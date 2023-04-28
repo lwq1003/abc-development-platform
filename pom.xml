@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>tech.abc</groupId>
+    <artifactId>abc-development-platform</artifactId>
+    <version>1.0.0</version>
+    <name>abc-development-platform</name>
+    <packaging>pom</packaging>
+    <description>abc-development-platform</description>
+
+    <modules>
+        <module>platform-common</module>
+        <module>platform-system</module>
+        <module>platform-framework</module>
+        <module>platform-entity-config</module>
+        <module>platform-boot-starter</module>
+        <module>platform-boot-starter-demo</module>
+    </modules>
+
+    <properties>
+        <!--开发平台统一版本号-->
+        <platform.version>1.0.0</platform.version>
+        <springboot.version>2.3.0.RELEASE</springboot.version>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+    <!-- 依赖声明 -->
+    <dependencyManagement>
+        <dependencies>
+            <!--spring boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- 平台公共模块-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-common</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 系统内核-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-system</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 系统框架-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-framework</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 实体配置-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-entity-config</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 平台聚合模块-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-boot-starter</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 示例模块-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-boot-starter-demo</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <build>
+        <finalName>abc-development-platform</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

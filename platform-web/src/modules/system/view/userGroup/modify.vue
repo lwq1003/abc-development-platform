@@ -1,0 +1,71 @@
+<template>
+  <Dialog title="修改" v-model="visible" width="40%">
+    <el-form
+      ref="form"
+      :model="entityData"
+      :rules="rules"
+      label-width="120px"
+      label-position="right"
+      style="width: 90%; margin: 0px auto"
+    >
+      <!--表单区域 -->
+      <el-form-item label="上级" prop="userGroup">
+        <UserGroupReference v-model="entityData.userGroup" :userGroup-param="userGroupParam" />
+      </el-form-item>
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="entityData.name" />
+      </el-form-item>
+      <el-form-item label="编码" prop="code">
+        <el-input v-model="entityData.code" />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <dictionary-radio-group v-model="entityData.status" code="Status" />
+      </el-form-item>
+      <el-form-item label="排序" prop="orderNo">
+        <el-input v-model="entityData.orderNo" />
+      </el-form-item>
+      <el-form-item label="备注" prop="remark">
+        <el-input v-model="entityData.remark" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button type="primary" @click="save" v-permission="pageCode + 'modify'">保存</el-button>
+      <el-button @click="close">关闭</el-button>
+    </template>
+  </Dialog>
+</template>
+
+<script>
+import { modifyMixin } from '@/mixin/modifyMixin.js'
+import UserGroupReference from '@/modules/system/view/userGroup/treereference.vue'
+const MODULE_CODE = 'system'
+const ENTITY_TYPE = 'userGroup'
+export default {
+  name: ENTITY_TYPE + '-modify',
+  components: {
+    UserGroupReference
+  },
+  mixins: [modifyMixin],
+  data() {
+    return {
+      entityType: ENTITY_TYPE,
+      moduleCode: MODULE_CODE,
+      // eslint-disable-next-line no-eval
+      api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
+      pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
+      entityData: {},
+      // 上级组件参数，用于传递数据
+      userGroupParam: {},
+      rules: {
+        //前端验证规则
+        userGroup: [{ required: true, message: '【上级】不能为空', trigger: 'blur' }],
+        name: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }],
+        status: [{ required: true, message: '【状态】不能为空', trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {}
+}
+</script>
+
+<style></style>

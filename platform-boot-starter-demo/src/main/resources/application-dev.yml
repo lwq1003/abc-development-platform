@@ -1,0 +1,38 @@
+server:
+  port: 8080
+#数据连接
+spring:
+  datasource:
+    # 数据库设置
+    url: jdbc:mysql://localhost:3306/abc?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: root
+    # redis设置
+  redis:
+    host: localhost
+    port: 6379
+    password:
+
+
+#打印sql日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#平台配置
+platform-config:
+  system:
+    enablePermission: false
+    userInitPassword: 12345678
+    tokenSecret: wqliu
+    exportDataPageSize: 2
+
+
+
+
+
+
+
+
+
+
