@@ -9,7 +9,7 @@
 二次封装和扩展代码生成器，实现entity、dao、service、controller、vo及前端vue页面生成。
 
 整体架构图如下：
-![输入图片说明](1.png)
+![输入图片说明](resource/1.png)
 
 ### 整体计划
 
@@ -28,7 +28,7 @@
 
 ### 后端架构
 
-![输入图片说明](2.png)
+![输入图片说明](resource/2.png)
 首先分成两部分，一部分是平台内核模块，命名规则是platform+模块功能名称；另一部分是能力扩展模块，命名规则是platform-boot-starter+模块功能名称。
 
 platform-common作为公用基础，主要包括工具类、公用注解、公共父类、公共常量、公共枚举值，与前端UI交互定义的vo类，该模块为最基础的模块，无前置依赖。
@@ -52,17 +52,21 @@ platform-boot-starter-notification：消息通知
 
 ### 如何运行
 
-#### 1. 初始化数据库
+#### 1. 准备工作
 
-执行根目录下init.sql,创建名字为abc的数据库。
+预装redis、nodejs、mysql、ide
 
-#### 2 .前端
+#### 2. 初始化数据库
+
+执行/resource目录下的init.sql,创建名字为abc的数据库。
+
+#### 3 .前端
 
 nodejs 18.14.2（未测试版本兼容性，理论上更高版本可用，低版本可能兼容）
 使用vscode打开platform-web目录，执行pnpm install安装npm module
 执行dev脚本，默认打开localhost:4000
 
-#### 3 .后端
+#### 4 .后端
 
 标准SpringBoot项目，多模块，启动类位于platform-boot-starter-demo下，默认端口8080。
 
