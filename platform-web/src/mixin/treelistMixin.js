@@ -14,7 +14,7 @@ export const treelistMixin = {
     changeNode(value, name) {
       this.treeNodeId = value
       this.treeNodeName = name
-      this.commonParam = { id: value }
+      this.commonParam = Object.assign(this.commonParam, { id: value })
     },
     refresh() {
       this.$refs.treeView.load()

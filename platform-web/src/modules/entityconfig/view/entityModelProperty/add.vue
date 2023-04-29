@@ -196,7 +196,6 @@ export default {
       this.entityData.widgetType = ''
     },
     dictionaryTypeChange() {
-      console.log(this.entityData.dictionaryType)
       this.entityData.defaultValue = ''
     },
     validateData() {

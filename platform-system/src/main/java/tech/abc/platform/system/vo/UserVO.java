@@ -1,10 +1,10 @@
 package tech.abc.platform.system.vo;
 
 
-import tech.abc.platform.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseVO;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -124,6 +124,11 @@ public class UserVO extends BaseVO {
      * 忽略上级
      */
     private Boolean ignoreParent;
+
+    /**
+     * 忽略用户组
+     */
+    private Boolean ignoreUserGroup;
 
     /**
      * 令牌

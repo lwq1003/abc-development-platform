@@ -45,6 +45,7 @@ public class GroupUserServiceImpl extends BaseServiceImpl<GroupUserMapper, Group
         }
     }
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addUser(String groupId, List<String> userIdList) {

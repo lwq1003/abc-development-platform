@@ -4,6 +4,13 @@ package tech.abc.platform.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.AllowAuthenticated;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
@@ -21,13 +28,6 @@ import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.system.vo.UserVO;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,40 +249,46 @@ public class UserController extends BaseController {
      */
     @GetMapping("/userGroup/{userGroupId}")
     @SystemLog(value = "用户组-用户查询")
-    @PreAuthorize("hasPermission(null,'system:userGroup:user')")
+    @PreAuthorize("hasPermission(null,'system:userGroup:configUser')")
     public ResponseEntity<Result> getUser(@PathVariable String userGroupId, UserVO queryVO, PageInfo pageInfo,
                                           SortInfo sortInfo) {
 
-        // 查找关联的用户
-        QueryWrapper<GroupUser> userGroupQueryWrapper = new QueryWrapper<>();
-        userGroupQueryWrapper.lambda().eq(GroupUser::getGroupId, userGroupId);
-        List<GroupUser> groupUserList = groupUserService.list(userGroupQueryWrapper);
-        List<String> userIdList = groupUserList.stream().map(x -> x.getUserId()).collect(Collectors.toList());
 
-
-        if (userIdList.size() > 0) {
-            // 构造分页对象
-            IPage<User> page = new Page<User>(pageInfo.getPageNum(), pageInfo.getPageSize());
-            // 构造查询条件
-            QueryWrapper<User> queryWrapper = QueryGenerator.generateQueryWrapper(User.class, queryVO, sortInfo);
-            // 附加用户组限制的范围
-            queryWrapper.lambda().in(User::getId, userIdList);
-
-            // 查询数据
-            userService.page(page, queryWrapper);
-            // 转换vo
-            IPage<UserVO> pageVO = mapperFacade.map(page, IPage.class);
-            List<UserVO> userVOList = new ArrayList<>();
-            for (int i = 0; i < page.getRecords().size(); i++) {
-                UserVO vo = convert2VO(page.getRecords().get(i));
-                userVOList.add(vo);
-            }
-            pageVO.setRecords(userVOList);
-            return ResultUtil.success(pageVO);
-        } else {
-            // 无数据，构造空对象返回
-            return ResultUtil.success(new Page<UserVO>());
+        // 构造分页对象
+        IPage<User> page = new Page<User>(pageInfo.getPageNum(), pageInfo.getPageSize());
+        // 当勾选查询所有复选框时，查询所有数据
+        if (queryVO.getIgnoreParent() != null && queryVO.getIgnoreParent()) {
+            queryVO.setOrganization(null);
         }
+
+        // 构造查询条件
+        QueryWrapper<User> queryWrapper = QueryGenerator.generateQueryWrapper(User.class, queryVO, sortInfo);
+
+        // 当未勾选全部用户复选框时，查询指定用户组下的用户
+        if (queryVO.getIgnoreUserGroup() == null || queryVO.getIgnoreUserGroup() == false) {
+
+            // 查找关联的用户
+            QueryWrapper<GroupUser> userGroupQueryWrapper = new QueryWrapper<>();
+            userGroupQueryWrapper.lambda().eq(GroupUser::getGroupId, userGroupId);
+            List<GroupUser> groupUserList = groupUserService.list(userGroupQueryWrapper);
+            List<String> userIdList = groupUserList.stream().map(x -> x.getUserId()).collect(Collectors.toList());
+            if (userIdList.size() > 0) {
+                // 附加用户组限制的范围
+                queryWrapper.lambda().in(User::getId, userIdList);
+            } else {
+                // 无数据，构造空对象返回
+                return ResultUtil.success(new Page<UserVO>());
+            }
+        }
+
+        // 查询数据
+        userService.page(page, queryWrapper);
+        // 转换vo
+        IPage<UserVO> pageVO = mapperFacade.map(page, IPage.class);
+        List<UserVO> userVOList = convert2VO(page.getRecords());
+        pageVO.setRecords(userVOList);
+        return ResultUtil.success(pageVO);
+
     }
 
 
@@ -312,6 +318,17 @@ public class UserController extends BaseController {
         return ResultUtil.success();
     }
 
+
+    /**
+     * 保存用户组与用户对应关系
+     */
+    @PutMapping("/{id}/saveGroupUser")
+    @SystemLog(value = "人员-配置用户组")
+    public ResponseEntity<Result> saveGroupUser(@PathVariable String id,
+                                                @RequestBody(required = false) List<String> userIdList) {
+        groupUserService.saveGroup(id, userIdList);
+        return ResultUtil.success();
+    }
 
     /**
      * 获取用户信息

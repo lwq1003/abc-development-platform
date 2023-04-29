@@ -127,6 +127,7 @@
     <ModifyPage ref="modifyPage" @refresh="refresh" />
     <ViewPage ref="viewPage" />
     <PermissionItem ref="permissionItem" @confirm="savePermissionItem" />
+    <User ref="user" />
   </ContentWrap>
 </template>
 
@@ -136,7 +137,7 @@ import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
 import PermissionItem from '@/modules/system/view/permissionItem/treemultiplereference.vue'
-
+import User from './user/index.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'userGroup'
 export default {
@@ -144,7 +145,8 @@ export default {
     AddPage,
     ModifyPage,
     ViewPage,
-    PermissionItem
+    PermissionItem,
+    User
   },
   mixins: [listMixin],
   data() {
@@ -215,6 +217,10 @@ export default {
       this.api.getPermission(row.id).then((res) => {
         this.$refs.permissionItem.init({ data: res.data })
       })
+    },
+    configUser(row) {
+      this.currentId = row.id
+      this.$refs.user.init({ id: row.id })
     },
     // 保存用户组与权限项对应
     savePermissionItem(userGroupIdList) {

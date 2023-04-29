@@ -73,7 +73,8 @@ export const listMixin = {
   watch: {
     commonParam: {
       immediate: true,
-      handler: 'handleParamChange'
+      handler: 'handleParamChange',
+      deep: true
     }
   },
   mounted() {
@@ -187,13 +188,17 @@ export const listMixin = {
       return true
     },
 
-    // 获取表格勾选行id
+    // 获取表格勾选行id字符串
     getCheckedId() {
       let ids = ''
       this.multipleSelection.forEach(function (item) {
         ids += item.id + ','
       })
       return ids
+    },
+    // 获取表格勾选行id 数组
+    getCheckedIdList() {
+      return this.multipleSelection.map((item) => item.id)
     },
     // 刷新
     refresh() {

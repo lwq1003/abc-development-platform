@@ -4,6 +4,14 @@ package tech.abc.platform.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.constant.TableFieldConstant;
@@ -22,16 +30,9 @@ import tech.abc.platform.system.entity.UserGroup;
 import tech.abc.platform.system.service.GroupPermissionItemService;
 import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.UserGroupService;
+import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.system.vo.UserGroupVO;
 import tech.abc.platform.system.vo.UserVO;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/system/userGroup")
 @Slf4j
 public class UserGroupController extends BaseController {
+
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserGroupService userGroupService;
 
@@ -177,6 +181,7 @@ public class UserGroupController extends BaseController {
 
     // region 扩展操作
 
+
     /**
      * 启用
      */
@@ -229,7 +234,7 @@ public class UserGroupController extends BaseController {
     @PostMapping("/{id}/user")
     @SystemLog(value = "用户组-新增用户")
     @PreAuthorize("hasPermission(null,'system:userGroup:configUser')")
-    public ResponseEntity<Result> addUser(@PathVariable String id, @RequestParam List<String> idList) {
+    public ResponseEntity<Result> addUser(@PathVariable String id, @RequestBody List<String> idList) {
         groupUserService.addUser(id, idList);
         return ResultUtil.success();
     }
@@ -241,7 +246,7 @@ public class UserGroupController extends BaseController {
     @PutMapping("/{id}/user")
     @SystemLog(value = "用户组-移除用户")
     @PreAuthorize("hasPermission(null,'system:userGroup:configUser')")
-    public ResponseEntity<Result> removeUser(@PathVariable String id, @RequestParam List<String> idList) {
+    public ResponseEntity<Result> removeUser(@PathVariable String id, @RequestBody List<String> idList) {
         // 构造条件
         QueryWrapper<GroupUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
@@ -274,7 +279,7 @@ public class UserGroupController extends BaseController {
     /**
      * 保存权限
      */
-    @ApiOperation(value = "保存用户组与权限对应关系")
+
     @PutMapping("/{id}/savePermission")
     @SystemLog(value = "用户组管理-权限设置", logRequestParam = false)
     @PreAuthorize("hasPermission(null,'system:userGroup:configPermission')")

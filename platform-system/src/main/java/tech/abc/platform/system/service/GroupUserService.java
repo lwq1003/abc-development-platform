@@ -22,6 +22,7 @@ public interface GroupUserService extends BaseService<GroupUser> {
      */
     void saveGroup(String userId, List<String> groupIdList);
 
+
     /**
      * 为用户组新增用户，如以存在则跳过，不会抛出异常
      *

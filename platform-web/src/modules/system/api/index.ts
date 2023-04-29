@@ -74,20 +74,21 @@ export const user = Object.assign({}, COMMON_METHOD, {
     return request.put({ url: this.serveUrl + id + '/changePassword', data: params })
   },
   // 获取用户组对应的用户
-  getUserGroupUser(userGroupId, params) {
+  getUserByUserGroupId(userGroupId, params) {
     return request.get({ url: this.serveUrl + 'userGroup/' + userGroupId, params })
   },
   // 获取用户对应的用户组
   getUserGroup(id) {
     return request.get({ url: this.serveUrl + id + '/getUserGroup' })
   },
-  // 保存用户组
+  // 保存用户对应的用户组列表
   saveUserGroup(id, userGroupIdList) {
     return request.put({
       url: this.serveUrl + id + '/saveUserGroup',
       data: userGroupIdList
     })
   },
+
   // 登录
   login(username, password) {
     return request.post({ url: this.serveUrl + 'login', params: { username, password } })
@@ -152,14 +153,14 @@ export const userGroup = Object.assign({}, COMMON_METHOD, {
   disable(id) {
     return request.put({ url: this.serveUrl + id + '/disable' })
   },
+
   // 批量移除用户
   batchRemoveUser(id, idList) {
-    // 注意 http delete方法无法传递参数，此处使用put方法替代
-    return request.put({ url: this.serveUrl + id + '/user', params: idList })
+    return request.put({ url: this.serveUrl + id + '/user', data: idList })
   },
   // 新增用户
   addUser(id, idList) {
-    return request.post({ url: this.serveUrl + id + '/user', params: idList })
+    return request.post({ url: this.serveUrl + id + '/user', data: idList })
   },
   // 获取权限
   getPermission(id) {
