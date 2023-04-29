@@ -8,7 +8,7 @@ const slots = useSlots()
 const props = defineProps({
   modelValue: propTypes.bool.def(false),
   title: propTypes.string.def('Dialog'),
-  fullscreen: propTypes.bool.def(true)
+  fullscreen: propTypes.bool.def(false)
 })
 
 const getBindValue = computed(() => {
@@ -23,7 +23,7 @@ const getBindValue = computed(() => {
   return obj
 })
 
-const isFullscreen = ref(false)
+const isFullscreen = ref(props.fullscreen)
 
 const toggleFull = () => {
   isFullscreen.value = !unref(isFullscreen)
@@ -45,7 +45,6 @@ const toggleFull = () => {
           {{ title }}
         </slot>
         <Icon
-          v-if="fullscreen"
           class="mr-18px cursor-pointer is-hover mt-2px z-10"
           :icon="isFullscreen ? 'zmdi:fullscreen-exit' : 'zmdi:fullscreen'"
           color="var(--el-color-info)"
