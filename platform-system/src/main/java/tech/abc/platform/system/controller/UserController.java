@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.AllowAuthenticated;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
-import tech.abc.platform.common.constant.CacheConstant;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.exception.SessionExpiredException;
 import tech.abc.platform.common.query.QueryGenerator;
@@ -349,19 +348,11 @@ public class UserController extends BaseController {
     }
 
 
-    public UserVO convert2VO(User entity) {
+    private UserVO convert2VO(User entity) {
         UserVO vo = mapperFacade.map(entity, UserVO.class);
-        String statusName = dictionaryUtil.getNameByCode("UserStatus", entity.getStatus());
-        vo.setStatusName(statusName);
-
-        vo.setOrganizationName(cacheUtil.get(CacheConstant.ORGANIZATION_CACHE_PREFIX + entity.getOrganization()));
-
-        if (entity.getGender() != null) {
-            String genderName = dictionaryUtil.getNameByCode("Gender", entity.getGender());
-            vo.setGenderName(genderName);
-
-        }
-
+        vo.setGenderName(dictionaryUtil.getNameByCode("Gender", entity.getGender()));
+        vo.setStatusName(dictionaryUtil.getNameByCode("UserStatus", entity.getStatus()));
+        vo.setForceChangePasswordFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getForceChangePasswordFlag()));
         return vo;
     }
 

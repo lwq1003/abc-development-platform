@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseServiceImpl;
-import tech.abc.platform.common.constant.CacheConstant;
 import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.enums.StatusEnum;
@@ -114,24 +113,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     }
 
-
-    @Override
-    public void afterAdd(User entity) {
-        cacheUtil.set(CacheConstant.USER_CACHE_PREFIX + entity.getId(), entity.getName());
-
-    }
-
-    @Override
-    public void afterModify(User entity) {
-        cacheUtil.set(CacheConstant.USER_CACHE_PREFIX + entity.getId(), entity.getName());
-
-    }
-
-    @Override
-    public void afterRemove(User entity) {
-        cacheUtil.remove(CacheConstant.USER_CACHE_PREFIX + entity.getId());
-
-    }
 
     @Override
     public void beforeRemove(User entity) {

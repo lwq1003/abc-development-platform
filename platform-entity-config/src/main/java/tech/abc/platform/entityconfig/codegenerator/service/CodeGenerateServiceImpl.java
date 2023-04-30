@@ -626,8 +626,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         customKeyValue.put("treeListEntityView", entityView);
         // 自定义树表视图模板
         CustomFile templateFile = new CustomFile.Builder()
-                .fileName("treelist.vue")
-                .templatePath("/templates/treelist.vue.ftl")
+                .fileName("treeList.vue")
+                .templatePath("/templates/treeList.vue.ftl")
                 .enableFileOverride()
                 .packageName("page")
                 .build();
@@ -647,8 +647,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         // 自定义树视图模板
         CustomFile templateFile = new CustomFile.Builder()
-                .fileName("treereference.vue")
-                .templatePath("/templates/treereference.vue.ftl")
+                .fileName("treeReference.vue")
+                .templatePath("/templates/treeReference.vue.ftl")
                 .enableFileOverride()
                 .packageName("page")
                 .build();
@@ -668,8 +668,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         // 自定义树视图模板
         CustomFile templateFile = new CustomFile.Builder()
-                .fileName("treemultiplereference.vue")
-                .templatePath("/templates/treemultiplereference.vue.ftl")
+                .fileName("treeMultipleReference.vue")
+                .templatePath("/templates/treeMultipleReference.vue.ftl")
                 .enableFileOverride()
                 .packageName("page")
                 .build();
@@ -768,15 +768,15 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                         // 树视图
                         generateTreeView(entityView, customKeyValue, builder);
                         break;
-                    case TREELIST:
+                    case TREE_LIST:
                         // 树表视图
                         generateTreeListView(entityView, customKeyValue, builder);
                         break;
-                    case TREEREFERENCE:
+                    case TREE_REFERENCE:
                         // 树视图
                         generateTreeReferenceView(entityView, customKeyValue, builder);
                         break;
-                    case TREEMULTIPLEREFERENCE:
+                    case TREE_MULTIPLE_REFERENCE:
                         // 树多选参照视图
                         generateTreeMultipleReferenceView(entityView, customKeyValue, builder);
                         break;

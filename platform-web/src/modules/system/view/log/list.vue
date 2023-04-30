@@ -67,8 +67,6 @@
       />
     </el-card>
 
-    <AddPage ref="addPage" @refresh="refresh" />
-    <ModifyPage ref="modifyPage" @refresh="refresh" />
     <ViewPage ref="viewPage" />
   </ContentWrap>
 </template>
@@ -98,7 +96,7 @@ export default {
           label: '内容',
           show: true,
           showOverflowTooltip: true,
-          width: '120',
+
           sortable: true
         },
         {
@@ -177,7 +175,7 @@ export default {
           label: '执行耗时ms',
           show: true,
           showOverflowTooltip: true,
-          width: '120',
+          width: '150',
           sortable: true
         }
       ],

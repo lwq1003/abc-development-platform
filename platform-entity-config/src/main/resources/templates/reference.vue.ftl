@@ -8,7 +8,7 @@
                 </el-button-group>
             </template>
         </el-input>
-        <Dialog title="${table.comment!}选择" v-model="visible" width="60%">
+        <Dialog title="${table.comment!}选择" v-model="visible" class="w-150">
             <CollapseTab>
                 <el-form :inline="true" :model="queryCondition" label-width="80px" @keyup.enter="query">
                     <!--查询条件区 -->
@@ -121,10 +121,6 @@
                     <div class="clearfix"></div>
                 </el-form>
             </CollapseTab>
-            <div class="mb-10px mt-10px">
-                <el-button type="primary" icon="check" @click="confirm">确定</el-button>
-            </div>
-
             <el-card style="width: 100%">
                 <div style="margin-top: 0; margin-bottom: 10px; float: right">
                     <ColumnsController :value="columnList" :tableKey="tableKey" />
@@ -155,6 +151,10 @@
                         :page-total="pageTotal"
                 />
             </el-card>
+            <template #footer>
+                <el-button type="primary" @click="confirm">确定</el-button>
+                <el-button @click="close">关闭</el-button>
+            </template>
         </Dialog>
     </div>
 </template>

@@ -233,6 +233,7 @@
 
 <script lang="ts">
     import {listMixin} from '@/mixin/listMixin.js'
+    import { formatDate, formatTime } from '@/utils/TableColumnFormatter.js'
     import AddPage from './add.vue'
     import ModifyPage from './modify.vue'
     import ViewPage from './view.vue'
@@ -292,7 +293,7 @@
                         , width: '${field.width}'
                         </#if>
                         <#if field.formatFunction??>
-                        , formatFunction: '${field.formatFunction}'
+                        , formatFunction: ${field.formatFunction}
                         </#if>
                         <#if field.sortableFlag=="YES" && field.dataType!="DATA_DICTIONARY">
                         , sortable: true

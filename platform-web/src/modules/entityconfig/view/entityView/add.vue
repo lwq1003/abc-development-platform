@@ -33,7 +33,7 @@
         prop="mainReferenceViewFlag"
         v-show="
           entityData.entityViewType === 'REFERENCE' ||
-          entityData.entityViewType === 'TREEREFERENCE' ||
+          entityData.entityViewType === 'TREE_REFERENCE' ||
           entityData.entityViewType === 'TREELISTREFERENCE'
         "
       >
@@ -69,7 +69,7 @@
       <el-form-item
         label="树路径"
         prop="treePath"
-        v-show="entityData.entityViewType === 'TREELIST'"
+        v-show="entityData.entityViewType === 'TREE_LIST'"
       >
         <el-input v-model="entityData.treePath" />
       </el-form-item>
@@ -124,9 +124,8 @@ export default {
       this.entityData.entity = param.id
       this.entityModelParam = { entity: param.id }
     },
-
     entityViewTypeChange(value, name) {
-      this.entityData.code = value.toLowerCase()
+      this.entityData.code = this.$StringUtil.toCamelCase(value)
       this.entityData.name = name
     }
   }

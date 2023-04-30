@@ -105,6 +105,10 @@ export const referenceMixin = {
       this.$emit('my-change', selectedRow.id)
       this.visible = false
     },
+    // 关闭
+    close() {
+      this.visible = false
+    },
     // 清空选择
     clear() {
       this.displayName = ''

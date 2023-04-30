@@ -75,7 +75,7 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="320">
+        <el-table-column fixed="right" label="操作" width="250">
           <template #default="scope">
             <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
               >修改</el-button

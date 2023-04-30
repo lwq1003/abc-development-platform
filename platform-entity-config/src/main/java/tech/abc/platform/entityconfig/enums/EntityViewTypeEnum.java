@@ -41,15 +41,15 @@ public enum EntityViewTypeEnum {
     /**
      * 树表
      */
-    TREELIST,
+    TREE_LIST,
     /**
      * 树参照
      */
-    TREEREFERENCE,
+    TREE_REFERENCE,
     /**
      * 树多选参照
      */
-    TREEMULTIPLEREFERENCE,
+    TREE_MULTIPLE_REFERENCE,
     /**
      * 自定义
      */

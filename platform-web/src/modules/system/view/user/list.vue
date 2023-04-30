@@ -69,7 +69,7 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="320">
+        <el-table-column fixed="right" label="操作" width="270">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'configUserGroup'"
@@ -143,6 +143,7 @@ import ViewPage from './view.vue'
 import UserGroup from '@/modules/system/view/userGroup/treemultiplereference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'user'
+import { formatDate, formatTime } from '@/utils/TableColumnFormatter.js'
 export default {
   components: {
     AddPage,
@@ -221,7 +222,8 @@ export default {
           show: true,
           showOverflowTooltip: true,
           width: '120',
-          sortable: true
+          sortable: true,
+          formatFunc: formatDate
         },
         {
           prop: 'statusName',
@@ -236,7 +238,8 @@ export default {
           show: true,
           showOverflowTooltip: true,
           width: '120',
-          sortable: true
+          sortable: true,
+          formatFunc: formatTime
         },
         {
           prop: 'orderNo',

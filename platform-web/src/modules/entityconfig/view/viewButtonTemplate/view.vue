@@ -9,7 +9,7 @@
     >
       <!--表单区域 -->
       <el-form-item label="按钮类型" prop="buttonType">
-        <dictionary-radio-group v-model="entityData.buttonType" code="ViewButtonType" />
+        <dictionary-select v-model="entityData.buttonType" code="ViewButtonType" />
       </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="entityData.name" />

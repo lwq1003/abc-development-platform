@@ -41,7 +41,9 @@ import constant from '@/constant/index'
 import api from '@/api/index'
 
 import dateFormatter from '@/utils/dateFormatter.js'
-import tableDateFormatter from '@/utils/tableDateFormatter.js'
+
+
+import StringUtil from '@/utils/stringUtil.js'
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
@@ -72,7 +74,10 @@ const setupAll = async () => {
 
   // 日期函数
   app.config.globalProperties.$dateFormatter = dateFormatter
-  app.config.globalProperties.$tableDateFormatter = tableDateFormatter
+
+  // 字符串工具函数
+  app.config.globalProperties.$StringUtil = StringUtil
+
 
   app.mount('#app')
 }

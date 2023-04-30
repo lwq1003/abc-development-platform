@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="20" type="flex">
-    <el-col :span="5">
+    <el-col :span="5" v-show="$route.query.viewType === 'LIST'">
       <page-button :button-type="$constant.VIEW_BUTTON_TYPE_ITEM.LIST_PAGE"
     /></el-col>
     <el-col :span="5">
@@ -24,7 +24,7 @@
       </el-row>
     </el-col>
 
-    <el-col :span="5">
+    <el-col :span="5" v-show="$route.query.viewType === 'LIST'">
       <row-button :button-type="$constant.VIEW_BUTTON_TYPE_ITEM.LIST_ROW"
     /></el-col>
   </el-row>

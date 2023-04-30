@@ -76,7 +76,7 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="270">
+        <el-table-column fixed="right" label="操作" width="230">
           <template #default="scope">
             <el-button type="primary" v-permission="pageCode + 'config'" @click="config(scope.row)"
               >配置</el-button

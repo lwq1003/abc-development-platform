@@ -1,7 +1,12 @@
 package tech.abc.platform.framework.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import tech.abc.platform.common.constant.CacheConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import tech.abc.platform.common.constant.TreeDefaultConstant;
 import tech.abc.platform.common.entity.MyGrantedAuthority;
 import tech.abc.platform.common.entity.MyUserDetails;
@@ -12,12 +17,6 @@ import tech.abc.platform.system.enums.OrganizationTypeEnum;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetails.setUserId(user.getId());
         userDetails.setName(user.getName());
         userDetails.setOrganizationId(user.getOrganization());
-        userDetails.setOrganizationName(cacheUtil.get(CacheConstant.ORGANIZATION_CACHE_PREFIX + user.getOrganization()));
+        userDetails.setOrganizationName(organizationService.getById(user.getOrganization()).getName());
         // 逐级查找组织机构类型
         List<Organization> list = organizationService.list();
         String currentOrganizationId = user.getOrganization();

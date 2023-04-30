@@ -79,4 +79,12 @@ body {
     box-sizing: border-box;
   }
 }
+
+.el-form .el-form-item {
+  margin-bottom: 20px;
+}
+
+.content-slot .el-form .el-form-item {
+  margin-bottom: 20px;
+}
 </style>

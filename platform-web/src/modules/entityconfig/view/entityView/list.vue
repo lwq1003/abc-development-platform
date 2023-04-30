@@ -66,7 +66,7 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="350">
+        <el-table-column fixed="right" label="操作" width="230">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'configView'"
@@ -173,9 +173,9 @@ export default {
       // 过滤无需配置的视图类型
       if (
         row.entityViewType == 'TREE' ||
-        row.entityViewType == 'TREELIST' ||
-        row.entityViewType == 'TREEREFERENCE' ||
-        row.entityViewType == 'TREEMULTIPLEREFERENCE'
+        row.entityViewType == 'TREE_LIST' ||
+        row.entityViewType == 'TREE_REFERENCE' ||
+        row.entityViewType == 'TREE_MULTIPLE_REFERENCE'
       ) {
         this.$message.info('无需配置')
         return
@@ -200,7 +200,10 @@ export default {
         }
       }
 
-      this.$router.push({ path: '/entityconfig/' + viewType + 'ViewConfig', query: { id: row.id } })
+      this.$router.push({
+        path: '/entityconfig/' + viewType + 'ViewConfig',
+        query: { id: row.id, viewType: row.entityViewType }
+      })
     }
   }
 }

@@ -140,17 +140,18 @@ const signIn = async () => {
             await permissionStore.generateRoutes('admin', routers).catch(() => {})
 
             permissionStore.getAddRouters.forEach((route) => {
-              addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
+              // 动态添加可访问路由表
+              addRoute(route as RouteRecordRaw)
             })
             permissionStore.setIsAddRouters(true)
-            push({ path: redirect.value || permissionStore.addRouters[0].path })
+            // 设置首页
+            push({ path: '/dashboard/analysis' })
           } else {
             await permissionStore.generateRoutes('none').catch(() => {})
             permissionStore.getAddRouters.forEach((route) => {
               addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
             })
             permissionStore.setIsAddRouters(true)
-
             push({ path: redirect.value || permissionStore.addRouters[0].path })
           }
         }

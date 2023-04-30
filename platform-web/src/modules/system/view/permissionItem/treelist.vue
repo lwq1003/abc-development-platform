@@ -10,18 +10,18 @@
 </template>
 
 <script>
-import { treelistMixin } from '@/mixin/treelistMixin.js'
+import { treeListMixin } from '@/mixin/treeListMixin.js'
 import TreeView from './tree.vue'
 import ListView from './list.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'permissionItem'
 export default {
-  name: ENTITY_TYPE + '-treelist',
+  name: ENTITY_TYPE + '-treeList',
   components: {
     TreeView,
     ListView
   },
-  mixins: [treelistMixin],
+  mixins: [treeListMixin],
   data() {
     return {}
   },

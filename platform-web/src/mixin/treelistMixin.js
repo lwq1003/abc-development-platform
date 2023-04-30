@@ -1,7 +1,7 @@
 /**
  * 树表页面混入
  */
-export const treelistMixin = {
+export const treeListMixin = {
   data() {
     return {
       commonParam: {},
