@@ -124,7 +124,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         // 配置其他请求,需认证
         http.authorizeRequests()
                 .anyRequest()
-                .permitAll();
+                .authenticated();
 
         // 配置JWT过滤器
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

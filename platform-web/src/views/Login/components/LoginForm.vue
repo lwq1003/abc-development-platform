@@ -129,11 +129,9 @@ const signIn = async () => {
 
       try {
         const res = await loginApi(formData)
-
         if (res) {
           // 保存用户信息
           userStore.setUserAction(res.data)
-
           // 是否使用动态路由
           if (appStore.getDynamicRouter) {
             const routers = res.data.menuPermission || []

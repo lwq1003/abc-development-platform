@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useCache } from '@/hooks/web/useCache'
 import { USER_KEY } from '@/constant/common'
 const { wsCache } = useCache()
+import { setToken } from '@/utils/auth'
 
 interface UserState {
   account: string
@@ -38,7 +39,10 @@ export const useUserStore = defineStore('user', {
       this.token = user.token
       this.buttonPermission = user.buttonPermission
       this.menuPermission = user.menuPermission
+      // 保存用户信息
       wsCache.set(USER_KEY, user)
+      // 保存令牌
+      setToken(user.token)
     },
     async clear() {
       wsCache.clear()

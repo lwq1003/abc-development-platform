@@ -17,12 +17,6 @@ const request = (option: any) => {
       'Content-Type': headersType || default_headers
     }
   })
-  //   .then((res) => {
-  //   // 未定义时，默认显示提示；明确设置为false时，不显示提示
-  //   if (showInfo === undefined || showInfo === true) {
-  //     ElMessage.info(res.data.message)
-  //   }
-  // })
 }
 export default {
   get: (option: any) => {

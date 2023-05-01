@@ -13,7 +13,7 @@ export const loginApi = (data: UserType) => {
 }
 
 export const loginOutApi = (): Promise<IResponse> => {
-  return request.get({ url: '/user/loginOut' })
+  return request.get({ url: '/system/user/logout' })
 }
 
 export const getUserListApi = ({ params }: AxiosConfig) => {

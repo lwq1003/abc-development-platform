@@ -1,9 +1,9 @@
 import axios, {
+  AxiosError,
   AxiosInstance,
-  InternalAxiosRequestConfig,
   AxiosRequestHeaders,
   AxiosResponse,
-  AxiosError
+  InternalAxiosRequestConfig
 } from 'axios'
 
 import qs from 'qs'
@@ -12,9 +12,13 @@ import { config } from './config'
 
 import { ElMessage } from 'element-plus'
 
-import { REQUEST_SUCCESS, UNAUTHORIZED, NOT_FOUND, METHOD_NOT_ALLOWED } from '@/constant/common'
+import { METHOD_NOT_ALLOWED, NOT_FOUND, REQUEST_SUCCESS, UNAUTHORIZED } from '@/constant/common'
+import { getToken } from '@/utils/auth'
+import { useCache } from '@/hooks/web/useCache'
 
 const { base_url } = config
+
+const { wsCache } = useCache()
 
 export const PATH_URL = base_url[import.meta.env.VITE_API_BASEPATH]
 
@@ -27,6 +31,12 @@ const service: AxiosInstance = axios.create({
 // request拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // 读取token
+    const token = getToken()
+    if (token) {
+      // 若不为空，则将token放入header属性
+      config.headers['X-Token'] = token
+    }
     const urlencoded = 'application/x-www-form-urlencoded'
     if (
       config.method === 'post' &&
@@ -34,7 +44,6 @@ service.interceptors.request.use(
     ) {
       config.data = qs.stringify(config.data)
     }
-    // ;(config.headers as AxiosRequestHeaders)['Token'] = 'test test'
     // get参数编码
     if (config.method === 'get' && config.params) {
       let url = config.url as string
@@ -79,7 +88,14 @@ service.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response) {
       if (error.response.status === UNAUTHORIZED) {
+        // 收到401响应时，给出友好提示
         ElMessage.warning('未登录或会话超时，请重新登录')
+        // 清空浏览器缓存
+        wsCache.clear()
+        // 执行页面刷新
+        setTimeout(function () {
+          location.reload()
+        }, 2000)
       } else if (error.response.status === NOT_FOUND) {
         ElMessage.error('未找到服务，请确认')
       } else if (error.response.status === METHOD_NOT_ALLOWED) {

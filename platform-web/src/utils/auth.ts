@@ -1,7 +1,5 @@
-import { useCache } from '@/hooks/web/useCache'
-
 import { TOKEN_KEY } from '@/constant/common'
-
+import { useCache } from '@/hooks/web/useCache'
 const { wsCache } = useCache()
 
 // 获取token
