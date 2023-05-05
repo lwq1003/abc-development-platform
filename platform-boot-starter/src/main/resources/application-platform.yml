@@ -79,6 +79,14 @@ platform-config:
     userInitPassword: 12345678
     tokenSecret: wqliu
     exportDataPageSize: 2
+  message:
+    serverPort: 8997
+    messageServerAppCode: CIP
+    readIdleTimeOut: 60
+    maxSendCount: 10
+    sendMessageSpan: 30
+    sendMessageCount: 10
+    enableResend: true
 
 
 

@@ -76,7 +76,7 @@ export default {
     confirm() {
       // 更新父组件绑定值
       this.$emit('update:modelValue', this.currentCode)
-      this.$emit('my-change', this.currentId)
+      this.$emit('change', this.currentId)
       this.visible = false
     },
     // 树表相关操作

@@ -247,7 +247,7 @@ public class UserController extends BaseController {
      * 查询用户组对应的用户信息
      */
     @GetMapping("/userGroup/{userGroupId}")
-    @SystemLog(value = "用户组-用户查询")
+    @SystemLog(value = "用户-根据用户组查询用户")
     @PreAuthorize("hasPermission(null,'system:userGroup:configUser')")
     public ResponseEntity<Result> getUser(@PathVariable String userGroupId, UserVO queryVO, PageInfo pageInfo,
                                           SortInfo sortInfo) {

@@ -5,7 +5,7 @@
       :model="entityData"
       label-width="120px"
       label-position="right"
-      style="width: 90%; margin: 0px auto"
+      style="width: 90%; margin: 0 auto"
     >
       <!--表单区域 -->
       <el-form-item label="实体模型" prop="entityModel" v-show="false">
@@ -174,6 +174,8 @@ export default {
     dataTypeChange() {
       // 清空控件类型选中值
       this.entityData.widgetType = ''
+      // 清空字典类型选中值
+      this.entityData.dictionaryType = ''
     },
     dictionaryTypeChange() {
       this.entityData.defaultValue = ''

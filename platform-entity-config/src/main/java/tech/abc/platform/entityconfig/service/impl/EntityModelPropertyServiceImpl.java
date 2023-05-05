@@ -1,5 +1,10 @@
 package tech.abc.platform.entityconfig.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
@@ -8,10 +13,6 @@ import tech.abc.platform.entityconfig.entity.EntityModelProperty;
 import tech.abc.platform.entityconfig.mapper.EntityModelPropertyMapper;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
 import tech.abc.platform.entityconfig.service.EntityModelService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -94,8 +95,15 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
 
     @Override
     protected void copyPropertyHandle(EntityModelProperty entity, String... value) {
-        // 名称后附加“副本”用于区分
-        entity.setName(entity.getName() + " 副本");
+        if (ArrayUtils.isNotEmpty(value)) {
+            // 复制父级
+            // 设置关联的实体标识
+            entity.setEntityModel(value[0]);
+        } else {
+            // 直接复制
+            // 名称后附加“副本”用于区分
+            entity.setName(entity.getName() + " 副本");
+        }
     }
 
     @Override

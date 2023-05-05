@@ -1,6 +1,12 @@
 package tech.abc.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.constant.CacheConstant;
 import tech.abc.platform.common.enums.StatusEnum;
@@ -11,12 +17,6 @@ import tech.abc.platform.system.entity.DictionaryType;
 import tech.abc.platform.system.mapper.DictionaryTypeMapper;
 import tech.abc.platform.system.service.DictionaryItemService;
 import tech.abc.platform.system.service.DictionaryTypeService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +128,7 @@ public class DictionaryTypeServiceImpl extends BaseServiceImpl<DictionaryTypeMap
     }
 
     @Override
-    public void afterModify(DictionaryType entity) {
+    public void afterModify(DictionaryType entity, DictionaryType originEntity) {
         cacheUtil.set(CacheConstant.DICTIONARY_TYPE_CACHE_PREFIX + entity.getId(), entity.getName());
 
         // 更新字典项缓存

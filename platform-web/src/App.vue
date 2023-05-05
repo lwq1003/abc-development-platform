@@ -63,19 +63,20 @@ body {
 
 // el-card样式
 .el-card {
-  border-radius: 0;
-  border: 1px solid #ddd;
-  background-color: #fff;
   overflow: hidden;
   color: #303133;
-  -webkit-transition: 0.3s;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0;
   transition: 0.3s;
+  transition: 0.3s;
+
   .el-card__header {
-    font-size: 14px;
     padding: 9px 10px;
+    font-size: 14px;
     color: #006eff;
     border-bottom: 1px solid #ddd;
-    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     box-sizing: border-box;
   }
 }

@@ -1,6 +1,13 @@
 package tech.abc.platform.entityconfig.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
@@ -9,12 +16,6 @@ import tech.abc.platform.entityconfig.entity.ViewButtonTemplate;
 import tech.abc.platform.entityconfig.mapper.ViewButtonMapper;
 import tech.abc.platform.entityconfig.service.ViewButtonService;
 import tech.abc.platform.entityconfig.vo.SortedObject;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -157,6 +158,14 @@ public class ViewButtonServiceImpl extends BaseServiceImpl<ViewButtonMapper, Vie
 
     @Override
     protected void copyPropertyHandle(ViewButton entity, String... value) {
-        entity.setView(value[0]);
+        if (ArrayUtils.isNotEmpty(value)) {
+            // 复制父级
+            // 设置关联的视图标识
+            entity.setView(value[0]);
+        } else {
+            // 直接复制
+            // 名称后附加“副本”用于区分
+            entity.setName(entity.getName() + " 副本");
+        }
     }
 }

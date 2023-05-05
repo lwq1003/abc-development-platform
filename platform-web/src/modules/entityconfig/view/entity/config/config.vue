@@ -56,17 +56,20 @@ export default {
   color: var(--el-text-color-primary);
   background: white;
 }
+
 .layout-container-demo .el-menu {
   border-right: none;
 }
+
 .layout-container-demo .el-main {
   padding: 0;
 }
+
 .layout-container-demo .toolbar {
+  right: 20px;
   display: inline-flex;
+  height: 100%;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  right: 20px;
 }
 </style>

@@ -19,8 +19,8 @@
                             <el-date-picker
                                     v-model="queryCondition.${item.code}BeginForQuery"
                                     <#if item.formatPattern??>
-                                        :value-format="dateFormatter.getDatetimeFormat('${item.formatPattern}')"
-                                        :type="dateFormatter.getDatetimeType('${item.formatPattern}')"
+                                        :value-format="$dateFormatter.getDatetimeFormat('${item.formatPattern}')"
+                                        :type="$dateFormatter.getDatetimeType('${item.formatPattern}')"
                                     </#if>
                                     align="right"
                                     unlink-panels
@@ -35,8 +35,8 @@
                             <el-date-picker
                                     v-model="queryCondition.${item.code}EndForQuery"
                                     <#if item.formatPattern??>
-                                        :value-format="dateFormatter.getDatetimeFormat('${item.formatPattern}')"
-                                        :type="dateFormatter.getDatetimeType('${item.formatPattern}')"
+                                        :value-format="$dateFormatter.getDatetimeFormat('${item.formatPattern}')"
+                                        :type="$dateFormatter.getDatetimeType('${item.formatPattern}')"
                                     </#if>
                                     align="right"
                                     unlink-panels

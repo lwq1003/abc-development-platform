@@ -1124,7 +1124,7 @@ const schema = reactive<FormSchema[]>([
 
   .holiday {
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     left: 50%;
     width: 6px;
     height: 6px;

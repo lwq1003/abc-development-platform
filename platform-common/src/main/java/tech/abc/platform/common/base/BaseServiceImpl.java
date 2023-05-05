@@ -3,13 +3,13 @@ package tech.abc.platform.common.base;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import tech.abc.platform.common.exception.CommonException;
-import tech.abc.platform.common.exception.CustomException;
-import tech.abc.platform.common.utils.CacheUtil;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.common.utils.CacheUtil;
 
 import java.util.List;
 
@@ -49,6 +49,8 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity>
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean modify(T entity) {
+        // 将修改前数据查出来缓存下来，传入到修改后方法中，用于一些特殊逻辑处理，如某个值变化才进行
+        T oldEntity = query(entity.getId());
 
         beforeModify(entity);
         beforeAddOrModifyOp(entity);
@@ -60,7 +62,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity>
 
         boolean result = super.updateById(entity);
         afterAddOrModifyOp(entity);
-        afterModify(entity);
+        afterModify(entity, oldEntity);
         return result;
     }
 
@@ -194,7 +196,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity>
      *
      * @param entity 实体
      */
-    protected void afterModify(T entity) {
+    protected void afterModify(T entity, T orginEntity) {
         // 子类根据需要覆写
     }
 
@@ -259,7 +261,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity>
      * @param value        属性值
      */
     protected void copyPropertyHandle(T entity, String... value) {
-      
+
     }
 
 

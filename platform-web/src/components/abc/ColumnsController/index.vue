@@ -1,11 +1,11 @@
 <template>
-  <el-popover placement="bottom" trigger="click" :visible="visible" style="margin-top: 0px">
+  <el-popover placement="bottom" trigger="click" :visible="visible" style="margin-top: 0">
     <div>
       <div>
         <el-checkbox
           v-model="checkAll"
           :indeterminate="indeterminate"
-          style="display: inline-block; font-weight: bold; margin-top: 8px"
+          style="display: inline-block; margin-top: 8px; font-weight: bold"
           @change="handleCheckAll"
           >全选</el-checkbox
         >
@@ -98,9 +98,10 @@ export default {
 }
 
 .close i {
-  border: 1px solid #dcdfe6;
   margin-right: 5px;
   cursor: pointer;
+  border: 1px solid #dcdfe6;
+
   /* &:hover {
           border: 1px solid #1890ff;
           color: #1890ff;

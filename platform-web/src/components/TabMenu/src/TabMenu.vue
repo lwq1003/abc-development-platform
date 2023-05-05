@@ -219,7 +219,7 @@ export default defineComponent({
 .@{prefix-cls} {
   transition: all var(--transition-time-02);
 
-  &:after {
+  &::after {
     position: absolute;
     top: 0;
     right: 0;

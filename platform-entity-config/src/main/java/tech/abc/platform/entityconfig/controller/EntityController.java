@@ -4,6 +4,13 @@ package tech.abc.platform.entityconfig.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.query.QueryGenerator;
@@ -15,13 +22,6 @@ import tech.abc.platform.entityconfig.entity.Entity;
 import tech.abc.platform.entityconfig.service.EntityService;
 import tech.abc.platform.entityconfig.service.ModuleService;
 import tech.abc.platform.entityconfig.vo.EntityVO;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +143,18 @@ public class EntityController extends BaseController {
         EntityVO vo = convert2VO(entity);
         return ResultUtil.success(vo);
     }
+
+    /**
+     * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+     */
+    @PostMapping("/{id}")
+    @SystemLog(value = "实体-复制新增")
+    @PreAuthorize("hasPermission(null,'entityconfig:entity:addByCopy')")
+    public ResponseEntity<Result> addByCopy(@PathVariable("id") String id) {
+        entityService.addByCopy(id);
+        return ResultUtil.success();
+    }
+
 
     // endregion
 

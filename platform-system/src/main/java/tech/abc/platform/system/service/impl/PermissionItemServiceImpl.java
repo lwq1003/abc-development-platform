@@ -1,6 +1,12 @@
 package tech.abc.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.constant.TreeDefaultConstant;
 import tech.abc.platform.common.enums.StatusEnum;
@@ -13,11 +19,6 @@ import tech.abc.platform.system.enums.PermissionTypeEnum;
 import tech.abc.platform.system.mapper.PermissionItemMapper;
 import tech.abc.platform.system.service.GroupPermissionItemService;
 import tech.abc.platform.system.service.PermissionItemService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -92,6 +93,21 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
                 throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【编码】");
             }
         }
+
+
+    }
+
+    @Override
+    protected void afterModify(PermissionItem entity, PermissionItem orginEntity) {
+        // 若编码发生变化，则级联修改下级权限编码
+        if (entity.getCode().equals(orginEntity.getCode()) == false) {
+            List<PermissionItem> list = this.lambdaQuery().eq(PermissionItem::getPermissionItem, entity.getId()).list();
+            if (CollectionUtils.isNotEmpty(list)) {
+                for (PermissionItem item : list) {
+                    modify(item);
+                }
+            }
+        }
     }
 
     @Override
@@ -127,8 +143,28 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
 
     @Override
     protected void copyPropertyHandle(PermissionItem entity, String... value) {
-        // 主属性后附加“副本”用于区分
-        entity.setName(entity.getName() + " 副本");
+
+        if (ArrayUtils.isNotEmpty(value)) {
+            // 复制父级
+            // 设置父级标识
+            entity.setPermissionItem(value[0]);
+
+        } else {
+            // 直接复制
+            // 名称后附加“副本”用于区分
+            entity.setName(entity.getName() + " 副本");
+        }
+    }
+
+    @Override
+    protected void afterAddByCopy(PermissionItem sourceEntity, PermissionItem entity) {
+        // 拷贝下级
+        List<PermissionItem> list = this.lambdaQuery().eq(PermissionItem::getPermissionItem, sourceEntity.getId()).list();
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (PermissionItem item : list) {
+                addByCopy(item.getId(), entity.getId());
+            }
+        }
     }
 
     @Override

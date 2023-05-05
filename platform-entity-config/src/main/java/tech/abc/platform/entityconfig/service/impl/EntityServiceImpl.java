@@ -1,5 +1,12 @@
 package tech.abc.platform.entityconfig.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
@@ -7,15 +14,15 @@ import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.entityconfig.codegenerator.service.CodeGenerateService;
 import tech.abc.platform.entityconfig.entity.Entity;
 import tech.abc.platform.entityconfig.entity.EntityModel;
+import tech.abc.platform.entityconfig.entity.EntityView;
 import tech.abc.platform.entityconfig.mapper.EntityMapper;
 import tech.abc.platform.entityconfig.service.EntityModelService;
 import tech.abc.platform.entityconfig.service.EntityService;
 import tech.abc.platform.entityconfig.service.EntityViewService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 实体 服务实现类
@@ -88,6 +95,55 @@ public class EntityServiceImpl extends BaseServiceImpl<EntityMapper, Entity> imp
         if (countCode > 0) {
             throw new CustomException(CommonException.PROPERTY_EXIST, "【编码】");
         }
+    }
+
+    @Override
+    protected void afterRemove(Entity entity) {
+        // 移除实体模型
+        QueryWrapper<EntityModel> queryWrapperEntityModel = new QueryWrapper<>();
+        queryWrapperEntityModel.lambda().eq(EntityModel::getEntity, entity.getId());
+        entityModelService.remove(queryWrapperEntityModel);
+
+        // 移除实体视图
+        QueryWrapper<EntityView> queryWrapperEntityView = new QueryWrapper<>();
+        queryWrapperEntityView.lambda().eq(EntityView::getEntity, entity.getId());
+        entityViewService.remove(queryWrapperEntityView);
+
+    }
+
+    @Override
+    public Map<String, String> getNameMap(List<String> idList) {
+        Map<String, String> result = new HashMap<>(5);
+        if (CollectionUtils.isNotEmpty(idList)) {
+            List<Entity> list = this.lambdaQuery().in(Entity::getId, idList).list();
+            if (CollectionUtils.isNotEmpty(list)) {
+                list.stream().forEach(x -> {
+                    result.put(x.getId(), x.getName());
+                });
+            }
+        }
+        return result;
+    }
+
+    @Override
+    protected void copyPropertyHandle(Entity entity, String... value) {
+        // 主属性后附加“副本”用于区分
+        entity.setName(entity.getName() + " 副本");
+    }
+
+    protected void afterAddByCopy(Entity source, Entity entity) {
+        String sourceId = source.getId();
+        String id = entity.getId();
+
+        // 复制模型
+        List<EntityModel> entityModelList = entityModelService.getByEntityId(sourceId);
+        for (EntityModel entityModel : entityModelList) {
+            entityModelService.addByCopy(entityModel.getId(), id);
+        }
+
+        // 此处并未复制视图，一是因为视图复杂多变，二是因为视图关联的模型需要模型先创建才能获取到
+
+
     }
 
     @Override

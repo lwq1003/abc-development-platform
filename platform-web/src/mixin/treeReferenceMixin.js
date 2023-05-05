@@ -4,7 +4,7 @@
 import { Dialog } from '@/components/abc/Dialog'
 
 export const treeReferenceMixin = {
-  emits: ['update:modelValue', 'my-change', 'change-selected'],
+  emits: ['update:modelValue', 'my-change', 'change-selected', 'change'],
   components: {
     Dialog
   },

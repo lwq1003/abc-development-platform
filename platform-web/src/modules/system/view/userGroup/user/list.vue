@@ -41,7 +41,7 @@
       </div>
 
       <el-card>
-        <div style="margin-top: 0; margin-bottom: 10px; float: right">
+        <div style="float: right; margin-top: 0; margin-bottom: 10px">
           <ColumnsController :value="columnList" :tableKey="tableKey" />
         </div>
 

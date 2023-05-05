@@ -1,5 +1,10 @@
 package tech.abc.platform.system.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.constant.CacheConstant;
 import tech.abc.platform.common.enums.StatusEnum;
@@ -9,11 +14,6 @@ import tech.abc.platform.system.entity.DictionaryItem;
 import tech.abc.platform.system.mapper.DictionaryItemMapper;
 import tech.abc.platform.system.service.DictionaryItemService;
 import tech.abc.platform.system.service.DictionaryTypeService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +117,7 @@ public class DictionaryItemServiceImpl extends BaseServiceImpl<DictionaryItemMap
     }
 
     @Override
-    public void afterModify(DictionaryItem entity) {
+    public void afterModify(DictionaryItem entity, DictionaryItem originEntity) {
         cacheUtil.set(CacheConstant.DICTIONARY_ITEM_CACHE_PREFIX + entity.getId(), entity.getName());
         String typeCode = getTypeCode(entity.getDictionaryType());
         cacheUtil.set(CacheConstant.DICTIONARY_ITEM_CODE_CACHE_PREFIX + "_" + typeCode + "_" + entity.getCode(), entity.getName());

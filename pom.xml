@@ -16,6 +16,11 @@
         <module>platform-entity-config</module>
         <module>platform-boot-starter</module>
         <module>platform-boot-starter-demo</module>
+
+        <module>platform-cip-common</module>
+        <module>platform-cip-api</module>
+        <module>platform-cip-message</module>
+        <module>platform-cip-manage</module>
     </modules>
 
     <properties>
@@ -76,6 +81,34 @@
             <dependency>
                 <groupId>tech.abc</groupId>
                 <artifactId>platform-boot-starter-demo</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 通用接口平台——公共基础-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-cip-common</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 通用接口平台——API服务-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-cip-api</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 通用接口平台——消息服务-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-cip-message</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 通用接口平台——管理服务-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-cip-manage</artifactId>
                 <version>${platform.version}</version>
             </dependency>
 

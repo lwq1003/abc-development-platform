@@ -5,7 +5,7 @@
     clearable
     :multiple="multiple"
     :disabled="readonly"
-    style="width: 100%; margin: 0px auto"
+    style="width: 100%; margin: 0 auto"
     @change="change"
   >
     <el-option

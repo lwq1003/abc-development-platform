@@ -12,7 +12,7 @@
             <CollapseTab>
                 <el-form :inline="true" :model="queryCondition" label-width="80px" @keyup.enter="query">
                     <!--查询条件区 -->
-                    <#list queryConditionList as item>
+                    <#list queryConditionListReference as item>
                     <#--根据数据类型处理-->
                         <#if item.dataType=="STRING">
                             <el-form-item label="${item.name}"  <#if item.showFlag=="NO">v-show="false" </#if>>

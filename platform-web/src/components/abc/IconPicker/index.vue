@@ -36,9 +36,9 @@ const emits = defineEmits(['update:modelValue'])
 
 <style scoped>
 .el-icon-picker {
+  display: flex;
   height: 256px;
   overflow-y: scroll;
-  display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
 }
@@ -47,13 +47,13 @@ const emits = defineEmits(['update:modelValue'])
   display: inline-block;
   width: 24px;
   height: 24px;
-  color: var(--el-text-color-regular);
-  font-size: 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  line-height: 45px;
   margin: 5px;
+  font-size: 20px;
+  line-height: 45px;
+  color: var(--el-text-color-regular);
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .icon:hover {

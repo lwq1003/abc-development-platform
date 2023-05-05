@@ -1,5 +1,10 @@
 package tech.abc.platform.common.utils;
 
+import org.springframework.util.Assert;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * 日期工具类
  *
@@ -146,15 +151,15 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     //        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
     //    }
     //
-    //    /**
-    //     *
-    //     * @param dateTimeStr yyyy-MM-dd HH:mm:ss
-    //     * @return
-    //     */
-    //    public static LocalDateTime toLocalDateTime(String dateTimeStr) {
-    //    	Assert.hasText(dateTimeStr, "参数dateTimeStr不能为空");
-    //        return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    //    }
+
+    /**
+     * @param dateTimeStr yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public static LocalDateTime toLocalDateTime(String dateTimeStr) {
+        Assert.hasText(dateTimeStr, "参数dateTimeStr不能为空");
+        return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
     //
     //    /**
     //     * 具体格式详见：{@link DateTimeFormatter}

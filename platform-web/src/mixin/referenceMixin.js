@@ -9,10 +9,12 @@ import { ContentWrap } from '@/components/abc/ContentWrap'
 import ListPager from '@/components/abc/ListPager/index.vue'
 import ColumnsController from '@/components/abc/ColumnsController/index.vue'
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
+import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
 
 export const referenceMixin = {
   emits: ['update:modelValue', 'my-change'],
   components: {
+    Dialog,
     ContentWrap,
     CollapseTab,
     QueryText,
@@ -20,7 +22,7 @@ export const referenceMixin = {
     ListPager,
     ColumnsController,
     DictionarySelect,
-    Dialog
+    DictionaryRadioGroup
   },
   props: {
     modelValue: {

@@ -156,6 +156,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .el-row {
   margin-bottom: 10px;
 }

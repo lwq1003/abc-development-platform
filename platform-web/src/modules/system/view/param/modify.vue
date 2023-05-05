@@ -6,7 +6,7 @@
       :rules="rules"
       label-width="120px"
       label-position="right"
-      style="width: 90%; margin: 0px auto"
+      style="width: 90%; margin: 0 auto"
     >
       <!--表单区域 -->
       <el-form-item label="参数名称" prop="paramName">

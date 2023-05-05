@@ -34,6 +34,13 @@
         >删除
       </el-button>
       <el-button
+        v-permission="pageCode + 'addByCopy'"
+        type="primary"
+        icon="CopyDocument"
+        @click="addByCopy"
+        >复制新增</el-button
+      >
+      <el-button
         v-permission="pageCode + 'generateTable'"
         type="primary"
         icon="Setting"
@@ -50,7 +57,7 @@
     </div>
 
     <el-card style="width: 100%">
-      <div style="margin-top: 0; margin-bottom: 10px; float: right">
+      <div style="float: right; margin-top: 0; margin-bottom: 10px">
         <ColumnsController :value="columnList" :tableKey="tableKey" />
       </div>
 

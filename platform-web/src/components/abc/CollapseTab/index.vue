@@ -31,17 +31,19 @@ export default {
 
 <style>
 .collapse-tab > .el-card__body {
-  padding: 0px;
+  padding: 0;
 }
+
 .content-slot {
-  padding: 20px 20px 0px 20px;
+  padding: 20px 20px 0;
 }
+
 .toggle-button {
-  text-align: center;
   height: 24px;
+  font-size: 24px;
   line-height: 24px;
   color: #d3dce6;
-  font-size: 24px;
+  text-align: center;
   cursor: pointer;
 }
 </style>

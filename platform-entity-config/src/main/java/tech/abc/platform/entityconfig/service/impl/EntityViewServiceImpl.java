@@ -3,6 +3,7 @@ package tech.abc.platform.entityconfig.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
@@ -155,8 +156,17 @@ public class EntityViewServiceImpl extends BaseServiceImpl<EntityViewMapper, Ent
 
     @Override
     protected void copyPropertyHandle(EntityView entity, String... value) {
-        // 名称后附加“副本”用于区分
-        entity.setName(entity.getName() + " 副本");
+        if (ArrayUtils.isNotEmpty(value)) {
+            // 复制父级
+            // 设置关联的实体标识和实体模型标识
+            entity.setEntity(value[0]);
+            entity.setEntityModel(value[1]);
+
+        } else {
+            // 直接复制
+            // 名称后附加“副本”用于区分
+            entity.setName(entity.getName() + " 副本");
+        }
     }
 
     @Override
