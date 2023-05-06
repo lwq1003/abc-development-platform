@@ -65,7 +65,11 @@ export const treeMultipleReferenceMixin = {
       this.visible = false
     },
     confirm() {
-      this.$emit('confirm', this.$refs.tree.getCheckedKeys())
+      // 获取半选节点ID
+      const halfCheckedKeys = this.$refs.tree.getHalfCheckedKeys()
+      // 拼接全选节点ID
+      const permissionIdList = halfCheckedKeys.concat(this.$refs.tree.getCheckedKeys())
+      this.$emit('confirm', permissionIdList)
       this.visible = false
     },
     getLeafNodeChecked(node) {

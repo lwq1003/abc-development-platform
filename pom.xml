@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>tech.abc</groupId>
     <artifactId>abc-development-platform</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>abc-development-platform</name>
     <packaging>pom</packaging>
     <description>abc-development-platform</description>

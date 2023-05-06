@@ -11,15 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.cip.entity.ApiServicePermission;
 import tech.abc.platform.cip.entity.App;
 import tech.abc.platform.cip.entity.MessagePermission;
+import tech.abc.platform.cip.entity.MessageSubscription;
 import tech.abc.platform.cip.exception.AppExceptionEnum;
 import tech.abc.platform.cip.mapper.AppMapper;
 import tech.abc.platform.cip.service.ApiServicePermissionService;
 import tech.abc.platform.cip.service.AppService;
 import tech.abc.platform.cip.service.MessagePermissionService;
+import tech.abc.platform.cip.service.MessageSubscriptionService;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.common.utils.UserUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +43,10 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
     private ApiServicePermissionService apiServicePermissionService;
 
     @Autowired
-    private MessagePermissionService apiMessageTopicPermissionService;
+    private MessagePermissionService messageTopicPermissionService;
+
+    @Autowired
+    private MessageSubscriptionService messageSubscriptionService;
 
 
     @Override
@@ -179,6 +185,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void withdrawApiPermission(String appId, List<String> apiServiceIdList) {
         if (CollectionUtils.isNotEmpty(apiServiceIdList)) {
             QueryWrapper<ApiServicePermission> queryWrapper = new QueryWrapper<>();
@@ -198,14 +205,14 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
 
             for (String apiMessageTopicId : apiMessageTopicIdList) {
                 // 查询是否已存在授权记录
-                long count = apiMessageTopicPermissionService.lambdaQuery().eq(MessagePermission::getApp, appId)
+                long count = messageTopicPermissionService.lambdaQuery().eq(MessagePermission::getApp, appId)
                         .eq(MessagePermission::getMessageTopic, apiMessageTopicId).count();
                 // 不存在时授权
                 if (count == 0) {
                     MessagePermission entity = new MessagePermission();
                     entity.setApp(appId);
                     entity.setMessageTopic(apiMessageTopicId);
-                    apiMessageTopicPermissionService.add(entity);
+                    messageTopicPermissionService.add(entity);
                 }
 
             }
@@ -213,13 +220,54 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void withdrawMessageTopicPermission(String appId, List<String> apiMessageTopicIdList) {
         if (CollectionUtils.isNotEmpty(apiMessageTopicIdList)) {
             QueryWrapper<MessagePermission> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda().eq(MessagePermission::getApp, appId)
                     .in(MessagePermission::getMessageTopic, apiMessageTopicIdList);
-            apiMessageTopicPermissionService.remove(queryWrapper);
+            messageTopicPermissionService.remove(queryWrapper);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void subscribeMessage(List<String> messageTopicIdList) {
+        // 获取app标识
+        String appId = getCurrentAppId();
+
+        if (CollectionUtils.isNotEmpty(messageTopicIdList)) {
+            // 移除末尾空元素
+            messageTopicIdList.removeIf(x -> StringUtils.isEmpty(x));
+
+            for (String messageTopicId : messageTopicIdList) {
+                // 查询是否已存在授权记录
+                long count = messageSubscriptionService.lambdaQuery().eq(MessageSubscription::getApp, appId)
+                        .eq(MessageSubscription::getMessageTopic, messageTopicId).count();
+                // 不存在时授权
+                if (count == 0) {
+                    MessageSubscription entity = new MessageSubscription();
+                    entity.setApp(appId);
+                    entity.setMessageTopic(messageTopicId);
+                    messageSubscriptionService.add(entity);
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public void unsubscribeMessage(List<String> messageTopicIdList) {
+        if (CollectionUtils.isNotEmpty(messageTopicIdList)) {
+            // 获取app标识
+            String appId = getCurrentAppId();
+            
+            QueryWrapper<MessageSubscription> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(MessageSubscription::getApp, appId)
+                    .in(MessageSubscription::getMessageTopic, messageTopicIdList);
+            messageSubscriptionService.remove(queryWrapper);
+        }
+
     }
 
     @Override
@@ -237,6 +285,16 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
         } else {
             throw new CustomException(AppExceptionEnum.APP_CODE_NOT_EXIST);
         }
+    }
+
+    @Override
+    public String getCurrentAppId() {
+        // 获取当前账号
+        String account = UserUtil.getAccount();
+        // 查找与账号编码相同的app
+        App app = getByCode(account);
+        // 获取app标识
+        return app.getId();
     }
 
 

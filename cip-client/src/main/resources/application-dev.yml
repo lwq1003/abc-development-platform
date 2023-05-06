@@ -1,0 +1,29 @@
+server:
+  port: 10001
+
+params:
+  appCode: tms
+  appSecret: 8543692d-7ea7-4797-a746-47891bff2bec
+  host: localhost
+  port: 8997
+  heartbeatRate: 5
+  maxSendCount: 4
+  sendMessageSpan: 30
+  sendMessageCount: 10
+  enableResend: true
+  webSocketPath: webSocket
+  readIdleTimeOut: 30
+spring:
+  # 数据库设置
+  datasource:
+    url: jdbc:mysql://localhost:3306/cip_client?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    # redis设置
+  redis:
+    host: localhost
+    port: 6379
+    password: test123
+platform-config:
+  message:
+    serverPort: 9998

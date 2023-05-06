@@ -7,10 +7,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.cip.entity.MessagePermission;
+import tech.abc.platform.cip.entity.MessageSubscription;
 import tech.abc.platform.cip.entity.MessageTopic;
 import tech.abc.platform.cip.exception.ApiMessageTopicExceptionEnum;
 import tech.abc.platform.cip.mapper.MessageTopicMapper;
+import tech.abc.platform.cip.service.AppService;
 import tech.abc.platform.cip.service.MessagePermissionService;
+import tech.abc.platform.cip.service.MessageSubscriptionService;
 import tech.abc.platform.cip.service.MessageTopicService;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.StatusEnum;
@@ -33,7 +36,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MessageTopicServiceImpl extends BaseServiceImpl<MessageTopicMapper, MessageTopic> implements MessageTopicService {
     @Autowired
-    private MessagePermissionService apiMessagePermissionService;
+    private MessagePermissionService messagePermissionService;
+
+    @Autowired
+    private MessageSubscriptionService messageSubscriptionService;
+
+    @Autowired
+    private AppService appService;
 
     @Override
     public MessageTopic init() {
@@ -126,7 +135,7 @@ public class MessageTopicServiceImpl extends BaseServiceImpl<MessageTopicMapper,
         List<MessageTopic> serviceList = this.list(queryWrapper);
         // 查询当前应用标识拥有权限的接口服务标识列表
         List<MessagePermission> hasPermissionList =
-                apiMessagePermissionService.lambdaQuery().eq(MessagePermission::getApp, appId).list();
+                messagePermissionService.lambdaQuery().eq(MessagePermission::getApp, appId).list();
         List<String> hasPermissionIdList = hasPermissionList.stream().map(x -> x.getMessageTopic()).collect(Collectors.toList());
         // 设置授权标志位
         serviceList.stream().forEach(x -> {
@@ -151,6 +160,44 @@ public class MessageTopicServiceImpl extends BaseServiceImpl<MessageTopicMapper,
             return serviceList.stream().filter(x -> x.getHasPermission().equals(hasPermission)).collect(Collectors.toList());
         }
 
+    }
+
+    @Override
+    public List<MessageTopic> queryMessageTopicSubscription(QueryWrapper<MessageTopic> queryWrapper, String hasSubscription) {
+
+
+        // 获取app标识
+        String appId = appService.getCurrentAppId();
+        // 获取有权限的消息主题列表
+        List<MessageTopic> messageTopicList = queryMessageTopicPermission(queryWrapper, appId, YesOrNoEnum.YES.name());
+
+
+        // 查询当前应用标识已订阅的接口服务标识列表
+        List<MessageSubscription> hasSubscriptionList =
+                messageSubscriptionService.lambdaQuery().eq(MessageSubscription::getApp, appId).list();
+        List<String> hasSubscriptionIdList = hasSubscriptionList.stream().map(x -> x.getMessageTopic()).collect(Collectors.toList());
+        // 设置订阅标志位
+        messageTopicList.stream().forEach(x -> {
+            if (CollectionUtils.isNotEmpty(hasSubscriptionIdList)) {
+                // 已订阅
+                if (hasSubscriptionIdList.contains(x.getId())) {
+                    x.setHasSubscription(YesOrNoEnum.YES.name());
+                } else {
+                    x.setHasSubscription(YesOrNoEnum.NO.name());
+                }
+            } else {
+                // 无任何订阅，所有标识位置为NO
+                x.setHasSubscription(YesOrNoEnum.NO.name());
+            }
+        });
+        if (StringUtils.isBlank(hasSubscription)) {
+            // 未设置查询条件，查询全部
+            return messageTopicList;
+
+        } else {
+            // 只查询对应的数据列表
+            return messageTopicList.stream().filter(x -> x.getHasSubscription().equals(hasSubscription)).collect(Collectors.toList());
+        }
     }
 
     @Override

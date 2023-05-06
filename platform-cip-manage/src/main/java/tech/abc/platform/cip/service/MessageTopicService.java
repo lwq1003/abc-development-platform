@@ -49,6 +49,16 @@ public interface MessageTopicService extends BaseService<MessageTopic> {
 
 
     /**
+     * 查询当前用户对应的应用对应的消息订阅列表
+     *
+     * @param queryWrapper    查询条件
+     * @param hasSubscription 是否已订阅
+     * @return
+     */
+    List<MessageTopic> queryMessageTopicSubscription(QueryWrapper<MessageTopic> queryWrapper, String hasSubscription);
+
+
+    /**
      * 根据消息主题编码获取响应主题编码
      *
      * @param code 消息主题

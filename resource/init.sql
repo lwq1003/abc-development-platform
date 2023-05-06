@@ -14,6 +14,29 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- 导出 abc 的数据库结构
+CREATE DATABASE IF NOT EXISTS `abc` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `abc`;
+
+-- 导出  表 abc.cfg_entity 结构
+CREATE TABLE IF NOT EXISTS `cfg_entity` (
+  `module` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '模块',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `author` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '作者',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='实体';
+
 -- 正在导出表  abc.cfg_entity 的数据：~26 rows (大约)
 INSERT INTO `cfg_entity` (`module`, `name`, `code`, `author`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1640314868674338817', '系统参数', 'Param', 'wqliu', '09', NULL, '1640515371261796353', '', '2023-03-28 08:45:18', '', '2023-04-19 15:13:27', 31, 'NO'),
@@ -44,6 +67,26 @@ INSERT INTO `cfg_entity` (`module`, `name`, `code`, `author`, `order_no`, `remar
 	('1653289677058265089', '消息权限', 'MessagePermission', 'wqliu', '07', NULL, '1653727826272161794', '1', '2023-05-03 19:46:53', '1', '2023-05-03 19:47:30', 2, 'NO'),
 	('1653289677058265089', '消息订阅', 'MessageSubscription', 'wqliu', '08', NULL, '1653731551623606273', '1', '2023-05-03 20:01:41', '1', '2023-05-03 20:02:16', 2, 'NO'),
 	('1653289677058265089', '消息日志', 'MessageLog', 'wqliu', '08', NULL, '1653734302302674946', '1', '2023-05-03 20:12:37', '1', '2023-05-03 20:13:09', 2, 'NO');
+
+-- 导出  表 abc.cfg_entity_model 结构
+CREATE TABLE IF NOT EXISTS `cfg_entity_model` (
+  `parent_model` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'BUSINESS_MODEL' COMMENT '父级模型',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `main_model_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否主模型',
+  `self_reference_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否自关联',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `entity` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '实体',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='实体模型';
 
 -- 正在导出表  abc.cfg_entity_model 的数据：~44 rows (大约)
 INSERT INTO `cfg_entity_model` (`parent_model`, `name`, `code`, `main_model_flag`, `self_reference_flag`, `order_no`, `remark`, `entity`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -92,6 +135,35 @@ INSERT INTO `cfg_entity_model` (`parent_model`, `name`, `code`, `main_model_flag
 	('BUSINESS_MODEL', '消息权限', 'MessagePermission', 'YES', 'NO', '01', NULL, '1653727826272161794', '1653727826301521921', '1', '2023-05-03 19:46:53', '1', '2023-05-03 19:47:50', 2, 'NO'),
 	('BUSINESS_MODEL', '消息订阅', 'MessageSubscription', 'YES', 'NO', '01', NULL, '1653731551623606273', '1653731551644577793', '1', '2023-05-03 20:01:41', '1', '2023-05-03 20:02:31', 2, 'NO'),
 	('BUSINESS_MODEL', '消息日志', 'MessageLog', 'YES', 'NO', '01', NULL, '1653734302302674946', '1653734302323646466', '1', '2023-05-03 20:12:37', '1', '2023-05-03 20:13:30', 2, 'NO');
+
+-- 导出  表 abc.cfg_entity_model_property 结构
+CREATE TABLE IF NOT EXISTS `cfg_entity_model_property` (
+  `entity_model` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '实体模型',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `data_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'STRING' COMMENT '数据类型',
+  `dictionary_type` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '字典类型',
+  `widget_type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '控件类型',
+  `format_pattern` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '显示格式',
+  `null_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT 'YES' COMMENT '是否可为空',
+  `max_length` int(11) DEFAULT NULL COMMENT '最大长度',
+  `decimal_length` int(11) DEFAULT NULL COMMENT '小数位数',
+  `default_value` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '默认值',
+  `unique_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否唯一',
+  `entity_model_property` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '唯一性参照',
+  `main_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '是否主属性',
+  `parent_property_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '是否上级属性',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='实体模型属性';
 
 -- 正在导出表  abc.cfg_entity_model_property 的数据：~329 rows (大约)
 INSERT INTO `cfg_entity_model_property` (`entity_model`, `name`, `code`, `data_type`, `dictionary_type`, `widget_type`, `format_pattern`, `null_flag`, `max_length`, `decimal_length`, `default_value`, `unique_flag`, `entity_model_property`, `main_flag`, `parent_property_flag`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -425,6 +497,33 @@ INSERT INTO `cfg_entity_model_property` (`entity_model`, `name`, `code`, `data_t
 	('1653734302323646466', '状态', 'status', 'DATA_DICTIONARY', 'MessageStatus', 'DROP_DOWN_LIST', NULL, 'YES', 32, NULL, '', 'NO', NULL, 'NO', 'NO', '14', NULL, '1653739698325102594', '1', '2023-05-03 20:34:04', '1', '2023-05-03 20:34:15', 2, 'NO'),
 	('1653734302323646466', '发送次数', 'sendCount', 'INTEGER', '', 'TEXT', NULL, 'YES', NULL, NULL, '0', 'NO', NULL, 'NO', 'NO', '15', NULL, '1653739972569669633', '1', '2023-05-03 20:35:09', '1', '2023-05-03 20:35:09', 1, 'NO');
 
+-- 导出  表 abc.cfg_entity_view 结构
+CREATE TABLE IF NOT EXISTS `cfg_entity_view` (
+  `entity_view_type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '视图类型',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `main_reference_view_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '主参照视图',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `before_init` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '初始化前',
+  `after_init` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '初始化后',
+  `validateData` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '验证数据',
+  `before_save` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '保存前',
+  `after_save` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '保存后',
+  `common_param_change` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '通用参数变更',
+  `tree_path` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '树路径',
+  `remark` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `entity_model` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '实体模型',
+  `entity` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '实体',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='实体视图';
+
 -- 正在导出表  abc.cfg_entity_view 的数据：~137 rows (大约)
 INSERT INTO `cfg_entity_view` (`entity_view_type`, `name`, `code`, `main_reference_view_flag`, `order_no`, `before_init`, `after_init`, `validateData`, `before_save`, `after_save`, `common_param_change`, `tree_path`, `remark`, `entity_model`, `entity`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('LIST', '列表', 'list', 'NO', '01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', '1641252670496907265', '1640515371261796353', '1641975231912390658', '', '2023-04-01 09:26:16', '', '2023-04-17 20:53:37', 4, 'NO'),
@@ -568,6 +667,35 @@ INSERT INTO `cfg_entity_view` (`entity_view_type`, `name`, `code`, `main_referen
 	('LIST', '列表视图', 'list', 'NO', '01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1653734302323646466', '1653734302302674946', '1653734302587887617', '1', '2023-05-03 20:12:37', '1', '2023-05-03 20:12:37', 1, 'NO'),
 	('VIEW', '查看视图', 'view', 'NO', '02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1653734302323646466', '1653734302302674946', '1653734302915043331', '1', '2023-05-03 20:12:37', '1', '2023-05-03 20:12:37', 1, 'NO');
 
+-- 导出  表 abc.cfg_entity_view_button 结构
+CREATE TABLE IF NOT EXISTS `cfg_entity_view_button` (
+  `id` varchar(32) NOT NULL COMMENT '标识',
+  `name` varchar(32) DEFAULT NULL COMMENT '名称',
+  `code` varchar(32) DEFAULT NULL COMMENT '编码',
+  `function_call` varchar(256) DEFAULT NULL COMMENT '方法调用',
+  `function_content` varchar(1048) DEFAULT NULL COMMENT '方法内容',
+  `view_id` varchar(32) DEFAULT NULL COMMENT '视图标识',
+  `button_type` varchar(32) DEFAULT NULL COMMENT '按钮类型',
+  `template_flag` varchar(32) DEFAULT NULL COMMENT '模板标识',
+  `operation_type` varchar(32) DEFAULT NULL COMMENT '操作类型',
+  `operation_view` varchar(32) DEFAULT NULL COMMENT '操作视图',
+  `icon` varchar(32) DEFAULT NULL COMMENT '图标',
+  `confirm_flag` varchar(32) DEFAULT NULL COMMENT '是否需确认',
+  `confirm_message` varchar(128) DEFAULT NULL COMMENT '确认提示信息',
+  `permission_flag` varchar(32) DEFAULT NULL COMMENT '是否控制权限',
+  `permission_code` varchar(128) DEFAULT NULL COMMENT '权限编码',
+  `more_flag` varchar(32) DEFAULT NULL COMMENT '是否用于更多',
+  `refresh_flag` varchar(32) DEFAULT NULL COMMENT '是否回刷',
+  `order_no` varchar(10) DEFAULT NULL COMMENT '排序号',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='实体视图按钮';
+
 -- 正在导出表  abc.cfg_entity_view_button 的数据：~63 rows (大约)
 INSERT INTO `cfg_entity_view_button` (`id`, `name`, `code`, `function_call`, `function_content`, `view_id`, `button_type`, `template_flag`, `operation_type`, `operation_view`, `icon`, `confirm_flag`, `confirm_message`, `permission_flag`, `permission_code`, `more_flag`, `refresh_flag`, `order_no`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1597515665647853570', '新增', 'add', 'add', NULL, '-1', 'LIST_PAGE', 'YES', 'ADD', NULL, 'plus', 'NO', NULL, 'YES', 'add', 'NO', 'NO', '02', '1', '2022-11-29 16:59:50', '', '2023-04-13 09:12:15', 13, 'NO'),
@@ -634,11 +762,54 @@ INSERT INTO `cfg_entity_view_button` (`id`, `name`, `code`, `function_call`, `fu
 	('1647470932901548034', '修改', 'modify', 'modify', NULL, '1647470434446266370', 'LIST_ROW', 'NO', 'MODIFY', NULL, 'edit', 'NO', NULL, 'YES', 'modify', 'NO', 'NO', '01', '1', '2022-12-03 15:19:23', '', '2023-04-13 09:13:16', 5, 'NO'),
 	('1647470932968656898', '删除', 'remove', 'remove', NULL, '1647470434446266370', 'LIST_ROW', 'NO', 'REMOVE', NULL, 'Delete', 'YES', '此操作将删除数据, 是否继续？', 'YES', 'remove', 'NO', 'NO', '02', '', '2023-04-03 16:46:57', '', '2023-04-13 09:16:01', 4, 'NO');
 
+-- 导出  表 abc.cfg_module 结构
+CREATE TABLE IF NOT EXISTS `cfg_module` (
+  `id` varchar(32) NOT NULL COMMENT '标识',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `code` varchar(32) NOT NULL COMMENT '编码',
+  `app` varchar(32) NOT NULL COMMENT '应用',
+  `abbreviation` varchar(32) NOT NULL COMMENT '缩略码',
+  `package_path` varchar(400) NOT NULL COMMENT '包路径',
+  `remark` varchar(400) DEFAULT NULL COMMENT '备注',
+  `order_no` varchar(10) DEFAULT NULL COMMENT '排序号',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模块';
+
 -- 正在导出表  abc.cfg_module 的数据：~2 rows (大约)
 INSERT INTO `cfg_module` (`id`, `name`, `code`, `app`, `abbreviation`, `package_path`, `remark`, `order_no`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1640314868674338817', '系统管理', 'system', 'PLATFORM', 'sys', 'tech.abc.platform', '', '01', '', '2023-03-27 19:28:35', '', '2023-04-05 11:11:27', 10, 'NO'),
 	('1640315164112723970', '实体配置', 'entityconfig', 'PLATFORM', 'cfg', 'tech.abc.platform', NULL, '02', '', '2023-03-27 19:29:45', '', '2023-04-08 09:25:53', 5, 'NO'),
 	('1653289677058265089', '接口平台', 'cip', 'PLATFORM', 'cip', 'tech.abc.platform', '', '00', '1', '2023-05-02 14:45:50', '1', '2023-05-02 14:46:30', 2, 'NO');
+
+-- 导出  表 abc.cfg_view_button 结构
+CREATE TABLE IF NOT EXISTS `cfg_view_button` (
+  `view` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '视图',
+  `button_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'LIST_PAGE' COMMENT '按钮类型',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `content` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '内容',
+  `icon` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '图标',
+  `confirm_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否需确认',
+  `confirm_message` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '确认信息',
+  `permission_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否控制权限',
+  `permission_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '权限编码',
+  `more_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否用于更多',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图按钮';
 
 -- 正在导出表  abc.cfg_view_button 的数据：~198 rows (大约)
 INSERT INTO `cfg_view_button` (`view`, `button_type`, `name`, `code`, `content`, `icon`, `confirm_flag`, `confirm_message`, `permission_flag`, `permission_code`, `more_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -867,6 +1038,29 @@ INSERT INTO `cfg_view_button` (`view`, `button_type`, `name`, `code`, `content`,
 	('1653314523284688897', 'LIST_ROW', 'API权限', 'configApiPermission', 'this.$refs.apiServicePermission.init({ id: row.id })', NULL, 'NO', NULL, 'YES', 'configApiPermission', 'NO', '00', '1653995522893111297', '1', '2023-05-04 13:30:37', '1', '2023-05-04 20:15:57', 6, 'NO'),
 	('1653314523284688897', 'LIST_ROW', '重置密钥', 'resetSecretKey', '     this.api.resetSecret(row.id)\n          .then(() => {\n            this.refresh()\n          })', NULL, 'YES', '是否重置密钥?', 'YES', 'resetSecretKey', 'YES', '06', '1654000932014350337', '1', '2023-05-04 13:52:07', '1', '2023-05-04 13:56:20', 4, 'NO');
 
+-- 导出  表 abc.cfg_view_button_template 结构
+CREATE TABLE IF NOT EXISTS `cfg_view_button_template` (
+  `button_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'LIST_PAGE' COMMENT '按钮类型',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `content` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '内容',
+  `icon` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '图标',
+  `confirm_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否需确认',
+  `confirm_message` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '确认信息',
+  `permission_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否控制权限',
+  `permission_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '权限编码',
+  `more_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否用于更多',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图按钮模板';
+
 -- 正在导出表  abc.cfg_view_button_template 的数据：~8 rows (大约)
 INSERT INTO `cfg_view_button_template` (`button_type`, `name`, `code`, `content`, `icon`, `confirm_flag`, `confirm_message`, `permission_flag`, `permission_code`, `more_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('LIST_PAGE', '新增', 'add', NULL, 'plus', 'NO', NULL, 'YES', 'add', 'NO', '02', '1597515665647853571', '1', '2022-11-29 16:59:50', '', '2023-04-13 09:12:15', 13, 'NO'),
@@ -879,6 +1073,31 @@ INSERT INTO `cfg_view_button_template` (`button_type`, `name`, `code`, `content`
 	('LIST_PAGE', '复制新增', 'addByCopy', NULL, 'CopyDocument', 'NO', NULL, 'YES', 'addByCopy', 'NO', '04', '1646074961286180861', '', '2023-04-12 16:57:08', '', '2023-04-13 09:16:36', 2, 'NO'),
 	('LIST_ROW', '启用', 'enable', NULL, NULL, 'NO', NULL, 'YES', 'enable', 'NO', '03', '1648657732663795713', '', '2023-04-19 20:00:09', '', '2023-04-19 20:00:09', 1, 'NO'),
 	('LIST_ROW', '停用', 'disable', NULL, NULL, 'NO', NULL, 'YES', 'disable', 'NO', '04', '1648657850746036226', '', '2023-04-19 20:00:37', '', '2023-04-19 20:00:37', 1, 'NO');
+
+-- 导出  表 abc.cfg_view_property 结构
+CREATE TABLE IF NOT EXISTS `cfg_view_property` (
+  `view` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '视图',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `data_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'STRING' COMMENT '数据类型',
+  `dictionary_type` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '字典类型',
+  `widget_type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '控件类型',
+  `format_pattern` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '显示格式',
+  `readonly_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否只读',
+  `default_value` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '默认值',
+  `show_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否显示',
+  `show_expression` varchar(1000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '显示表达式',
+  `require_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NO' COMMENT '是否必填',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图属性';
 
 -- 正在导出表  abc.cfg_view_property 的数据：~605 rows (大约)
 INSERT INTO `cfg_view_property` (`view`, `name`, `code`, `data_type`, `dictionary_type`, `widget_type`, `format_pattern`, `readonly_flag`, `default_value`, `show_flag`, `show_expression`, `require_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -1538,6 +1757,30 @@ INSERT INTO `cfg_view_property` (`view`, `name`, `code`, `data_type`, `dictionar
 	('1653734302915043331', '状态', 'status', 'DATA_DICTIONARY', 'MessageStatus', 'DROP_DOWN_LIST', NULL, 'NO', '', 'YES', NULL, 'NO', NULL, '1653741385513246722', '1', '2023-05-03 20:40:46', '1', '2023-05-03 20:40:46', 1, 'NO'),
 	('1653734302915043331', '发送次数', 'sendCount', 'INTEGER', '', 'TEXT', NULL, 'NO', '0', 'YES', NULL, 'NO', NULL, '1653741385513246723', '1', '2023-05-03 20:40:46', '1', '2023-05-03 20:40:46', 1, 'NO');
 
+-- 导出  表 abc.cfg_view_query_condition 结构
+CREATE TABLE IF NOT EXISTS `cfg_view_query_condition` (
+  `view` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '视图',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `data_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'STRING' COMMENT '数据类型',
+  `dictionary_type` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '字典类型',
+  `widget_type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '控件类型',
+  `match_rule` varchar(32) COLLATE utf8mb4_bin DEFAULT 'NO' COMMENT '匹配规则',
+  `format_pattern` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '显示格式',
+  `default_value` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '默认值',
+  `readonly_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否只读',
+  `show_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否显示',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图查询条件';
+
 -- 正在导出表  abc.cfg_view_query_condition 的数据：~158 rows (大约)
 INSERT INTO `cfg_view_query_condition` (`view`, `name`, `code`, `data_type`, `dictionary_type`, `widget_type`, `match_rule`, `format_pattern`, `default_value`, `readonly_flag`, `show_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1641975231912390658', '参数名称', 'paramName', 'STRING', NULL, 'TEXT', 'LK', NULL, '', 'NO', 'YES', '00', '1643227851578724354', '', '2023-04-04 20:23:44', '', '2023-04-04 20:23:47', 3, 'NO'),
@@ -1708,6 +1951,29 @@ INSERT INTO `cfg_view_query_condition` (`view`, `name`, `code`, `data_type`, `di
 	('1653734302587887617', '错误编码', 'errorCode', 'STRING', NULL, 'TEXT', 'LK', NULL, NULL, 'NO', 'YES', '11', '1653741076502093826', '1', '2023-05-03 20:39:32', '1', '2023-05-03 20:40:17', 5, 'NO'),
 	('1653734302587887617', '错误信息', 'errorMessage', 'STRING', '', 'TEXT', 'LK', NULL, '', 'NO', 'YES', '12', '1653741220706459650', '1', '2023-05-03 20:40:07', '1', '2023-05-03 20:40:17', 3, 'NO'),
 	('1653734302587887617', '状态', 'status', 'DATA_DICTIONARY', 'MessageStatus', 'DROP_DOWN_LIST', 'NO', NULL, '', 'NO', 'YES', '13', '1653741260942417921', '1', '2023-05-03 20:40:16', '1', '2023-05-03 20:40:17', 2, 'NO');
+
+-- 导出  表 abc.cfg_view_query_result 结构
+CREATE TABLE IF NOT EXISTS `cfg_view_query_result` (
+  `view` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '视图',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `data_type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'STRING' COMMENT '数据类型',
+  `dictionary_type` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '字典类型',
+  `width` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '宽度',
+  `sortable_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否支持排序',
+  `format_function` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '格式化方法',
+  `show_overflow_tooltip_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否悬浮显示',
+  `show_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '是否显示',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图查询结果';
 
 -- 正在导出表  abc.cfg_view_query_result 的数据：~264 rows (大约)
 INSERT INTO `cfg_view_query_result` (`view`, `name`, `code`, `data_type`, `dictionary_type`, `width`, `sortable_flag`, `format_function`, `show_overflow_tooltip_flag`, `show_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -2006,6 +2272,25 @@ INSERT INTO `cfg_view_query_result` (`view`, `name`, `code`, `data_type`, `dicti
 	('1653734302587887617', '状态', 'status', 'DATA_DICTIONARY', 'MessageStatus', NULL, 'NO', NULL, 'YES', 'YES', NULL, '1653741281733582851', '1', '2023-05-03 20:40:21', '1', '2023-05-03 20:40:21', 1, 'NO'),
 	('1653734302587887617', '发送次数', 'sendCount', 'INTEGER', '', NULL, 'YES', NULL, 'YES', 'YES', NULL, '1653741281733582852', '1', '2023-05-03 20:40:21', '1', '2023-05-03 20:40:21', 1, 'NO');
 
+-- 导出  表 abc.cip_api_service 结构
+CREATE TABLE IF NOT EXISTS `cip_api_service` (
+  `category` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '分类',
+  `name` varchar(64) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(64) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `handler` varchar(512) COLLATE utf8mb4_bin NOT NULL COMMENT '处理器',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NORMAL' COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='API服务';
+
 -- 正在导出表  abc.cip_api_service 的数据：~5 rows (大约)
 INSERT INTO `cip_api_service` (`category`, `name`, `code`, `handler`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('PRODUCT', '获取一个产品的信息', 'taobao.product.get', '', 'NORMAL', '01', NULL, '1427794515517497345', '1', '2021-08-18 08:48:34', '1', '2021-08-18 10:17:46', 4, 'NO'),
@@ -2014,38 +2299,286 @@ INSERT INTO `cip_api_service` (`category`, `name`, `code`, `handler`, `status`, 
 	('MESSAGE', '消息查询', 'platform.message.query', 'tech.abc.platform.cip.api.handler.system.MessageQueryHandler', 'NORMAL', '01', NULL, '1428613321949110274', '1', '2021-08-20 15:02:13', '1', '2021-08-21 15:57:18', 2, 'NO'),
 	('MESSAGE', '消息确认', 'platform.message.confirm', 'tech.abc.platform.cip.api.handler.system.MessageConfirmHandler', 'NORMAL', '02', NULL, '1428613321949110275', '1', '2021-08-20 15:02:13', '1', '2021-08-21 15:57:18', 2, 'NO');
 
+-- 导出  表 abc.cip_api_service_log 结构
+CREATE TABLE IF NOT EXISTS `cip_api_service_log` (
+  `app_code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '应用编码',
+  `service_code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '服务编码',
+  `request_time` datetime DEFAULT NULL COMMENT '请求时间',
+  `receive_time` datetime DEFAULT NULL COMMENT '收到时间',
+  `request_business_data` varchar(5120) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求业务数据',
+  `execute_result` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '执行结果',
+  `error_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误编码',
+  `error_message` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误信息',
+  `response_time` datetime DEFAULT NULL COMMENT '响应时间',
+  `response_business_data` varchar(5120) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应业务数据',
+  `execution_time` bigint(20) DEFAULT NULL COMMENT '执行耗时ms',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='API服务日志';
+
 -- 正在导出表  abc.cip_api_service_log 的数据：~0 rows (大约)
 
--- 正在导出表  abc.cip_api_service_permission 的数据：~0 rows (大约)
+-- 导出  表 abc.cip_api_service_permission 结构
+CREATE TABLE IF NOT EXISTS `cip_api_service_permission` (
+  `app` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '应用',
+  `api_service` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT 'API服务',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='API服务权限';
+
+-- 正在导出表  abc.cip_api_service_permission 的数据：~7 rows (大约)
 INSERT INTO `cip_api_service_permission` (`app`, `api_service`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1653544221780553730', '1427794515517497345', '1654464290240868354', '1', '2023-05-05 20:33:20', '1', '2023-05-05 20:33:20', 1, 'NO'),
 	('1653544221780553730', '1428613321949110274', '1654464290240868355', '1', '2023-05-05 20:33:20', '1', '2023-05-05 20:33:20', 1, 'NO'),
 	('1653544221780553730', '1427872907029901313', '1654464290240868356', '1', '2023-05-05 20:33:20', '1', '2023-05-05 20:33:20', 1, 'NO'),
 	('1653544221780553730', '1428613321949110275', '1654464290240868357', '1', '2023-05-05 20:33:20', '1', '2023-05-05 20:33:20', 1, 'NO'),
-	('1653544221780553730', '1427873943371116546', '1654464290240868358', '1', '2023-05-05 20:33:20', '1', '2023-05-05 20:33:20', 1, 'NO');
+	('1653544221780553730', '1427873943371116546', '1654464290240868358', '1', '2023-05-05 20:33:20', '1', '2023-05-05 20:33:20', 1, 'NO'),
+	('1451433003353628673', '1428613321949110274', '1654652666684428290', '1', '2023-05-06 09:01:52', '1', '2023-05-06 09:01:52', 1, 'NO'),
+	('1451433003353628673', '1428613321949110275', '1654652666684428291', '1', '2023-05-06 09:01:52', '1', '2023-05-06 09:01:52', 1, 'NO');
+
+-- 导出  表 abc.cip_app 结构
+CREATE TABLE IF NOT EXISTS `cip_app` (
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `secret_key` varchar(2048) COLLATE utf8mb4_bin NOT NULL COMMENT '密钥',
+  `integration_model` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'CLIENT' COMMENT '对接模式',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NORMAL' COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='应用';
 
 -- 正在导出表  abc.cip_app 的数据：~2 rows (大约)
 INSERT INTO `cip_app` (`name`, `code`, `secret_key`, `integration_model`, `status`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
-	('OA系统', 'oa', '1a3d47e5-feee-4799-ae56-d58a712c98fe', 'CLIENT', 'NORMAL', '01', '1653544221780553730', '1', '2023-05-03 07:37:19', '1', '2023-05-03 07:37:19', 1, 'NO'),
-	('客户关系管理系统', 'crm', '35072127-0d3b-46ca-82a8-643304dfa812', 'INTERFACE', 'NORMAL', '02', '1653544988516102146', '1', '2023-05-03 07:40:21', '1', '2023-05-03 07:40:21', 1, 'NO');
+	('四五六运输管理系统', 'tms', '8543692d-7ea7-4797-a746-47891bff2bec', 'CLIENT', 'NORMAL', '01', '1451433003353628673', '1', '2021-10-21 06:19:29', '1', '2022-07-14 19:51:53', 6, 'NO'),
+	('OA系统', 'oa', '1a3d47e5-feee-4799-ae56-d58a712c98fe', 'CLIENT', 'NORMAL', '02', '1653544221780553730', '1', '2023-05-03 07:37:19', '1', '2023-05-03 07:37:19', 1, 'NO'),
+	('客户关系管理系统', 'crm', '35072127-0d3b-46ca-82a8-643304dfa812', 'INTERFACE', 'NORMAL', '03', '1653544988516102146', '1', '2023-05-03 07:40:21', '1', '2023-05-03 07:40:21', 1, 'NO');
+
+-- 导出  表 abc.cip_app_data_permission 结构
+CREATE TABLE IF NOT EXISTS `cip_app_data_permission` (
+  `app` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '应用',
+  `role_code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '角色编码',
+  `business_code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '业务编码',
+  `second_business_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '二级业务编码',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='应用数据权限';
 
 -- 正在导出表  abc.cip_app_data_permission 的数据：~0 rows (大约)
+INSERT INTO `cip_app_data_permission` (`app`, `role_code`, `business_code`, `second_business_code`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
+	('1451433003353628673', 'CARRIER', '001', NULL, NULL, NULL, '1654655847321620481', '1', '2023-05-06 09:14:31', '1', '2023-05-06 09:14:31', 1, 'NO');
 
--- 正在导出表  abc.cip_message_log 的数据：~0 rows (大约)
+-- 导出  表 abc.cip_message_log 结构
+CREATE TABLE IF NOT EXISTS `cip_message_log` (
+  `request_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求标识',
+  `request_app_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求应用编码',
+  `request_topic_code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求主题编码',
+  `request_time` datetime DEFAULT NULL COMMENT '请求时间',
+  `request_data` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求数据',
+  `response_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应标识',
+  `response_app_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应应用编码',
+  `response_topic_code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应主题编码',
+  `response_time` datetime DEFAULT NULL COMMENT '响应时间',
+  `response_data` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应数据',
+  `response_result` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应结果',
+  `error_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误编码',
+  `error_message` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误信息',
+  `status` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态',
+  `send_count` int(11) DEFAULT '0' COMMENT '发送次数',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息日志';
 
--- 正在导出表  abc.cip_message_permission 的数据：~0 rows (大约)
+-- 正在导出表  abc.cip_message_log 的数据：~60 rows (大约)
+INSERT INTO `cip_message_log` (`request_id`, `request_app_code`, `request_topic_code`, `request_time`, `request_data`, `response_id`, `response_app_code`, `response_topic_code`, `response_time`, `response_data`, `response_result`, `error_code`, `error_message`, `status`, `send_count`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
+	('1654649458473885697', 'TMS', 'framework.login.request', '2023-05-06 08:49:08', '{"appSecret":"$2a$10$GE9e80kG12fWKQ5MskztyeLgHASNo2/NvAW6FTjRzeAvqTruR4X3y","appCode":"TMS"}', '1654649459425996802', 'CIP', 'framework.error.response', '2023-05-06 08:49:08', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654649459425996801', '', '2023-05-06 08:49:08', '', '2023-05-06 08:49:08', 2, 'NO'),
+	('1654649606818029570', 'TMS', 'framework.login.request', '2023-05-06 08:49:43', '{"appSecret":"$2a$10$gO0BITFga1yEt.a5CMLDwu.UZixI5ECn7FfCw5QAznj0Zvs80OE1q","appCode":"TMS"}', '1654649606885142533', 'CIP', 'framework.error.response', '2023-05-06 08:49:43', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654649606885142532', '', '2023-05-06 08:49:43', '', '2023-05-06 08:49:43', 2, 'NO'),
+	('1654649754067460098', 'TMS', 'framework.login.request', '2023-05-06 08:50:18', '{"appSecret":"$2a$10$dLXDu9kJFZeJCU2vtUk/uOzj4kdzBbn2dQ8raxhojUbzeXR3ojaYq","appCode":"TMS"}', '1654649754130378755', 'CIP', 'framework.error.response', '2023-05-06 08:50:18', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654649754130378754', '', '2023-05-06 08:50:18', '', '2023-05-06 08:50:18', 2, 'NO'),
+	('1654649901358833666', 'TMS', 'framework.login.request', '2023-05-06 08:50:53', '{"appSecret":"$2a$10$hpaVNJ2eYiMHSDM05UAn4uGpq1bFwEeHkIf9/.o4inq2mZ2g9wSeK","appCode":"TMS"}', '1654649901425946626', 'CIP', 'framework.error.response', '2023-05-06 08:50:53', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654649901358837764', '', '2023-05-06 08:50:53', '', '2023-05-06 08:50:53', 2, 'NO'),
+	('1654650048591486977', 'TMS', 'framework.login.request', '2023-05-06 08:51:28', '{"appSecret":"$2a$10$j/R2H5hV8nq.FVPruXvFcuTFJqR/7f4LxRpjv4sX58loeegaweMKG","appCode":"TMS"}', '1654650048658599938', 'CIP', 'framework.error.response', '2023-05-06 08:51:28', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650048658599937', '', '2023-05-06 08:51:28', '', '2023-05-06 08:51:28', 2, 'NO'),
+	('1654650195815751681', 'TMS', 'framework.login.request', '2023-05-06 08:52:03', '{"appSecret":"$2a$10$YN1JSO6Xh35UKz4G4V761eyYntoJWKrx8pPexToljiNHlwdH26/dC","appCode":"TMS"}', '1654650195882864643', 'CIP', 'framework.error.response', '2023-05-06 08:52:03', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650195882864642', '', '2023-05-06 08:52:03', '', '2023-05-06 08:52:03', 2, 'NO'),
+	('1654650343086153729', 'TMS', 'framework.login.request', '2023-05-06 08:52:38', '{"appSecret":"$2a$10$zALXxUf5Vrc5EyiEC7sMhOvLpRsw4E9vWhleu6YWzCYueMejMEX.6","appCode":"TMS"}', '1654650343149072387', 'CIP', 'framework.error.response', '2023-05-06 08:52:38', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650343149072386', '', '2023-05-06 08:52:38', '', '2023-05-06 08:52:38', 2, 'NO'),
+	('1654650442466045953', 'TMS', 'framework.login.request', '2023-05-06 08:53:02', '{"appSecret":"$2a$10$Tg3FSfXEn6qDuxCAf6NW7.gl9Php5vyK14px9Wdy4T2Ymdg6Oppk6","appCode":"TMS"}', '1654650442629574662', 'CIP', 'framework.error.response', '2023-05-06 08:53:02', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650442629574661', '', '2023-05-06 08:53:02', '', '2023-05-06 08:53:02', 2, 'NO'),
+	('1654650590466256898', 'TMS', 'framework.login.request', '2023-05-06 08:53:37', '{"appSecret":"$2a$10$LCLd9i9jdHp9yl4F5ZI8jeU0dQSdvms0ez7Y1kw50q6FXbpHXVCiC","appCode":"TMS"}', '1654650590533316610', 'CIP', 'framework.error.response', '2023-05-06 08:53:37', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650590533316609', '', '2023-05-06 08:53:37', '', '2023-05-06 08:53:37', 2, 'NO'),
+	('1654650737715687426', 'TMS', 'framework.login.request', '2023-05-06 08:54:12', '{"appSecret":"$2a$10$AqucFuYTfmRmplBvTnwOAOJM88/ETr0PL8WxoL.LY4gsB/HqNyGae","appCode":"TMS"}', '1654650737715638278', 'CIP', 'framework.error.response', '2023-05-06 08:54:12', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650737715638277', '', '2023-05-06 08:54:12', '', '2023-05-06 08:54:12', 2, 'NO'),
+	('1654650884939952130', 'TMS', 'framework.login.request', '2023-05-06 08:54:48', '{"appSecret":"$2a$10$OEj1YRD3GR1Qi.0ycohA8e2DlgnSmOHcur0CM0J6uUAz3/mxmKjvi","appCode":"TMS"}', '1654650884939902982', 'CIP', 'framework.error.response', '2023-05-06 08:54:48', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654650884939902981', '', '2023-05-06 08:54:48', '', '2023-05-06 08:54:48', 2, 'NO'),
+	('1654651032160022530', 'TMS', 'framework.login.request', '2023-05-06 08:55:23', '{"appSecret":"$2a$10$UYjObWfPsFnWclWED1rPye19Op1AGVThDgAdZ.u9h1KX2ti9bI3Qe","appCode":"TMS"}', '1654651032159973382', 'CIP', 'framework.error.response', '2023-05-06 08:55:23', NULL, 'ERROR', NULL, '消息处理器不存在', 'RESPONSED', 0, '1654651032159973381', '', '2023-05-06 08:55:23', '', '2023-05-06 08:55:23', 2, 'NO'),
+	('1654651179401064449', 'TMS', 'framework.login.request', '2023-05-06 08:55:58', '{"appSecret":"$2a$10$9HW2QO6AgcfYTxlhD8iRgucoU.jrQ6WP./E3UqdFGbxlJQd2WuAH6","appCode":"TMS"}', '1654651179468124163', 'CIP', 'framework.error.response', '2023-05-06 08:55:58', NULL, 'ERROR', NULL, '应用标识无效', 'RESPONSED', 0, '1654651179401015300', '', '2023-05-06 08:55:58', '', '2023-05-06 08:55:58', 2, 'NO'),
+	('1654651179401064449', 'TMS', 'framework.login.request', '2023-05-06 08:55:58', '{"appSecret":"$2a$10$9HW2QO6AgcfYTxlhD8iRgucoU.jrQ6WP./E3UqdFGbxlJQd2WuAH6","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651179468124162', '', '2023-05-06 08:55:58', '', '2023-05-06 08:55:58', 1, 'NO'),
+	('1654651304965943298', 'TMS', 'framework.login.request', '2023-05-06 08:56:28', '{"appSecret":"$2a$10$sTq4zqW6i4r5IsYbneW/xe.8aXGiZw6LEOKV5//Hb4CHDoh0y6Cq6","appCode":"TMS"}', '1654651305834057730', 'CIP', 'framework.error.response', '2023-05-06 08:56:28', NULL, 'ERROR', NULL, '应用标识无效', 'RESPONSED', 0, '1654651305699840002', '', '2023-05-06 08:56:28', '', '2023-05-06 08:56:28', 2, 'NO'),
+	('1654651304965943298', 'TMS', 'framework.login.request', '2023-05-06 08:56:28', '{"appSecret":"$2a$10$sTq4zqW6i4r5IsYbneW/xe.8aXGiZw6LEOKV5//Hb4CHDoh0y6Cq6","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651305766948865', '', '2023-05-06 08:56:28', '', '2023-05-06 08:56:28', 1, 'NO'),
+	('1654651452999708673', 'TMS', 'framework.login.request', '2023-05-06 08:57:03', '{"appSecret":"$2a$10$KTGB9sRE4pUc8phfN7pOn.g8663EtjOsm7SQT8pZWLf3LwmKZvVsy","appCode":"TMS"}', '1654651453066711042', 'CIP', 'framework.error.response', '2023-05-06 08:57:03', NULL, 'ERROR', NULL, '应用标识无效', 'RESPONSED', 0, '1654651452999602181', '', '2023-05-06 08:57:03', '', '2023-05-06 08:57:03', 2, 'NO'),
+	('1654651452999708673', 'TMS', 'framework.login.request', '2023-05-06 08:57:03', '{"appSecret":"$2a$10$KTGB9sRE4pUc8phfN7pOn.g8663EtjOsm7SQT8pZWLf3LwmKZvVsy","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651453066711041', '', '2023-05-06 08:57:03', '', '2023-05-06 08:57:03', 1, 'NO'),
+	('1654651600249139201', 'TMS', 'framework.login.request', '2023-05-06 08:57:38', '{"appSecret":"$2a$10$mb9K9ITF2x1AMCCZOiTqLevb/I/o4QUXPaly9BQY.fv8VFg7msTUm","appCode":"TMS"}', '1654651600311947266', 'CIP', 'framework.error.response', '2023-05-06 08:57:38', NULL, 'ERROR', NULL, '应用标识无效', 'RESPONSED', 0, '1654651600249032709', '', '2023-05-06 08:57:38', '', '2023-05-06 08:57:38', 2, 'NO'),
+	('1654651600249139201', 'TMS', 'framework.login.request', '2023-05-06 08:57:38', '{"appSecret":"$2a$10$mb9K9ITF2x1AMCCZOiTqLevb/I/o4QUXPaly9BQY.fv8VFg7msTUm","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651600311947265', '', '2023-05-06 08:57:38', '', '2023-05-06 08:57:38', 1, 'NO'),
+	('1654651747569872898', 'TMS', 'framework.login.request', '2023-05-06 08:58:13', '{"appSecret":"$2a$10$.Ska5tzemQPJ.r3EV2/sO.3Gap3xq/OOYVnrJN5r1/8wdEYd/GRj2","appCode":"TMS"}', '1654651747703984129', 'CIP', 'framework.error.response', '2023-05-06 08:58:13', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654651747569766404', '', '2023-05-06 08:58:13', '', '2023-05-06 08:58:13', 2, 'NO'),
+	('1654651747569872898', 'TMS', 'framework.login.request', '2023-05-06 08:58:13', '{"appSecret":"$2a$10$.Ska5tzemQPJ.r3EV2/sO.3Gap3xq/OOYVnrJN5r1/8wdEYd/GRj2","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651747636875265', '', '2023-05-06 08:58:13', '', '2023-05-06 08:58:13', 1, 'NO'),
+	('1654651800057393153', 'TMS', 'framework.login.request', '2023-05-06 08:58:26', '{"appSecret":"$2a$10$2Z0o9FHLaft2Zsu7U9BrAuuLllBnVB0cuwSUF22VAUY3gqTY5zBru","appCode":"TMS"}', '1654651801055580163', 'CIP', 'framework.error.response', '2023-05-06 08:58:26', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654651800921362434', '', '2023-05-06 08:58:26', '', '2023-05-06 08:58:26', 2, 'NO'),
+	('1654651800057393153', 'TMS', 'framework.login.request', '2023-05-06 08:58:26', '{"appSecret":"$2a$10$2Z0o9FHLaft2Zsu7U9BrAuuLllBnVB0cuwSUF22VAUY3gqTY5zBru","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651801055580162', '', '2023-05-06 08:58:26', '', '2023-05-06 08:58:26', 1, 'NO'),
+	('1654651948229570562', 'TMS', 'framework.login.request', '2023-05-06 08:59:01', '{"appSecret":"$2a$10$GMz35r9VGkpr2EG245KLt.vPU1uH92I7K73xW4OvgaltUPjEfAjUa","appCode":"TMS"}', '1654651948296622083', 'CIP', 'framework.error.response', '2023-05-06 08:59:01', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654651948296622081', '', '2023-05-06 08:59:01', '', '2023-05-06 08:59:01', 2, 'NO'),
+	('1654651948229570562', 'TMS', 'framework.login.request', '2023-05-06 08:59:01', '{"appSecret":"$2a$10$GMz35r9VGkpr2EG245KLt.vPU1uH92I7K73xW4OvgaltUPjEfAjUa","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654651948296622082', '', '2023-05-06 08:59:01', '', '2023-05-06 08:59:01', 1, 'NO'),
+	('1654652095537721345', 'TMS', 'framework.login.request', '2023-05-06 08:59:36', '{"appSecret":"$2a$10$CIb8GYMIxjD9g5wTlW/2BeSjKDTuSLc4ZZBHPxXNer.eAYFMVnL12","appCode":"TMS"}', '1654652095667687426', 'CIP', 'framework.error.response', '2023-05-06 08:59:36', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654652095604772868', '', '2023-05-06 08:59:36', '', '2023-05-06 08:59:36', 2, 'NO'),
+	('1654652095537721345', 'TMS', 'framework.login.request', '2023-05-06 08:59:36', '{"appSecret":"$2a$10$CIb8GYMIxjD9g5wTlW/2BeSjKDTuSLc4ZZBHPxXNer.eAYFMVnL12","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654652095604772869', '', '2023-05-06 08:59:36', '', '2023-05-06 08:59:36', 1, 'NO'),
+	('1654652242858455041', 'TMS', 'framework.login.request', '2023-05-06 09:00:11', '{"appSecret":"$2a$10$9..UJUztO5/zXtlaPplvoO5BbtQQJH44Aix.mzjxv7T8g7M7fgN6y","appCode":"TMS"}', '1654652242921312261', 'CIP', 'framework.error.response', '2023-05-06 09:00:11', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654652242921312259', '', '2023-05-06 09:00:11', '', '2023-05-06 09:00:11', 2, 'NO'),
+	('1654652242858455041', 'TMS', 'framework.login.request', '2023-05-06 09:00:11', '{"appSecret":"$2a$10$9..UJUztO5/zXtlaPplvoO5BbtQQJH44Aix.mzjxv7T8g7M7fgN6y","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654652242921312260', '', '2023-05-06 09:00:11', '', '2023-05-06 09:00:11', 1, 'NO'),
+	('1654652390149828609', 'TMS', 'framework.login.request', '2023-05-06 09:00:46', '{"appSecret":"$2a$10$Hg0k/DJXcgVgJaEy30kSyerSVvM09rXTIv4NWfylefdItRC3fnRda","appCode":"TMS"}', '1654652390212685827', 'CIP', 'framework.error.response', '2023-05-06 09:00:46', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654652390212685825', '', '2023-05-06 09:00:46', '', '2023-05-06 09:00:46', 2, 'NO'),
+	('1654652390149828609', 'TMS', 'framework.login.request', '2023-05-06 09:00:46', '{"appSecret":"$2a$10$Hg0k/DJXcgVgJaEy30kSyerSVvM09rXTIv4NWfylefdItRC3fnRda","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654652390212685826', '', '2023-05-06 09:00:46', '', '2023-05-06 09:00:46', 1, 'NO'),
+	('1654652537499922434', 'TMS', 'framework.login.request', '2023-05-06 09:01:22', '{"appSecret":"$2a$10$SGP4gVMfncIwzolITHqg.uUcZLn6gScpHhe4t0B7Oj2Btv5XMP7bG","appCode":"TMS"}', '1654652537566973955', 'CIP', 'framework.error.response', '2023-05-06 09:01:22', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654652537499865092', '', '2023-05-06 09:01:22', '', '2023-05-06 09:01:22', 2, 'NO'),
+	('1654652537499922434', 'TMS', 'framework.login.request', '2023-05-06 09:01:22', '{"appSecret":"$2a$10$SGP4gVMfncIwzolITHqg.uUcZLn6gScpHhe4t0B7Oj2Btv5XMP7bG","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654652537566973954', '', '2023-05-06 09:01:22', '', '2023-05-06 09:01:22', 1, 'NO'),
+	('1654652684795490305', 'TMS', 'framework.login.request', '2023-05-06 09:01:57', '{"appSecret":"$2a$10$wIt7XF2KkwJkX/zPFAatWuGZW9GHPvM6Yv70S7hSo8Zy06NTtaaae","appCode":"TMS"}', '1654652684862541826', 'CIP', 'framework.error.response', '2023-05-06 09:01:57', NULL, 'ERROR', NULL, '应用无权限', 'RESPONSED', 0, '1654652684795432965', '', '2023-05-06 09:01:57', '', '2023-05-06 09:01:57', 2, 'NO'),
+	('1654652684795490305', 'TMS', 'framework.login.request', '2023-05-06 09:01:57', '{"appSecret":"$2a$10$wIt7XF2KkwJkX/zPFAatWuGZW9GHPvM6Yv70S7hSo8Zy06NTtaaae","appCode":"TMS"}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '1654652684862541825', '', '2023-05-06 09:01:57', '', '2023-05-06 09:01:57', 1, 'NO'),
+	('1654652832044920833', 'TMS', 'framework.login.request', '2023-05-06 09:02:32', '{"appSecret":"$2a$10$bJLHb.EwsCqeaU1VnWGqCu7IrTmoTiHph7rYk15eltbhblfMHffiC","appCode":"TMS"}', '1654652832111972354', 'CIP', 'framework.login.response', '2023-05-06 09:02:32', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654652832044863492', '', '2023-05-06 09:02:32', '', '2023-05-06 09:02:32', 3, 'NO'),
+	('1654652979562786818', 'TMS', 'framework.login.request', '2023-05-06 09:03:07', '{"appSecret":"$2a$10$kGBzvQx4tdjqYmWCjZZa2u80MDHF1sxmN8nWUnJ8vQNOfGFY4RDV2","appCode":"TMS"}', '1654652979696947201', 'CIP', 'framework.login.response', '2023-05-06 09:03:07', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654652979562729477', '', '2023-05-06 09:03:07', '', '2023-05-06 09:03:07', 3, 'NO'),
+	('1654653127122595841', 'TMS', 'framework.login.request', '2023-05-06 09:03:42', '{"appSecret":"$2a$10$E.AtYZqJg.yWnjUbzDLMDuqV1AhYwxonkG2UC7E2PQ0viNVrYm/Iy","appCode":"TMS"}', '1654653127189647361', 'CIP', 'framework.login.response', '2023-05-06 09:03:42', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654653127122538500', '', '2023-05-06 09:03:42', '', '2023-05-06 09:03:42', 3, 'NO'),
+	('1654653274694987777', 'TMS', 'framework.login.request', '2023-05-06 09:04:17', '{"appSecret":"$2a$10$LiG6MjSYShIz8yiGGjHSJOgKRST3CGQlZr9vF8R.tahzGOuorWhXW","appCode":"TMS"}', '1654653274762039297', 'CIP', 'framework.login.response', '2023-05-06 09:04:17', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654653274694930436', '', '2023-05-06 09:04:17', '', '2023-05-06 09:04:17', 3, 'NO'),
+	('1654653422330294273', 'TMS', 'framework.login.request', '2023-05-06 09:04:53', '{"appSecret":"$2a$10$vnvt45zJPvF7PMDTTR49xuS9koriJW/8tzeCMd6teDAjVzSuf6/Uy","appCode":"TMS"}', '1654653422464454657', 'CIP', 'framework.login.response', '2023-05-06 09:04:53', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654653422330236932', '', '2023-05-06 09:04:53', '', '2023-05-06 09:04:53', 3, 'NO'),
+	('1654653569990766594', 'TMS', 'framework.login.request', '2023-05-06 09:05:28', '{"appSecret":"$2a$10$F0/rRd936EtjrO7I9t9OG.lJsiY0poO482BWBK08lnh.Eaz8lzUrS","appCode":"TMS"}', '1654653570053623811', 'CIP', 'framework.login.response', '2023-05-06 09:05:28', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654653570053623810', '', '2023-05-06 09:05:28', '', '2023-05-06 09:05:28', 3, 'NO'),
+	('1654653717554769921', 'TMS', 'framework.login.request', '2023-05-06 09:06:03', '{"appSecret":"$2a$10$FwGZdcnDHqoRKcpJRHA7V.0AH4yskroFy4f9aPtv4lblcfEl3PExq","appCode":"TMS"}', '1654653717621821442', 'CIP', 'framework.login.response', '2023-05-06 09:06:03', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654653717554712580', '', '2023-05-06 09:06:03', '', '2023-05-06 09:06:03', 3, 'NO'),
+	('1654653865127161857', 'TMS', 'framework.login.request', '2023-05-06 09:06:38', '{"appSecret":"$2a$10$fYpZpJRZq9Grl7faS.rElOaDfIa3f8Lm1Gfoe/xTYw.o4kWMSaxR6","appCode":"TMS"}', '1654653865194213377', 'CIP', 'framework.login.response', '2023-05-06 09:06:38', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654653865127104516', '', '2023-05-06 09:06:38', '', '2023-05-06 09:06:38', 3, 'NO'),
+	('1654654012682776577', 'TMS', 'framework.login.request', '2023-05-06 09:07:13', '{"appSecret":"$2a$10$VanodIl8huFR8o8cwchhQ.5l4slXF07miY.1yRiQQW0er61LHQ7Oi","appCode":"TMS"}', '1654654012749828098', 'CIP', 'framework.login.response', '2023-05-06 09:07:13', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654012682719236', '', '2023-05-06 09:07:13', '', '2023-05-06 09:07:13', 3, 'NO'),
+	('1654654160280334337', 'TMS', 'framework.login.request', '2023-05-06 09:07:48', '{"appSecret":"$2a$10$zBL4RGeWQKlYab15DigcReO7J/PUGyul8Z71bFMKnvwn8NYlvhYQi","appCode":"TMS"}', '1654654160347385857', 'CIP', 'framework.login.response', '2023-05-06 09:07:49', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654160280276997', '', '2023-05-06 09:07:48', '', '2023-05-06 09:07:49', 3, 'NO'),
+	('1654654307819171842', 'TMS', 'framework.login.request', '2023-05-06 09:08:24', '{"appSecret":"$2a$10$j.USdfWRlwjvQSXpjfOyc.qoYTK187plCZGvnfhaLWY04ct8wK5j.","appCode":"TMS"}', '1654654307886223361', 'CIP', 'framework.login.response', '2023-05-06 09:08:24', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654307819114501', '', '2023-05-06 09:08:24', '', '2023-05-06 09:08:24', 3, 'NO'),
+	('1654654455349620737', 'TMS', 'framework.login.request', '2023-05-06 09:08:59', '{"appSecret":"$2a$10$IBSgcyLj.6mFbabGumlC5Ory.41uYgFRvaQSYlzhmHFJBvH.v06gy","appCode":"TMS"}', '1654654455416672258', 'CIP', 'framework.login.response', '2023-05-06 09:08:59', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654455416672257', '', '2023-05-06 09:08:59', '', '2023-05-06 09:08:59', 3, 'NO'),
+	('1654654498337001473', 'TMS', 'framework.login.request', '2023-05-06 09:09:09', '{"appSecret":"$2a$10$MQG3xq2m59opW0.5Gh6I1uDaDy/U9ZktEX5HJyuzapw4Sn2er2t8i","appCode":"TMS"}', '1654654498576060418', 'CIP', 'framework.login.response', '2023-05-06 09:09:09', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654498508951556', '', '2023-05-06 09:09:09', '', '2023-05-06 09:09:09', 3, 'NO'),
+	('1654654870220767233', 'TMS', 'framework.login.request', '2023-05-06 09:10:38', '{"appSecret":"$2a$10$i.IKXnZXYkgi3khV6nlBuuzgdpDRn/Ga50pYINIvtfR46haCG8saS","appCode":"TMS"}', '1654654870455635970', 'CIP', 'framework.login.response', '2023-05-06 09:10:38', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654870392721413', '', '2023-05-06 09:10:38', '', '2023-05-06 09:10:38', 3, 'NO'),
+	('1654654987447382017', 'TMS', 'framework.login.request', '2023-05-06 09:11:06', '{"appSecret":"$2a$10$lZWKEmgvRrLi60Uf52V3guw/NvnfvlelbIbZ1jH7m2OsNJq1iqpiG","appCode":"TMS"}', '1654654987636101122', 'CIP', 'framework.login.response', '2023-05-06 09:11:06', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654654987636101121', '', '2023-05-06 09:11:06', '', '2023-05-06 09:11:06', 3, 'NO'),
+	('1654655269925388289', 'TMS', 'framework.login.request', '2023-05-06 09:12:13', '{"appSecret":"$2a$10$7z6.kMVHPy/F0XPwH8IuzOJqXBm.UIE3bVrFJeNg2NtyKG66oP5dC","appCode":"TMS"}', '1654655270185390082', 'CIP', 'framework.login.response', '2023-05-06 09:12:13', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654655270118281221', '', '2023-05-06 09:12:13', '', '2023-05-06 09:12:13', 3, 'NO'),
+	('1654656069405868033', 'TMS', 'framework.login.request', '2023-05-06 09:15:24', '{"appSecret":"$2a$10$mrxU3vNpDdEek64b3XDX5Om5/ldurvjKBq3bAgFAd2qyyANSEwiTC","appCode":"TMS"}', '1654656070274117633', 'CIP', 'framework.login.response', '2023-05-06 09:15:24', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654656070076985346', '', '2023-05-06 09:15:24', '', '2023-05-06 09:15:24', 3, 'NO'),
+	('1654656562144313345', 'TMS', 'framework.login.request', '2023-05-06 09:17:21', '{"appSecret":"$2a$10$xLHbDzx44tFHghUvL6sdfOYGc0h2276nMhD/hg6xtYFOj95sgT0Ze","appCode":"TMS"}', '1654656563331239938', 'CIP', 'framework.login.response', '2023-05-06 09:17:21', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654656563264131073', '', '2023-05-06 09:17:21', '', '2023-05-06 09:17:21', 3, 'NO'),
+	('1654658924950945794', 'TMS', 'framework.login.request', '2023-05-06 09:26:45', '{"appSecret":"$2a$10$aQzqNGtKvS9khjN3Wy4xaOXI27XAi.8LJaz66wKFOY9F9yidUJn2a","appCode":"TMS"}', '1654658925823307777', 'CIP', 'framework.login.response', '2023-05-06 09:26:45', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654658925621981185', '', '2023-05-06 09:26:45', '', '2023-05-06 09:26:45', 3, 'NO'),
+	('1654658926150463490', 'CIP', 'lms.transportbill.consignmentbill.create', '2023-05-06 09:26:45', '委托单创建', '1654658926284734466', 'TMS', 'framework.message.confirm.response', '2023-05-06 09:26:45', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 1, '1654658926217572354', '', '2023-05-06 09:26:45', '', '2023-05-06 09:26:45', 4, 'NO'),
+	('1654659248579248129', 'TMS', 'framework.login.request', '2023-05-06 09:28:02', '{"appSecret":"$2a$10$giyeMkpEut.x7jQmJMDude44lACJs4ELO1Y9TyHnqLOvb1mxFN9qW","appCode":"TMS"}', '1654659249380319233', 'CIP', 'framework.login.response', '2023-05-06 09:28:02', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654659249183186946', '', '2023-05-06 09:28:02', '', '2023-05-06 09:28:02', 3, 'NO'),
+	('1654659249782972418', 'CIP', 'lms.transportbill.consignmentbill.create', '2023-05-06 09:28:02', '委托单创建', '1654659250261164033', 'TMS', 'framework.message.confirm.response', '2023-05-06 09:28:02', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 1, '1654659249782972419', '', '2023-05-06 09:28:02', '', '2023-05-06 09:28:02', 4, 'NO'),
+	('1654670944052019202', 'TMS', 'framework.login.request', '2023-05-06 10:14:30', '{"appSecret":"$2a$10$EmGDfyh/3EIf339xDjIi1O.PnjdMCEHUFNjtiSAIIeaHLACVXXk36","appCode":"TMS"}', '1654670944182001665', 'CIP', 'framework.login.response', '2023-05-06 10:14:30', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654670944114892803', '', '2023-05-06 10:14:30', '', '2023-05-06 10:14:30', 3, 'NO'),
+	('1654670944517545985', 'CIP', 'lms.transportbill.consignmentbill.create', '2023-05-06 10:14:30', '委托单创建', '1654670944517586950', 'TMS', 'framework.message.confirm.response', '2023-05-06 10:14:30', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 1, '1654670944517545986', '', '2023-05-06 10:14:30', '', '2023-05-06 10:14:30', 4, 'NO'),
+	('1654715017253191681', 'TMS', 'framework.login.request', '2023-05-06 13:09:38', '{"appSecret":"$2a$10$AYT6vAEGZm/pmvOyh9xp1u60kXddZa9q5XRRzgS7rnzRlThS.HAS2","appCode":"TMS"}', '1654715017378979842', 'CIP', 'framework.login.response', '2023-05-06 13:09:38', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654715017316065285', '', '2023-05-06 13:09:38', '', '2023-05-06 13:09:38', 3, 'NO'),
+	('1654715017697746945', 'CIP', 'lms.transportbill.consignmentbill.create', '2023-05-06 13:09:38', '委托单创建', '1654715017697787909', 'TMS', 'framework.message.confirm.response', '2023-05-06 13:09:38', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 1, '1654715017697746946', '', '2023-05-06 13:09:38', '', '2023-05-06 13:09:38', 4, 'NO'),
+	('1654719613862248450', 'TMS', 'framework.login.request', '2023-05-06 13:27:54', '{"appSecret":"$2a$10$E.ZFvsqqzKMXSW5QFnOBxuPiRWWb9atTb0BdcCf7brUJyn46JA2WC","appCode":"TMS"}', '1654719614726205442', 'CIP', 'framework.login.response', '2023-05-06 13:27:54', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654719614533267458', '', '2023-05-06 13:27:54', '', '2023-05-06 13:27:54', 3, 'NO'),
+	('1654720773687914498', 'TMS', 'framework.login.request', '2023-05-06 13:32:30', '{"appSecret":"$2a$10$AG75H1ws7uANRl6OEiIxTu2w9Ee1HAs3Q4kUd0XFCldihTy5sSrOK","appCode":"TMS"}', '1654720774489047042', 'CIP', 'framework.login.response', '2023-05-06 13:32:31', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654720774291914755', '', '2023-05-06 13:32:30', '', '2023-05-06 13:32:31', 3, 'NO'),
+	('1654734636135251970', 'TMS', 'framework.login.request', '2023-05-06 14:27:35', '{"appSecret":"$2a$10$VLXhYArOZNSOuapePs9F6.cqUEXsMLtDr7nkWt8rbSg.at/Y6Cv8e","appCode":"TMS"}', '1654734636391137282', 'CIP', 'framework.login.response', '2023-05-06 14:27:36', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654734636324028420', '', '2023-05-06 14:27:35', '', '2023-05-06 14:27:36', 3, 'NO'),
+	('1654767463153340417', 'tms', 'framework.login.request', '2023-05-06 16:38:02', '{"appSecret":"$2a$10$58JhYMv5J76ZNdPQW9o6Du4VHLJtExZA9qHy6s5wgXLCkCtyGbw5i","appCode":"tms"}', '1654767463816015874', 'CIP', 'framework.login.response', '2023-05-06 16:38:02', NULL, 'SUCCESS', NULL, NULL, 'RESPONSED', 0, '1654767463748907010', '', '2023-05-06 16:38:02', '', '2023-05-06 16:38:02', 3, 'NO');
+
+-- 导出  表 abc.cip_message_permission 结构
+CREATE TABLE IF NOT EXISTS `cip_message_permission` (
+  `app` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '应用',
+  `message_topic` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '消息主题',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息权限';
+
+-- 正在导出表  abc.cip_message_permission 的数据：~4 rows (大约)
 INSERT INTO `cip_message_permission` (`app`, `message_topic`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1653544221780553730', '1448247847417774081', '1654464415772192770', '1', '2023-05-05 20:33:50', '1', '2023-05-05 20:33:50', 1, 'NO'),
-	('1653544221780553730', '1448247847417774084', '1654464415772192771', '1', '2023-05-05 20:33:50', '1', '2023-05-05 20:33:50', 1, 'NO');
+	('1653544221780553730', '1448247847417774084', '1654464415772192771', '1', '2023-05-05 20:33:50', '1', '2023-05-05 20:33:50', 1, 'NO'),
+	('1451433003353628673', '1448247847417774081', '1654652759244328961', '1', '2023-05-06 09:02:14', '1', '2023-05-06 09:02:14', 1, 'NO'),
+	('1451433003353628673', '1448247847417774084', '1654652759244328962', '1', '2023-05-06 09:02:14', '1', '2023-05-06 09:02:14', 1, 'NO');
 
--- 正在导出表  abc.cip_message_subscription 的数据：~0 rows (大约)
+-- 导出  表 abc.cip_message_subscription 结构
+CREATE TABLE IF NOT EXISTS `cip_message_subscription` (
+  `app` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '应用',
+  `message_topic` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '消息主题',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息订阅';
+
+-- 正在导出表  abc.cip_message_subscription 的数据：~7 rows (大约)
+INSERT INTO `cip_message_subscription` (`app`, `message_topic`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
+	('1451433003353628673', '1448247847417774082', '1', NULL, NULL, NULL, NULL, 1, 'NO'),
+	('1451433003353628673', '1448247847417774081', '1654766595695751170', '1654718747339972609', '2023-05-06 16:34:35', '1654718747339972609', '2023-05-06 16:34:35', 1, 'YES'),
+	('1451433003353628673', '1448247847417774084', '1654766622669320194', '1654718747339972609', '2023-05-06 16:34:42', '1654718747339972609', '2023-05-06 16:34:42', 1, 'YES'),
+	('1451433003353628673', '1448247847417774081', '1654769754195398658', '1654718747339972609', '2023-05-06 16:47:08', '1654718747339972609', '2023-05-06 16:47:08', 1, 'YES'),
+	('1451433003353628673', '1448247847417774084', '1654769754195398659', '1654718747339972609', '2023-05-06 16:47:08', '1654718747339972609', '2023-05-06 16:47:08', 1, 'YES'),
+	('1451433003353628673', '1448247847417774081', '1654769796411068417', '1654718747339972609', '2023-05-06 16:47:18', '1654718747339972609', '2023-05-06 16:47:18', 1, 'NO'),
+	('1451433003353628673', '1448247847417774084', '1654769796411068418', '1654718747339972609', '2023-05-06 16:47:18', '1654718747339972609', '2023-05-06 16:47:18', 1, 'NO');
+
+-- 导出  表 abc.cip_message_topic 结构
+CREATE TABLE IF NOT EXISTS `cip_message_topic` (
+  `category` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '分类',
+  `name` varchar(128) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(256) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `handler` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '处理器',
+  `sender` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '发送器',
+  `response_topic_code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应主题编码',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NORMAL' COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息主题';
 
 -- 正在导出表  abc.cip_message_topic 的数据：~4 rows (大约)
 INSERT INTO `cip_message_topic` (`category`, `name`, `code`, `handler`, `sender`, `response_topic_code`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
-	('USER', '登录请求', 'framework.login.request', 'tech.abc.platform.cip.message.server.handler.request.system.LoginRequestHandler', NULL, 'framework.login.response', 'NORMAL', '01', NULL, '1448247847417774081', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO'),
-	('USER', '委托单创建', 'lms.transportbill.consignmentbill.create', 'tech.abc.platform.cip.message.handler.request.lms.transportbilll.ConsignmentBillCreateRequestHandler', 'tech.abc.platform.cip.message.server.sender.request.lms.transportbill.ConsignmentBillCreateRequestSender', 'framework.message.confirm.response', 'NORMAL', '01', NULL, '1448247847417774082', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO'),
-	('USER', '消息确认响应', 'framework.message.confirm.response', 'tech.abc.platform.cip.message.server.handler.response.system.MessageConfirmResponseHandler', 'tech.abc.platform.cip.message.server.sender.response.system.MessageConfirmResponseSender', '', 'NORMAL', '01', NULL, '1448247847417774084', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO'),
-	('USER', '登录响应', 'framework.login.response', '', 'tech.abc.platform.cip.message.server.sender.response.system.LoginResponseSender', '', 'NORMAL', '01', NULL, '1448247847417774085', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO');
+	('USER', '登录请求', 'framework.login.request', 'tech.abc.platform.cip.message.handler.request.system.LoginRequestHandler', NULL, 'framework.login.response', 'NORMAL', '01', NULL, '1448247847417774081', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO'),
+	('USER', '委托单创建', 'lms.transportbill.consignmentbill.create', 'tech.abc.platform.cip.message.handler.request.lms.transportbilll.ConsignmentBillCreateRequestHandler', 'tech.abc.platform.cip.message.sender.request.lms.transportbill.ConsignmentBillCreateRequestSender', 'framework.message.confirm.response', 'NORMAL', '01', NULL, '1448247847417774082', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO'),
+	('USER', '消息确认响应', 'framework.message.confirm.response', 'tech.abc.platform.cip.message.handler.response.system.MessageConfirmResponseHandler', 'tech.abc.platform.cip.message.sender.response.system.MessageConfirmResponseSender', '', 'NORMAL', '01', NULL, '1448247847417774084', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO'),
+	('USER', '登录响应', 'framework.login.response', '', 'tech.abc.platform.cip.message.sender.response.system.LoginResponseSender', '', 'NORMAL', '01', NULL, '1448247847417774085', '1', '2021-10-13 19:22:49', '1', '2021-10-13 19:22:49', 1, 'NO');
+
+-- 导出  表 abc.sys_dictionary_item 结构
+CREATE TABLE IF NOT EXISTS `sys_dictionary_item` (
+  `dictionary_type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '字典类型',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='字典项';
 
 -- 正在导出表  abc.sys_dictionary_item 的数据：~211 rows (大约)
 INSERT INTO `sys_dictionary_item` (`dictionary_type`, `name`, `code`, `status`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -2263,6 +2796,22 @@ INSERT INTO `sys_dictionary_item` (`dictionary_type`, `name`, `code`, `status`, 
 	('1169086045509345282', '213', '213', 'NORMAL', '213', '1651190351666393089', '', '2023-04-26 19:43:52', '', '2023-04-26 19:44:25', 1, 'YES'),
 	('1586952096636190721', '树多选参照视图', 'TREE_MULTIPLE_REFERENCE', 'NORMAL', '09', '1651742101448200194', '', '2023-04-28 08:16:20', '', '2023-04-30 08:39:00', 3, 'NO');
 
+-- 导出  表 abc.sys_dictionary_type 结构
+CREATE TABLE IF NOT EXISTS `sys_dictionary_type` (
+  `dictionary_type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '上级',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='字典类型';
+
 -- 正在导出表  abc.sys_dictionary_type 的数据：~71 rows (大约)
 INSERT INTO `sys_dictionary_type` (`dictionary_type`, `name`, `code`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('0', '字典类型', 'ZDLX', '01', '1', NULL, NULL, NULL, '2019-07-09 13:29:36', 1, 'NO'),
@@ -2338,7 +2887,21 @@ INSERT INTO `sys_dictionary_type` (`dictionary_type`, `name`, `code`, `order_no`
 	('1586886291055689730', '应用编码', 'AppCode', '10', '1600408579986063363', '1', '2022-12-07 16:35:14', '1', '2022-12-07 16:35:23', 2, 'NO'),
 	('1123532280403148801', '123123', 'Tset', NULL, '1651105291164491778', '', '2023-04-26 14:05:52', '', '2023-04-26 14:06:26', 2, 'YES');
 
--- 正在导出表  abc.sys_group_permission_item 的数据：~335 rows (大约)
+-- 导出  表 abc.sys_group_permission_item 结构
+CREATE TABLE IF NOT EXISTS `sys_group_permission_item` (
+  `id` varchar(32) NOT NULL COMMENT '标识',
+  `group_id` varchar(32) DEFAULT NULL COMMENT '组标识',
+  `permission_item_id` varchar(32) DEFAULT NULL COMMENT '权限项标识',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组与权限项对应表';
+
+-- 正在导出表  abc.sys_group_permission_item 的数据：~358 rows (大约)
 INSERT INTO `sys_group_permission_item` (`id`, `group_id`, `permission_item_id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1', '99', '1123781860797521922', NULL, NULL, NULL, NULL, 1, 'NO'),
 	('1651826946509668354', '2', '1583621693334597634', '', '2023-04-28 13:53:28', '', '2023-04-28 13:53:28', 1, 'YES'),
@@ -2672,11 +3235,48 @@ INSERT INTO `sys_group_permission_item` (`id`, `group_id`, `permission_item_id`,
 	('1652933668552884255', '1652933590236839938', '1619244145921982465', '1', '2023-05-01 15:11:11', '1', '2023-05-01 15:11:11', 1, 'NO'),
 	('1652933668552884256', '1652933590236839938', '1619244146307858433', '1', '2023-05-01 15:11:11', '1', '2023-05-01 15:11:11', 1, 'NO'),
 	('1652933668552884257', '1652933590236839938', '1619244146639208450', '1', '2023-05-01 15:11:11', '1', '2023-05-01 15:11:11', 1, 'NO'),
+	('1654760491356028930', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 16:10:20', '1', '2023-05-06 16:10:20', 1, 'YES'),
+	('1654760491423137794', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 16:10:20', '1', '2023-05-06 16:10:20', 1, 'YES'),
+	('1654760491423137795', '1654760331288805378', '1654720962284814338', '1', '2023-05-06 16:10:20', '1', '2023-05-06 16:10:20', 1, 'YES'),
+	('1654760491423137796', '1654760331288805378', '1654721110436020226', '1', '2023-05-06 16:10:20', '1', '2023-05-06 16:10:20', 1, 'YES'),
+	('1654770530846281730', '1654760331288805378', '1654720962284814338', '1654718747339972609', '2023-05-06 16:50:13', '1654718747339972609', '2023-05-06 16:50:13', 1, 'YES'),
+	('1654770530846281731', '1654760331288805378', '1654721231399747585', '1654718747339972609', '2023-05-06 16:50:13', '1654718747339972609', '2023-05-06 16:50:13', 1, 'YES'),
+	('1654770530846281732', '1654760331288805378', '1654721266258608130', '1654718747339972609', '2023-05-06 16:50:13', '1654718747339972609', '2023-05-06 16:50:13', 1, 'YES'),
+	('1654771663832690690', '1654760331288805378', '1654720962284814338', '1', '2023-05-06 16:54:43', '1', '2023-05-06 16:54:43', 1, 'YES'),
+	('1654771663832690691', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 16:54:43', '1', '2023-05-06 16:54:43', 1, 'YES'),
+	('1654771663832690692', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 16:54:43', '1', '2023-05-06 16:54:43', 1, 'YES'),
+	('1654772853261807618', '1654760331288805378', '1654720962284814338', '1', '2023-05-06 16:59:27', '1', '2023-05-06 16:59:27', 1, 'YES'),
+	('1654772853261807619', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 16:59:27', '1', '2023-05-06 16:59:27', 1, 'YES'),
+	('1654772853261807620', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 16:59:27', '1', '2023-05-06 16:59:27', 1, 'YES'),
+	('1654772998728658946', '1654760331288805378', '1654720962284814338', '1', '2023-05-06 17:00:02', '1', '2023-05-06 17:00:02', 1, 'YES'),
+	('1654772998728658947', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 17:00:02', '1', '2023-05-06 17:00:02', 1, 'YES'),
+	('1654772998728658948', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 17:00:02', '1', '2023-05-06 17:00:02', 1, 'YES'),
+	('1654773270481809410', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 17:01:07', '1', '2023-05-06 17:01:07', 1, 'YES'),
+	('1654773270481809411', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 17:01:07', '1', '2023-05-06 17:01:07', 1, 'YES'),
+	('1654774217341743105', '1654760331288805378', '1', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
+	('1654774217341743106', '1654760331288805378', '1653334182323093506', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
+	('1654774217341743107', '1654760331288805378', '1654720962284814338', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
+	('1654774217341743108', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
+	('1654774217341743109', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
 	('2', '99', '1258371492062494721', NULL, NULL, NULL, NULL, 1, 'YES'),
 	('3', '99', '1258371930191081474', NULL, NULL, NULL, NULL, 1, 'YES'),
 	('4', '99', '1259327774730788866', NULL, NULL, NULL, NULL, 1, 'NO');
 
--- 正在导出表  abc.sys_group_user 的数据：~51 rows (大约)
+-- 导出  表 abc.sys_group_user 结构
+CREATE TABLE IF NOT EXISTS `sys_group_user` (
+  `id` varchar(32) NOT NULL COMMENT '标识',
+  `group_id` varchar(32) DEFAULT NULL COMMENT '组标识',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户标识',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组与用户对应表';
+
+-- 正在导出表  abc.sys_group_user 的数据：~55 rows (大约)
 INSERT INTO `sys_group_user` (`id`, `group_id`, `user_id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1', '99', '1', NULL, NULL, NULL, NULL, 1, 'YES'),
 	('1651558220086398977', '3', '1', '', '2023-04-27 20:05:39', '', '2023-04-27 20:05:39', 1, 'YES'),
@@ -2735,9 +3335,57 @@ INSERT INTO `sys_group_user` (`id`, `group_id`, `user_id`, `create_id`, `create_
 	('1652236026407591939', '2', '1651546954525593601', '', '2023-04-29 16:59:00', '', '2023-04-29 16:59:00', 1, 'YES'),
 	('1652241303378894850', '1650653075458785282', '1651846726876676097', '', '2023-04-29 17:19:59', '', '2023-04-29 17:19:59', 1, 'NO'),
 	('1652241303378894851', '1650653075458785282', '1650311010862542849', '', '2023-04-29 17:19:59', '', '2023-04-29 17:19:59', 1, 'NO'),
-	('1652933631567511553', '1652933590236839938', '1650311010862542849', '1', '2023-05-01 15:11:02', '1', '2023-05-01 15:11:02', 1, 'NO');
+	('1652933631567511553', '1652933590236839938', '1650311010862542849', '1', '2023-05-01 15:11:02', '1', '2023-05-01 15:11:02', 1, 'NO'),
+	('1654760401467899906', '1654760331288805378', '1654718747339972609', '1', '2023-05-06 16:09:58', '1', '2023-05-06 16:09:58', 1, 'YES'),
+	('1654761707347673090', '99', '1654718747339972609', '1', '2023-05-06 16:15:10', '1', '2023-05-06 16:15:10', 1, 'YES'),
+	('1654762378524393474', '99', '1654718747339972609', '1', '2023-05-06 16:17:50', '1', '2023-05-06 16:17:50', 1, 'YES'),
+	('1654770229703643137', '1654760331288805378', '1654718747339972609', '1654718747339972609', '2023-05-06 16:49:02', '1654718747339972609', '2023-05-06 16:49:02', 1, 'NO');
+
+-- 导出  表 abc.sys_log 结构
+CREATE TABLE IF NOT EXISTS `sys_log` (
+  `content` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '内容',
+  `log_type` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '日志类型',
+  `request_time` datetime DEFAULT NULL COMMENT '请求时间',
+  `request_param` varchar(5120) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求参数',
+  `request_path` varchar(1024) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求路径',
+  `request_method` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求方法',
+  `operator_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作人标识',
+  `operator_account` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作人账号',
+  `operator_name` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作人姓名',
+  `operator_ip` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '操作人ip',
+  `response_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应结果',
+  `response_data` varchar(5120) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应数据',
+  `time_consuming` int(11) DEFAULT NULL COMMENT '执行耗时ms',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='日志';
 
 -- 正在导出表  abc.sys_log 的数据：~0 rows (大约)
+
+-- 导出  表 abc.sys_organization 结构
+CREATE TABLE IF NOT EXISTS `sys_organization` (
+  `organization` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '组织机构',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '编码',
+  `type` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'DEPARTMENT' COMMENT '类型',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NORMAL' COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='组织机构';
 
 -- 正在导出表  abc.sys_organization 的数据：~20 rows (大约)
 INSERT INTO `sys_organization` (`organization`, `name`, `code`, `type`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -2766,7 +3414,24 @@ INSERT INTO `sys_organization` (`organization`, `name`, `code`, `type`, `status`
 	('1186911044748820481', '24213', '12313', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649321972508700673', '', '2023-04-21 15:59:36', '', '2023-04-22 10:58:03', 1, 'YES'),
 	('1186911443060899841', '133', '123', 'DEPARTMENT', 'NORMAL', '213', NULL, '1649593489192677378', '', '2023-04-22 09:58:30', '', '2023-04-22 09:58:58', 2, 'YES'),
 	('1186911094312910849', '123', '123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649608506872983553', '', '2023-04-22 10:58:11', '', '2023-04-22 10:59:12', 2, 'NO'),
-	('1649608506872983553', '123', '123123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649608547331239937', '', '2023-04-22 10:58:21', '', '2023-04-22 10:58:51', 1, 'YES');
+	('1649608506872983553', '123', '123123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649608547331239937', '', '2023-04-22 10:58:21', '', '2023-04-22 10:58:51', 1, 'YES'),
+	('1', '应用', 'app', 'DEPARTMENT', 'NORMAL', '99', '接口平台对接的应用系统用户', '1654718552153841666', '1', '2023-05-06 13:23:41', '1', '2023-05-06 13:23:41', 1, 'NO');
+
+-- 导出  表 abc.sys_param 结构
+CREATE TABLE IF NOT EXISTS `sys_param` (
+  `param_name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '参数名称',
+  `param_key` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '参数编码',
+  `param_value` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '参数值',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序号',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT 'NO' COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='系统参数';
 
 -- 正在导出表  abc.sys_param 的数据：~5 rows (大约)
 INSERT INTO `sys_param` (`param_name`, `param_key`, `param_value`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -2777,6 +3442,22 @@ INSERT INTO `sys_param` (`param_name`, `param_key`, `param_value`, `order_no`, `
 	('账号锁定自动解锁时间间隔（分）', 'ACCOUNT_UNLOCK_INTERVAL', '10', '005', '1158917976734400513', '1', '2019-08-07 09:49:12', '', '2023-03-24 10:47:21', 3, 'NO'),
 	('123', '123', '123', NULL, '1647947222863691777', '', '2023-04-17 20:56:50', '', '2023-04-17 20:57:17', 1, 'YES');
 
+-- 导出  表 abc.sys_param_back 结构
+CREATE TABLE IF NOT EXISTS `sys_param_back` (
+  `id` varchar(32) NOT NULL COMMENT '标识',
+  `param_name` varchar(32) DEFAULT NULL COMMENT '参数名称',
+  `param_key` varchar(32) DEFAULT NULL COMMENT '参数编码',
+  `param_value` varchar(32) DEFAULT NULL COMMENT '参数值',
+  `order_no` varchar(10) DEFAULT NULL COMMENT '排序号',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统参数';
+
 -- 正在导出表  abc.sys_param_back 的数据：~5 rows (大约)
 INSERT INTO `sys_param_back` (`id`, `param_name`, `param_key`, `param_value`, `order_no`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1158916418164588545', '密码最小长度', 'PASSWORD_LENGTH', '8', '001', '1', '2019-08-07 09:43:00', '1', '2020-05-10 12:01:17', 4, 'NO'),
@@ -2785,7 +3466,29 @@ INSERT INTO `sys_param_back` (`id`, `param_name`, `param_key`, `param_value`, `o
 	('1158917826028863489', '用户登录最多输错次数', 'PASSWORD_INPUT_ERROR_TIMES', '10', '004', '1', '2019-08-07 09:48:36', '1', '2020-08-26 03:21:29', 5, 'NO'),
 	('1158917976734400513', '账号锁定自动解锁时间间隔（分）', 'ACCOUNT_UNLOCK_INTERVAL', '10', '005', '1', '2019-08-07 09:49:12', '', '2023-03-24 10:47:21', 3, 'YES');
 
--- 正在导出表  abc.sys_permission_item 的数据：~210 rows (大约)
+-- 导出  表 abc.sys_permission_item 结构
+CREATE TABLE IF NOT EXISTS `sys_permission_item` (
+  `permission_item` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '上级',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '编码',
+  `type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '类型',
+  `permission_code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '权限编码',
+  `view_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '视图编码',
+  `component` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '组件',
+  `icon` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '图标',
+  `status` varchar(32) COLLATE utf8mb4_bin DEFAULT 'NORMAL' COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='权限项';
+
+-- 正在导出表  abc.sys_permission_item 的数据：~208 rows (大约)
 INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `permission_code`, `view_code`, `component`, `icon`, `status`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('0', '系统资源', 'root', 'GROUP', 'root', NULL, '#', 'bx:bxs-component', 'NORMAL', '010', '1', NULL, NULL, '1', '2020-09-03 07:14:53', 2, 'NO'),
 	('1', '系统管理', 'system', 'MODULE', 'system', NULL, '#', 'bx:bxs-component', 'NORMAL', '01', '1123781860797521922', NULL, NULL, '', '2023-04-29 20:33:53', 5, 'NO'),
@@ -3006,7 +3709,39 @@ INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `p
 	('1653334589053140993', '授予API权限', 'grantApiPermission', 'BUTTON', 'cip:app:grantApiPermission', NULL, NULL, NULL, 'NORMAL', '11', '1654110917809475585', '1', '2023-05-04 21:09:09', '1', '2023-05-04 21:09:09', 1, 'NO'),
 	('1653334589053140993', '收回API权限', 'withdrawApiPermission', 'BUTTON', 'cip:app:withdrawApiPermission', NULL, NULL, NULL, 'NORMAL', '12', '1654111010390347778', '1', '2023-05-04 21:09:31', '1', '2023-05-04 21:09:31', 1, 'NO'),
 	('1653334589053140993', '授予消息权限', 'grantMessagePermission', 'BUTTON', 'cip:app:grantMessagePermission', NULL, NULL, NULL, 'NORMAL', '13', '1654360515878645762', '1', '2023-05-05 13:40:58', '1', '2023-05-05 13:41:28', 2, 'NO'),
-	('1653334589053140993', '收回消息权限', 'withdrawMessagePermission', 'BUTTON', 'cip:app:withdrawMessagePermission', NULL, NULL, NULL, 'NORMAL', '14', '1654360515920588801', '1', '2023-05-05 13:40:58', '1', '2023-05-05 13:42:06', 3, 'NO');
+	('1653334589053140993', '收回消息权限', 'withdrawMessagePermission', 'BUTTON', 'cip:app:withdrawMessagePermission', NULL, NULL, NULL, 'NORMAL', '14', '1654360515920588801', '1', '2023-05-05 13:40:58', '1', '2023-05-05 13:42:06', 3, 'NO'),
+	('1653334182323093506', '13213', '213', 'MENU', 'cip:213', '213', 'cip/view/213/213', NULL, 'NORMAL', '213', '1654720654787805186', '1', '2023-05-06 13:32:02', '1', '2023-05-06 13:32:09', 1, 'YES'),
+	('1653334182323093506', '123', '23', 'BUTTON', 'cip:23', NULL, NULL, NULL, 'NORMAL', '123', '1654720832429162498', '1', '2023-05-06 13:32:44', '1', '2023-05-06 13:32:51', 1, 'YES'),
+	('1653334182323093506', '消息订阅', 'messageSubscription', 'MENU', 'cip:messageSubscription', 'list', 'cip/view/messageSubscription/list', 'bx:bxs-component', 'NORMAL', '99', '1654720962284814338', '1', '2023-05-06 13:33:15', '1', '2023-05-06 13:33:15', 1, 'NO'),
+	('1654720962284814338', '查询', 'query', 'BUTTON', 'cip:messageSubscription:query', NULL, NULL, NULL, 'NORMAL', '01', '1654721110436020226', '1', '2023-05-06 13:33:51', '1654718747339972609', '2023-05-06 16:39:45', 1, 'YES'),
+	('1654720962284814338', '订阅消息', 'subscribeMessage', 'BUTTON', 'cip:messageSubscription:subscribeMessage', NULL, NULL, NULL, 'NORMAL', '01', '1654721231399747585', '1', '2023-05-06 13:34:19', '1654718747339972609', '2023-05-06 16:42:30', 5, 'NO'),
+	('1654720962284814338', '取消订阅消息', 'unsubscribeMessage', 'BUTTON', 'cip:messageSubscription:unsubscribeMessage', NULL, NULL, NULL, 'NORMAL', '02', '1654721266258608130', '1', '2023-05-06 13:34:28', '1654718747339972609', '2023-05-06 16:42:34', 6, 'NO');
+
+-- 导出  表 abc.sys_user 结构
+CREATE TABLE IF NOT EXISTS `sys_user` (
+  `organization` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '组织机构',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '姓名',
+  `account` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '账号',
+  `password` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '密码',
+  `gender` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '性别',
+  `birthday` datetime DEFAULT NULL COMMENT '生日',
+  `telephone` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '手机号',
+  `email` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱',
+  `position` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '职位',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NORMAL' COMMENT '状态',
+  `force_change_password_flag` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'YES' COMMENT '强制修改密码',
+  `fail_login_count` int(11) DEFAULT '0' COMMENT '失败登录次数',
+  `lock_time` datetime DEFAULT NULL COMMENT '锁定时间',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户';
 
 -- 正在导出表  abc.sys_user 的数据：~4 rows (大约)
 INSERT INTO `sys_user` (`organization`, `name`, `account`, `password`, `gender`, `birthday`, `telephone`, `email`, `position`, `status`, `force_change_password_flag`, `fail_login_count`, `lock_time`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
@@ -3016,9 +3751,28 @@ INSERT INTO `sys_user` (`organization`, `name`, `account`, `password`, `gender`,
 	('1', '张三', 'zhangsan', '$2a$10$wdXuR/yQsIwdHBr5N0oiLe7LkfR6Q.K0qJo59TNlSfJ1rosO6bkO2', 'MALE', '2023-04-06 00:00:00', '13131312331', '1@126.com', NULL, 'DEAD', 'YES', 0, NULL, '02', '1650310811029123073', '', '2023-04-24 09:28:53', '', '2023-04-24 19:49:39', 3, 'NO'),
 	('1', '李四', 'lisi', '$2a$10$wdXuR/yQsIwdHBr5N0oiLe7LkfR6Q.K0qJo59TNlSfJ1rosO6bkO2', 'FEMALE', '2023-04-06 00:00:00', '13131312331', '1@126.com', NULL, 'NORMAL', 'NO', 0, NULL, '03', '1650311010862542849', '', '2023-04-24 09:29:41', '', '2023-04-24 09:30:05', 2, 'NO'),
 	('1', '王企鹅群翁', '王企鹅', '$2a$10$u6AY238G.j7tig2y6qHPFe6Vj0RTF4pcqE/U4RBDxL3CRRzVzaHxy', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, NULL, NULL, '1651546954525593601', '', '2023-04-27 19:20:53', '', '2023-04-30 17:31:28', 1, 'YES'),
-	('1', '213123', '123123', '$2a$10$gidorVjELI87m9oPT8a6suMjtg9pTzhz0JhC53JT.SoTNzQqkSMY.', 'MALE', NULL, NULL, NULL, NULL, 'LOCK', 'YES', 0, '2023-04-23 20:48:52', NULL, '1651846726876676097', '', '2023-04-28 15:12:04', '', '2023-04-30 15:36:27', 2, 'NO');
+	('1', '213123', '123123', '$2a$10$gidorVjELI87m9oPT8a6suMjtg9pTzhz0JhC53JT.SoTNzQqkSMY.', 'MALE', NULL, NULL, NULL, NULL, 'LOCK', 'YES', 0, '2023-04-23 20:48:52', NULL, '1651846726876676097', '', '2023-04-28 15:12:04', '', '2023-04-30 15:36:27', 2, 'NO'),
+	('1654718552153841666', '四五六运输管理系统', 'tms', '$2a$10$JK8bUenpqNl33Ogc6RIpkOir8Nwt.l.xF4jsXnQYZXHhHhSfbCYze', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, NULL, '01', '1654718747339972609', '1', '2023-05-06 13:24:27', '1654718747339972609', '2023-05-06 16:48:09', 3, 'NO');
 
--- 正在导出表  abc.sys_user_group 的数据：~7 rows (大约)
+-- 导出  表 abc.sys_user_group 结构
+CREATE TABLE IF NOT EXISTS `sys_user_group` (
+  `user_group` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '上级',
+  `name` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '名称',
+  `code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '编码',
+  `status` varchar(32) COLLATE utf8mb4_bin NOT NULL DEFAULT 'NORMAL' COMMENT '状态',
+  `order_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序',
+  `remark` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户组';
+
+-- 正在导出表  abc.sys_user_group 的数据：~8 rows (大约)
 INSERT INTO `sys_user_group` (`user_group`, `name`, `code`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('0', '用户组', 'root', 'NORMAL', '01', NULL, '1', '1', '2021-03-13 10:08:56', '1', '2021-03-13 10:08:59', 1, 'NO'),
 	('4', '1', '', 'NORMAL', '1', NULL, '1650396893808746498', '', '2023-04-24 15:10:57', '', '2023-04-25 08:29:39', 10, 'NO'),
@@ -3027,12 +3781,45 @@ INSERT INTO `sys_user_group` (`user_group`, `name`, `code`, `status`, `order_no`
 	('4', '4', NULL, 'NORMAL', '4', NULL, '1650653075458785282', '', '2023-04-25 08:08:56', '', '2023-04-25 08:08:56', 1, 'NO'),
 	('2', '213123', '213', 'NORMAL', '23', NULL, '1651566243760611330', '', '2023-04-27 20:37:32', '', '2023-04-30 16:07:23', 1, 'YES'),
 	('2', '测试用户组', 'test', 'NORMAL', '02', NULL, '1652933590236839938', '1', '2023-05-01 15:10:53', '1', '2023-05-01 15:10:53', 1, 'NO'),
+	('2', '对接应用', 'app', 'NORMAL', '03', NULL, '1654760331288805378', '1', '2023-05-06 16:09:42', '1', '2023-05-06 16:09:42', 1, 'NO'),
 	('1', '岗位角色', 'role', 'NORMAL', '01', NULL, '2', '1', '2021-03-13 11:08:06', '1', '2022-12-05 15:19:48', 2, 'NO'),
 	('1', '流程', 'workflow', 'NORMAL', '02', NULL, '3', '1', '2021-03-13 11:08:34', '1', '2021-03-13 11:08:34', 2, 'NO'),
 	('1', '通讯组', 'message', 'NORMAL', '03', '', '4', '1', '2021-03-13 10:50:44', '1', '2021-03-13 10:50:44', 3, 'NO'),
 	('2', '系统管理员', 'admin', 'NORMAL', '01', NULL, '99', '1', '2021-03-13 11:10:46', '1', '2021-03-13 11:10:46', 3, 'NO');
 
+-- 导出  表 abc.sys_user_password_change_log 结构
+CREATE TABLE IF NOT EXISTS `sys_user_password_change_log` (
+  `id` varchar(32) NOT NULL COMMENT '编号',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户标识',
+  `account` varchar(32) DEFAULT NULL COMMENT '用户账号',
+  `change_time` datetime DEFAULT NULL COMMENT '密码更新时间',
+  `origin_password` varchar(128) DEFAULT NULL COMMENT '原密码',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新人标识',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户密码修改日志';
+
 -- 正在导出表  abc.sys_user_password_change_log 的数据：~0 rows (大约)
+
+-- 导出  表 abc.sys_user_profile 结构
+CREATE TABLE IF NOT EXISTS `sys_user_profile` (
+  `id` varchar(32) NOT NULL COMMENT '标识',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户标识',
+  `desktop_config` varchar(6000) DEFAULT NULL COMMENT '桌面配置',
+  `time_zone` varchar(32) DEFAULT NULL COMMENT '时区',
+  `language` varchar(32) DEFAULT NULL COMMENT '语种',
+  `create_id` varchar(32) DEFAULT NULL COMMENT '创建人标识',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) DEFAULT NULL COMMENT '更新人标识',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) DEFAULT NULL COMMENT '删除标志',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户配置';
 
 -- 正在导出表  abc.sys_user_profile 的数据：~0 rows (大约)
 

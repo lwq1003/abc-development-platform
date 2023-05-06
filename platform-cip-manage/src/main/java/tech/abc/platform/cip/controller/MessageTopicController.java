@@ -197,6 +197,27 @@ public class MessageTopicController extends BaseController {
         return ResultUtil.success(voList);
     }
 
+
+    /**
+     * 消息服务订阅查询
+     */
+    @GetMapping("/queryMessageSubscription")
+    @PreAuthorize("hasPermission(null,'cip:messageSubscription:query')")
+    public ResponseEntity<Result> queryMessageSubscription(MessageTopicVO queryVO, SortInfo sortInfo) {
+        // 暂存传入的参数
+        String hasSubscription = queryVO.getHasSubscription();
+        // 移除hasPermission参数，否则会构建sql语句，而该字段并不存在
+        queryVO.setHasSubscription(null);
+        // 构造查询条件
+        QueryWrapper<MessageTopic> queryWrapper = QueryGenerator.generateQueryWrapper(MessageTopic.class
+                , queryVO, sortInfo);
+        List<MessageTopic> list = messageTopicService.queryMessageTopicSubscription(queryWrapper, hasSubscription);
+        // 转换vo
+        List<MessageTopicVO> voList = convert2VO(list);
+        return ResultUtil.success(voList);
+    }
+
+
     // endregion
 
     // region 辅助操作
@@ -226,6 +247,8 @@ public class MessageTopicController extends BaseController {
         entityList.stream().forEach(x -> {
             MessageTopicVO vo = convert2VO(x);
             vo.setHasPermissionName(dictionaryUtil.getNameByCode("YesOrNo", vo.getHasPermission()));
+            vo.setHasSubscriptionName(dictionaryUtil.getNameByCode("YesOrNo", vo.getHasSubscription()));
+
             voList.add(vo);
         });
         return voList;

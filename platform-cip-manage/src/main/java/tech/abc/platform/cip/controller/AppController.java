@@ -250,6 +250,33 @@ public class AppController extends BaseController {
     // endregion
 
 
+    // region 消息主题订阅/退订
+
+    /**
+     * 订阅消息
+     */
+    @PutMapping("/subscribeMessage")
+    @SystemLog(value = "应用-订阅消息")
+    @PreAuthorize("hasPermission(null,'cip:messageSubscription:subscribeMessage')")
+    public ResponseEntity<Result> subscribeMessage(@RequestBody(required = false) List<String> messageTopicIdList) {
+        appService.subscribeMessage(messageTopicIdList);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 取消订阅消息
+     */
+    @PutMapping("/unsubscribeMessage")
+    @SystemLog(value = "应用-取消订阅消息")
+    @PreAuthorize("hasPermission(null,'cip:messageSubscription:unsubscribeMessage')")
+    public ResponseEntity<Result> unsubscribeMessage(@RequestBody(required = false) List<String> messageTopicIdList) {
+        appService.unsubscribeMessage(messageTopicIdList);
+        return ResultUtil.success();
+    }
+
+
+    // endregion
+
     // region 辅助操作
 
     /**

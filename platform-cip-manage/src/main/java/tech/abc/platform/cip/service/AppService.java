@@ -86,6 +86,21 @@ public interface AppService extends BaseService<App> {
 
 
     /**
+     * 订阅消息
+     *
+     * @param messageTopicIdList 消息主题标识列表
+     */
+    void subscribeMessage(List<String> messageTopicIdList);
+
+    /**
+     * 退订消息
+     *
+     * @param messageTopicIdList 消息主题标识列表
+     */
+    void unsubscribeMessage(List<String> messageTopicIdList);
+
+
+    /**
      * 获取处理模式
      *
      * @param appCode
@@ -102,5 +117,12 @@ public interface AppService extends BaseService<App> {
      */
     App getByCode(String code);
 
+    /**
+     * 获取当前用户对应的应用标识
+     * 约定：用户账号与应用编码一致
+     *
+     * @return {@link String}
+     */
+    String getCurrentAppId();
 }
 

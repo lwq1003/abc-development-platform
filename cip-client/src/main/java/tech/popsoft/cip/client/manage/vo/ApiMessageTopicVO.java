@@ -1,6 +1,7 @@
-package tech.abc.platform.cip.vo;
+package tech.popsoft.cip.client.manage.vo;
 
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,15 +10,17 @@ import tech.abc.platform.common.base.BaseVO;
 
 
 /**
- * 应用接口服务权限 视图对象
+ * 消息主题 视图对象
  *
  * @author wqliu
- * @date 2021-08-17
+ * @date 2021-08-21
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class AppApiServicePermissionVO extends BaseVO {
+
+@ApiModel(value = "消息主题对象")
+public class ApiMessageTopicVO extends BaseVO {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,6 +29,15 @@ public class AppApiServicePermissionVO extends BaseVO {
 
     @ApiModelProperty(value = "名称")
     private String name;
+
+    @ApiModelProperty(value = "处理器")
+    private String handler;
+
+    @ApiModelProperty(value = "发送器")
+    private String sender;
+
+    @ApiModelProperty(value = "响应主题编码")
+    private String responseTopicCode;
 
     @ApiModelProperty(value = "分类")
     private String category;
@@ -44,6 +56,9 @@ public class AppApiServicePermissionVO extends BaseVO {
 
     @ApiModelProperty(value = "是否已授权")
     private String hasPermission;
+
+    @ApiModelProperty(value = "是否已订阅")
+    private String hasSubscription;
     /********字典类*****/
     @ApiModelProperty(value = "状态")
     private String statusName;
@@ -53,6 +68,10 @@ public class AppApiServicePermissionVO extends BaseVO {
 
     @ApiModelProperty(value = "是否已授权")
     private String hasPermissionName;
+
+    @ApiModelProperty(value = "是否已订阅")
+    private String hasSubscriptionName;
+
     /********子对象*****/
 
 

@@ -1,0 +1,94 @@
+server:
+  port: 8080
+#数据连接
+spring:
+  datasource:
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/abc?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: root
+    druid:
+      # 连接池的配置信息
+      # 初始化大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 600000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+      testWhileIdle: false
+      testOnBorrow: true
+      testOnReturn: false
+      usePingMethod: false
+  devtools:
+    livereload:
+      enabled: true
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    #新版本redis的timeout是一个duration，需使用如下写法
+    timeout: 10s
+    database: 0
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 2
+        # 连接池中的最大空闲连接
+        max-idle: 2
+        # 连接池的最大连接数
+        max-active: 16
+        #连接池最大阻塞等待时间
+        max-wait: 30s
+  profiles:
+    active: dev
+  #  session:
+  #    store-type: REDIS
+  #    timeout: 8h
+  servlet:
+    # 文件上传设置
+    multipart:
+      #设置单个文件的大小,-1代表不限制
+      max-file-size: -1
+      #设置单次请求文件的大小,-1代表不限制
+      max-request-size: -1
+
+  freemarker:
+    #    不检测是否存在模板，避免启动时控制台输出警告信息
+    checkTemplateLocation: false
+
+
+
+#mybatis-plus配置
+mybatis-plus:
+  #  mapper-locations: classpath*:/system/**.xml
+  global-config:
+    db-config:
+      logic-delete-value: "YES" # 逻辑已删除值
+      logic-not-delete-value: "NO" # 逻辑未删除值
+#平台配置
+platform-config:
+  system:
+    enablePermission: false
+    userInitPassword: 12345678
+    tokenSecret: wqliu
+    exportDataPageSize: 2
+  message:
+    serverPort: 8997
+    messageServerAppCode: CIP
+    readIdleTimeOut: 60
+    maxSendCount: 10
+    sendMessageSpan: 30
+    sendMessageCount: 10
+    enableResend: true
+
+
+
+
+

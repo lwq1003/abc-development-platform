@@ -40,6 +40,20 @@ export const app = Object.assign({}, COMMON_METHOD, {
       url: this.serveUrl + id + '/withdrawMessagePermission',
       data: messageTopicIdList
     })
+  },
+  // 订阅消息
+  subscribeMessage(messageTopicIdList) {
+    return request.put({
+      url: this.serveUrl + 'subscribeMessage',
+      data: messageTopicIdList
+    })
+  },
+  // 取消订阅消息
+  unsubscribeMessage(messageTopicIdList) {
+    return request.put({
+      url: this.serveUrl + 'unsubscribeMessage',
+      data: messageTopicIdList
+    })
   }
 })
 
@@ -73,6 +87,9 @@ export const messageTopic = Object.assign({}, COMMON_METHOD, {
   },
   queryMessagePermission(params) {
     return request.get({ url: this.serveUrl + 'queryMessagePermission', params })
+  },
+  queryMessageSubscription(params) {
+    return request.get({ url: this.serveUrl + 'queryMessageSubscription', params })
   }
 })
 

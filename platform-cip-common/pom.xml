@@ -5,12 +5,12 @@
     <parent>
         <groupId>tech.abc</groupId>
         <artifactId>abc-development-platform</artifactId>
-        <version>1.0.0</version>
+        <version>2.0.0</version>
     </parent>
     <groupId>tech.abc</groupId>
     <artifactId>platform-cip-common</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>platform-cip-common</name>
     <description>platform-cip</description>
     <properties>
