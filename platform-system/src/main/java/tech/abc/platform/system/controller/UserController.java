@@ -26,6 +26,7 @@ import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
+import tech.abc.platform.system.vo.UserChangePasswordVO;
 import tech.abc.platform.system.vo.UserVO;
 
 import java.util.ArrayList;
@@ -224,11 +225,12 @@ public class UserController extends BaseController {
     /**
      * 用户修改密码
      */
-    @PutMapping("/{id}/changePassword")
+    @PutMapping("/changePassword")
     @SystemLog(value = "修改密码", logType = LogTypeEnum.AUDIT)
     @AllowAuthenticated
-    public ResponseEntity<Result> changePassword(@PathVariable String id, String oldPassword, String newPassword) {
-        userService.changePassword(id, oldPassword, newPassword);
+    public ResponseEntity<Result> changePassword(@RequestBody UserChangePasswordVO vo) {
+
+        userService.changePassword(vo.getUserId(), vo.getOldPassword(), vo.getNewPassword());
         return ResultUtil.success();
     }
 

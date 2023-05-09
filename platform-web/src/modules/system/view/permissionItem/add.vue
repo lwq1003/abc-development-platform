@@ -50,7 +50,7 @@
 
 <script>
 import { addMixin } from '@/mixin/addMixin.js'
-import PermissionItemReference from '@/modules/system/view/permissionItem/treereference.vue'
+import PermissionItemReference from '@/modules/system/view/permissionItem/treeReference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'permissionItem'
 export default {

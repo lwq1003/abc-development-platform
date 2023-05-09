@@ -35,7 +35,7 @@
 
 <script>
 import { viewMixin } from '@/mixin/viewMixin.js'
-import UserGroupReference from '@/modules/system/view/userGroup/treereference.vue'
+import UserGroupReference from '@/modules/system/view/userGroup/treeReference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'userGroup'
 export default {

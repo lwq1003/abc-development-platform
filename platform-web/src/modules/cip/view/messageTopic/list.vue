@@ -119,13 +119,14 @@
 
 <script lang="ts">
 import { listMixin } from '@/mixin/listMixin.js'
-import { formatDate, formatTime } from '@/utils/TableColumnFormatter.js'
+
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
 const MODULE_CODE = 'cip'
 const ENTITY_TYPE = 'messageTopic'
 export default {
+  name: ENTITY_TYPE,
   components: {
     AddPage,
     ModifyPage,
@@ -134,7 +135,6 @@ export default {
   mixins: [listMixin],
   data() {
     return {
-      name: ENTITY_TYPE + '-list',
       entityType: ENTITY_TYPE,
       moduleCode: MODULE_CODE,
       // eslint-disable-next-line no-eval

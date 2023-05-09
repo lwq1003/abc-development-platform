@@ -106,7 +106,6 @@ export default {
   mixins: [listMixin],
   data() {
     return {
-      name: ENTITY_TYPE + '-list',
       entityType: ENTITY_TYPE,
       moduleCode: MODULE_CODE,
       // eslint-disable-next-line no-eval

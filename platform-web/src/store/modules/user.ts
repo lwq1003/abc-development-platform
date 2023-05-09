@@ -8,7 +8,7 @@ import { setToken } from '@/utils/auth'
 interface UserState {
   account: string
   name: string
-  forceChangePassword: string
+  forceChangePasswordFlag: string
   id: string
   token: string
   buttonPermission: string[]
@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     account: '',
     name: '',
-    forceChangePassword: '',
+    forceChangePasswordFlag: '',
     id: '',
     token: '',
     buttonPermission: [],
@@ -34,7 +34,7 @@ export const useUserStore = defineStore('user', {
     async setUserAction(user) {
       this.account = user.account
       this.name = user.name
-      this.forceChangePassword = user.forceChangePassword
+      this.forceChangePasswordFlag = user.forceChangePasswordFlag
       this.id = user.id
       this.token = user.token
       this.buttonPermission = user.buttonPermission
@@ -51,7 +51,7 @@ export const useUserStore = defineStore('user', {
     resetState() {
       this.account = ''
       this.name = ''
-      this.forceChangePassword = ''
+      this.forceChangePasswordFlag = ''
       this.id = ''
       this.token = ''
       this.buttonPermission = []

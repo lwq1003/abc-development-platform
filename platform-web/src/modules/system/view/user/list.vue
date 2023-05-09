@@ -140,10 +140,10 @@ import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
-import UserGroup from '@/modules/system/view/userGroup/treemultiplereference.vue'
+import UserGroup from '@/modules/system/view/userGroup/treeMultipleReference.vue'
+import { getFormatMethod } from '@/utils/TableColumnFormatter.js'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'user'
-import { formatDate, formatTime } from '@/utils/TableColumnFormatter.js'
 export default {
   components: {
     AddPage,
@@ -154,7 +154,6 @@ export default {
   mixins: [listMixin],
   data() {
     return {
-      name: ENTITY_TYPE + '-list',
       entityType: ENTITY_TYPE,
       moduleCode: MODULE_CODE,
       // eslint-disable-next-line no-eval
@@ -223,7 +222,7 @@ export default {
           showOverflowTooltip: true,
           width: '120',
           sortable: true,
-          formatFunc: formatDate
+          formatFunc: getFormatMethod('FORMAT_DATE')
         },
         {
           prop: 'statusName',
@@ -239,7 +238,7 @@ export default {
           showOverflowTooltip: true,
           width: '120',
           sortable: true,
-          formatFunc: formatTime
+          formatFunc: getFormatMethod('FORMAT_TIME')
         },
         {
           prop: 'orderNo',

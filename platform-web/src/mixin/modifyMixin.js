@@ -5,7 +5,7 @@
 import { Dialog } from '@/components/abc/Dialog'
 import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
-import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeReference.vue'
+import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeReferenceUseCode.vue'
 import IconPicker from '@/components/abc/IconPicker/index.vue'
 
 export const modifyMixin = {

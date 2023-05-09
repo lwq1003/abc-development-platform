@@ -104,6 +104,7 @@ import ViewPage from './view.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityView'
 export default {
+  name: ENTITY_TYPE,
   components: {
     AddPage,
     ModifyPage,
@@ -112,7 +113,6 @@ export default {
   mixins: [listMixin],
   data() {
     return {
-      name: ENTITY_TYPE + '-list',
       entityType: ENTITY_TYPE,
       moduleCode: MODULE_CODE,
       // eslint-disable-next-line no-eval
@@ -140,6 +140,19 @@ export default {
           show: true,
           showOverflowTooltip: true,
           sortable: true
+        },
+        {
+          prop: 'mainViewFlagName',
+          label: '主视图',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: false
+        },
+        {
+          prop: 'mainReferenceViewFlagName',
+          label: '主参照视图',
+          show: true,
+          showOverflowTooltip: true
         },
         {
           prop: 'orderNo',

@@ -51,6 +51,7 @@ public class EntityViewServiceImpl extends BaseServiceImpl<EntityViewMapper, Ent
     public EntityView init() {
         EntityView entity = new EntityView();
         // 默认值处理
+        entity.setMainViewFlag(YesOrNoEnum.NO.name());
         entity.setMainReferenceViewFlag(YesOrNoEnum.NO.name());
         return entity;
     }

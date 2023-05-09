@@ -70,8 +70,11 @@ export const user = Object.assign({}, COMMON_METHOD, {
     return request.put({ url: this.serveUrl + id + '/unlock' })
   },
   // 用户修改密码
-  changePassword(id, params) {
-    return request.put({ url: this.serveUrl + id + '/changePassword', data: params })
+  changePassword(id, oldPassword, newPassword) {
+    return request.put({
+      url: this.serveUrl + 'changePassword',
+      data: { userId: id, oldPassword, newPassword }
+    })
   },
   // 获取用户组对应的用户
   getUserByUserGroupId(userGroupId, params) {

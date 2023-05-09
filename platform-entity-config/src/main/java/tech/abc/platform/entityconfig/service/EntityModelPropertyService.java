@@ -30,6 +30,23 @@ public interface EntityModelPropertyService extends BaseService<EntityModelPrope
      */
     List<EntityModelProperty> getByEntityModelId(String entityModelId);
 
+    /**
+     * 通过实体模型标识获取实体模型属性列表(仅数据库存储）
+     *
+     * @param entityModelId 实体模型id
+     * @return {@link List}<{@link EntityModelProperty}>
+     */
+    List<EntityModelProperty> getDatabaseStoreListByEntityModelId(String entityModelId);
+
+
+    /**
+     * 通过实体模型标识获取实体模型属性列表(仅非数据库存储）
+     *
+     * @param entityModelId 实体模型id
+     * @return {@link List}<{@link EntityModelProperty}>
+     */
+    List<EntityModelProperty> getNoDatabaseStoreListByEntityModelId(String entityModelId);
+
 
     /**
      * 通过实体模型标识获取包含父类在内的所有实体模型属性列表

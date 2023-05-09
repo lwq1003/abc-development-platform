@@ -1,10 +1,10 @@
 package tech.abc.platform.entityconfig.vo;
 
 
-import tech.abc.platform.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseVO;
 
 import javax.validation.constraints.NotBlank;
 
@@ -102,6 +102,12 @@ public class EntityModelPropertyVO extends BaseVO {
     private String parentPropertyFlag;
 
     /**
+     * 是否库表存储
+     */
+    @NotBlank(message = "【是否库表存储】不能为空")
+    private String databaseStoreFlag;
+
+    /**
      * 排序
      */
     private String orderNo;
@@ -136,12 +142,18 @@ public class EntityModelPropertyVO extends BaseVO {
 
     private String parentPropertyFlagName;
 
+    /**
+     * 是否库表存储
+     */
+    private String databaseStoreFlagName;
+
 
     /********实体类*****/
     /**
      * 唯一性参照
      */
     private String entityModelPropertyName;
+
 
     /********范围查询*****/
 

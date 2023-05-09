@@ -91,6 +91,9 @@
       <el-form-item label="是否上级属性" prop="parentPropertyFlag">
         <dictionary-radio-group v-model="entityData.parentPropertyFlag" code="YesOrNo" />
       </el-form-item>
+      <el-form-item label="是否库表存储" prop="databaseStoreFlag">
+        <dictionary-radio-group v-model="entityData.databaseStoreFlag" code="YesOrNo" />
+      </el-form-item>
       <el-form-item label="排序" prop="orderNo">
         <el-input v-model="entityData.orderNo" />
       </el-form-item>

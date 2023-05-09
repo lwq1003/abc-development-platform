@@ -29,11 +29,7 @@ export const getRawRoute = (route: RouteLocationNormalized): RouteLocationNormal
   return {
     ...opt,
     matched: (matched
-      ? matched.map((item) => ({
-          meta: item.meta,
-          name: item.name,
-          path: item.path
-        }))
+      ? matched.map((item) => ({ meta: item.meta, name: item.name, path: item.path }))
       : undefined) as RouteRecordNormalized[]
   }
 }

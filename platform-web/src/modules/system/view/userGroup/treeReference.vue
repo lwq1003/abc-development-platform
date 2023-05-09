@@ -8,7 +8,7 @@
         </el-button-group>
       </template>
     </el-input>
-    <Dialog title="字典类型选择" v-model="visible" width="300px">
+    <Dialog title="用户组选择" v-model="visible" width="300px">
       <el-input v-model="searchValue" placeholder="请输入名称查询" style="margin-bottom: 10px" />
       <el-tag>当前选中：{{ currentName }}</el-tag>
       <el-tree
@@ -33,7 +33,7 @@
 <script>
 import { treeReferenceMixin } from '@/mixin/treeReferenceMixin.js'
 const MODULE_CODE = 'system'
-const ENTITY_TYPE = 'dictionaryType'
+const ENTITY_TYPE = 'userGroup'
 export default {
   mixins: [treeReferenceMixin],
   data() {

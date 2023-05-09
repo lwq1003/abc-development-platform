@@ -2,10 +2,10 @@ package tech.abc.platform.entityconfig.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
 
 /**
  * 实体视图 实体类
@@ -37,6 +37,11 @@ public class EntityView extends BaseEntity {
     @TableField("code")
     private String code;
 
+    /**
+     * 主视图
+     */
+    @TableField("main_view_flag")
+    private String mainViewFlag;
 
     /**
      * 主参照视图

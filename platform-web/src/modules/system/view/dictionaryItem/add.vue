@@ -37,7 +37,7 @@
 
 <script>
 import { addMixin } from '@/mixin/addMixin.js'
-import DictionaryTypeReference from '@/modules/system/view/dictionaryType/treereference.vue'
+import DictionaryTypeReference from '@/modules/system/view/dictionaryType/treeReference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'dictionaryItem'
 export default {

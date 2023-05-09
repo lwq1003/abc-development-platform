@@ -3,13 +3,17 @@ package tech.abc.platform.entityconfig.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
+import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
+import tech.abc.platform.entityconfig.enums.EntityModelPropertyTypeEnum;
 import tech.abc.platform.entityconfig.mapper.EntityModelPropertyMapper;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
 import tech.abc.platform.entityconfig.service.EntityModelService;
@@ -17,6 +21,7 @@ import tech.abc.platform.entityconfig.service.EntityModelService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 实体模型属性 服务实现类
@@ -39,6 +44,7 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
         entity.setUniqueFlag("NO");
         entity.setMainFlag("NO");
         entity.setParentPropertyFlag("NO");
+        entity.setDatabaseStoreFlag("YES");
         return entity;
     }
 
@@ -114,12 +120,20 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
     }
 
     @Override
+    public List<EntityModelProperty> getDatabaseStoreListByEntityModelId(String entityModelId) {
+        return getByEntityModelId(entityModelId).stream().filter(x -> x.getDatabaseStoreFlag().equals(YesOrNoEnum.YES.name())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EntityModelProperty> getNoDatabaseStoreListByEntityModelId(String entityModelId) {
+        return getByEntityModelId(entityModelId).stream().filter(x -> x.getDatabaseStoreFlag().equals(YesOrNoEnum.NO.name())).collect(Collectors.toList());
+
+    }
+
+    @Override
     public List<EntityModelProperty> getFullPropertyByEntityModelId(String entityModelId) {
-        log.info("模型标识:{}", entityModelId);
         EntityModel entityModel = entityModelService.query(entityModelId);
         String parentModelId = entityModelService.getIdByCode(entityModel.getParentModel());
-        log.info("上级模型标识:{}", parentModelId);
-
 
         // 获取父级模型属性列表
         List<EntityModelProperty> parentModelPropertyList = getByEntityModelId(parentModelId);
@@ -134,5 +148,47 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
     @Override
     public List<EntityModelProperty> getByEntityModelCode(String entityModelCode) {
         return this.lambdaQuery().eq(EntityModelProperty::getCode, entityModelCode).list();
+    }
+
+    @Override
+    protected void beforeAddOrModifyOp(EntityModelProperty entity) {
+        String propertyDataType = generatePropertyDataType(entity);
+        entity.setPropertyDataType(propertyDataType);
+    }
+
+    /**
+     * 生成属性的数据类型
+     *
+     * @param modelProperty 模型属性
+     * @return {@link String}
+     */
+    private String generatePropertyDataType(EntityModelProperty modelProperty) {
+        String result = StringUtils.EMPTY;
+        EntityModelPropertyTypeEnum dataType = EnumUtils.getEnum(EntityModelPropertyTypeEnum.class, modelProperty.getDataType());
+        switch (dataType) {
+            case STRING:
+                result = "String";
+                break;
+            case INTEGER:
+                result = "Integer";
+                break;
+            case LONG:
+                result = "Long";
+                break;
+            case DOUBLE:
+                result = "Double";
+                break;
+            case DATETIME:
+                result = "LocalDateTime";
+                break;
+            case DECIMAL:
+                result = "BigDecimal";
+                break;
+            default:
+                result = "String";
+        }
+
+        return result;
+
     }
 }

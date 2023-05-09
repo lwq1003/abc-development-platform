@@ -2,7 +2,26 @@
 import { useTagsViewStore } from '@/store/modules/tagsView'
 import { useAppStore } from '@/store/modules/app'
 import { Footer } from '@/components/Footer'
-import { computed } from 'vue'
+import { ElDialog } from 'element-plus'
+import { useCache } from '@/hooks/web/useCache'
+import { ref, computed, onMounted } from 'vue'
+import ChangePassword from '@/components/abc/ChangePassword/index.vue'
+import { USER_KEY } from '@/constant/common'
+const { wsCache } = useCache()
+// 修改密码对话框可见性
+const visible = ref(false)
+// 生命周期钩子
+onMounted(() => {
+  if (wsCache.get(USER_KEY).forceChangePasswordFlag === 'YES') {
+    visible.value = true
+  }
+})
+
+const beforeClose = (done) => {
+  if (wsCache.get(USER_KEY).forceChangePasswordFlag === 'NO') {
+    done()
+  }
+}
 
 const appStore = useAppStore()
 
@@ -48,5 +67,19 @@ const getCaches = computed((): string[] => {
       </template>
     </router-view>
   </section>
+  <ElDialog
+    title="修改密码"
+    v-model="visible"
+    width="400px"
+    destroy-on-close
+    lock-scroll
+    heigh="500px"
+    draggable
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :before-close="beforeClose"
+  >
+    <ChangePassword @hidden="visible = false" />
+  </ElDialog>
   <Footer v-if="footer" />
 </template>

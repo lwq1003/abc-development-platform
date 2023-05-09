@@ -1,7 +1,7 @@
 package tech.abc.platform.system.exception;
 
-import tech.abc.platform.common.exception.ExceptionInterface;
 import lombok.Getter;
+import tech.abc.platform.common.exception.ExceptionInterface;
 
 
 /**
@@ -42,7 +42,7 @@ public enum UserExceptionEnum implements ExceptionInterface {
     /**
      * 密码强度不够，请包含大写字母、小写字母、数字、特殊符号这4种类型中的3种
      */
-    PWD_CHANGE_NOT_STRONG("密码强度不够，请包含大写字母、小写字母、数字、特殊符号这4种类型中的3种"),
+    PWD_CHANGE_NOT_STRONG("密码强度不够，请包含大写字母、小写字母、数字、特殊符号这4种类型中的3种,且至少8位"),
     /**
      * 新密码不能包含账号、电话号码或出生日期三者中任何一项
      */

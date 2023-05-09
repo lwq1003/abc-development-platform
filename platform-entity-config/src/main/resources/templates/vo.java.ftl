@@ -48,6 +48,17 @@ public class ${entity} implements Serializable {
     private ${field.propertyType} ${field.propertyName};
 
 </#list>
+
+
+    /********非库表存储属性*****/
+<#list noDatabaseStoreEntityModelPropertyList as field>
+    /**
+    * ${field.name}
+    */
+    private ${field.propertyDataType} ${field.code};
+
+</#list>
+}
 <#------------  END 字段循环遍历  ---------->
 
     /********字典类*****/
@@ -57,6 +68,16 @@ public class ${entity} implements Serializable {
     * ${item.name}
     */
     private String ${item.code}Name;
+
+    </#if>
+</#list>
+<#list noDatabaseStoreEntityModelPropertyList as item>
+    <#if item.dataType=="DATA_DICTIONARY">
+    /**
+    * ${item.name}
+    */
+    private String ${item.code}Name;
+
     </#if>
 </#list>
 
@@ -68,6 +89,7 @@ public class ${entity} implements Serializable {
     * ${item.name}
     */
     private String ${item.code}Name;
+
     </#if>
 </#list>
 </#if>
@@ -84,6 +106,7 @@ public class ${entity} implements Serializable {
     * ${item.name}止
     */
     private String ${item.code}EndForQuery;
+
 </#list>
 </#if>
 
@@ -93,6 +116,7 @@ public class ${entity} implements Serializable {
     * 忽略上级
     */
     private Boolean ignoreParent;
+
 </#if>
 
     /********子对象*****/

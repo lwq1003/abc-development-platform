@@ -24,6 +24,13 @@
         <el-input v-model="entityData.code" />
       </el-form-item>
       <el-form-item
+        label="主视图"
+        prop="mainViewFlag"
+        v-show="entityData.entityViewType === 'LIST' || entityData.entityViewType === 'TREE_LIST'"
+      >
+        <dictionary-radio-group v-model="entityData.mainViewFlag" code="YesOrNo" />
+      </el-form-item>
+      <el-form-item
         label="主参照视图"
         prop="mainReferenceViewFlag"
         v-show="

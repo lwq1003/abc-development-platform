@@ -7,3 +7,11 @@ export function formatDate(row, column, cellValue) {
 export function formatTime(row, column, cellValue) {
   return dateFormatter.formatUTCTime(cellValue)
 }
+
+export function getFormatMethod(name) {
+  if (name === 'FORMAT_DATE') {
+    return formatDate
+  } else if (name === 'FORMAT_TIME') {
+    return formatTime
+  }
+}

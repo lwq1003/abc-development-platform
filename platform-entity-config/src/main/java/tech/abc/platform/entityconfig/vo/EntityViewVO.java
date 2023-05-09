@@ -1,10 +1,10 @@
 package tech.abc.platform.entityconfig.vo;
 
 
-import tech.abc.platform.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseVO;
 
 import javax.validation.constraints.NotBlank;
 
@@ -36,6 +36,12 @@ public class EntityViewVO extends BaseVO {
     @NotBlank(message = "编码不能为空")
     private String code;
 
+
+    /**
+     * 主视图
+     */
+
+    private String mainViewFlag;
 
     /**
      * 主参照视图
@@ -106,6 +112,12 @@ public class EntityViewVO extends BaseVO {
      * 视图类型
      */
     private String entityViewTypeName;
+
+    /**
+     * 主视图
+     */
+
+    private String mainViewFlagName;
 
 
     /**

@@ -152,10 +152,9 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             String parentModelId = entityModelService.getIdByCode(entityModel.getParentModel());
             List<EntityModelProperty> parentModelPropertyList = entityModelPropertyService.getByEntityModelId(parentModelId);
 
-            log.info("父级模型字段数：{}", parentModelPropertyList.size());
-            // 获取实体模型属性列表
-            List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getByEntityModelId(entityModel.getId());
 
+            // 获取实体模型属性列表,非库表存储字段忽略
+            List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModel.getId());
             CollectionUtils.addAll(entityModelPropertyList, parentModelPropertyList.iterator());
             // 将实体模型属性转换为库表字段信息
             List<TableFieldInfo> tableFieldInfoList = convertModelPropertyData(entityModelPropertyList);
@@ -174,7 +173,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             TableFieldInfo tableFieldInfo = new TableFieldInfo();
             String fieldCode = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, modelProperty.getCode());
             tableFieldInfo.setCode(fieldCode);
-            tableFieldInfo.setDataType(generateDataType(modelProperty));
+            tableFieldInfo.setDataType(generateDatabaseDataType(modelProperty));
 
             String nullFlag = "";
             if (modelProperty.getNullFlag().equals(YesOrNoEnum.NO.name())) {
@@ -183,6 +182,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             tableFieldInfo.setNullFlag(nullFlag);
             tableFieldInfo.setName(modelProperty.getName());
 
+            // TODO 去除库表默认值设定
             String defaultValue = "";
             if (StringUtils.isNotBlank(modelProperty.getDefaultValue())) {
                 defaultValue = "DEFAULT '" + modelProperty.getDefaultValue() + "'";
@@ -195,12 +195,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     /**
-     * 生成数据类型
+     * 生成库表的数据类型
      *
      * @param modelProperty 模型属性
      * @return {@link String}
      */
-    private String generateDataType(EntityModelProperty modelProperty) {
+    private String generateDatabaseDataType(EntityModelProperty modelProperty) {
         String result = StringUtils.EMPTY;
         Integer maxLength = modelProperty.getMaxLength();
         Integer decimalLength = modelProperty.getDecimalLength();
@@ -438,6 +438,13 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 获取查询结果配置
         List<ViewQueryResult> queryResultList = viewQueryResultService.listByView(entityView.getId());
         customKeyValue.put("queryResultList", queryResultList);
+
+        // 查询结果中有设置格式化方法
+        if (queryResultList.stream().anyMatch(x -> StringUtils.isNotBlank(x.getFormatFunction()))) {
+            customKeyValue.put("existFormatMethod", YesOrNoEnum.YES.name());
+        } else {
+            customKeyValue.put("existFormatMethod", YesOrNoEnum.NO.name());
+        }
 
 
         // 自定义列表视图模板
@@ -710,6 +717,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getByEntityModelId(entityModel.getId());
             customKeyValue.put("entityModelPropertyList", entityModelPropertyList);
 
+            // 获取非库存储的实体模型属性列表
+            List<EntityModelProperty> noDatabaseStoreEntityModelPropertyList = entityModelPropertyService.getNoDatabaseStoreListByEntityModelId(entityModel.getId());
+            customKeyValue.put("noDatabaseStoreEntityModelPropertyList", noDatabaseStoreEntityModelPropertyList);
+
 
             entityModelPropertyList.forEach(x -> {
                 // 设置主属性编码
@@ -740,6 +751,16 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
             // 获取所有视图
             List<EntityView> entityViewList = entityViewService.getByModelId(entityModel.getId());
+            // 获取主视图
+            Optional<EntityView> mainView = entityViewList.stream().filter(x -> x.getMainViewFlag().equals(YesOrNoEnum.YES.name())).findFirst();
+            if (mainView.isPresent()) {
+                customKeyValue.put("mainViewCode", mainView.get().getCode());
+            } else {
+                // 此处不抛出异常是因为部分关系对应表无视图，设置为空，避免代码生成时报错
+                customKeyValue.put("mainViewCode", "");
+            }
+
+
             // 遍历视图
             entityViewList.stream().forEach(entityView -> {
                 EntityViewTypeEnum entityViewTypeEnum = EnumUtils.getEnum(EntityViewTypeEnum.class, entityView.getEntityViewType(), EntityViewTypeEnum.LIST);

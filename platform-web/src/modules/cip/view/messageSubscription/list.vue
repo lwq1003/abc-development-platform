@@ -73,8 +73,9 @@ import CollapseTab from '@/components/abc/CollapseTab/index.vue'
 import QueryText from '@/components/abc/QueryText/index.vue'
 
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
-
+const ENTITY_TYPE = 'messageSubscription'
 export default {
+  name: ENTITY_TYPE,
   components: {
     CollapseTab,
     QueryText,

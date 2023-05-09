@@ -41,7 +41,7 @@
 
 <script>
 import { viewMixin } from '@/mixin/viewMixin.js'
-import OrganizationReference from '@/modules/system/view/organization/treereference.vue'
+import OrganizationReference from '@/modules/system/view/organization/treeReference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'organization'
 export default {

@@ -7,7 +7,10 @@ import { useRouter } from 'vue-router'
 import { loginOutApi } from '@/api/login'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useTagsViewStore } from '@/store/modules/tagsView'
-
+import { Dialog } from '@/components/abc/Dialog'
+import ChangePassword from '@/components/abc/ChangePassword/index.vue'
+import { ref } from 'vue'
+import { UserFilled } from '@element-plus/icons-vue'
 const tagsViewStore = useTagsViewStore()
 
 const { getPrefixCls } = useDesign()
@@ -17,9 +20,10 @@ const prefixCls = getPrefixCls('user-info')
 const { t } = useI18n()
 
 const { wsCache } = useCache()
-
+import { USER_KEY } from '@/constant/common'
 const { replace } = useRouter()
 
+const visible = ref(false)
 const loginOut = () => {
   ElMessageBox.confirm(t('common.loginOutMessage'), t('common.reminder'), {
     confirmButtonText: t('common.ok'),
@@ -38,25 +42,28 @@ const loginOut = () => {
     .catch(() => {})
 }
 
-const toDocument = () => {
-  window.open('https://element-plus-admin-doc.cn/')
+const changePassword = () => {
+  visible.value = true
 }
 </script>
 
 <template>
   <ElDropdown :class="prefixCls" trigger="click">
     <div class="flex items-center">
-      <img
-        src="@/assets/imgs/avatar.jpg"
-        alt=""
-        class="w-[calc(var(--logo-height)-25px)] rounded-[50%]"
-      />
-      <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">Archer</span>
+      <el-avatar :icon="UserFilled" :size="30" />
+
+      <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">{{
+        wsCache.get(USER_KEY).name
+      }}</span>
+      <Dialog title="修改密码" v-model="visible" width="400px">
+        <ChangePassword @hidden="visible = false" />
+      </Dialog>
     </div>
+
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem>
-          <div @click="toDocument">{{ t('common.document') }}</div>
+          <div @click="changePassword">{{ t('common.changePassword') }}</div>
         </ElDropdownItem>
         <ElDropdownItem divided>
           <div @click="loginOut">{{ t('common.loginOut') }}</div>

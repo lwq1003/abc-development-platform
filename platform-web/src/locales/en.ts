@@ -8,6 +8,7 @@ export default {
     required: 'This is required',
     loginOut: 'Login out',
     document: 'Document',
+    changePassword: 'Change password',
     reminder: 'Reminder',
     loginOutMessage: 'Exit the system?',
     back: 'Back',

@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  name: ENTITY_TYPE,
   data() {
     return {}
   },

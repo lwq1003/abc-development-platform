@@ -77,4 +77,13 @@ public class ${entity} implements Serializable {
 
 </#list>
 <#------------  END 字段循环遍历  ---------->
+    /********非库表存储属性*****/
+<#list noDatabaseStoreEntityModelPropertyList as field>
+    /**
+    * ${field.name}
+    */
+    @TableField(exist = false)
+    private ${field.propertyDataType} ${field.code};
+
+</#list>
 }

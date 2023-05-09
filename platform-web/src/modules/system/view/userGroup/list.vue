@@ -136,7 +136,7 @@ import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
-import PermissionItem from '@/modules/system/view/permissionItem/treemultiplereference.vue'
+import PermissionItem from '@/modules/system/view/permissionItem/treeMultipleReference.vue'
 import User from './user/index.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'userGroup'
@@ -151,7 +151,6 @@ export default {
   mixins: [listMixin],
   data() {
     return {
-      name: ENTITY_TYPE + '-list',
       entityType: ENTITY_TYPE,
       moduleCode: MODULE_CODE,
       // eslint-disable-next-line no-eval

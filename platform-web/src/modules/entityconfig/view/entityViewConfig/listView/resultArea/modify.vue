@@ -35,7 +35,7 @@
         <dictionary-radio-group v-model="entityData.sortableFlag" code="YesOrNo" />
       </el-form-item>
       <el-form-item label="格式化方法" prop="formatFunction">
-        <el-input v-model="entityData.formatFunction" />
+        <dictionary-select v-model="entityData.formatFunction" code="TableColumnFormatMethod" />
       </el-form-item>
       <el-form-item label="是否悬浮显示" prop="showOverflowTooltipFlag">
         <dictionary-radio-group v-model="entityData.showOverflowTooltipFlag" code="YesOrNo" />

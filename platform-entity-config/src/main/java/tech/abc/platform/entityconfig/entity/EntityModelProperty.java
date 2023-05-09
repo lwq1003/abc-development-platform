@@ -3,10 +3,10 @@ package tech.abc.platform.entityconfig.entity;
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
 
 /**
  * 实体模型属性 实体类
@@ -109,6 +109,19 @@ public class EntityModelProperty extends BaseEntity {
      */
     @TableField("parent_property_flag")
     private String parentPropertyFlag;
+
+    /**
+     * 是否库表存储
+     */
+    @TableField("database_store_flag")
+    private String databaseStoreFlag;
+
+
+    /**
+     * 属性数据类型
+     */
+    @TableField("property_data_type")
+    private String propertyDataType;
 
     /**
      * 排序

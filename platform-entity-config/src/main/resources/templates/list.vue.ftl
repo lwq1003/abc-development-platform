@@ -233,10 +233,12 @@
 
 <script lang="ts">
     import {listMixin} from '@/mixin/listMixin.js'
-    import { formatDate, formatTime } from '@/utils/TableColumnFormatter.js'
     import AddPage from './add.vue'
     import ModifyPage from './modify.vue'
     import ViewPage from './view.vue'
+    <#if existFormatMethod=="YES">
+    import { getFormatMethod } from '@/utils/TableColumnFormatter.js'
+    </#if>
     <#list queryConditionList as item>
     <#if item.dataType=="ENTITY">
     import ${item.code?cap_first}Reference from '@/modules/${package.ModuleName}/view/${item.code}/${mainReferenceViewMap[item.code]}.vue'
@@ -245,6 +247,9 @@
     const MODULE_CODE = '${package.ModuleName}'
     const ENTITY_TYPE = '${entity?uncap_first}'
     export default {
+    <#if mainViewCode=="list">
+        name: ENTITY_TYPE,
+    </#if>
         mixins: [listMixin],
         components:{
             AddPage,
@@ -258,7 +263,6 @@
         },
         data() {
             return {
-                name: ENTITY_TYPE + '-list',
                 entityType: ENTITY_TYPE,
                 moduleCode: MODULE_CODE,
                 // eslint-disable-next-line no-eval
@@ -292,8 +296,8 @@
                         <#if field.width??>
                         , width: '${field.width}'
                         </#if>
-                        <#if field.formatFunction??>
-                        , formatFunction: ${field.formatFunction}
+                        <#if field.formatFunction!?length gt 0>
+                        , formatFunction: getFormatMethod('${field.formatFunction}')
                         </#if>
                         <#if field.sortableFlag=="YES" && field.dataType!="DATA_DICTIONARY">
                         , sortable: true

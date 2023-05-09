@@ -98,6 +98,7 @@ import ViewPage from './view.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'viewButtonTemplate'
 export default {
+  name: ENTITY_TYPE,
   components: {
     AddPage,
     ModifyPage,
@@ -106,7 +107,6 @@ export default {
   mixins: [listMixin],
   data() {
     return {
-      name: ENTITY_TYPE + '-list',
       entityType: ENTITY_TYPE,
       moduleCode: MODULE_CODE,
       // eslint-disable-next-line no-eval

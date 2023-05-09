@@ -4,6 +4,12 @@ package tech.abc.platform.entityconfig.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.query.QueryGenerator;
@@ -15,12 +21,6 @@ import tech.abc.platform.entityconfig.entity.EntityView;
 import tech.abc.platform.entityconfig.service.EntityModelService;
 import tech.abc.platform.entityconfig.service.EntityViewService;
 import tech.abc.platform.entityconfig.vo.EntityViewVO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,6 +169,9 @@ public class EntityViewController extends BaseController {
     private EntityViewVO convert2VO(EntityView entity) {
         EntityViewVO vo = mapperFacade.map(entity, EntityViewVO.class);
         vo.setEntityViewTypeName(dictionaryUtil.getNameByCode("EntityViewType", entity.getEntityViewType()));
+        vo.setMainViewFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getMainViewFlag()));
+        vo.setMainReferenceViewFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getMainReferenceViewFlag()));
+
         return vo;
     }
 
