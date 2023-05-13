@@ -54,7 +54,7 @@ public class LogDTO {
 
 
     /**
-     * 响应结果
+     * 是否执行成功
      */
     private String responseCode;
 

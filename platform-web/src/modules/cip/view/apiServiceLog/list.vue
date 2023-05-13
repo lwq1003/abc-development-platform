@@ -125,6 +125,11 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
+      // 排序信息
+      sortInfo: {
+        sort_field: 'id',
+        sort_sortType: 'descending'
+      },
       columnList: [
         {
           prop: 'appCode',

@@ -23,7 +23,6 @@
             align="right"
             unlink-panels
             placeholder="开始"
-            style="width: 214px"
           />
         </el-form-item>
         <el-form-item label="至">
@@ -34,7 +33,6 @@
             align="right"
             unlink-panels
             placeholder="结束"
-            style="width: 214px"
           />
         </el-form-item>
 
@@ -58,7 +56,6 @@
             align="right"
             unlink-panels
             placeholder="开始"
-            style="width: 214px"
           />
         </el-form-item>
         <el-form-item label="至">
@@ -69,7 +66,6 @@
             align="right"
             unlink-panels
             placeholder="结束"
-            style="width: 214px"
           />
         </el-form-item>
 
@@ -143,7 +139,6 @@
 
 <script lang="ts">
 import { listMixin } from '@/mixin/listMixin.js'
-
 import ViewPage from './view.vue'
 const MODULE_CODE = 'cip'
 const ENTITY_TYPE = 'messageLog'
@@ -160,6 +155,11 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
+      // 排序信息
+      sortInfo: {
+        sort_field: 'id',
+        sort_sortType: 'descending'
+      },
       columnList: [
         {
           prop: 'requestId',
@@ -277,12 +277,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-form-item .el-input {
-  width: 214px;
-}
-
-.el-form-item .el-select {
-  width: 214px;
-}
-</style>
+<style scoped></style>

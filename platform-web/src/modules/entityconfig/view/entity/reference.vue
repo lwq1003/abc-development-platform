@@ -1,13 +1,10 @@
 <template>
   <div class="w-full">
-    <el-input v-model="displayName" disabled>
-      <template #append>
-        <el-button-group>
-          <el-button icon="grid" @click="init" />
-          <el-button icon="delete" @click="clear" />
-        </el-button-group>
-      </template>
-    </el-input>
+    <el-input v-model="displayName" disabled style="width: 152px" />
+    <el-button-group>
+      <el-button icon="grid" @click="init" style="border-left-width: 0; padding: 10px" />
+      <el-button icon="delete" @click="clear" style="border-left-width: 0; padding: 10px" />
+    </el-button-group>
     <Dialog title="实体选择" v-model="visible" width="60%">
       <CollapseTab>
         <el-form :inline="true" :model="queryCondition" label-width="80px" @keyup.enter="query">

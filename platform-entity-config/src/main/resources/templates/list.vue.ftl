@@ -274,6 +274,13 @@
                 ${item.code}Param: {},
                 </#if>
                 </#list>
+                <#if existOrderNo=="NO">
+                // 排序信息
+                sortInfo: {
+                    sort_field: 'id',
+                    sort_sortType: 'descending'
+                },
+                </#if>
                 columnList: [
                     <#list queryResultList as field>
                     {

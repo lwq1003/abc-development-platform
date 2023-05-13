@@ -446,7 +446,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             customKeyValue.put("existFormatMethod", YesOrNoEnum.NO.name());
         }
 
-
         // 自定义列表视图模板
         CustomFile templateFile = new CustomFile.Builder()
                 .fileName("list.vue")
@@ -721,7 +720,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             List<EntityModelProperty> noDatabaseStoreEntityModelPropertyList = entityModelPropertyService.getNoDatabaseStoreListByEntityModelId(entityModel.getId());
             customKeyValue.put("noDatabaseStoreEntityModelPropertyList", noDatabaseStoreEntityModelPropertyList);
 
-
+            // 默认设置不存在排序属性orderNo
+            customKeyValue.put("existOrderNo", YesOrNoEnum.NO.name());
             entityModelPropertyList.forEach(x -> {
                 // 设置主属性编码
                 if (x.getMainFlag().equals(YesOrNoEnum.YES.name())) {
@@ -733,6 +733,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                     customKeyValue.put("parentPropertyCode", x.getCode());
 
                 }
+
+                // 属性中有orderNo属性
+                if ("orderNo".equals(x.getCode())) {
+                    customKeyValue.put("existOrderNo", YesOrNoEnum.YES.name());
+                }
+
 
                 // 设置关联实体主参照视图
                 if (x.getDataType().equals(EntityModelPropertyTypeEnum.ENTITY.name())) {

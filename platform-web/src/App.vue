@@ -88,4 +88,8 @@ body {
 .content-slot .el-form .el-form-item {
   margin-bottom: 20px;
 }
+
+.el-form-item .el-input {
+  width: 220px;
+}
 </style>

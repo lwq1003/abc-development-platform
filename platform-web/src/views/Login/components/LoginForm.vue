@@ -169,4 +169,8 @@ const signIn = async () => {
     color: var(--el-color-primary) !important;
   }
 }
+
+:deep(.el-input) {
+  width: 100%;
+}
 </style>

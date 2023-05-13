@@ -1,45 +1,77 @@
-<script setup lang="ts">
-import { ComponentInternalInstance, getCurrentInstance } from 'vue'
-
-const {
-  appContext: {
-    app: {
-      config: { globalProperties }
-    }
-  }
-} = getCurrentInstance() as ComponentInternalInstance
-
-interface Props {
-  modelValue?: string
-}
-defineProps<Props>()
-
-const emits = defineEmits(['update:modelValue'])
-</script>
-
 <template>
-  <el-popover trigger="focus" :width="256">
-    <template #reference>
-      <el-button :icon="modelValue">{{ modelValue }}</el-button>
-    </template>
+  <el-button :icon="modelValue" @click="show">{{ modelValue }} </el-button>
+  <el-icon @click="clear" size="large" style="margin-left: 10px">
+    <Delete />
+  </el-icon>
+  <Dialog title="图标选择" v-model="visible" width="300px">
+    <el-input v-model="searchValue" placeholder="输入图标名搜索" style="margin-bottom: 10px" />
     <div class="el-icon-picker">
       <component
-        v-for="icon in globalProperties.$icons"
+        v-for="icon in iconList"
         :key="icon"
         :class="[icon, 'icon', { 'icon-active': icon == modelValue }]"
         :is="icon"
-        @click="emits('update:modelValue', icon)"
+        @click="confirm(icon)"
       />
     </div>
-  </el-popover>
+  </Dialog>
 </template>
+
+<script>
+import { Dialog } from '@/components/abc/Dialog'
+export default {
+  components: {
+    Dialog
+  },
+  props: {
+    modelValue: {
+      type: String,
+      default: '',
+      required: false
+    }
+  },
+  emits: ['update:modelValue'],
+  data() {
+    return {
+      iconList: this.$icons,
+      // 搜索值
+      searchValue: '',
+      // 可见性
+      visible: false
+    }
+  },
+  watch: {
+    searchValue(value) {
+      if (value !== '') {
+        value = value.toLowerCase()
+        this.iconList = this.$icons.filter((icon) => {
+          return icon.toLowerCase().includes(value)
+        })
+      } else {
+        this.iconList = this.$icons
+      }
+    }
+  },
+  methods: {
+    show() {
+      this.visible = true
+    },
+    confirm(icon) {
+      this.$emit('update:modelValue', icon)
+      this.visible = false
+    },
+    clear() {
+      this.$emit('update:modelValue', '')
+    }
+  }
+}
+</script>
 
 <style scoped>
 .el-icon-picker {
   display: flex;
   height: 256px;
   overflow-y: scroll;
-  justify-content: space-around;
   flex-wrap: wrap;
 }
 
