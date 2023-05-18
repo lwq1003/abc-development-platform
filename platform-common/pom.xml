@@ -141,7 +141,12 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
-
+        <!--阿里EasyExcel组件-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.3.1</version>
+        </dependency>
     </dependencies>
 
     <build>

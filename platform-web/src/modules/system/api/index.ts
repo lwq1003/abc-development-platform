@@ -31,23 +31,20 @@ export const organization = Object.assign({}, COMMON_METHOD, {
   },
   disable(id) {
     return request.put({ url: this.serveUrl + id + '/disable' })
+  },
+  // 下载导入模板
+  downloadImportTemplate() {
+    return request.download({ url: this.serveUrl + 'downloadImportTemplate' })
+  },
+  // 导入
+  import(formData) {
+    return request.upload({ url: this.serveUrl + 'importExcel', data: formData })
   }
   // // 根据id列表查询信息
   // getOrganization(idList) {
   //   return request.get({url:this.serveUrl + 'getOrganization?' + qs.stringify(idList, { arrayFormat: 'repeat' }))
   // },
-  // // 下载导入模板
-  // downloadImportTemplate() {
-  //   return request.download({url:this.serveUrl + 'downloadImportTemplate'})
-  // },
-  // // 导入
-  // import(params) {
-  //   return request.post({url:this.serveUrl + 'importExcel', params, true, {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data'
-  //     }
-  //   })
-  // },
+
   // // 导出
   // export(params) {
   //   return request.download({url:this.serveUrl + 'exportExcel', params)

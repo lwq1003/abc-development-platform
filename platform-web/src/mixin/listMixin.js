@@ -308,6 +308,23 @@ export const listMixin = {
             message: '已取消'
           })
         })
+    },
+    // 下载导入模板
+    downloadImportTemplate() {
+      this.api.downloadImportTemplate()
+    },
+    // 导入
+    importData(file) {
+      const formData = new FormData()
+      formData.append('file', file.file)
+      this.api
+        .import(formData)
+        .then(() => {
+          this.refresh()
+        })
+        .finally(() => {
+          this.clearFile()
+        })
     }
   },
   provide() {

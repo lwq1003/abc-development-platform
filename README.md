@@ -1,7 +1,7 @@
 ### 系统简介
 
 企业级通用开发平台，前后端分离架构，单工程，多模块，部署形态为单体应用。
-前端基于vue3.2.47，element-plus 2.1.0，前端框架vue-element-plus-admin深度整合改造。
+前端基于vue3.2.47，element-plus 2.1.0，前端框架vue-element-plus-admin1.9.4深度整合改造。
 后端SSM+MybatisPlus，使用SpringBoot 2.3.0。
 数据库使用MySql 5.7.36.
 
@@ -51,8 +51,18 @@ platform-boot-starter-notification：消息通知
 
 #### 3 .前端
 
-nodejs 18.14.2（未测试版本兼容性，理论上更高版本可用，低版本可能兼容）
+nodejs >=14.6，执行pnpm install命令，若nodejs版本过低会提示
+
 使用vscode打开platform-web目录，执行pnpm install安装npm module
+
+执行前建议设置国内镜像以加快下载速度
+pnpm config set registry https://registry.npm.taobao.org/
+
+执行结束会提示如下错误，不用理会，因为把husky移除导致的，不影响系统正常运行，进行下步dev脚本即可
+husky install
+'husky' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
 执行dev脚本，默认打开localhost:4000
 
 #### 4 .后端
@@ -64,6 +74,17 @@ nodejs 18.14.2（未测试版本兼容性，理论上更高版本可用，低版
 #### 5 .接口平台对接客户端
 
 cip-client是一个模拟的接口平台客户端，是一个独立的springboot，相当于第三方系统，有自己独立的数据库，数据库脚本参见\cip-client\src\main\resources\init.sql
+
+### 常见问题
+
+1.项目克隆后，初始运行有可能编译错误，lombok插件失效，编辑器报类似如下警告：
+java: You aren't using a compiler supported by lombok, so lombok will not work and has been disabled.
+Your processor is: com.sun.proxy.$Proxy8
+Lombok supports: OpenJDK javac, ECJ
+
+解决方式1是彻底清理缓存，即执行invalidate caches，一般能解决，不过更推荐如下设置
+![3.jpg](resource%2F3.jpg)
+-Djps.track.ap.dependencies=false
 
 ### 整体计划
 

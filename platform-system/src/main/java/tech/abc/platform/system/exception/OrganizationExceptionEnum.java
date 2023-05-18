@@ -1,7 +1,7 @@
 package tech.abc.platform.system.exception;
 
-import tech.abc.platform.common.exception.ExceptionInterface;
 import lombok.Getter;
+import tech.abc.platform.common.exception.ExceptionInterface;
 
 
 /**
@@ -16,7 +16,16 @@ public enum OrganizationExceptionEnum implements ExceptionInterface {
     /**
      * 未找到组织机构
      */
-    NOT_FOUND("未找到组织机构【{0}】"),
+    NAME_NOT_FOUND("未找到上级名称"),
+    /**
+     * 未找到组织机构编码
+     */
+    CODE_NOT_FOUND("未找到上级编码"),
+
+    /**
+     * 编码和名称不能同时为空
+     */
+    PARENT_NAME_AND_CODE_CANOT_NULL("上级名称和上级编码不能同时为空"),
     /**
      * 组织机构下存在人员，不能删除
      */

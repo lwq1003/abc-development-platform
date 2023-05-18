@@ -1042,7 +1042,9 @@ INSERT INTO `cfg_view_button` (`view`, `button_type`, `name`, `code`, `content`,
 	('1653734302587887617', 'LIST_PAGE', '删除', 'batchRemove', NULL, 'delete', 'NO', '此操作将删除数据, 是否继续？', 'YES', 'remove', 'NO', '03', '1653734302915043330', '1', '2023-05-03 20:12:37', '1', '2023-05-03 20:12:37', 1, 'NO'),
 	('1653314523284688897', 'LIST_ROW', '消息权限', 'configMessagePermission', 'this.$refs.messagePermission.init({ id: row.id })', NULL, 'NO', NULL, 'YES', 'configMessagePermission', 'NO', '01', '1653995345331445761', '1', '2023-05-04 13:29:55', '1', '2023-05-04 20:16:06', 6, 'NO'),
 	('1653314523284688897', 'LIST_ROW', 'API权限', 'configApiPermission', 'this.$refs.apiServicePermission.init({ id: row.id })', NULL, 'NO', NULL, 'YES', 'configApiPermission', 'NO', '00', '1653995522893111297', '1', '2023-05-04 13:30:37', '1', '2023-05-04 20:15:57', 6, 'NO'),
-	('1653314523284688897', 'LIST_ROW', '重置密钥', 'resetSecretKey', '     this.api.resetSecret(row.id)\n          .then(() => {\n            this.refresh()\n          })', NULL, 'YES', '是否重置密钥?', 'YES', 'resetSecretKey', 'YES', '06', '1654000932014350337', '1', '2023-05-04 13:52:07', '1', '2023-05-04 13:56:20', 4, 'NO');
+	('1653314523284688897', 'LIST_ROW', '重置密钥', 'resetSecretKey', '     this.api.resetSecret(row.id)\n          .then(() => {\n            this.refresh()\n          })', NULL, 'YES', '是否重置密钥?', 'YES', 'resetSecretKey', 'YES', '06', '1654000932014350337', '1', '2023-05-04 13:52:07', '1', '2023-05-04 13:56:20', 4, 'NO'),
+	('1648589167218778113', 'LIST_PAGE', '批量导入', 'import', NULL, 'List', 'NO', NULL, 'YES', 'import', 'NO', '05', '1658743089816203266', '1', '2023-05-17 15:55:45', '1', '2023-05-17 15:55:45', 1, 'NO'),
+	('1648589167218778113', 'LIST_PAGE', '下载模板', 'downloadImportTemplate', NULL, 'Download', 'NO', NULL, 'YES', 'downloadImportTemplate', 'NO', '06', '1658743282166984705', '1', '2023-05-17 15:56:31', '1', '2023-05-17 15:56:31', 1, 'NO');
 
 -- 导出  表 abc.cfg_view_button_template 结构
 CREATE TABLE IF NOT EXISTS `cfg_view_button_template` (
@@ -1070,7 +1072,7 @@ CREATE TABLE IF NOT EXISTS `cfg_view_button_template` (
 -- 正在导出表  abc.cfg_view_button_template 的数据：~8 rows (大约)
 INSERT INTO `cfg_view_button_template` (`button_type`, `name`, `code`, `content`, `icon`, `confirm_flag`, `confirm_message`, `permission_flag`, `permission_code`, `more_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('LIST_PAGE', '新增', 'add', NULL, 'plus', 'NO', NULL, 'YES', 'add', 'NO', '02', '1597515665647853571', '1', '2022-11-29 16:59:50', '', '2023-04-13 09:12:15', 13, 'NO'),
-	('LIST_PAGE', '刷新', 'refresh', NULL, 'refresh', 'NO', '111', 'NO', NULL, 'NO', '01', '1597515800729608191', '1', '2022-11-29 17:00:22', '', '2023-04-04 21:17:51', 10, 'NO'),
+	('LIST_PAGE', '刷新', 'refresh', NULL, 'Refresh', 'NO', '111', 'NO', NULL, 'NO', '01', '1597515800729608191', '1', '2022-11-29 17:00:22', '1', '2023-05-13 20:44:42', 12, 'NO'),
 	('LIST_PAGE', '删除', 'batchRemove', NULL, 'delete', 'NO', '此操作将删除数据, 是否继续？', 'YES', 'remove', 'NO', '03', '1598503607128162301', '1', '2022-12-02 10:25:33', '', '2023-04-13 09:16:17', 5, 'NO'),
 	('LIST_ROW', '修改', 'modify', NULL, 'edit', 'NO', NULL, 'YES', 'modify', 'NO', '01', '1598939938052603901', '1', '2022-12-03 15:19:23', '', '2023-04-13 09:13:16', 5, 'NO'),
 	('MODIFY_PAGE', '保存', 'save', NULL, NULL, 'NO', NULL, 'NO', NULL, 'NO', '02', '1631117040853028861', '1', '2023-03-02 10:19:42', '', '2023-04-05 20:22:51', 3, 'NO'),
@@ -3432,14 +3434,14 @@ CREATE TABLE IF NOT EXISTS `sys_organization` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='组织机构';
 
--- 正在导出表  abc.sys_organization 的数据：~20 rows (大约)
+-- 正在导出表  abc.sys_organization 的数据：~28 rows (大约)
 INSERT INTO `sys_organization` (`organization`, `name`, `code`, `type`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1', '未分配', 'unsigned', 'DEPARTMENT', 'NORMAL', '999', NULL, '-1', '1', '2021-01-22 08:49:02', '1', '2021-01-22 08:49:02', 1, 'NO'),
 	('0', '一二三集团', 'huayuan', 'GROUP', 'NORMAL', '01', NULL, '1', '1', NULL, '1', NULL, 1, 'NO'),
 	('1', '信息中心', NULL, 'DEPARTMENT', 'NORMAL', '03', NULL, '1180012958376042498', '1', '2019-10-04 06:53:08', '1', '2019-10-04 06:53:08', 1, 'NO'),
 	('1', '生产部', NULL, 'DEPARTMENT', 'NORMAL', '01', NULL, '1180013063376248834', '1', '2019-10-04 06:53:33', '', '2023-04-22 10:55:03', 4, 'NO'),
 	('1', '销售部', NULL, 'DEPARTMENT', 'NORMAL', '02', NULL, '1180013123820363778', '1', '2019-10-04 06:53:47', '1', '2019-10-04 06:53:47', 1, 'NO'),
-	('1180013063376248834', '生产一部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911044748820481', '1', '2019-10-23 07:43:39', '1', '2019-10-23 07:43:39', 1, 'NO'),
+	('1180013063376248834', '生产一部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911044748820481', '1', '2019-10-23 07:43:39', '1', '2023-05-18 20:23:55', 2, 'NO'),
 	('1180013063376248834', '生产二部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911094312910849', '1', '2019-10-23 07:43:51', '1', '2019-10-23 07:43:51', 1, 'NO'),
 	('1180013063376248834', '生产三部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911138961276930', '1', '2019-10-23 07:44:02', '1', '2020-05-20 11:18:16', 2, 'NO'),
 	('1', '行政部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911361171308545', '1', '2019-10-23 07:44:55', '', '2023-04-22 10:55:29', 9, 'NO'),
@@ -3458,9 +3460,16 @@ INSERT INTO `sys_organization` (`organization`, `name`, `code`, `type`, `status`
 	('1186911044748820481', '1223132', '213123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1648974923460362241', '', '2023-04-20 17:00:33', '', '2023-04-22 10:57:59', 1, 'YES'),
 	('1186911044748820481', '24213', '12313', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649321972508700673', '', '2023-04-21 15:59:36', '', '2023-04-22 10:58:03', 1, 'YES'),
 	('1186911443060899841', '133', '123', 'DEPARTMENT', 'NORMAL', '213', NULL, '1649593489192677378', '', '2023-04-22 09:58:30', '', '2023-04-22 09:58:58', 2, 'YES'),
-	('1186911094312910849', '123', '123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649608506872983553', '', '2023-04-22 10:58:11', '', '2023-04-22 10:59:12', 2, 'NO'),
+	('1186911094312910849', '123', '123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649608506872983553', '', '2023-04-22 10:58:11', '1', '2023-05-18 19:53:28', 2, 'YES'),
 	('1649608506872983553', '123', '123123', 'DEPARTMENT', 'NORMAL', NULL, NULL, '1649608547331239937', '', '2023-04-22 10:58:21', '', '2023-04-22 10:58:51', 1, 'YES'),
-	('1', '应用', 'app', 'DEPARTMENT', 'NORMAL', '99', '接口平台对接的应用系统用户', '1654718552153841666', '1', '2023-05-06 13:23:41', '1', '2023-05-06 13:23:41', 1, 'NO');
+	('1', '应用', 'app', 'DEPARTMENT', 'NORMAL', '99', '接口平台对接的应用系统用户', '1654718552153841666', '1', '2023-05-06 13:23:41', '1', '2023-05-06 13:23:41', 1, 'NO'),
+	('1649608506872983553', '研发部', 'yanfa', 'DEPARTMENT', 'NORMAL', '01', '备注', '1659158247432544257', '1', '2023-05-18 19:25:27', '1', '2023-05-18 19:53:21', 1, 'YES'),
+	('1', '研发部', 'yanfa', 'DEPARTMENT', 'NORMAL', '01', '备注', '1659165366231785474', '1', '2023-05-18 19:53:44', '1', '2023-05-18 19:53:44', 1, 'NO'),
+	('1186911044748820481', '1号车间', '1', 'DEPARTMENT', 'NORMAL', '01', NULL, '1659171806891794433', '1', '2023-05-18 20:19:19', '1', '2023-05-18 20:19:19', 1, 'NO'),
+	('1186911094312910849', '1号车间', '2', 'DEPARTMENT', 'NORMAL', '01', NULL, '1659171827334832130', '1', '2023-05-18 20:19:24', '1', '2023-05-18 20:19:50', 2, 'NO'),
+	('-1', '研发部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1659172036211171329', '1', '2023-05-18 20:20:14', '1', '2023-05-18 20:20:24', 1, 'YES'),
+	('1659171806891794433', '研发部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1659172221330972674', '1', '2023-05-18 20:20:58', '1', '2023-05-18 20:20:58', 1, 'NO'),
+	('1659171827334832130', '研发部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1659174037749817345', '1', '2023-05-18 20:28:11', '1', '2023-05-18 20:28:11', 1, 'NO');
 
 -- 导出  表 abc.sys_param 结构
 CREATE TABLE IF NOT EXISTS `sys_param` (
@@ -3533,7 +3542,7 @@ CREATE TABLE IF NOT EXISTS `sys_permission_item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='权限项';
 
--- 正在导出表  abc.sys_permission_item 的数据：~226 rows (大约)
+-- 正在导出表  abc.sys_permission_item 的数据：~208 rows (大约)
 INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `permission_code`, `view_code`, `component`, `icon`, `status`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('0', '系统资源', 'root', 'GROUP', 'root', NULL, '#', 'UserFilled', 'NORMAL', '010', '1', NULL, NULL, '1', '2020-09-03 07:14:53', 2, 'NO'),
 	('1', '系统管理', 'system', 'MODULE', 'system', NULL, '#', 'Setting', 'NORMAL', '01', '1123781860797521922', NULL, NULL, '1', '2023-05-12 20:27:09', 9, 'NO'),
@@ -3592,9 +3601,9 @@ INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `p
 	('1258371492062494721', '导出', 'export', 'BUTTON', 'system:user:export', NULL, NULL, 'UserFilled', 'NORMAL', '11', '1351070763888521218', '1', '2021-01-18 15:35:46', '1', '2021-01-18 15:35:46', 1, 'NO'),
 	('1258371492062494721', '导入', 'import', 'BUTTON', 'system:user:import', NULL, NULL, 'UserFilled', 'NORMAL', '12', '1352426900563009538', '1', '2021-01-22 09:24:35', '1', '2021-01-22 09:24:35', 1, 'NO'),
 	('1258371492062494721', '下载导入模板', 'downloadImportTemplate', 'BUTTON', 'system:user:downloadImportTemplate', NULL, NULL, 'UserFilled', 'NORMAL', '13', '1353529204645130241', '1', '2021-01-25 10:24:44', '1', '2021-01-25 10:24:44', 1, 'NO'),
-	('1258371930191081474', '导入', 'import', 'BUTTON', 'system:organization:import', NULL, NULL, 'UserFilled', 'NORMAL', '08', '1353606456242171906', '1', '2021-01-25 15:31:43', '1', '2021-01-25 15:35:16', 2, 'NO'),
+	('1258371930191081474', '导入', 'import', 'BUTTON', 'system:organization:import', NULL, NULL, '', 'NORMAL', '08', '1353606456242171906', '1', '2021-01-25 15:31:43', '1', '2023-05-17 15:52:24', 3, 'NO'),
 	('1258371930191081474', '导出', 'export', 'BUTTON', 'system:organization:export', NULL, NULL, 'UserFilled', 'NORMAL', '09', '1353606536361766913', '1', '2021-01-25 15:32:02', '1', '2021-01-25 15:35:23', 2, 'NO'),
-	('1258371930191081474', '下载导入模板', 'downloadImportTemplate', 'BUTTON', 'system:organization:downloadImportTemplate', NULL, NULL, 'UserFilled', 'NORMAL', '10', '1353606636085538817', '1', '2021-01-25 15:32:26', '1', '2021-01-25 15:32:26', 1, 'NO'),
+	('1258371930191081474', '下载导入模板', 'downloadImportTemplate', 'BUTTON', 'system:organization:downloadImportTemplate', NULL, NULL, '', 'NORMAL', '10', '1353606636085538817', '1', '2021-01-25 15:32:26', '1', '2023-05-17 15:52:35', 2, 'NO'),
 	('1258371492062494721', '高级查询', 'advanceQuery', 'BUTTON', 'system:user:advanceQuery', NULL, NULL, 'UserFilled', 'NORMAL', '14', '1354299184139571201', '1', '2021-01-27 13:24:22', '1', '2021-01-27 13:24:22', 1, 'NO'),
 	('1123781860797521922', '用户组', 'userGroup', 'MENU', 'system:userGroup', 'treeList', 'system/view/userGroup/treeList', 'Avatar', 'NORMAL', '03', '1370271549858967554', '1', '2021-03-12 15:12:51', '1', '2023-05-13 19:51:47', 3, 'NO'),
 	('1370271549858967554', '查询', 'query', 'BUTTON', 'system:userGroup:query', NULL, NULL, 'UserFilled', 'NORMAL', '01', '1370271550739771393', '1', '2021-03-12 15:12:51', '1', '2021-04-30 16:32:05', 3, 'NO'),

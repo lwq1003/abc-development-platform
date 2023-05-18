@@ -43,6 +43,27 @@
         @click="addByCopy"
         >复制新增</el-button
       >
+      <el-button
+        v-permission="pageCode + 'downloadImportTemplate'"
+        type="primary"
+        icon="Download"
+        @click="downloadImportTemplate"
+        >下载模板</el-button
+      >
+      <el-upload
+        ref="uploader"
+        :limit="1"
+        :http-request="importData"
+        action="/"
+        :show-file-list="false"
+        :before-upload="onBeforeUpload"
+        accept=".xlsx,.xls"
+        class="uploader"
+      >
+        <el-button v-permission="pageCode + 'import'" type="primary" icon="List"
+          >批量导入
+        </el-button>
+      </el-upload>
     </div>
 
     <el-card style="width: 100%">
@@ -74,15 +95,13 @@
         />
         <el-table-column fixed="right" label="操作" width="250">
           <template #default="scope">
-            <el-button v-permission="pageCode + 'enable'" type="primary" @click="enable(scope.row)"
-              >启用</el-button
+            <el-button v-permission="pageCode + 'modify'" @click="modify(scope.row)" type="primary"
+              >修改</el-button
             >
-            <el-button
-              v-permission="pageCode + 'disable'"
-              type="primary"
-              @click="disable(scope.row)"
-              >停用</el-button
+            <el-button v-permission="pageCode + 'remove'" @click="remove(scope.row)" type="primary"
+              >删除</el-button
             >
+
             <el-dropdown class="ml-10px">
               <el-button type="primary">
                 更多
@@ -91,13 +110,13 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item>
-                    <el-button text v-permission="pageCode + 'modify'" @click="modify(scope.row)"
-                      >修改</el-button
+                    <el-button v-permission="pageCode + 'enable'" text @click="enable(scope.row)"
+                      >启用</el-button
                     >
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-button text v-permission="pageCode + 'remove'" @click="remove(scope.row)"
-                      >删除</el-button
+                    <el-button v-permission="pageCode + 'disable'" text @click="disable(scope.row)"
+                      >停用</el-button
                     >
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -196,7 +215,39 @@ export default {
     },
     commonParamChange(param) {
       this.queryCondition.organization = param.id
+    },
+    clearFile() {
+      // 上传成功之后清除历史记录,否则再次上传浏览器无响应
+
+      this.$refs.uploader.clearFiles()
+    },
+    onBeforeUpload(file) {
+      const fileSuffix = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const whiteList = ['xls', 'xlsx']
+      if (whiteList.indexOf(fileSuffix) === -1) {
+        this.$message.error('导入文件只能是xls、xlsx格式')
+        return false
+      }
+      const isSizeLimit = file.size / 1024 / 1024 < 10
+      if (!isSizeLimit) {
+        this.$message.error('上传文件大小不能超过 10MB')
+        return false
+      }
     }
   }
 }
 </script>
+
+<style scoped>
+:deep(.el-upload) {
+  margin-left: 12px;
+  display: inline;
+  text-align: center;
+  cursor: pointer;
+  outline: 0;
+}
+
+:deep(.uploader) {
+  display: inline;
+}
+</style>
