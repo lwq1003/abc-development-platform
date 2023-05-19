@@ -39,16 +39,15 @@ export const organization = Object.assign({}, COMMON_METHOD, {
   // 导入
   import(formData) {
     return request.upload({ url: this.serveUrl + 'importExcel', data: formData })
+  },
+  // 导出
+  export(params) {
+    return request.download({ url: this.serveUrl + 'exportExcel', params })
   }
   // // 根据id列表查询信息
   // getOrganization(idList) {
   //   return request.get({url:this.serveUrl + 'getOrganization?' + qs.stringify(idList, { arrayFormat: 'repeat' }))
   // },
-
-  // // 导出
-  // export(params) {
-  //   return request.download({url:this.serveUrl + 'exportExcel', params)
-  // }
 })
 
 // 用户
@@ -100,23 +99,19 @@ export const user = Object.assign({}, COMMON_METHOD, {
   // 根据id列表查询用户信息
   getUser(idList) {
     return request.get({ url: this.serveUrl + 'getUser', params: idList })
+  },
+  // 下载导入模板
+  downloadImportTemplate() {
+    return request.download({ url: this.serveUrl + 'downloadImportTemplate' })
+  },
+  // 导入
+  import(formData) {
+    return request.upload({ url: this.serveUrl + 'importExcel', data: formData })
+  },
+  // 导出
+  export(params) {
+    return request.download({ url: this.serveUrl + 'exportExcel', params })
   }
-  // // 下载导入模板
-  // downloadImportTemplate() {
-  //   return request.download({ url: this.serveUrl + 'downloadImportTemplate' })
-  // },
-  // // 导入
-  // import(params) {
-  //   return request.post({ url: this.serveUrl + 'importExcel', params, true, {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data'
-  //     }
-  //   })
-  // },
-  // // 导出
-  // export(params) {
-  //   return request.download({ url: this.serveUrl + 'exportExcel', params)
-  // },
   // // 高级查询初始化
   // initAdvanceQuery() {
   //   return request.get({ url: this.serveUrl + 'initAdvanceQuery' })
@@ -207,7 +202,6 @@ export const dictionaryItem = Object.assign({}, COMMON_METHOD, {
     return request.put({ url: this.serveUrl + id + '/disable' })
   }
 })
-
 // // 用户设置
 // export const userProfile = Object.assign({}, COMMON_METHOD, {
 //   serveUrl: '/' + moduleName + '/' + 'userProfile' + '/',

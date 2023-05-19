@@ -1,6 +1,5 @@
 package tech.abc.platform.common.component.easyexcel;
 
-// 有个很重要的点 CommonExcelDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;

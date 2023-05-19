@@ -64,6 +64,14 @@
           >批量导入
         </el-button>
       </el-upload>
+      <el-button
+        v-permission="pageCode + 'export'"
+        type="primary"
+        icon="Document"
+        @click="exportData"
+        class="ml-3"
+        >批量导出
+      </el-button>
     </div>
 
     <el-card style="width: 100%">
@@ -218,7 +226,6 @@ export default {
     },
     clearFile() {
       // 上传成功之后清除历史记录,否则再次上传浏览器无响应
-
       this.$refs.uploader.clearFiles()
     },
     onBeforeUpload(file) {

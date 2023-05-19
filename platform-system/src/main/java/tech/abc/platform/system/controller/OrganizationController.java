@@ -4,6 +4,12 @@ package tech.abc.platform.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.constant.TableFieldConstant;
@@ -19,12 +25,6 @@ import tech.abc.platform.common.vo.TreeVO;
 import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.vo.OrganizationVO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,7 +245,7 @@ public class OrganizationController extends BaseController {
      * @param entityList 实体列表
      * @return {@link List}<{@link EntityVO}> 视图对象列表
      */
-    private List<OrganizationVO> convert2VO(List<Organization> entityList) {
+    public List<OrganizationVO> convert2VO(List<Organization> entityList) {
         List<OrganizationVO> voList = new ArrayList<>(entityList.size());
 
         // 获取 上级组织 集合

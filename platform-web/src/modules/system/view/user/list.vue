@@ -40,6 +40,35 @@
         @click="addByCopy"
         >复制新增</el-button
       >
+      <el-button
+        v-permission="pageCode + 'downloadImportTemplate'"
+        type="primary"
+        icon="Download"
+        @click="downloadImportTemplate"
+        >下载模板</el-button
+      >
+      <el-upload
+        ref="uploader"
+        :limit="1"
+        :http-request="importData"
+        action="/"
+        :show-file-list="false"
+        :before-upload="onBeforeUpload"
+        accept=".xlsx,.xls"
+        class="uploader"
+      >
+        <el-button v-permission="pageCode + 'import'" type="primary" icon="List"
+          >批量导入
+        </el-button>
+      </el-upload>
+      <el-button
+        v-permission="pageCode + 'export'"
+        type="primary"
+        icon="Document"
+        @click="exportData"
+        class="ml-3"
+        >批量导出
+      </el-button>
     </div>
 
     <el-card style="width: 100%">
@@ -296,7 +325,38 @@ export default {
     // 保存用户与用户组对应
     saveUserGroup(userGroupIdList) {
       this.api.saveUserGroup(this.currentId, userGroupIdList)
+    },
+    clearFile() {
+      // 上传成功之后清除历史记录,否则再次上传浏览器无响应
+      this.$refs.uploader.clearFiles()
+    },
+    onBeforeUpload(file) {
+      const fileSuffix = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const whiteList = ['xls', 'xlsx']
+      if (whiteList.indexOf(fileSuffix) === -1) {
+        this.$message.error('导入文件只能是xls、xlsx格式')
+        return false
+      }
+      const isSizeLimit = file.size / 1024 / 1024 < 10
+      if (!isSizeLimit) {
+        this.$message.error('上传文件大小不能超过 10MB')
+        return false
+      }
     }
   }
 }
 </script>
+
+<style scoped>
+:deep(.el-upload) {
+  margin-left: 12px;
+  display: inline;
+  text-align: center;
+  cursor: pointer;
+  outline: 0;
+}
+
+:deep(.uploader) {
+  display: inline;
+}
+</style>

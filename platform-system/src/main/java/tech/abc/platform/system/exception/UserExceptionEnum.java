@@ -48,6 +48,20 @@ public enum UserExceptionEnum implements ExceptionInterface {
      */
     PWD_CHANGE_EASY("新密码不能包含账号、电话号码或出生日期三者中任何一项"),
 
+    /**
+     * 未找到组织机构
+     */
+    ORGANIZATION_NAME_NOT_FOUND("未找到组织机构名称"),
+    /**
+     * 未找到组织机构编码
+     */
+    ORGANIZATION_CODE_NOT_FOUND("未找到组织机构编码"),
+
+    /**
+     * 编码和名称不能同时为空
+     */
+    ORGANIZATION_NAME_AND_CODE_CANOT_NULL("组织机构名称和组织机构编码不能同时为空"),
+
     ;
     private String message;
 

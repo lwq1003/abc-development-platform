@@ -364,7 +364,7 @@ public class UserController extends BaseController {
      * @param entityList 实体列表
      * @return {@link List}<{@link EntityVO}> 视图对象列表
      */
-    private List<UserVO> convert2VO(List<User> entityList) {
+    public List<UserVO> convert2VO(List<User> entityList) {
         List<UserVO> voList = new ArrayList<>(entityList.size());
 
         // 获取 组织机构 集合

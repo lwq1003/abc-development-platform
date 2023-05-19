@@ -325,6 +325,11 @@ export const listMixin = {
         .finally(() => {
           this.clearFile()
         })
+    },
+    // 导出
+    exportData() {
+      const params = Object.assign({}, this.queryCondition)
+      this.api.export(params)
     }
   },
   provide() {
