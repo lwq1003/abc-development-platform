@@ -2,7 +2,7 @@ import { service } from './service'
 
 import { config } from './config'
 import { ElMessage } from 'element-plus'
-
+import { getToken } from '@/utils/auth'
 const { default_headers } = config
 
 const request = (option: any) => {
@@ -18,6 +18,7 @@ const request = (option: any) => {
     }
   })
 }
+
 export default {
   get: (option: any) => {
     return new Promise((resolve, reject) => {
@@ -79,27 +80,15 @@ export default {
         })
     })
   },
+  // 下载
   download: (option: any) => {
-    request({ method: 'get', responseType: 'blob', ...option })
-      .then((res) => {
-        const { data, headers } = res
-        const fileName = headers['content-disposition'].replace(/\w+;filename=(.*)/, '$1')
-        // 此处当返回json文件时需要先对data进行JSON.stringify处理，其他类型文件不用做处理
-        const blob = new Blob([data], { type: headers['content-type'] })
-        const dom = document.createElement('a')
-        const url = window.URL.createObjectURL(blob)
-        dom.href = url
-        dom.download = decodeURI(fileName)
-        dom.style.display = 'none'
-        document.body.appendChild(dom)
-        dom.click()
-        dom.parentNode.removeChild(dom)
-        window.URL.revokeObjectURL(url)
-      })
-      .catch((err) => {
-        reject(err)
-      })
+    const link = document.createElement('a')
+    link.href = import.meta.env.VITE_BASE_URL + option.url + '?X-Token=' + getToken()
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   },
+  // 上传
   upload: (option: any) => {
     return new Promise((resolve, reject) => {
       option.headersType = 'multipart/form-data'

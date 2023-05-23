@@ -1,0 +1,4 @@
+platform-config:
+  oss:
+    storeClass: tech.abc.platform.oss.service.impl.LocalStoreServiceImpl
+    basePath: c:/attachment/

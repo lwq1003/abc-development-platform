@@ -212,6 +212,7 @@
                     sort_field: 'id',
                     sort_sortType: 'descending'
                 },
+                </#if>
                 columnList: [
                     <#list queryResultListReference as field>
                     {

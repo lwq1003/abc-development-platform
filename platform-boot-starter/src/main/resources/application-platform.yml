@@ -87,6 +87,9 @@ platform-config:
     sendMessageSpan: 30
     sendMessageCount: 10
     enableResend: true
+  oss:
+    storeClass: tech.abc.platform.oss.service.impl.LocalStoreServiceImpl
+    basePath: c:/attachment/
 
 
 

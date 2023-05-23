@@ -347,7 +347,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Override
     public void checkPermission(String id, String permissionCode) {
-        int count = userMapper.checkPermission(id, permissionCode);
+        long count = userMapper.checkPermission(id, permissionCode);
         if (count == 0) {
             throw new CustomException(PermissionItemExceptionEnum.NO_PERMISSION);
         }

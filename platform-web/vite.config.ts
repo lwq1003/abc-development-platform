@@ -129,6 +129,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '/cip': {
           target: env.VITE_BASE_URL,
           changeOrigin: true
+        },
+        //  业务支撑模块
+        '/support': {
+          target: env.VITE_BASE_URL,
+          changeOrigin: true
         }
         // ,
         // // 选项写法

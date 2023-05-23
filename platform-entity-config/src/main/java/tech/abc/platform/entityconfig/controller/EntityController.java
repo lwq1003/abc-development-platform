@@ -105,7 +105,8 @@ public class EntityController extends BaseController {
         // 构造分页对象
         IPage<Entity> page = new Page<Entity>(pageInfo.getPageNum(), pageInfo.getPageSize());
         // 构造查询条件
-        QueryWrapper<Entity> queryWrapper = QueryGenerator.generateQueryWrapper(Entity.class, queryVO, sortInfo);
+        QueryWrapper<Entity> queryWrapper = QueryGenerator.generateQueryWrapper(Entity.class, queryVO);
+        queryWrapper.lambda().orderByAsc(Entity::getModule).orderByAsc(Entity::getOrderNo);
 
         // 查询数据
         entityService.page(page, queryWrapper);

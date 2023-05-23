@@ -142,36 +142,31 @@ export default {
           prop: 'name',
           label: '名称',
           show: true,
-          showOverflowTooltip: true,
-          sortable: true
+          showOverflowTooltip: true
         },
         {
           prop: 'code',
           label: '编码',
           show: true,
-          showOverflowTooltip: true,
-          sortable: true
+          showOverflowTooltip: true
         },
         {
           prop: 'author',
           label: '作者',
           show: true,
-          showOverflowTooltip: true,
-          sortable: true
+          showOverflowTooltip: true
         },
         {
           prop: 'orderNo',
           label: '排序',
           show: true,
-          showOverflowTooltip: true,
-          sortable: true
+          showOverflowTooltip: true
         },
         {
           prop: 'moduleName',
           label: '模块',
           show: true,
-          showOverflowTooltip: true,
-          sortable: true
+          showOverflowTooltip: true
         }
       ],
       queryCondition: {

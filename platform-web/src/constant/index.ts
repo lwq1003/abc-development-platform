@@ -3,12 +3,14 @@
  */
 import * as common from './common'
 import * as system from '@/modules/system/constant'
+import * as support from '@/modules/support/constant'
 import * as entityconfig from '@/modules/entityconfig/constant'
 import * as cip from '@/modules/cip/constant'
 
 export default {
   ...common,
   ...system,
+  ...support,
   ...entityconfig,
   ...cip
 }

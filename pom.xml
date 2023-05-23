@@ -13,6 +13,7 @@
         <module>platform-common</module>
         <module>platform-system</module>
         <module>platform-framework</module>
+        <module>platform-support</module>
         <module>platform-entity-config</module>
         <module>platform-boot-starter</module>
         <module>platform-boot-starter-demo</module>
@@ -21,6 +22,8 @@
         <module>platform-cip-api</module>
         <module>platform-cip-message</module>
         <module>platform-cip-manage</module>
+
+        <module>platform-boot-starter-oss</module>
     </modules>
 
     <properties>
@@ -60,6 +63,13 @@
             <dependency>
                 <groupId>tech.abc</groupId>
                 <artifactId>platform-framework</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 系统支持-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-support</artifactId>
                 <version>${platform.version}</version>
             </dependency>
 
@@ -109,6 +119,14 @@
             <dependency>
                 <groupId>tech.abc</groupId>
                 <artifactId>platform-cip-manage</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+
+            <!-- 对象存储-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-boot-starter-oss</artifactId>
                 <version>${platform.version}</version>
             </dependency>
 

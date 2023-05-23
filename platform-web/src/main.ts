@@ -42,8 +42,12 @@ import api from '@/api/index'
 
 import dateFormatter from '@/utils/dateFormatter.js'
 
-
 import StringUtil from '@/utils/stringUtil.js'
+
+import uploader from 'vue-simple-uploader'
+
+import 'vue-simple-uploader/dist/style.css'
+
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
@@ -78,6 +82,8 @@ const setupAll = async () => {
   // 字符串工具函数
   app.config.globalProperties.$StringUtil = StringUtil
 
+  // 文件上传
+  app.use(uploader)
 
   app.mount('#app')
 }

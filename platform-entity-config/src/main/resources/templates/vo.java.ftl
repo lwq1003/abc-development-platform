@@ -58,7 +58,7 @@ public class ${entity} implements Serializable {
     private ${field.propertyDataType} ${field.code};
 
 </#list>
-}
+
 <#------------  END 字段循环遍历  ---------->
 
     /********字典类*****/
