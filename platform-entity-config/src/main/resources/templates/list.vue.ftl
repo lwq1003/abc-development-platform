@@ -181,7 +181,7 @@
                         :sortable="item.sortable"
                 />
                 <#if rowButtonList?? && (rowButtonList?size > 0)>
-                <el-table-column fixed="right" label="操作" width="320">
+                <el-table-column fixed="right" label="操作" width="250">
                     <template #default="scope">
                         <#list rowButtonList as rowButton>
                             <el-button

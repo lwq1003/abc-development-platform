@@ -66,8 +66,14 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="180">
+        <el-table-column fixed="right" label="操作" width="270">
           <template #default="scope">
+            <el-button
+              v-permission="pageCode + 'configItem'"
+              type="primary"
+              @click="configItem(scope.row)"
+              >字典项</el-button
+            >
             <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
               >修改</el-button
             >
@@ -87,6 +93,7 @@
     <AddPage ref="addPage" @refresh="refresh" />
     <ModifyPage ref="modifyPage" @refresh="refresh" />
     <ViewPage ref="viewPage" />
+    <!-- <DictionaryItem ref="dictionaryItem" /> -->
   </ContentWrap>
 </template>
 
@@ -94,6 +101,7 @@
 import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
+// import DictionaryItem from '../dictionaryItem/list.vue'
 import ViewPage from './view.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'dictionaryType'
@@ -102,6 +110,7 @@ export default {
     AddPage,
     ModifyPage,
     ViewPage
+    // DictionaryItem
   },
   mixins: [listMixin],
   data() {
@@ -155,6 +164,9 @@ export default {
     },
     commonParamChange(param) {
       this.queryCondition.dictionaryType = param.id
+    },
+    configItem(row) {
+      this.$router.push({ path: '/system/dictionaryItem', query: { id: row.id } })
     }
   }
 }

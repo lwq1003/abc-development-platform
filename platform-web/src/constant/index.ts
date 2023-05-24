@@ -6,11 +6,12 @@ import * as system from '@/modules/system/constant'
 import * as support from '@/modules/support/constant'
 import * as entityconfig from '@/modules/entityconfig/constant'
 import * as cip from '@/modules/cip/constant'
-
+import * as scheduler from '@/modules/scheduler/constant'
 export default {
   ...common,
   ...system,
   ...support,
   ...entityconfig,
-  ...cip
+  ...cip,
+  ...scheduler
 }

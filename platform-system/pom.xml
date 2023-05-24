@@ -26,6 +26,12 @@
             <groupId>tech.abc</groupId>
             <artifactId>platform-common</artifactId>
         </dependency>
+
+
+        <dependency>
+            <groupId>tech.abc</groupId>
+            <artifactId>platform-boot-starter-scheduler</artifactId>
+        </dependency>
     </dependencies>
 
 

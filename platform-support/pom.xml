@@ -22,16 +22,16 @@
         </dependency>
 
 
-        <!--&lt;!&ndash; 任务调度&ndash;&gt;-->
-        <!--<dependency>-->
-        <!--    <groupId>tech.abc</groupId>-->
-        <!--    <artifactId>platform-boot-starter-scheduler</artifactId>-->
-        <!--</dependency>-->
-
         <!-- 对象存储-->
         <dependency>
             <groupId>tech.abc</groupId>
             <artifactId>platform-boot-starter-oss</artifactId>
+        </dependency>
+
+        <!--任务调度-->
+        <dependency>
+            <groupId>tech.abc</groupId>
+            <artifactId>platform-boot-starter-scheduler</artifactId>
         </dependency>
 
 

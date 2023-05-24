@@ -82,6 +82,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     private ViewPropertyService viewPropertyService;
 
 
+    /**
+     * 视图文件夹名称
+     */
+    private String viewFolderName = "";
+
+
     @Override
     public void generateCode(String entityCode) {
 
@@ -114,7 +120,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         configTemplate(codeGenerator);
 
         // 配置注入
-        configInjection(codeGenerator, entity, module.getApp().toLowerCase());
+        configInjection(codeGenerator, entity, module.getApp().toLowerCase(), module.getCode());
 
         // 策略配置
         configStrategy(codeGenerator, entity.getCode(), module.getAbbreviation());
@@ -451,7 +457,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("list.vue")
                 .templatePath("/templates/list.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
 
         builder.customFile(templateFile);
@@ -479,7 +485,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("add.vue")
                 .templatePath("/templates/add.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -507,7 +513,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("modify.vue")
                 .templatePath("/templates/modify.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -535,7 +541,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("view.vue")
                 .templatePath("/templates/view.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -591,7 +597,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("reference.vue")
                 .templatePath("/templates/reference.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
 
         builder.customFile(templateFile);
@@ -613,7 +619,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("tree.vue")
                 .templatePath("/templates/tree.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -635,7 +641,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("treeList.vue")
                 .templatePath("/templates/treeList.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -656,7 +662,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("treeReference.vue")
                 .templatePath("/templates/treeReference.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -677,7 +683,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .fileName("treeMultipleReference.vue")
                 .templatePath("/templates/treeMultipleReference.vue.ftl")
                 .enableFileOverride()
-                .packageName("page")
+                .packageName(viewFolderName)
                 .build();
         builder.customFile(templateFile);
 
@@ -686,7 +692,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     //#endregion
 
 
-    private void configInjection(AutoGenerator codeGenerator, Entity entity, String appCode) {
+    private void configInjection(AutoGenerator codeGenerator, Entity entity, String appCode, String moduleCode) {
 
 
         // 设置自定义变量
@@ -694,6 +700,9 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 公共变量处理
         // 注入应用编码
         customKeyValue.put("appCode", appCode);
+
+        // 设置视图文件夹名称
+        viewFolderName = "view/" + moduleCode + "/" + StringUtils.uncapitalize(entity.getCode());
 
 
         InjectionConfig.Builder builder = new InjectionConfig.Builder();

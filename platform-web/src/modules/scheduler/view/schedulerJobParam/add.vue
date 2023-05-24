@@ -1,0 +1,75 @@
+<template>
+  <Dialog title="新增" v-model="visible" width="500px">
+    <el-form
+      ref="form"
+      :model="entityData"
+      :rules="rules"
+      label-width="120px"
+      label-position="right"
+      style="width: 90%; margin: 0px auto"
+    >
+      <!--表单区域 -->
+      <el-form-item label="调度任务" prop="schedulerJob">
+        <SchedulerJobReference
+          v-model="entityData.schedulerJob"
+          :schedulerJob-param="schedulerJobParam"
+        />
+      </el-form-item>
+      <el-form-item label="参数名称" prop="paramName">
+        <el-input v-model="entityData.paramName" />
+      </el-form-item>
+      <el-form-item label="参数编码" prop="paramCode">
+        <el-input v-model="entityData.paramCode" />
+      </el-form-item>
+      <el-form-item label="参数值" prop="paramValue">
+        <el-input v-model="entityData.paramValue" />
+      </el-form-item>
+      <el-form-item label="排序" prop="orderNo">
+        <el-input v-model="entityData.orderNo" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button type="primary" @click="save" v-permission="pageCode + 'add'">保存</el-button>
+      <el-button @click="close">关闭</el-button>
+    </template>
+  </Dialog>
+</template>
+
+<script>
+import { addMixin } from '@/mixin/addMixin.js'
+import SchedulerJobReference from '@/modules/scheduler/view/schedulerJob/reference.vue'
+const MODULE_CODE = 'scheduler'
+const ENTITY_TYPE = 'schedulerJobParam'
+export default {
+  name: ENTITY_TYPE + '-add',
+  components: {
+    SchedulerJobReference
+  },
+  mixins: [addMixin],
+  data() {
+    return {
+      entityType: ENTITY_TYPE,
+      moduleCode: MODULE_CODE,
+      // eslint-disable-next-line no-eval
+      api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
+      pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
+      entityData: {},
+      // 调度任务组件参数，用于传递数据
+      schedulerJobParam: {},
+      rules: {
+        //前端验证规则
+        schedulerJob: [{ required: true, message: '【调度任务】不能为空', trigger: 'blur' }],
+        paramName: [{ required: true, message: '【参数名称】不能为空', trigger: 'blur' }],
+        paramCode: [{ required: true, message: '【参数编码】不能为空', trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {
+    afterInit(param) {
+      this.entityData.schedulerJob = param.id
+    }
+  }
+}
+</script>
+
+<style></style>

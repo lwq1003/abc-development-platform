@@ -24,6 +24,7 @@
         <module>platform-cip-manage</module>
 
         <module>platform-boot-starter-oss</module>
+        <module>platform-boot-starter-scheduler</module>
     </modules>
 
     <properties>
@@ -127,6 +128,13 @@
             <dependency>
                 <groupId>tech.abc</groupId>
                 <artifactId>platform-boot-starter-oss</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 任务调度-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-boot-starter-scheduler</artifactId>
                 <version>${platform.version}</version>
             </dependency>
 

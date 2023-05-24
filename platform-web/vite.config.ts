@@ -134,6 +134,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '/support': {
           target: env.VITE_BASE_URL,
           changeOrigin: true
+        },
+        //  任务调度模块
+        '/scheduler': {
+          target: env.VITE_BASE_URL,
+          changeOrigin: true
         }
         // ,
         // // 选项写法

@@ -9,7 +9,7 @@
         <el-form-item label="编码">
           <QueryText v-model="queryCondition.code" type="LK" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-show="false">
           <el-checkbox v-model="queryCondition.ignoreParent">查询全部</el-checkbox>
         </el-form-item>
         <el-form-item style="float: right">
@@ -176,6 +176,9 @@ export default {
     },
     commonParamChange(param) {
       this.queryCondition.dictionaryType = param.id
+    },
+    beforeInit() {
+      this.queryCondition.dictionaryType = this.$route.query.id
     }
   }
 }
