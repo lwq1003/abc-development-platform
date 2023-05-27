@@ -139,6 +139,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '/scheduler': {
           target: env.VITE_BASE_URL,
           changeOrigin: true
+        },
+        //  系统通知模块
+        '/notification': {
+          target: env.VITE_BASE_URL,
+          changeOrigin: true
         }
         // ,
         // // 选项写法

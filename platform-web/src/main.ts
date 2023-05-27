@@ -48,6 +48,14 @@ import uploader from 'vue-simple-uploader'
 
 import 'vue-simple-uploader/dist/style.css'
 
+// web socket
+import webSocket from '@/modules/notification/view/systemMessage/webSocket.js'
+
+
+// 消息通知
+// import { Notification } from 'element-ui'
+// Vue.prototype.$notification = Notification
+
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
@@ -81,6 +89,10 @@ const setupAll = async () => {
 
   // 字符串工具函数
   app.config.globalProperties.$StringUtil = StringUtil
+
+  // web socket
+  app.config.globalProperties.$webSocket = webSocket
+
 
   // 文件上传
   app.use(uploader)

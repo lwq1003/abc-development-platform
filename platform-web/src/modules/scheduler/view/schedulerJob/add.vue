@@ -16,7 +16,7 @@
         <el-input v-model="entityData.name" />
       </el-form-item>
       <el-form-item label="调度触发" prop="cronExpression">
-        <el-input v-model="entityData.cronExpression" />
+        <CronExpression v-model="entityData.cronExpression" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <dictionary-radio-group v-model="entityData.status" code="JobStatus" />

@@ -20,12 +20,12 @@ public class MyJobListener extends JobListenerSupport {
 
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
-        log.info("【{}】任务即将执行", context.getJobDetail().getDescription());
+        
     }
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
 
-        
+
     }
 }

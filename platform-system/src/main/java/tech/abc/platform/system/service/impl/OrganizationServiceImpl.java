@@ -1,21 +1,23 @@
 package tech.abc.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.notification.service.SystemMessageService;
 import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.exception.OrganizationExceptionEnum;
 import tech.abc.platform.system.mapper.OrganizationMapper;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ public class OrganizationServiceImpl extends BaseServiceImpl<OrganizationMapper,
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SystemMessageService systemMessageService;
 
     @Override
     public Organization init() {
@@ -88,6 +93,16 @@ public class OrganizationServiceImpl extends BaseServiceImpl<OrganizationMapper,
             }
         }
         return result;
+    }
+
+    @Override
+    protected void afterModify(Organization entity, Organization orginEntity) {
+        // TODO 测试数据，当组织机构名称变更后，发送系统通知
+        if (!entity.getName().equals(orginEntity.getName())) {
+            String content = MessageFormat.format("{0}变更为{1}", orginEntity.getName(), entity.getName());
+            systemMessageService.sendMessage("admin", "组织机构修改", content);
+        }
+
     }
 
     @Override

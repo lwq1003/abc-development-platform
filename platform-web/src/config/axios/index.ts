@@ -18,14 +18,24 @@ const request = (option: any) => {
     }
   })
 }
-
+// 处理显示信息
+const processShowInfo = (option, res) => {
+  // 未定义时，默认显示提示；明确设置为false时，不显示提示
+  if (
+    option.params === undefined ||
+    option.params.showInfo === undefined ||
+    option.params.showInfo === true
+  ) {
+    ElMessage.info(res.data.message)
+  }
+}
 export default {
   get: (option: any) => {
     return new Promise((resolve, reject) => {
       request({ method: 'get', ...option })
         .then((res) => {
           // 明确设置为true时，显示提示
-          if (option.showInfo === true) {
+          if (option.params && option.params.showInfo === true) {
             ElMessage.info(res.data.message)
           }
           resolve(res.data)
@@ -39,10 +49,7 @@ export default {
     return new Promise((resolve, reject) => {
       request({ method: 'post', ...option })
         .then((res) => {
-          // 未定义时，默认显示提示；明确设置为false时，不显示提示
-          if (option.showInfo === undefined || option.showInfo === true) {
-            ElMessage.info(res.data.message)
-          }
+          processShowInfo(option, res)
           resolve(res.data)
         })
         .catch((err) => {
@@ -54,10 +61,7 @@ export default {
     return new Promise((resolve, reject) => {
       request({ method: 'delete', ...option })
         .then((res) => {
-          // 未定义时，默认显示提示；明确设置为false时，不显示提示
-          if (option.showInfo === undefined || option.showInfo === true) {
-            ElMessage.info(res.data.message)
-          }
+          processShowInfo(option, res)
           resolve(res.data)
         })
         .catch((err) => {
@@ -69,10 +73,7 @@ export default {
     return new Promise((resolve, reject) => {
       request({ method: 'put', ...option })
         .then((res) => {
-          // 未定义时，默认显示提示；明确设置为false时，不显示提示
-          if (option.showInfo === undefined || option.showInfo === true) {
-            ElMessage.info(res.data.message)
-          }
+          processShowInfo(option, res)
           resolve(res.data)
         })
         .catch((err) => {
@@ -94,10 +95,7 @@ export default {
       option.headersType = 'multipart/form-data'
       request({ method: 'post', ...option })
         .then((res) => {
-          // 未定义时，默认显示提示；明确设置为false时，不显示提示
-          if (option.showInfo === undefined || option.showInfo === true) {
-            ElMessage.info(res.data.message)
-          }
+          processShowInfo(option, res)
           resolve(res.data)
         })
         .catch((err) => {

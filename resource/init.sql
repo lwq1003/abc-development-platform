@@ -67,7 +67,8 @@ INSERT INTO `cfg_entity` (`module`, `name`, `code`, `author`, `order_no`, `remar
 	('1661201015638097921', '任务', 'Job', 'wqliu', '01', NULL, '1661200442931052546', '1', '2023-05-24 10:40:24', '1', '2023-05-24 10:43:23', 2, 'NO'),
 	('1661201015638097921', '任务参数', 'JobParam', 'wqliu', '02', NULL, '1661237378265698305', '1', '2023-05-24 13:07:10', '1', '2023-05-24 13:07:43', 2, 'NO'),
 	('1661201015638097921', '调度任务', 'SchedulerJob', 'wqliu', '03', NULL, '1661246572859523073', '1', '2023-05-24 13:43:42', '1', '2023-05-24 13:44:01', 2, 'NO'),
-	('1661201015638097921', '调度任务参数', 'SchedulerJobParam', 'wqliu', '04', NULL, '1661280301137035265', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:58:08', 2, 'NO');
+	('1661201015638097921', '调度任务参数', 'SchedulerJobParam', 'wqliu', '04', NULL, '1661280301137035265', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:58:08', 2, 'NO'),
+	('1662235462906966017', '系统消息', 'SystemMessage', 'wqliu', '01', NULL, '1662235771502882817', '1', '2023-05-27 07:14:25', '1', '2023-05-27 07:14:25', 1, 'NO');
 
 -- 导出  表 abc.cfg_entity_model 结构
 CREATE TABLE IF NOT EXISTS `cfg_entity_model` (
@@ -128,7 +129,8 @@ INSERT INTO `cfg_entity_model` (`parent_model`, `name`, `code`, `main_model_flag
 	('BUSINESS_MODEL', '任务', 'Job', 'YES', 'NO', '01', NULL, '1661200442931052546', '1661200443014938626', '1', '2023-05-24 10:40:24', '1', '2023-05-24 10:44:16', 2, 'NO'),
 	('BUSINESS_MODEL', '任务参数', 'JobParam', 'YES', 'NO', '01', '', '1661237378265698305', '1661237378265698306', '1', '2023-05-24 13:07:10', '1', '2023-05-24 13:08:15', 2, 'NO'),
 	('BUSINESS_MODEL', '调度任务', 'SchedulerJob', 'YES', 'NO', '01', NULL, '1661246572859523073', '1661246572926631938', '1', '2023-05-24 13:43:42', '1', '2023-05-24 13:44:30', 2, 'NO'),
-	('BUSINESS_MODEL', '调度任务参数', 'SchedulerJobParam', 'YES', 'NO', '01', '', '1661280301137035265', '1661280301137035266', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:58:27', 2, 'NO');
+	('BUSINESS_MODEL', '调度任务参数', 'SchedulerJobParam', 'YES', 'NO', '01', '', '1661280301137035265', '1661280301137035266', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:58:27', 2, 'NO'),
+	('BUSINESS_MODEL', '系统消息', 'SystemMessage', 'YES', 'NO', '01', NULL, '1662235771502882817', '1662235771502882818', '1', '2023-05-27 07:14:25', '1', '2023-05-27 07:14:25', 1, 'NO');
 
 -- 导出  表 abc.cfg_entity_model_property 结构
 CREATE TABLE IF NOT EXISTS `cfg_entity_model_property` (
@@ -459,7 +461,12 @@ INSERT INTO `cfg_entity_model_property` (`entity_model`, `name`, `code`, `data_t
 	('1661280301137035266', '参数名称', 'paramName', 'STRING', NULL, 'TEXT', NULL, 'NO', 32, NULL, '', 'YES', 'schedulerJob', 'YES', 'NO', 'YES', 'String', '01', NULL, '1661280301199949825', '1', '2023-05-24 15:57:44', '1', '2023-05-24 16:25:00', 2, 'NO'),
 	('1661280301137035266', '参数编码', 'paramCode', 'STRING', NULL, 'TEXT', NULL, 'NO', 32, NULL, NULL, 'YES', 'schedulerJob', 'NO', 'NO', 'YES', 'String', '02', NULL, '1661280301199949826', '1', '2023-05-24 15:57:44', '1', '2023-05-24 16:25:09', 2, 'NO'),
 	('1661280301137035266', '参数值', 'paramValue', 'STRING', NULL, 'TEXT', NULL, 'YES', 32, NULL, NULL, 'NO', NULL, 'NO', 'NO', 'YES', NULL, '03', NULL, '1661280301199949827', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:57:44', 1, 'NO'),
-	('1661280301137035266', '排序', 'orderNo', 'STRING', NULL, 'TEXT', NULL, 'YES', 32, NULL, NULL, 'NO', NULL, 'NO', 'NO', 'YES', NULL, '04', NULL, '1661280301199949828', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:57:44', 1, 'NO');
+	('1661280301137035266', '排序', 'orderNo', 'STRING', NULL, 'TEXT', NULL, 'YES', 32, NULL, NULL, 'NO', NULL, 'NO', 'NO', 'YES', NULL, '04', NULL, '1661280301199949828', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:57:44', 1, 'NO'),
+	('1662235771502882818', '类型', 'type', 'DATA_DICTIONARY', 'SystemMessageType', 'DROP_DOWN_LIST', NULL, 'NO', 32, NULL, '', 'NO', NULL, 'NO', 'NO', 'YES', 'String', '01', NULL, '1662240323010588674', '1', '2023-05-27 07:32:31', '1', '2023-05-27 07:32:31', 1, 'NO'),
+	('1662235771502882818', '接收人', 'receiver', 'STRING', NULL, 'TEXT', NULL, 'NO', 32, NULL, NULL, 'NO', NULL, 'NO', 'NO', 'YES', 'String', '02', NULL, '1662240430711926785', '1', '2023-05-27 07:32:56', '1', '2023-05-27 07:32:56', 1, 'NO'),
+	('1662235771502882818', '标题', 'title', 'STRING', NULL, 'TEXT', NULL, 'NO', 256, NULL, NULL, 'NO', NULL, 'YES', 'NO', 'YES', 'String', '03', NULL, '1662240573431508993', '1', '2023-05-27 07:33:30', '1', '2023-05-27 07:39:02', 2, 'NO'),
+	('1662235771502882818', '内容', 'content', 'STRING', NULL, 'TEXTAREA', NULL, 'YES', 512, NULL, NULL, 'NO', NULL, 'NO', 'NO', 'YES', 'String', '04', NULL, '1662241712461869057', '1', '2023-05-27 07:38:02', '1', '2023-05-27 07:38:02', 1, 'NO'),
+	('1662235771502882818', '是否已读', 'readFlag', 'DATA_DICTIONARY', 'YesOrNo', 'RADIO_BUTTON_GROUP', NULL, 'YES', 32, NULL, 'NO', 'NO', NULL, 'NO', 'NO', 'YES', 'String', '05', NULL, '1662241910340743169', '1', '2023-05-27 07:38:49', '1', '2023-05-27 07:38:49', 1, 'NO');
 
 -- 导出  表 abc.cfg_entity_view 结构
 CREATE TABLE IF NOT EXISTS `cfg_entity_view` (
@@ -622,7 +629,9 @@ INSERT INTO `cfg_entity_view` (`entity_view_type`, `name`, `code`, `main_view_fl
 	('ADD', '新增视图', 'add', 'NO', 'NO', '02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1661280301137035266', '1661280301137035265', '1661280301267058689', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:57:44', 1, 'NO'),
 	('MODIFY', '修改视图', 'modify', 'NO', 'NO', '03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1661280301137035266', '1661280301137035265', '1661280301267058695', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:57:44', 1, 'NO'),
 	('VIEW', '查看视图', 'view', 'NO', 'NO', '04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1661280301137035266', '1661280301137035265', '1661280301267058701', '1', '2023-05-24 15:57:44', '1', '2023-05-24 15:57:44', 1, 'NO'),
-	('REFERENCE', '参照视图', 'reference', 'NO', 'YES', '05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1661246572926631938', '1661246572859523073', '1661280891032338434', '1', '2023-05-24 16:00:04', '1', '2023-05-24 16:00:04', 1, 'NO');
+	('REFERENCE', '参照视图', 'reference', 'NO', 'YES', '05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1661246572926631938', '1661246572859523073', '1661280891032338434', '1', '2023-05-24 16:00:04', '1', '2023-05-24 16:00:04', 1, 'NO'),
+	('LIST', '列表视图', 'list', 'YES', 'NO', '01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1662235771502882818', '1662235771502882817', '1662243136394522625', '1', '2023-05-27 07:43:41', '1', '2023-05-27 07:43:41', 1, 'NO'),
+	('VIEW', '查看视图', 'view', 'NO', 'NO', '02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1662235771502882818', '1662235771502882817', '1662243763182923777', '1', '2023-05-27 07:46:11', '1', '2023-05-27 07:46:11', 1, 'NO');
 
 -- 导出  表 abc.cfg_entity_view_button 结构
 CREATE TABLE IF NOT EXISTS `cfg_entity_view_button` (
@@ -744,7 +753,8 @@ INSERT INTO `cfg_module` (`id`, `name`, `code`, `app`, `abbreviation`, `package_
 	('1640315164112723970', '实体配置', 'entityconfig', 'PLATFORM', 'cfg', 'tech.abc.platform', NULL, '02', '', '2023-03-27 19:29:45', '', '2023-04-08 09:25:53', 5, 'NO'),
 	('1653289677058265089', '接口平台', 'cip', 'PLATFORM', 'cip', 'tech.abc.platform', '', '00', '1', '2023-05-02 14:45:50', '1', '2023-05-02 14:46:30', 2, 'NO'),
 	('1659754931250302977', '业务支撑', 'support', 'PLATFORM', 'spt', 'tech.abc.platform', '', '03', '1', '2023-05-20 10:56:27', '1', '2023-05-20 10:56:27', 1, 'NO'),
-	('1661201015638097921', '任务调度', 'scheduler', 'PLATFORM', 'schd', 'tech.abc.platform', '', '04', '1', '2023-05-24 10:42:40', '1', '2023-05-24 10:42:40', 1, 'NO');
+	('1661201015638097921', '任务调度', 'scheduler', 'PLATFORM', 'schd', 'tech.abc.platform', '', '04', '1', '2023-05-24 10:42:40', '1', '2023-05-24 10:42:40', 1, 'NO'),
+	('1662235462906966017', '系统通知', 'notification', 'PLATFORM', 'ntfc', 'tech.abc.platform', '', '05', '1', '2023-05-27 07:13:12', '1', '2023-05-27 07:13:12', 1, 'NO');
 
 -- 导出  表 abc.cfg_view_button 结构
 CREATE TABLE IF NOT EXISTS `cfg_view_button` (
@@ -978,7 +988,11 @@ INSERT INTO `cfg_view_button` (`view`, `button_type`, `name`, `code`, `content`,
 	('1661246572993740802', 'LIST_PAGE', '暂停全部', 'pauseAll', ' this.api.pauseAll()\n          .then(() => {\n            this.refresh()\n          })', 'VideoPause', 'YES', '是否确认暂停全部', 'YES', 'pauseAll', 'NO', '04', '1661291833719816193', '1', '2023-05-24 16:43:33', '1', '2023-05-24 16:45:33', 4, 'NO'),
 	('1661246572993740802', 'LIST_PAGE', '恢复全部', 'resumeAll', ' this.api.resumeAll()\n          .then(() => {\n            this.refresh()\n          })', 'VideoPlay', 'YES', '是否确认恢复全部?', 'YES', 'resumeAll', 'NO', '05', '1661292127849578497', '1', '2023-05-24 16:44:43', '1', '2023-05-24 16:45:43', 3, 'NO'),
 	('1661246572993740802', 'LIST_ROW', '恢复', 'resume', '  this.api.resume(row.id)\n          .then(() => {\n            this.refresh()\n          })', NULL, 'YES', '是否确认恢复？', 'YES', 'resume', 'YES', '04', '1661292909776896001', '1', '2023-05-24 16:47:50', '1', '2023-05-24 19:40:19', 4, 'NO'),
-	('1661246572993740802', 'LIST_ROW', '执行', 'execute', ' this.api.execute(row.id)', NULL, 'YES', '是否立即执行一次该任务?', 'YES', 'execute', 'YES', '05', '1661293361696374786', '1', '2023-05-24 16:49:37', '1', '2023-05-24 19:40:43', 4, 'NO');
+	('1661246572993740802', 'LIST_ROW', '执行', 'execute', ' this.api.execute(row.id)', NULL, 'YES', '是否立即执行一次该任务?', 'YES', 'execute', 'YES', '05', '1661293361696374786', '1', '2023-05-24 16:49:37', '1', '2023-05-24 19:40:43', 4, 'NO'),
+	('1662243136394522625', 'LIST_PAGE', '刷新', 'refresh', NULL, 'Refresh', 'NO', '111', 'NO', NULL, 'NO', '01', '1662243265864298497', '1', '2022-11-29 17:00:22', '1', '2023-05-13 20:44:42', 12, 'NO'),
+	('1662243136394522625', 'LIST_PAGE', '删除', 'batchRemove', NULL, 'delete', 'NO', '此操作将删除数据, 是否继续？', 'YES', 'remove', 'NO', '03', '1662243265864298498', '1', '2022-12-02 10:25:33', '', '2023-04-13 09:16:17', 5, 'NO'),
+	('1662243136394522625', 'LIST_ROW', '删除', 'remove', NULL, 'Delete', 'YES', '此操作将删除数据, 是否继续？', 'YES', 'remove', 'NO', '02', '1662243545624375298', '', '2023-04-03 16:46:57', '', '2023-04-13 09:16:01', 4, 'NO'),
+	('1662243136394522625', 'LIST_PAGE', '设置所有已读', 'setAllRead', 'this.api.allRead().then(() => {\n        // 未读消息清零\n        this.$store.dispatch(\'app/setUnreadMessageCountEqaulZero\')\n        this.refresh()\n      })', 'Reading', 'YES', '是否将所有消息设置为已读', 'YES', 'setAllRead', 'NO', '03', '1662256766498385921', '1', '2023-05-27 08:37:51', '1', '2023-05-27 08:39:34', 2, 'NO');
 
 -- 导出  表 abc.cfg_view_button_template 结构
 CREATE TABLE IF NOT EXISTS `cfg_view_button_template` (
@@ -1645,7 +1659,12 @@ INSERT INTO `cfg_view_property` (`view`, `name`, `code`, `data_type`, `dictionar
 	('1661280301267058701', '调度任务', 'schedulerJob', 'ENTITY', '', 'ENTITY_SELECT', NULL, 'NO', NULL, 'YES', NULL, 'YES', '00', '1661281534430183426', '1', '2023-05-24 16:02:38', '1', '2023-05-24 16:26:44', 3, 'NO'),
 	('1661246573195067393', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', 'RADIO_BUTTON_GROUP', NULL, 'NO', 'RUNNING', 'YES', NULL, 'YES', '03', '1661293519049883649', '1', '2023-05-24 16:50:15', '1', '2023-05-24 16:50:15', 2, 'NO'),
 	('1661246573195067399', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', 'RADIO_BUTTON_GROUP', NULL, 'NO', 'RUNNING', 'YES', NULL, 'YES', '03', '1661293595721760770', '1', '2023-05-24 16:50:33', '1', '2023-05-24 16:50:34', 2, 'NO'),
-	('1661246573262176262', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', 'RADIO_BUTTON_GROUP', NULL, 'NO', 'RUNNING', 'YES', NULL, 'YES', '03', '1661293648268001281', '1', '2023-05-24 16:50:46', '1', '2023-05-24 16:50:46', 2, 'NO');
+	('1661246573262176262', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', 'RADIO_BUTTON_GROUP', NULL, 'NO', 'RUNNING', 'YES', NULL, 'YES', '03', '1661293648268001281', '1', '2023-05-24 16:50:46', '1', '2023-05-24 16:50:46', 2, 'NO'),
+	('1662243763182923777', '类型', 'type', 'DATA_DICTIONARY', 'SystemMessageType', 'DROP_DOWN_LIST', NULL, 'NO', '', 'YES', NULL, 'YES', NULL, '1662243792048123905', '1', '2023-05-27 07:46:18', '1', '2023-05-27 07:46:20', 1, 'YES'),
+	('1662243763182923777', '接收人', 'receiver', 'STRING', NULL, 'TEXT', NULL, 'NO', NULL, 'YES', NULL, 'YES', NULL, '1662243792048123906', '1', '2023-05-27 07:46:18', '1', '2023-05-27 07:46:23', 1, 'YES'),
+	('1662243763182923777', '标题', 'title', 'STRING', NULL, 'TEXT', NULL, 'NO', NULL, 'YES', NULL, 'YES', NULL, '1662243792115232770', '1', '2023-05-27 07:46:18', '1', '2023-05-27 07:46:18', 1, 'NO'),
+	('1662243763182923777', '内容', 'content', 'STRING', NULL, 'TEXTAREA', NULL, 'NO', NULL, 'YES', NULL, 'NO', NULL, '1662243792115232771', '1', '2023-05-27 07:46:18', '1', '2023-05-27 07:46:18', 1, 'NO'),
+	('1662243763182923777', '是否已读', 'readFlag', 'DATA_DICTIONARY', 'YesOrNo', 'RADIO_BUTTON_GROUP', NULL, 'NO', 'NO', 'YES', NULL, 'NO', NULL, '1662243792115232772', '1', '2023-05-27 07:46:18', '1', '2023-05-27 07:46:18', 1, 'NO');
 
 -- 导出  表 abc.cfg_view_query_condition 结构
 CREATE TABLE IF NOT EXISTS `cfg_view_query_condition` (
@@ -1671,7 +1690,7 @@ CREATE TABLE IF NOT EXISTS `cfg_view_query_condition` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图查询条件';
 
--- 正在导出表  abc.cfg_view_query_condition 的数据：~131 rows (大约)
+-- 正在导出表  abc.cfg_view_query_condition 的数据：~128 rows (大约)
 INSERT INTO `cfg_view_query_condition` (`view`, `name`, `code`, `data_type`, `dictionary_type`, `widget_type`, `match_rule`, `format_pattern`, `default_value`, `readonly_flag`, `show_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1641975231912390658', '参数名称', 'paramName', 'STRING', NULL, 'TEXT', 'LK', NULL, '', 'NO', 'YES', '00', '1643227851578724354', '', '2023-04-04 20:23:44', '1', '2023-05-24 13:12:05', 4, 'NO'),
 	('1643425456518680578', '名称', 'name', 'STRING', NULL, 'TEXT', 'LK', NULL, NULL, 'NO', 'YES', '01', '1643425704603373570', '', '2023-04-05 09:29:56', '', '2023-04-18 14:41:25', 21, 'NO'),
@@ -1800,7 +1819,9 @@ INSERT INTO `cfg_view_query_condition` (`view`, `name`, `code`, `data_type`, `di
 	('1661280891032338434', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', 'DROP_DOWN_LIST', 'NO', NULL, '', 'NO', 'YES', '01', '1661293687174365186', '1', '2023-05-24 16:50:55', '1', '2023-05-24 16:51:01', 3, 'NO'),
 	('1661239662219415554', '名称', 'name', 'STRING', NULL, 'TEXT', 'LK', NULL, NULL, 'NO', 'YES', '00', '1661332428697931778', '1', '2023-05-24 19:24:52', '1', '2023-05-24 19:25:07', 4, 'NO'),
 	('1661239662219415554', '任务类', 'jobClass', 'STRING', NULL, 'TEXT', 'LK', NULL, NULL, 'NO', 'YES', '01', '1661332477792260098', '1', '2023-05-24 19:25:03', '1', '2023-05-24 19:25:07', 3, 'NO'),
-	('1661239662219415554', '状态', 'status', 'DATA_DICTIONARY', 'Status', 'DROP_DOWN_LIST', 'NO', NULL, 'NORMAL', 'NO', 'NO', '02', '1661332492296163329', '1', '2023-05-24 19:25:07', '1', '2023-05-24 19:25:21', 3, 'NO');
+	('1661239662219415554', '状态', 'status', 'DATA_DICTIONARY', 'Status', 'DROP_DOWN_LIST', 'NO', NULL, 'NORMAL', 'NO', 'NO', '02', '1661332492296163329', '1', '2023-05-24 19:25:07', '1', '2023-05-24 19:25:21', 3, 'NO'),
+	('1662243136394522625', '标题', 'title', 'STRING', NULL, 'TEXT', 'LK', NULL, NULL, 'NO', 'YES', '00', '1662243401105436673', '1', '2023-05-27 07:44:44', '1', '2023-05-27 07:44:48', 3, 'NO'),
+	('1662243136394522625', '是否已读', 'readFlag', 'DATA_DICTIONARY', 'YesOrNo', 'DROP_DOWN_LIST', 'NO', NULL, '', 'NO', 'YES', '01', '1662243413252141058', '1', '2023-05-27 07:44:47', '1', '2023-05-27 07:44:54', 3, 'NO');
 
 -- 导出  表 abc.cfg_view_query_result 结构
 CREATE TABLE IF NOT EXISTS `cfg_view_query_result` (
@@ -1825,7 +1846,7 @@ CREATE TABLE IF NOT EXISTS `cfg_view_query_result` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='视图查询结果';
 
--- 正在导出表  abc.cfg_view_query_result 的数据：~206 rows (大约)
+-- 正在导出表  abc.cfg_view_query_result 的数据：~202 rows (大约)
 INSERT INTO `cfg_view_query_result` (`view`, `name`, `code`, `data_type`, `dictionary_type`, `width`, `sortable_flag`, `format_function`, `show_overflow_tooltip_flag`, `show_flag`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1641975231912390658', '参数名称', 'paramName', 'STRING', NULL, '120', 'YES', NULL, 'YES', 'YES', '00', '1643229400342253570', '', '2023-04-04 20:29:53', '', '2023-04-17 20:52:45', 6, 'NO'),
 	('1641975231912390658', '参数编码', 'paramKey', 'STRING', NULL, '120', 'YES', NULL, 'YES', 'YES', '01', '1643229408256905217', '', '2023-04-04 20:29:55', '', '2023-04-17 20:52:45', 5, 'NO'),
@@ -2031,7 +2052,10 @@ INSERT INTO `cfg_view_query_result` (`view`, `name`, `code`, `data_type`, `dicti
 	('1661246572993740802', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', NULL, 'NO', NULL, 'YES', 'YES', '03', '1661291030397353986', '1', '2023-05-24 16:40:22', '1', '2023-05-24 16:40:22', 2, 'NO'),
 	('1661280891032338434', '状态', 'status', 'DATA_DICTIONARY', 'JobStatus', NULL, 'NO', NULL, 'YES', 'YES', '01', '1661293743617114114', '1', '2023-05-24 16:51:08', '1', '2023-05-24 16:51:09', 2, 'NO'),
 	('1661239662219415554', '名称', 'name', 'STRING', NULL, NULL, 'YES', NULL, 'YES', 'YES', '00', '1661332570968723457', '1', '2023-05-24 19:25:26', '1', '2023-05-24 19:25:34', 5, 'NO'),
-	('1661239662219415554', '任务类', 'jobClass', 'STRING', NULL, NULL, 'YES', NULL, 'YES', 'YES', '01', '1661332579525103617', '1', '2023-05-24 19:25:28', '1', '2023-05-24 19:25:34', 4, 'NO');
+	('1661239662219415554', '任务类', 'jobClass', 'STRING', NULL, NULL, 'YES', NULL, 'YES', 'YES', '01', '1661332579525103617', '1', '2023-05-24 19:25:28', '1', '2023-05-24 19:25:34', 4, 'NO'),
+	('1662243136394522625', '标题', 'title', 'STRING', NULL, NULL, 'YES', NULL, 'YES', 'YES', '00', '1662243461461471233', '1', '2023-05-27 07:44:59', '1', '2023-05-27 07:45:06', 4, 'NO'),
+	('1662243136394522625', '内容', 'content', 'STRING', NULL, NULL, 'YES', NULL, 'YES', 'YES', '01', '1662243470579888129', '1', '2023-05-27 07:45:01', '1', '2023-05-27 07:45:06', 3, 'NO'),
+	('1662243136394522625', '是否已读', 'readFlag', 'DATA_DICTIONARY', 'YesOrNo', NULL, 'NO', NULL, 'YES', 'YES', '02', '1662243489630416898', '1', '2023-05-27 07:45:06', '1', '2023-05-27 07:45:06', 2, 'NO');
 
 -- 导出  表 abc.cip_api_service 结构
 CREATE TABLE IF NOT EXISTS `cip_api_service` (
@@ -2357,6 +2381,63 @@ BEGIN
 END//
 DELIMITER ;
 
+-- 导出  表 abc.ntfc_system_message 结构
+CREATE TABLE IF NOT EXISTS `ntfc_system_message` (
+  `type` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '类型',
+  `receiver` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '接收人',
+  `title` varchar(256) COLLATE utf8mb4_bin NOT NULL COMMENT '标题',
+  `content` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '内容',
+  `read_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT 'NO' COMMENT '是否已读',
+  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `version` int(11) DEFAULT NULL COMMENT '版本号',
+  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标识',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='系统消息';
+
+-- 正在导出表  abc.ntfc_system_message 的数据：~33 rows (大约)
+INSERT INTO `ntfc_system_message` (`type`, `receiver`, `title`, `content`, `read_flag`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662271353042022402', '1', '2023-05-27 09:35:49', '1', '2023-05-27 09:46:56', 2, 'YES'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662274181810634754', '1', '2023-05-27 09:47:03', '1', '2023-05-27 10:29:00', 4, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662274484551303170', '1', '2023-05-27 09:48:15', '1', '2023-05-27 10:30:24', 5, 'YES'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662275531101454337', '1', '2023-05-27 09:52:25', '1', '2023-05-27 10:04:55', 5, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662283722904322049', '1', '2023-05-27 10:24:58', '1', '2023-05-27 10:28:53', 2, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'NO', '1662283742269423617', '1', '2023-05-27 10:25:03', '1', '2023-05-27 10:30:19', 1, 'YES'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662367540432650241', '1', '2023-05-27 15:58:02', '1', '2023-05-27 15:58:02', 1, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662367600016932865', '1', '2023-05-27 15:58:16', '1', '2023-05-27 15:58:16', 1, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662367889017061377', '1', '2023-05-27 15:59:25', '1', '2023-05-27 15:59:25', 1, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662368033821212673', '1', '2023-05-27 15:59:59', '1', '2023-05-27 15:59:59', 1, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662368045657538562', '1', '2023-05-27 16:00:02', '1', '2023-05-27 16:00:02', 1, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662368877136355330', '1', '2023-05-27 16:03:20', '1', '2023-05-27 16:03:20', 1, 'NO'),
+	('', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662369184973103105', '1', '2023-05-27 16:04:34', '1', '2023-05-27 16:04:34', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662369254531448834', '1', '2023-05-27 16:04:50', '1', '2023-05-27 16:04:50', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662369408386908161', '1', '2023-05-27 16:05:27', '1', '2023-05-27 16:05:27', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662369612678873089', '1', '2023-05-27 16:06:16', '1', '2023-05-27 16:47:54', 2, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662369764978245634', '1', '2023-05-27 16:06:52', '1', '2023-05-27 16:47:51', 2, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662372324782927874', '1', '2023-05-27 16:17:02', '1', '2023-05-27 16:17:02', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662376324630605826', '1', '2023-05-27 16:32:56', '1', '2023-05-27 16:32:56', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662377578425511937', '1', '2023-05-27 16:37:55', '1', '2023-05-27 16:37:55', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662377603025104898', '1', '2023-05-27 16:38:01', '1', '2023-05-27 16:38:01', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662377682859487233', '1', '2023-05-27 16:38:20', '1', '2023-05-27 16:38:20', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662377763465621505', '1', '2023-05-27 16:38:39', '1', '2023-05-27 16:38:39', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662379384413122561', '1', '2023-05-27 16:45:05', '1', '2023-05-27 16:45:05', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662382241535258626', '1', '2023-05-27 16:56:27', '1', '2023-05-27 16:56:27', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662382260971663362', '1', '2023-05-27 16:56:31', '1', '2023-05-27 16:56:31', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662382298993029121', '1', '2023-05-27 16:56:40', '1', '2023-05-27 16:56:40', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662382315401146370', '1', '2023-05-27 16:56:44', '1', '2023-05-27 16:56:44', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662383229335793665', '1', '2023-05-27 17:00:22', '1', '2023-05-27 17:00:22', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662383244661780481', '1', '2023-05-27 17:00:26', '1', '2023-05-27 17:00:26', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662383971144593409', '1', '2023-05-27 17:03:19', '1', '2023-05-27 17:07:52', 2, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662383996801150978', '1', '2023-05-27 17:03:25', '1', '2023-05-27 17:03:25', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662384150337843202', '1', '2023-05-27 17:04:02', '1', '2023-05-27 17:07:45', 2, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '组织机构修改', 'YES', '1662385183063658497', '1', '2023-05-27 17:08:08', '1', '2023-05-27 17:08:16', 2, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '21321312变更为2323', 'NO', '1662386192418635778', '1', '2023-05-27 17:12:09', '1', '2023-05-27 17:12:09', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '2323变更为2323123', 'NO', '1662386219765497858', '1', '2023-05-27 17:12:15', '1', '2023-05-27 17:12:15', 1, 'NO'),
+	('BUSINESS_MESSAGE', 'admin', '组织机构修改', '2323123变更为123', 'NO', '1662386487064297474', '1', '2023-05-27 17:13:19', '1', '2023-05-27 17:13:19', 1, 'NO');
+
 -- 导出  表 abc.qrtz_blob_triggers 结构
 CREATE TABLE IF NOT EXISTS `qrtz_blob_triggers` (
   `SCHED_NAME` varchar(120) COLLATE utf8mb4_bin NOT NULL,
@@ -2390,9 +2471,9 @@ CREATE TABLE IF NOT EXISTS `qrtz_cron_triggers` (
   CONSTRAINT `qrtz_cron_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- 正在导出表  abc.qrtz_cron_triggers 的数据：~1 rows (大约)
+-- 正在导出表  abc.qrtz_cron_triggers 的数据：~0 rows (大约)
 INSERT INTO `qrtz_cron_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `CRON_EXPRESSION`, `TIME_ZONE_ID`) VALUES
-	('MyScheduler', '1661342671523885058', 'DEFAULT', ' * 0/5 * * * ? ', 'Asia/Shanghai');
+	('MyScheduler', '1661640576998690818', 'DEFAULT', '0 0/5 * ? * *', 'Asia/Shanghai');
 
 -- 导出  表 abc.qrtz_fired_triggers 结构
 CREATE TABLE IF NOT EXISTS `qrtz_fired_triggers` (
@@ -2413,6 +2494,8 @@ CREATE TABLE IF NOT EXISTS `qrtz_fired_triggers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- 正在导出表  abc.qrtz_fired_triggers 的数据：~0 rows (大约)
+INSERT INTO `qrtz_fired_triggers` (`SCHED_NAME`, `ENTRY_ID`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `INSTANCE_NAME`, `FIRED_TIME`, `SCHED_TIME`, `PRIORITY`, `STATE`, `JOB_NAME`, `JOB_GROUP`, `IS_NONCONCURRENT`, `REQUESTS_RECOVERY`) VALUES
+	('MyScheduler', 'DESKTOP-5T7K39D16851788610841685178861072', '1661640576998690818', 'DEFAULT', 'DESKTOP-5T7K39D1685178861084', 1685178888038, 1685178900000, 5, 'ACQUIRED', NULL, NULL, '0', '0');
 
 -- 导出  表 abc.qrtz_job_details 结构
 CREATE TABLE IF NOT EXISTS `qrtz_job_details` (
@@ -2429,9 +2512,9 @@ CREATE TABLE IF NOT EXISTS `qrtz_job_details` (
   PRIMARY KEY (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- 正在导出表  abc.qrtz_job_details 的数据：~0 rows (大约)
+-- 正在导出表  abc.qrtz_job_details 的数据：~1 rows (大约)
 INSERT INTO `qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`, `DESCRIPTION`, `JOB_CLASS_NAME`, `IS_DURABLE`, `IS_NONCONCURRENT`, `IS_UPDATE_DATA`, `REQUESTS_RECOVERY`, `JOB_DATA`) VALUES
-	('MyScheduler', '1661342671523885058', 'DEFAULT', '解锁账号', 'tech.abc.platform.system.scheduler.AutoUnlockAccount', '0', '1', '0', '0', _binary 0x230d0a23576564204d61792032342032303a31303a35372043535420323032330d0a);
+	('MyScheduler', '1661640576998690818', 'DEFAULT', '解锁账号', 'tech.abc.platform.system.scheduler.AutoUnlockAccount', '0', '1', '0', '0', _binary 0x230d0a23546875204d61792032352031363a32303a32392043535420323032330d0a);
 
 -- 导出  表 abc.qrtz_locks 结构
 CREATE TABLE IF NOT EXISTS `qrtz_locks` (
@@ -2463,9 +2546,9 @@ CREATE TABLE IF NOT EXISTS `qrtz_scheduler_state` (
   PRIMARY KEY (`SCHED_NAME`,`INSTANCE_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- 正在导出表  abc.qrtz_scheduler_state 的数据：~0 rows (大约)
+-- 正在导出表  abc.qrtz_scheduler_state 的数据：~1 rows (大约)
 INSERT INTO `qrtz_scheduler_state` (`SCHED_NAME`, `INSTANCE_NAME`, `LAST_CHECKIN_TIME`, `CHECKIN_INTERVAL`) VALUES
-	('MyScheduler', 'DESKTOP-5T7K39D1684930224543', 1684930540603, 5000);
+	('MyScheduler', 'DESKTOP-5T7K39D1685178861084', 1685178887131, 5000);
 
 -- 导出  表 abc.qrtz_simple_triggers 结构
 CREATE TABLE IF NOT EXISTS `qrtz_simple_triggers` (
@@ -2526,9 +2609,9 @@ CREATE TABLE IF NOT EXISTS `qrtz_triggers` (
   CONSTRAINT `qrtz_triggers_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- 正在导出表  abc.qrtz_triggers 的数据：~0 rows (大约)
+-- 正在导出表  abc.qrtz_triggers 的数据：~1 rows (大约)
 INSERT INTO `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `JOB_NAME`, `JOB_GROUP`, `DESCRIPTION`, `NEXT_FIRE_TIME`, `PREV_FIRE_TIME`, `PRIORITY`, `TRIGGER_STATE`, `TRIGGER_TYPE`, `START_TIME`, `END_TIME`, `CALENDAR_NAME`, `MISFIRE_INSTR`, `JOB_DATA`) VALUES
-	('MyScheduler', '1661342671523885058', 'DEFAULT', '1661342671523885058', 'DEFAULT', '解锁账号', 1684930546000, 1684930545000, 5, 'WAITING', 'CRON', 1684930257000, 0, NULL, 1, _binary '');
+	('MyScheduler', '1661640576998690818', 'DEFAULT', '1661640576998690818', 'DEFAULT', '解锁账号', 1685178900000, 1685178600000, 5, 'ACQUIRED', 'CRON', 1685002829000, 0, NULL, 1, _binary '');
 
 -- 导出  表 abc.schd_job 结构
 CREATE TABLE IF NOT EXISTS `schd_job` (
@@ -2568,7 +2651,7 @@ CREATE TABLE IF NOT EXISTS `schd_job_param` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='任务参数';
 
--- 正在导出表  abc.schd_job_param 的数据：~2 rows (大约)
+-- 正在导出表  abc.schd_job_param 的数据：~0 rows (大约)
 
 -- 导出  表 abc.schd_scheduler_job 结构
 CREATE TABLE IF NOT EXISTS `schd_scheduler_job` (
@@ -2588,9 +2671,11 @@ CREATE TABLE IF NOT EXISTS `schd_scheduler_job` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='调度任务';
 
--- 正在导出表  abc.schd_scheduler_job 的数据：~2 rows (大约)
+-- 正在导出表  abc.schd_scheduler_job 的数据：~3 rows (大约)
 INSERT INTO `schd_scheduler_job` (`job`, `name`, `cron_expression`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
-	('1661335356615725057', '解锁账号', ' * 0/5 * * * ? ', 'RUNNING', '01', NULL, '1661342671523885058', '1', '2023-05-24 20:05:34', '1', '2023-05-24 20:10:57', 3, 'NO');
+	('1661335356615725057', '解锁账号', ' *  0/5 * * * ? ', 'RUNNING', '01', NULL, '1661342671523885058', '1', '2023-05-24 20:05:34', '1', '2023-05-25 09:30:47', 12, 'YES'),
+	('1661335356615725057', '测试解锁', '0 0/1 * * * ?', 'RUNNING', NULL, NULL, '1661545536414613505', '1', '2023-05-25 09:31:41', '1', '2023-05-25 15:48:57', 6, 'YES'),
+	('1661335356615725057', '解锁账号', '0 0/5 * ? * *', 'RUNNING', NULL, NULL, '1661640576998690818', '1', '2023-05-25 15:49:20', '1', '2023-05-25 16:20:29', 8, 'NO');
 
 -- 导出  表 abc.schd_scheduler_job_param 结构
 CREATE TABLE IF NOT EXISTS `schd_scheduler_job_param` (
@@ -2846,7 +2931,13 @@ INSERT INTO `sys_dictionary_item` (`dictionary_type`, `name`, `code`, `status`, 
 	('1597516489367216129', '刷新', 'REFRESH', 'NORMAL', '97', '1631117975532703747', '1', '2023-03-02 10:23:25', '1', '2023-03-02 10:23:25', 1, 'NO'),
 	('1586952096636190721', '树多选参照视图', 'TREE_MULTIPLE_REFERENCE', 'NORMAL', '09', '1651742101448200194', '', '2023-04-28 08:16:20', '', '2023-04-30 08:39:00', 3, 'NO'),
 	('1655915140335296513', '日期', 'FORMAT_DATE', 'NORMAL', '01', '1655915334128918529', '1', '2023-05-09 20:39:16', '1', '2023-05-09 20:39:16', 1, 'NO'),
-	('1655915140335296513', '时间', 'FORMAT_TIME', 'NORMAL', '02', '1655915435131953154', '1', '2023-05-09 20:39:40', '1', '2023-05-09 20:39:40', 1, 'NO');
+	('1655915140335296513', '时间', 'FORMAT_TIME', 'NORMAL', '02', '1655915435131953154', '1', '2023-05-09 20:39:40', '1', '2023-05-09 20:39:40', 1, 'NO'),
+	('1662237491268186114', '登录请求', 'LOGIN_REQUEST', 'NORMAL', '01', '1662239323705077761', '1', '2023-05-27 07:28:32', '1', '2023-05-27 07:28:32', 1, 'NO'),
+	('1662237491268186114', '登录响应', 'LOGIN_RESPONSE', 'NORMAL', '02', '1662239387823403009', '1', '2023-05-27 07:28:48', '1', '2023-05-27 07:28:48', 1, 'NO'),
+	('1662237491268186114', '心跳请求', 'HEARTBEAT_REQUEST', 'NORMAL', '03', '1662239506782253058', '1', '2023-05-27 07:29:16', '1', '2023-05-27 07:29:16', 1, 'NO'),
+	('1662237491268186114', '心跳响应', 'HEARTBEAT_RESPONSE', 'NORMAL', '04', '1662239578655846401', '1', '2023-05-27 07:29:33', '1', '2023-05-27 07:29:33', 1, 'NO'),
+	('1662237491268186114', '业务消息', 'BUSINESS_MESSAGE', 'NORMAL', '05', '1662239653901660161', '1', '2023-05-27 07:29:51', '1', '2023-05-27 07:29:51', 1, 'NO'),
+	('1662237491268186114', '注销请求', 'LOGOUT_REQUEST', 'NORMAL', '06', '1662239723829096449', '1', '2023-05-27 07:30:08', '1', '2023-05-27 07:30:08', 1, 'NO');
 
 -- 导出  表 abc.sys_dictionary_type 结构
 CREATE TABLE IF NOT EXISTS `sys_dictionary_type` (
@@ -2884,10 +2975,10 @@ INSERT INTO `sys_dictionary_type` (`dictionary_type`, `name`, `code`, `order_no`
 	('1262358501588205570', '任务状态', 'JobStatus', '01', '1262358593149861889', '1', '2020-05-18 12:25:17', '1', '2020-05-18 12:25:17', 1, 'NO'),
 	('1123533546831298562', '时区', 'TimeZone', '07', '1265177591377879041', '1', '2020-05-26 07:06:58', '1', '2020-05-26 07:07:10', 2, 'NO'),
 	('1123533546831298562', '语种', 'Language', '08', '1265177705416810498', '1', '2020-05-26 07:07:25', '1', '2020-05-26 07:07:37', 2, 'NO'),
-	('1', '工作流', 'Workflow', '05', '1269113727745839106', '1', '2020-06-06 03:47:46', '1', '2020-06-06 03:47:46', 1, 'NO'),
+	('1', '工作流', 'Workflow', '98', '1269113727745839106', '1', '2020-06-06 03:47:46', '1', '2023-05-27 07:19:34', 2, 'NO'),
 	('1269113727745839106', '模板分类', 'TemplateCategory', '01', '1269113842543939585', '1', '2020-06-06 03:48:14', '1', '2020-06-06 03:48:14', 1, 'NO'),
 	('1269113727745839106', '流程状态', 'FlowStatus', '02', '1272515129729941506', '1', '2020-06-15 13:03:44', '1', '2020-06-21 02:40:20', 3, 'NO'),
-	('1', '业务流程', 'BusinessFlow', '06', '1273602414458216450', '1', '2020-06-18 13:04:13', '1', '2020-06-18 13:04:13', 1, 'NO'),
+	('1', '业务流程', 'BusinessFlow', '99', '1273602414458216450', '1', '2020-06-18 13:04:13', '1', '2023-05-27 07:18:56', 2, 'NO'),
 	('1273602414458216450', '请假类型', 'LeaveType', '01', '1273602535702962177', '1', '2020-06-18 13:04:42', '1', '2020-06-18 13:04:42', 1, 'NO'),
 	('1269113727745839106', '常用审批意见', 'CommonAdvice', '03', '1277567432352706561', '1', '2020-06-29 11:39:47', '1', '2020-06-29 11:39:47', 1, 'NO'),
 	('1269113727745839106', '流程监听器类别', 'WorkflowListenerCategory', '04', '1282502015493943298', '1', '2020-07-13 02:28:03', '1', '2020-07-13 03:24:10', 2, 'NO'),
@@ -2900,7 +2991,7 @@ INSERT INTO `sys_dictionary_type` (`dictionary_type`, `name`, `code`, `order_no`
 	('1', '业务支撑', 'Support', '03', '1350339296518561793', '1', '2021-01-16 15:09:11', '1', '2021-01-16 15:09:11', 1, 'NO'),
 	('1350339296518561793', '流水号重置策略', 'SerialNoResetStrategy', '01', '1350339368731893761', '1', '2021-01-16 15:09:28', '1', '2021-01-16 15:09:28', 1, 'NO'),
 	('1350339296518561793', '内容模板类型', 'ContentTemplateType', '02', '1360478516031590401', '1', '2021-02-13 14:38:49', '1', '2021-02-13 14:38:49', 1, 'NO'),
-	('1', '接口平台', 'ApiPlatform', '999', '1427789981864943617', '1', '2021-08-18 08:30:33', '1', '2021-08-18 08:30:33', 1, 'NO'),
+	('1', '接口平台', 'ApiPlatform', '29', '1427789981864943617', '1', '2021-08-18 08:30:33', '1', '2023-05-27 07:19:14', 2, 'NO'),
 	('1427789981864943617', '接口服务分类', 'ApiServiceCategory', '01', '1427790110311309314', '1', '2021-08-18 08:31:04', '1', '2021-08-18 08:31:04', 1, 'NO'),
 	('1427789981864943617', '接口服务执行结果', 'ApiServiceExecuteResult', '02', '1427825609281265665', '1', '2021-08-18 10:52:08', '1', '2021-08-23 10:43:26', 2, 'NO'),
 	('1427789981864943617', '消息主题分类', 'ApiMessageTopicCategory', '03', '1428993861053530114', '1', '2021-08-21 16:14:21', '1', '2021-08-21 16:14:21', 1, 'NO'),
@@ -2908,7 +2999,7 @@ INSERT INTO `sys_dictionary_type` (`dictionary_type`, `name`, `code`, `order_no`
 	('1427789981864943617', '消息状态', 'MessageStatus', '05', '1429643182180388865', '1', '2021-08-23 11:14:31', '1', '2021-08-23 11:14:31', 1, 'NO'),
 	('1427789981864943617', '对接模式', 'IntegrationModel', '06', '1450627333771464706', '1', '2021-10-20 08:58:02', '1', '2021-10-20 08:58:02', 1, 'NO'),
 	('1427789981864943617', '数据角色', 'DataRole', '07', '1451349441031917570', '1', '2021-10-22 08:47:26', '1', '2021-10-22 08:47:26', 1, 'NO'),
-	('1', '实体配置', 'EntityConfig', '0101', '1586886291055689730', '1', '2022-10-31 09:02:29', '1', '2022-10-31 09:02:29', 1, 'NO'),
+	('1', '实体配置', 'EntityConfig', '09', '1586886291055689730', '1', '2022-10-31 09:02:29', '1', '2023-05-27 07:19:55', 2, 'NO'),
 	('1586886291055689730', '实体模型属性类型', 'EntityModelPropertyType', '01', '1586886552545378305', '1', '2022-10-31 09:03:32', '1', '2022-10-31 10:11:33', 2, 'NO'),
 	('1586886291055689730', '实体视图类型', 'EntityViewType', '02', '1586952096636190721', '1', '2022-10-31 13:23:59', '1', '2022-10-31 13:23:59', 1, 'NO'),
 	('1586886291055689730', '显示控制', 'ShowControl', '11', '1586952096636190722', '1', '2022-10-31 13:23:59', '1', '2022-10-31 13:23:59', 1, 'NO'),
@@ -2923,7 +3014,9 @@ INSERT INTO `sys_dictionary_type` (`dictionary_type`, `name`, `code`, `order_no`
 	('1123532280403148801', '日期时间格式', 'DatetimeFormat', '04', '1600056686730432514', '1', '2022-12-06 17:16:56', '1', '2022-12-06 17:16:56', 1, 'NO'),
 	('1586886291055689730', '文本匹配规则', 'TextPatternRule', '10', '1600408579986063362', '1', '2022-12-07 16:35:14', '1', '2022-12-07 16:35:23', 2, 'NO'),
 	('1586886291055689730', '应用编码', 'AppCode', '10', '1600408579986063363', '1', '2022-12-07 16:35:14', '1', '2022-12-07 16:35:23', 2, 'NO'),
-	('1586886291055689730', '表格列格式化方法', 'TableColumnFormatMethod', '12', '1655915140335296513', '1', '2023-05-09 20:38:30', '1', '2023-05-09 20:46:58', 2, 'NO');
+	('1586886291055689730', '表格列格式化方法', 'TableColumnFormatMethod', '12', '1655915140335296513', '1', '2023-05-09 20:38:30', '1', '2023-05-09 20:46:58', 2, 'NO'),
+	('1', '系统通知', 'Notification', '06', '1662236681616519169', '1', '2023-05-27 07:18:02', '1', '2023-05-27 07:19:23', 4, 'NO'),
+	('1662236681616519169', '系统消息类型', 'SystemMessageType', '01', '1662237491268186114', '1', '2023-05-27 07:21:15', '1', '2023-05-27 07:21:15', 1, 'NO');
 
 -- 导出  表 abc.sys_group_permission_item 结构
 CREATE TABLE IF NOT EXISTS `sys_group_permission_item` (
@@ -2939,9 +3032,9 @@ CREATE TABLE IF NOT EXISTS `sys_group_permission_item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户组与权限项对应表';
 
--- 正在导出表  abc.sys_group_permission_item 的数据：~335 rows (大约)
+-- 正在导出表  abc.sys_group_permission_item 的数据：~598 rows (大约)
 INSERT INTO `sys_group_permission_item` (`id`, `group_id`, `permission_item_id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
-	('1', '99', '1123781860797521922', NULL, NULL, NULL, NULL, 1, 'NO'),
+	('1', '99', '1123781860797521922', NULL, NULL, NULL, NULL, 1, 'YES'),
 	('1651827186029592578', '2', '1', '', '2023-04-28 13:54:25', '', '2023-04-28 13:54:25', 1, 'NO'),
 	('1651827186029592579', '2', '1583265755662610434', '', '2023-04-28 13:54:25', '', '2023-04-28 13:54:25', 1, 'NO'),
 	('1651827186029592580', '2', '1583621684736274434', '', '2023-04-28 13:54:25', '', '2023-04-28 13:54:25', 1, 'NO'),
@@ -3275,7 +3368,270 @@ INSERT INTO `sys_group_permission_item` (`id`, `group_id`, `permission_item_id`,
 	('1654774217341743107', '1654760331288805378', '1654720962284814338', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
 	('1654774217341743108', '1654760331288805378', '1654721231399747585', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
 	('1654774217341743109', '1654760331288805378', '1654721266258608130', '1', '2023-05-06 17:04:52', '1', '2023-05-06 17:04:52', 1, 'NO'),
-	('4', '99', '1259327774730788866', NULL, NULL, NULL, NULL, 1, 'NO');
+	('1662285916999270402', '99', '1', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270403', '99', '1123781860797521922', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270404', '99', '1258371492062494721', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270405', '99', '1258371492804886529', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270406', '99', '1258371493064933378', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270407', '99', '1258371493341757441', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270408', '99', '1258371494054789121', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270409', '99', '1258371494268698625', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270410', '99', '1258380325329633281', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270411', '99', '1258380404652310529', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270412', '99', '1586956123683893254', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270413', '99', '1258380528866623490', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270414', '99', '1258380662643949569', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270415', '99', '1258380783511207938', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270416', '99', '1370639564832157698', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270417', '99', '1351070763888521218', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270418', '99', '1352426900563009538', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270419', '99', '1353529204645130241', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270420', '99', '1354299184139571201', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270421', '99', '1258371930191081474', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270422', '99', '1258371930891530242', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270423', '99', '1258371932376313858', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270424', '99', '1258371932812521474', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270425', '99', '1258371933047402498', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270426', '99', '1258371933303255042', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270427', '99', '1258379307581767681', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270428', '99', '1258379488863780865', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285916999270429', '99', '1586956123683893255', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573569', '99', '1353606456242171906', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573570', '99', '1353606536361766913', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573571', '99', '1353606636085538817', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573572', '99', '1370271549858967554', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573573', '99', '1370271550739771393', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573574', '99', '1370271551461191681', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573575', '99', '1370271551792541698', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573576', '99', '1370271551461191682', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573577', '99', '1370271552614625282', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573578', '99', '1370271552937586689', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573579', '99', '1370301447256338434', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573580', '99', '1370301510581940225', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573581', '99', '1370301696909701122', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573582', '99', '1370301777373229058', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573583', '99', '1258639382447697922', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573584', '99', '1258639382976180226', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573585', '99', '1258639384108642306', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573586', '99', '1258639384544849921', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573587', '99', '1258639384544849922', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573588', '99', '1258639384926531586', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573589', '99', '1258639385144635394', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573590', '99', '1259291003875799042', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573591', '99', '1259291086197403650', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573592', '99', '1260912691533144066', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573593', '99', '1260912692279730178', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573594', '99', '1260912692594302978', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573595', '99', '1260912693076647938', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573596', '99', '1260912693705793537', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573597', '99', '1260912694167166978', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573598', '99', '1261173972848664577', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573599', '99', '1651189382161412097', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917070573600', '99', '1651189568988295170', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488129', '99', '1651189568988295171', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488130', '99', '1651189568988295172', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488131', '99', '1651741776586772481', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488132', '99', '1651189568988295173', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488133', '99', '1651189568988295174', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488134', '99', '1651190904865730562', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488135', '99', '1651190904865730563', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488136', '99', '1259327774730788866', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488137', '99', '1259327775368323074', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488138', '99', '1259327775691284482', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488139', '99', '1259327776525950977', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488140', '99', '1259327776777609217', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488141', '99', '1259327777486446594', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488142', '99', '1167338537256849410', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488143', '99', '1167341043433181186', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488144', '99', '1261589386628005890', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488145', '99', '1381518481944162306', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488146', '99', '1381518816209219586', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488147', '99', '1381518905912799233', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488148', '99', '1381519008715190274', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488149', '99', '1661207314467684353', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488150', '99', '1661206988746424322', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488151', '99', '1661206988746424323', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488152', '99', '1661206988746424324', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488153', '99', '1661206988746424325', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488154', '99', '1661206988746424326', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488155', '99', '1661206988809338881', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488156', '99', '1661206988809338882', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488157', '99', '1661206988809338883', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488158', '99', '1661206988809338884', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488159', '99', '1661242389846589441', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488160', '99', '1661241919690297346', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488161', '99', '1661241919690297347', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488162', '99', '1661241919690297348', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488163', '99', '1661241919757406210', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488164', '99', '1661241919757406211', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488165', '99', '1661241919757406212', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488166', '99', '1661241919757406213', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488167', '99', '1661329017906663426', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488168', '99', '1661329017919246337', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488169', '99', '1661329017919246338', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488170', '99', '1661329017919246339', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488171', '99', '1661329017919246340', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488172', '99', '1661328062301634561', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488173', '99', '1661328352673300481', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488174', '99', '1661329017990549507', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917133488175', '99', '1661329017919246341', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402690', '99', '1661329017919246342', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402691', '99', '1661328504616157186', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402692', '99', '1661328539441463298', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402693', '99', '1661328624904601602', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402694', '99', '1661331226098700289', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402695', '99', '1661331226098700290', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402696', '99', '1661331226098700291', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402697', '99', '1661331226098700292', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402698', '99', '1661331226098700293', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402699', '99', '1661331226098700294', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402700', '99', '1661331226098700295', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402701', '99', '1653334182323093506', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402702', '99', '1653334589053140993', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402703', '99', '1653334904762597378', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402704', '99', '1653334904829706241', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402705', '99', '1653334904829706242', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402706', '99', '1653334904829706243', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402707', '99', '1653334904829706244', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402708', '99', '1653544325853818881', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402709', '99', '1653544325853818882', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402710', '99', '1654097133267124226', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402711', '99', '1654097159179534337', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402712', '99', '1654097360942333954', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402713', '99', '1654110917809475585', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402714', '99', '1654111010390347778', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402715', '99', '1654360515878645762', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402716', '99', '1654360515920588801', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402717', '99', '1653651522193514497', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402718', '99', '1653651522193514498', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402719', '99', '1653651522193514499', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402720', '99', '1653651522193514500', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402721', '99', '1653651522264817666', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402722', '99', '1653651522264817667', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402723', '99', '1653651522264817668', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402724', '99', '1653651522264817669', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402725', '99', '1653721411658772481', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402726', '99', '1653721411658772482', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402727', '99', '1653721411704909826', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402728', '99', '1653721411704909827', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402729', '99', '1653721411704909828', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402730', '99', '1653721411704909829', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402731', '99', '1653721411704909830', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402732', '99', '1653721411704909831', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402733', '99', '1654720962284814338', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402734', '99', '1654721231399747585', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402735', '99', '1654721266258608130', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402736', '99', '1653595977646374913', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402737', '99', '1653596169913270274', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402738', '99', '1653596169913270275', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402739', '99', '1653596169913270276', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917196402740', '99', '1653596169913270277', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317250', '99', '1653596169913270278', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317251', '99', '1653685722330259458', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317252', '99', '1653685722330259459', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317253', '99', '1653685722330259460', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317254', '99', '1653685722330259463', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317255', '99', '1653743726039773185', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317256', '99', '1653743726064939010', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317257', '99', '1653743726064939011', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317258', '99', '1653743726064939012', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317259', '99', '1583265755662610434', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317260', '99', '1583621684736274434', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317261', '99', '1583621693334597634', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317262', '99', '1583621694890684418', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317263', '99', '1583621695494664193', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317264', '99', '1583621695784071170', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317265', '99', '1583621696102838274', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317266', '99', '1585889231057698817', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317267', '99', '1586963701121925122', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317268', '99', '1653547439277289474', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317269', '99', '1590507235774967810', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317270', '99', '1590507417728069634', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317271', '99', '1583621695494664194', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317272', '99', '1583621695494664195', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317273', '99', '1583266846315884546', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317274', '99', '1583266854025015297', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317275', '99', '1583266854423474177', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317276', '99', '1583266855144894466', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317277', '99', '1583266855564324865', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317278', '99', '1583266855878897665', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317279', '99', '1592471425539870722', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317280', '99', '1592471434742173692', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317281', '99', '1592471435039969282', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317282', '99', '1592471436025630722', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317283', '99', '1592471436260511742', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317284', '99', '1592471436533141502', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317285', '99', '1584461700769234945', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317286', '99', '1584461706913890306', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317287', '99', '1584461707165548546', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317288', '99', '1584461709011042306', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317289', '99', '1584461709384335362', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317290', '99', '1584461709879263234', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317291', '99', '1584461709879263235', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317292', '99', '1586906740598751233', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317293', '99', '1586956123683893253', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317294', '99', '1584462679212220418', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317295', '99', '1584462686090878978', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317296', '99', '1584462686384480257', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317297', '99', '1584462686619361282', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317298', '99', '1584462686808104962', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317299', '99', '1584462687097511938', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317300', '99', '1586956123683893252', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317301', '99', '1586956114351566849', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317302', '99', '1586956123314794497', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317303', '99', '1586956123683893250', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317304', '99', '1586956123964911617', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917259317305', '99', '1586956124229152770', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426113', '99', '1586956124682137601', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426114', '99', '1586956124682137602', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426115', '99', '1586967216296804354', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426116', '99', '1586956123683893251', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426117', '99', '1619170258194518017', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426118', '99', '1592471425539870122', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426119', '99', '1592471434742173612', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426120', '99', '1592471435039969212', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426121', '99', '1592471436025630712', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426122', '99', '1592471436260511712', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426123', '99', '1592471436533141512', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426124', '99', '1593519785781477377', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426125', '99', '1593519794681790465', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426126', '99', '1593519797760409602', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426127', '99', '1593519799350050818', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426128', '99', '1593519799966613506', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426129', '99', '1593519800327323650', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426130', '99', '1594593708811984897', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426131', '99', '1594593720476344321', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426132', '99', '1594593724951666690', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426133', '99', '1594593725396262914', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426134', '99', '1594593725878607873', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426135', '99', '1594593726226735105', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426136', '99', '1619170258194518018', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426137', '99', '1619244122144473089', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426138', '99', '1619244141081755650', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426139', '99', '1619244144802103297', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426140', '99', '1619244145921982465', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426141', '99', '1619244146307858433', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426142', '99', '1619244146639208450', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426143', '99', '1591992839796871169', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426144', '99', '1659753506533371905', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426145', '99', '1659828341531791362', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426146', '99', '1659828341628260353', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426147', '99', '1659828341628260354', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426148', '99', '1659828341628260355', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426149', '99', '1659828341628260356', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426150', '99', '1659828341628260357', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426151', '99', '1659828341628260358', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426152', '99', '1659828341695369218', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426153', '99', '1659828341695369222', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426154', '99', '1659828341695369219', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426155', '99', '1659828341695369220', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426156', '99', '1662266360884899842', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426157', '99', '1662266586756558850', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426158', '99', '1662266766872555521', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426159', '99', '1662266766872555522', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426160', '99', '1662267169114697730', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('1662285917326426161', '99', '1662267043809865729', '1650311010862542849', '2023-05-27 10:33:41', '1650311010862542849', '2023-05-27 10:33:41', 1, 'NO'),
+	('4', '99', '1259327774730788866', NULL, NULL, NULL, NULL, 1, 'YES');
 
 -- 导出  表 abc.sys_group_user 结构
 CREATE TABLE IF NOT EXISTS `sys_group_user` (
@@ -3304,7 +3660,8 @@ INSERT INTO `sys_group_user` (`id`, `group_id`, `user_id`, `create_id`, `create_
 	('1652241303378894850', '1650653075458785282', '1651846726876676097', '', '2023-04-29 17:19:59', '', '2023-04-29 17:19:59', 1, 'NO'),
 	('1652241303378894851', '1650653075458785282', '1650311010862542849', '', '2023-04-29 17:19:59', '', '2023-04-29 17:19:59', 1, 'NO'),
 	('1652933631567511553', '1652933590236839938', '1650311010862542849', '1', '2023-05-01 15:11:02', '1', '2023-05-01 15:11:02', 1, 'NO'),
-	('1654770229703643137', '1654760331288805378', '1654718747339972609', '1654718747339972609', '2023-05-06 16:49:02', '1654718747339972609', '2023-05-06 16:49:02', 1, 'NO');
+	('1654770229703643137', '1654760331288805378', '1654718747339972609', '1654718747339972609', '2023-05-06 16:49:02', '1654718747339972609', '2023-05-06 16:49:02', 1, 'NO'),
+	('1662285310700044289', '99', '1650311010862542849', '1', '2023-05-27 10:31:17', '1', '2023-05-27 10:31:17', 1, 'NO');
 
 -- 导出  表 abc.sys_log 结构
 CREATE TABLE IF NOT EXISTS `sys_log` (
@@ -3355,7 +3712,9 @@ INSERT INTO `sys_log` (`content`, `log_type`, `request_time`, `request_param`, `
 	('admin 登录失败：用户已锁定，请联系系统管理员', 'AUDIT', '2023-05-09 16:23:21', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1655850930268037122', '', '2023-05-09 16:23:21', '', '2023-05-09 16:23:21', 1, 'NO'),
 	('admin 登录失败：用户已锁定，请联系系统管理员', 'AUDIT', '2023-05-09 16:23:24', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1655850943425568769', '', '2023-05-09 16:23:24', '', '2023-05-09 16:23:24', 1, 'NO'),
 	('admin 登录失败：用户名或密码错误', 'AUDIT', '2023-05-09 16:24:04', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1655851110929293313', '', '2023-05-09 16:24:04', '', '2023-05-09 16:24:04', 1, 'NO'),
-	('admin 登录失败：用户已锁定，请联系系统管理员', 'AUDIT', '2023-05-09 16:24:10', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1655851137449877505', '', '2023-05-09 16:24:10', '', '2023-05-09 16:24:10', 1, 'NO');
+	('admin 登录失败：用户已锁定，请联系系统管理员', 'AUDIT', '2023-05-09 16:24:10', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1655851137449877505', '', '2023-05-09 16:24:10', '', '2023-05-09 16:24:10', 1, 'NO'),
+	('lisi 登录失败：用户名或密码错误', 'AUDIT', '2023-05-27 10:31:26', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1662285349736431618', '', '2023-05-27 10:31:26', '', '2023-05-27 10:31:26', 1, 'NO'),
+	('lisi 登录失败：用户名或密码错误', 'AUDIT', '2023-05-27 10:31:27', NULL, NULL, NULL, '', '', '', '0:0:0:0:0:0:0:1', 'NO', NULL, NULL, '1662285352877965314', '', '2023-05-27 10:31:27', '', '2023-05-27 10:31:27', 1, 'NO');
 
 -- 导出  表 abc.sys_organization 结构
 CREATE TABLE IF NOT EXISTS `sys_organization` (
@@ -3380,17 +3739,17 @@ CREATE TABLE IF NOT EXISTS `sys_organization` (
 INSERT INTO `sys_organization` (`organization`, `name`, `code`, `type`, `status`, `order_no`, `remark`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1', '未分配', 'unsigned', 'DEPARTMENT', 'NORMAL', '999', NULL, '-1', '1', '2021-01-22 08:49:02', '1', '2021-01-22 08:49:02', 1, 'NO'),
 	('0', '一二三集团', 'abc', 'GROUP', 'NORMAL', '01', NULL, '1', '1', NULL, '1', NULL, 1, 'NO'),
-	('1', '信息中心', NULL, 'DEPARTMENT', 'NORMAL', '03', NULL, '1180012958376042498', '1', '2019-10-04 06:53:08', '1', '2019-10-04 06:53:08', 1, 'NO'),
-	('1', '生产部', NULL, 'DEPARTMENT', 'NORMAL', '01', NULL, '1180013063376248834', '1', '2019-10-04 06:53:33', '', '2023-04-22 10:55:03', 4, 'NO'),
-	('1', '销售部', NULL, 'DEPARTMENT', 'NORMAL', '02', NULL, '1180013123820363778', '1', '2019-10-04 06:53:47', '1', '2019-10-04 06:53:47', 1, 'NO'),
-	('1180013063376248834', '生产一部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911044748820481', '1', '2019-10-23 07:43:39', '1', '2023-05-18 20:23:55', 2, 'NO'),
+	('1', '信息中心', NULL, 'DEPARTMENT', 'NORMAL', '03', NULL, '1180012958376042498', '1', '2019-10-04 06:53:08', '1', '2023-05-27 16:56:44', 2, 'NO'),
+	('1', '生产部', NULL, 'DEPARTMENT', 'NORMAL', '01', NULL, '1180013063376248834', '1', '2019-10-04 06:53:33', '1', '2023-05-27 16:56:40', 8, 'NO'),
+	('1', '销售部', NULL, 'DEPARTMENT', 'NORMAL', '02', NULL, '1180013123820363778', '1', '2019-10-04 06:53:47', '1', '2023-05-27 17:00:26', 3, 'NO'),
+	('1180013063376248834', '生产一部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911044748820481', '1', '2019-10-23 07:43:39', '1', '2023-05-27 16:17:02', 4, 'NO'),
 	('1180013063376248834', '生产二部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911094312910849', '1', '2019-10-23 07:43:51', '1', '2019-10-23 07:43:51', 1, 'NO'),
 	('1180013063376248834', '生产三部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911138961276930', '1', '2019-10-23 07:44:02', '1', '2020-05-20 11:18:16', 2, 'NO'),
-	('1', '行政部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911361171308545', '1', '2019-10-23 07:44:55', '', '2023-04-22 10:55:29', 9, 'NO'),
+	('1', '行政部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911361171308545', '1', '2019-10-23 07:44:55', '1', '2023-05-27 17:08:08', 25, 'NO'),
 	('1186911361171308545', '人力资源', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911443060899841', '1', '2019-10-23 07:45:14', '1', '2019-10-23 07:45:14', 1, 'NO'),
 	('1186911361171308545', '办公室', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911503463071745', '1', '2019-10-23 07:45:29', '1', '2019-10-23 07:45:29', 1, 'NO'),
 	('1186911361171308545', '后勤', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911538351292417', '1', '2019-10-23 07:45:37', '1', '2019-10-23 07:45:37', 1, 'NO'),
-	('1', '财务部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911884368789506', '1', '2019-10-23 07:47:00', '', '2023-04-22 10:55:26', 5, 'NO'),
+	('1', '财务部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911884368789506', '1', '2019-10-23 07:47:00', '1', '2023-05-27 17:03:25', 12, 'NO'),
 	('1186911884368789506', '会计', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911937498038274', '1', '2019-10-23 07:47:12', '1', '2020-05-20 11:21:52', 3, 'NO'),
 	('1186911884368789506', '出纳', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1186911985829003266', '1', '2019-10-23 07:47:24', '1', '2019-10-23 07:47:24', 1, 'NO'),
 	('1180012958376042498', '生产IT', 'pp', 'MODULE', 'NORMAL', '01', NULL, '1298459665034199042', '1', '2020-08-26 03:18:03', '1', '2020-08-26 03:18:03', 1, 'NO'),
@@ -3403,7 +3762,8 @@ INSERT INTO `sys_organization` (`organization`, `name`, `code`, `type`, `status`
 	('1186911044748820481', '1号车间', '1', 'DEPARTMENT', 'NORMAL', '01', NULL, '1659171806891794433', '1', '2023-05-18 20:19:19', '1', '2023-05-18 20:19:19', 1, 'NO'),
 	('1186911094312910849', '1号车间', '2', 'DEPARTMENT', 'NORMAL', '01', NULL, '1659171827334832130', '1', '2023-05-18 20:19:24', '1', '2023-05-18 20:19:50', 2, 'NO'),
 	('1659171806891794433', '研发部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1659172221330972674', '1', '2023-05-18 20:20:58', '1', '2023-05-18 20:20:58', 1, 'NO'),
-	('1659171827334832130', '研发部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1659174037749817345', '1', '2023-05-18 20:28:11', '1', '2023-05-18 20:28:11', 1, 'NO');
+	('1659171827334832130', '研发部', NULL, 'DEPARTMENT', 'NORMAL', NULL, NULL, '1659174037749817345', '1', '2023-05-18 20:28:11', '1', '2023-05-18 20:28:11', 1, 'NO'),
+	('1', '123', '213', 'DEPARTMENT', 'NORMAL', '123', NULL, '1662282307347693569', '1', '2023-05-27 10:19:20', '1', '2023-05-27 17:13:19', 5, 'NO');
 
 -- 导出  表 abc.sys_param 结构
 CREATE TABLE IF NOT EXISTS `sys_param` (
@@ -3474,7 +3834,7 @@ CREATE TABLE IF NOT EXISTS `sys_permission_item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='权限项';
 
--- 正在导出表  abc.sys_permission_item 的数据：~244 rows (大约)
+-- 正在导出表  abc.sys_permission_item 的数据：~237 rows (大约)
 INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `permission_code`, `view_code`, `component`, `icon`, `status`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('0', '系统资源', 'root', 'GROUP', 'root', NULL, '#', 'UserFilled', 'NORMAL', '010', '1', NULL, NULL, '1', '2020-09-03 07:14:53', 2, 'NO'),
 	('1', '系统管理', 'system', 'MODULE', 'system', NULL, '#', 'Setting', 'NORMAL', '01', '1123781860797521922', NULL, NULL, '1', '2023-05-12 20:27:09', 9, 'NO'),
@@ -3641,7 +4001,7 @@ INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `p
 	('1651189382161412097', '启用', 'enable', 'BUTTON', 'system:dictionaryItem:enable', NULL, NULL, 'UserFilled', 'NORMAL', '06', '1651190904865730562', '', '2023-04-26 19:46:04', '', '2023-04-26 19:46:24', 2, 'NO'),
 	('1651189382161412097', '停用', 'disable', 'BUTTON', 'system:dictionaryItem:disable', NULL, NULL, 'UserFilled', 'NORMAL', '07', '1651190904865730563', '', '2023-04-26 19:46:04', '', '2023-04-26 19:46:40', 2, 'NO'),
 	('1651189382161412097', '复制新增', 'addByCopy', 'BUTTON', 'system:dictionaryItem:addByCopy', NULL, NULL, 'UserFilled', 'NORMAL', '0301', '1651741776586772481', '', '2023-04-28 08:15:02', '', '2023-04-28 08:15:39', 3, 'NO'),
-	('1', '接口平台', 'cip', 'MODULE', 'cip', NULL, '#', 'Fold', 'NORMAL', '99', '1653334182323093506', '1', '2023-05-02 17:42:41', '1', '2023-05-12 20:29:28', 2, 'NO'),
+	('1', '接口平台', 'cip', 'MODULE', 'cip', NULL, '#', 'Fold', 'NORMAL', '03', '1653334182323093506', '1', '2023-05-02 17:42:41', '1', '2023-05-27 09:16:15', 3, 'NO'),
 	('1653334182323093506', '应用', 'app', 'MENU', 'cip:app', 'list', 'cip/view/app/list', 'Expand', 'NORMAL', '01', '1653334589053140993', '1', '2023-05-02 17:44:18', '1', '2023-05-13 20:23:53', 2, 'NO'),
 	('1653334589053140993', '查询', 'query', 'BUTTON', 'cip:app:query', NULL, NULL, 'UserFilled', 'NORMAL', '01', '1653334904762597378', '1', '2023-05-02 17:45:33', '1', '2023-05-02 17:45:53', 2, 'NO'),
 	('1653334589053140993', '查看', 'view', 'BUTTON', 'cip:app:view', NULL, NULL, 'UserFilled', 'NORMAL', '02', '1653334904829706241', '1', '2023-05-02 17:45:33', '1', '2023-05-02 17:46:59', 3, 'NO'),
@@ -3740,7 +4100,13 @@ INSERT INTO `sys_permission_item` (`permission_item`, `name`, `code`, `type`, `p
 	('1661331226098700289', '新增', 'add', 'BUTTON', 'scheduler:schedulerJobParam:add', NULL, NULL, 'UserFilled', 'NORMAL', '03', '1661331226098700292', '1', '2023-05-24 19:20:05', '1', '2023-05-24 19:20:29', 2, 'NO'),
 	('1661331226098700289', '复制新增', 'addByCopy', 'BUTTON', 'scheduler:schedulerJobParam:addByCopy', NULL, NULL, 'UserFilled', 'NORMAL', '04', '1661331226098700293', '1', '2023-05-24 19:20:05', '1', '2023-05-24 19:20:29', 2, 'NO'),
 	('1661331226098700289', '修改', 'modify', 'BUTTON', 'scheduler:schedulerJobParam:modify', NULL, NULL, 'UserFilled', 'NORMAL', '07', '1661331226098700294', '1', '2023-05-24 19:20:05', '1', '2023-05-24 19:20:29', 2, 'NO'),
-	('1661331226098700289', '删除', 'remove', 'BUTTON', 'scheduler:schedulerJobParam:remove', NULL, NULL, 'UserFilled', 'NORMAL', '08', '1661331226098700295', '1', '2023-05-24 19:20:05', '1', '2023-05-24 19:20:29', 2, 'NO');
+	('1661331226098700289', '删除', 'remove', 'BUTTON', 'scheduler:schedulerJobParam:remove', NULL, NULL, 'UserFilled', 'NORMAL', '08', '1661331226098700295', '1', '2023-05-24 19:20:05', '1', '2023-05-24 19:20:29', 2, 'NO'),
+	('1', '系统通知', 'notification', 'MODULE', 'notification', NULL, '#', 'Warning', 'NORMAL', '99', '1662266360884899842', '1', '2023-05-27 09:15:59', '1', '2023-05-27 09:15:59', 1, 'NO'),
+	('1662266360884899842', '系统消息', 'systemMessage', 'MENU', 'notification:systemMessage', 'list', 'notification/view/systemMessage/list', 'ChatLineRound', 'NORMAL', '01', '1662266586756558850', '1', '2023-05-27 09:16:52', '1', '2023-05-27 09:16:52', 1, 'NO'),
+	('1662266586756558850', '查询', 'query', 'BUTTON', 'notification:systemMessage:query', NULL, NULL, 'UserFilled', 'NORMAL', '01', '1662266766872555521', '1', '2023-05-27 09:17:35', '1', '2023-05-27 09:17:47', 2, 'NO'),
+	('1662266586756558850', '查看', 'view', 'BUTTON', 'notification:systemMessage:view', NULL, NULL, '', 'NORMAL', '02', '1662266766872555522', '1', '2023-05-27 09:17:35', '1', '2023-05-27 09:18:29', 3, 'NO'),
+	('1662266586756558850', '删除', 'remove', 'BUTTON', 'notification:systemMessage:remove', NULL, NULL, 'UserFilled', 'NORMAL', '05', '1662267043809865729', '1', '2023-05-27 09:18:41', '1', '2023-05-27 09:18:52', 2, 'NO'),
+	('1662266586756558850', '设置所有已读', 'setAllRead', 'BUTTON', 'notification:systemMessage:setAllRead', NULL, NULL, '', 'NORMAL', '03', '1662267169114697730', '1', '2023-05-27 09:19:11', '1', '2023-05-27 09:19:40', 2, 'NO');
 
 -- 导出  表 abc.sys_user 结构
 CREATE TABLE IF NOT EXISTS `sys_user` (
@@ -3768,16 +4134,19 @@ CREATE TABLE IF NOT EXISTS `sys_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户';
 
--- 正在导出表  abc.sys_user 的数据：~8 rows (大约)
+-- 正在导出表  abc.sys_user 的数据：~11 rows (大约)
 INSERT INTO `sys_user` (`organization`, `name`, `account`, `password`, `gender`, `birthday`, `telephone`, `email`, `position`, `status`, `force_change_password_flag`, `fail_login_count`, `lock_time`, `order_no`, `id`, `create_id`, `create_time`, `update_id`, `update_time`, `version`, `delete_flag`) VALUES
 	('1', '系统管理员', 'admin', '$2a$10$wdXuR/yQsIwdHBr5N0oiLe7LkfR6Q.K0qJo59TNlSfJ1rosO6bkO2', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'NO', 0, '2023-05-09 16:24:10', NULL, '1', '1', NULL, '1', '2023-05-09 16:24:28', 67, 'NO'),
 	('1', '张三', 'zhangsan', '$2a$10$wdXuR/yQsIwdHBr5N0oiLe7LkfR6Q.K0qJo59TNlSfJ1rosO6bkO2', 'MALE', '2023-04-06 00:00:00', '13131312331', '1@126.com', NULL, 'DEAD', 'YES', 0, '2023-04-23 20:48:52', '02', '1650310811029123073', '', '2023-04-24 09:28:53', '', '2023-04-24 19:49:39', 3, 'NO'),
-	('1', '李四', 'lisi', '$2a$10$ZMDFg9bYcGN3shbw9EZY8.5v2Bu1vqOIfGlkSMKTEGfCtK/v1W9m.', 'FEMALE', '2023-04-06 00:00:00', '13131312331', '1@126.com', NULL, 'NORMAL', 'NO', 0, '2023-04-24 09:28:53', '03', '1650311010862542849', '', '2023-04-24 09:29:41', '', '2023-05-24 20:05:35', 7, 'NO'),
+	('1', '李四', 'lisi', '$2a$10$uGc3K9BeYTPRBQKS66NeqeTaRhxZRSlcYxAfKr.zNyubYDkbE04sS', 'FEMALE', '2023-04-06 00:00:00', '13131312331', '1@126.com', NULL, 'NORMAL', 'NO', 0, '2023-04-24 09:28:53', '03', '1650311010862542849', '', '2023-04-24 09:29:41', '1650311010862542849', '2023-05-27 10:32:32', 11, 'NO'),
 	('1', '213123', '123123', '$2a$10$gidorVjELI87m9oPT8a6suMjtg9pTzhz0JhC53JT.SoTNzQqkSMY.', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, '2023-04-23 20:48:52', NULL, '1651846726876676097', '', '2023-04-28 15:12:04', '', '2023-05-24 19:56:05', 3, 'NO'),
 	('1654718552153841666', '四五六运输管理系统', 'tms', '$2a$10$JK8bUenpqNl33Ogc6RIpkOir8Nwt.l.xF4jsXnQYZXHhHhSfbCYze', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, NULL, '01', '1654718747339972609', '1', '2023-05-06 13:24:27', '1654718747339972609', '2023-05-06 16:48:09', 3, 'NO'),
 	('-1', '宋七', 'songqi', '$2a$10$R3F45dANS6BNm3CNyL.89OQsXkP64.ZCIY63v/eJYLrbQ1x7FSP.m', 'MALE', '1982-10-03 00:00:00', '138123456789', 'sealy@125.com', '总经理', 'NORMAL', 'YES', 0, NULL, NULL, '1659536315305177089', '1', '2023-05-19 20:27:45', '1', '2023-05-19 20:27:45', 1, 'NO'),
 	('1180012958376042498', '宋八', 'songba', '$2a$10$E/x4rgrudxme5K4cpMOVP.IlFAFl.bbuCbyeOfswf3qH35A3ubO8K', 'FEMALE', '1982-10-03 00:00:00', '138123456789', 'sealy@125.com', '总经理', 'NORMAL', 'YES', 0, NULL, NULL, '1659536315716218881', '1', '2023-05-19 20:27:45', '1', '2023-05-19 20:27:45', 1, 'NO'),
-	('-1', '宋七3', 'songqi3', '$2a$10$x9EuNXL4PdBLRxb0zdNt.e.ZrYOTPajxhgyseyVfu63Cg2HJ2SuNy', 'MALE', '1982-10-03 00:00:00', '138123456789', 'sealy@125.com', '总经理', 'NORMAL', 'YES', 0, NULL, NULL, '1659543048836689922', '1', '2023-05-19 20:54:30', '1', '2023-05-19 20:54:30', 1, 'NO');
+	('-1', '宋七3', 'songqi3', '$2a$10$x9EuNXL4PdBLRxb0zdNt.e.ZrYOTPajxhgyseyVfu63Cg2HJ2SuNy', 'MALE', '1982-10-03 00:00:00', '138123456789', 'sealy@125.com', '总经理', 'NORMAL', 'YES', 0, NULL, NULL, '1659543048836689922', '1', '2023-05-19 20:54:30', '1', '2023-05-19 20:54:30', 1, 'NO'),
+	('1', '刘九', 'liujiu', '$2a$10$xNrKAh3qSAzPS8v01l75He2vVopuPUB1DppDkfKlCxT9YJdZmZrnS', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, NULL, NULL, '1662279279613853697', '1', '2023-05-27 10:07:19', '1', '2023-05-27 10:07:19', 1, 'NO'),
+	('1', '23123', '213', '$2a$10$L6GMosd7ZYXVy0VIQo/tguxt6ZmU8rJRhEkwMjW7GAmvNBmEMkjMO', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, NULL, NULL, '1662279590290145282', '1', '2023-05-27 10:08:33', '1', '2023-05-27 10:08:33', 1, 'NO'),
+	('1', '123', '12313', '$2a$10$adWhlbecNMDzGLi/c7QZceNDhsDgZTZcLVqHeEzWh4VwJFfZ7Buu2', 'MALE', NULL, NULL, NULL, NULL, 'NORMAL', 'YES', 0, NULL, NULL, '1662283221856960513', '1', '2023-05-27 10:22:58', '1', '2023-05-27 10:22:58', 1, 'NO');
 
 -- 导出  表 abc.sys_user_group 结构
 CREATE TABLE IF NOT EXISTS `sys_user_group` (
@@ -3833,7 +4202,8 @@ INSERT INTO `sys_user_password_change_log` (`id`, `user_id`, `account`, `change_
 	('1655812925956317186', '1', 'admin', '2023-05-09 13:52:20', '$2a$10$n7rKS5B7b7xDV/vT8.luOOzqax4sdpJBJB1RYYsBhrVlg2NuEs4Si', '1', '2023-05-09 13:52:20', '1', '2023-05-09 13:52:20', 1, 'NO'),
 	('1655834080536715265', '1', 'admin', '2023-05-09 15:16:23', '$2a$10$3eUxUpnaESttE/sKnOvZ9.7B8BmoM4.ziKIMwnCzN5aNeUUSTjHGe', '1', '2023-05-09 15:16:23', '1', '2023-05-09 15:16:23', 1, 'NO'),
 	('1655834558737702913', '1', 'admin', '2023-05-09 15:18:17', '$2a$10$zz9zhit3wI6s1rTeqUyj7uVPakWJlYJMahEKf/exnFx7nKF.RMZg2', '1', '2023-05-09 15:18:17', '1', '2023-05-09 15:18:17', 1, 'NO'),
-	('1655884681119293441', '1650311010862542849', 'lisi', '2023-05-09 18:37:27', '$2a$10$7f25Sl3YUP6R0nogJnQ4nuf18iQ/ch.30W1WawMFFNrJ2zqcKUUaK', '1650311010862542849', '2023-05-09 18:37:27', '1650311010862542849', '2023-05-09 18:37:27', 1, 'NO');
+	('1655884681119293441', '1650311010862542849', 'lisi', '2023-05-09 18:37:27', '$2a$10$7f25Sl3YUP6R0nogJnQ4nuf18iQ/ch.30W1WawMFFNrJ2zqcKUUaK', '1650311010862542849', '2023-05-09 18:37:27', '1650311010862542849', '2023-05-09 18:37:27', 1, 'NO'),
+	('1662285628875751425', '1650311010862542849', 'lisi', '2023-05-27 10:32:32', '$2a$10$G1JwyUZnq3ojsfGKYKfKHeKMIORl1ya83tUIhj9G6Jq897/cyYTmK', '1650311010862542849', '2023-05-27 10:32:32', '1650311010862542849', '2023-05-27 10:32:32', 1, 'NO');
 
 -- 导出  表 abc.sys_user_profile 结构
 CREATE TABLE IF NOT EXISTS `sys_user_profile` (

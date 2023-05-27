@@ -58,10 +58,13 @@ spring:
       max-file-size: -1
       #设置单次请求文件的大小,-1代表不限制
       max-request-size: -1
-
   freemarker:
     #    不检测是否存在模板，避免启动时控制台输出警告信息
     checkTemplateLocation: false
+  mail:
+    host: smtp.126.com
+    username: sealy321@126.com
+    password: '********'
   quartz:
     scan: true
     jdbc:
@@ -117,6 +120,8 @@ platform-config:
     userInitPassword: 12345678
     tokenSecret: wqliu
     exportDataPageSize: 2
+  notification:
+    serverPort: 9997
   message:
     serverPort: 8997
     messageServerAppCode: CIP
@@ -128,6 +133,8 @@ platform-config:
   oss:
     storeClass: tech.abc.platform.oss.service.impl.LocalStoreServiceImpl
     basePath: c:/attachment/
+  mail:
+    senderAddress: sealy321@126.com
 
 
 

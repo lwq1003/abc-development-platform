@@ -44,6 +44,7 @@ public class AutoUnlockAccount extends QuartzJobBean {
     @SystemLog(value = "解锁用户", logType = LogTypeEnum.SCHEDULER, logRequestParam = false, executeResult = CommonConstant.YES)
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
+
         // 获取所有锁定的账户
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.lambda().eq(User::getStatus, UserStatusEnum.LOCK.toString());
@@ -55,7 +56,7 @@ public class AutoUnlockAccount extends QuartzJobBean {
                 if (lockTime <= intervalMin) {
                     // 自动解锁用户
                     userService.unlock(user.getId());
-                    log.info("执行解锁操作");
+
                 }
             }
         }

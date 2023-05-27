@@ -8,7 +8,7 @@ import { Screenfull } from '@/components/Screenfull'
 import { Breadcrumb } from '@/components/Breadcrumb'
 import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
-
+import Notification from '@/components/abc/Notification/index.vue'
 const { getPrefixCls, variables } = useDesign()
 
 const prefixCls = getPrefixCls('tool-header')
@@ -66,6 +66,7 @@ export default defineComponent({
               color="var(--top-header-text-color)"
             ></LocaleDropdown>
           ) : undefined}
+          <Notification></Notification>
           <UserInfo class="hover-trigger"></UserInfo>
         </div>
       </div>

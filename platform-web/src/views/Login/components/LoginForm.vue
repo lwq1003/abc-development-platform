@@ -14,6 +14,8 @@ import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
 import { UserType } from '@/api/login/types'
 import { useValidator } from '@/hooks/web/useValidator'
 import { FormSchema } from '@/types/form'
+import useGetGlobalProperties from '@/hooks/useGlobal'
+const globalProperties = useGetGlobalProperties()
 
 const { required } = useValidator()
 
@@ -109,6 +111,8 @@ const signIn = async () => {
         if (res) {
           // 保存用户信息
           userStore.setUserAction(res.data)
+          // 登录成功，启动websocket连接
+          globalProperties.$webSocket.init()
           // 是否使用动态路由
           if (appStore.getDynamicRouter) {
             const routers = res.data.menuPermission || []

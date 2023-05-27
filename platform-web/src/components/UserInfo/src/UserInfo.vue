@@ -11,6 +11,9 @@ import { Dialog } from '@/components/abc/Dialog'
 import ChangePassword from '@/components/abc/ChangePassword/index.vue'
 import { ref } from 'vue'
 import { UserFilled } from '@element-plus/icons-vue'
+import { USER_KEY } from '@/constant/common'
+import useGetGlobalProperties from '@/hooks/useGlobal'
+const globalProperties = useGetGlobalProperties()
 const tagsViewStore = useTagsViewStore()
 
 const { getPrefixCls } = useDesign()
@@ -20,7 +23,7 @@ const prefixCls = getPrefixCls('user-info')
 const { t } = useI18n()
 
 const { wsCache } = useCache()
-import { USER_KEY } from '@/constant/common'
+
 const { replace } = useRouter()
 
 const visible = ref(false)
@@ -36,6 +39,9 @@ const loginOut = () => {
         wsCache.clear()
         tagsViewStore.delAllViews()
         resetRouter() // 重置静态路由表
+
+        // 关闭websocket连接
+        globalProperties.prototype.$webSocket.close()
         replace('/login')
       }
     })

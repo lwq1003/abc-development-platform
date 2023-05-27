@@ -8,6 +8,7 @@ import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect
 import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeReferenceUseCode.vue'
 import IconPicker from '@/components/abc/IconPicker/index.vue'
 import { Editor } from '@/components/abc/Editor'
+import CronExpression from '@/components/abc/CronExpression/index.vue'
 export const viewMixin = {
   components: {
     Dialog,
@@ -15,7 +16,8 @@ export const viewMixin = {
     DictionarySelect,
     DataDictionarySelect,
     IconPicker,
-    Editor
+    Editor,
+    CronExpression
   },
   data() {
     return {

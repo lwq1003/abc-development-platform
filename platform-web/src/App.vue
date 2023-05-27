@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { ConfigGlobal } from '@/components/ConfigGlobal'
 import { isDark } from '@/utils/is'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useCache } from '@/hooks/web/useCache'
-
+import useGetGlobalProperties from '@/hooks/useGlobal'
+const globalProperties = useGetGlobalProperties()
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('app')
@@ -29,6 +30,10 @@ const setDefaultTheme = () => {
 }
 
 setDefaultTheme()
+
+onMounted(() => {
+  globalProperties.$webSocket.init()
+})
 </script>
 
 <template>
