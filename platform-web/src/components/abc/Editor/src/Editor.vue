@@ -21,7 +21,8 @@ const props = defineProps({
     type: Object as PropType<IEditorConfig>,
     default: () => undefined
   },
-  modelValue: propTypes.string.def('')
+  modelValue: propTypes.string.def(''),
+  readonly: propTypes.bool.def(false)
 })
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -95,7 +96,7 @@ const editorConfig = computed((): IEditorConfig => {
 
   return Object.assign(
     {
-      readOnly: false,
+      readOnly: props.readonly,
       customAlert: (s: string, t: string) => {
         switch (t) {
           case 'success':

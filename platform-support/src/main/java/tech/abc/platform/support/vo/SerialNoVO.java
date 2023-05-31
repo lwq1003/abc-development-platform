@@ -2,62 +2,107 @@ package tech.abc.platform.support.vo;
 
 
 import tech.abc.platform.common.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 单据流水号 视图对象
- * @author wqliu
- * *
- */
+* 流水号 视图对象类
+*
+* @author wqliu
+* @date 2023-05-30
+*/
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
+public class SerialNoVO extends BaseVO {
+    /**
+    * 模块
+    */
+    @NotBlank(message = "【模块】不能为空")
+    private String module;
 
-@ApiModel(value="单据流水号对象")
-public class SerialNoVO extends BaseVO
-     {
-
-    private static final long serialVersionUID = 1L;
-
-    @ApiModelProperty(value = "单据编码")
-    private String code;
-
-    @ApiModelProperty(value = "单据名称")
+    /**
+    * 名称
+    */
+    @NotBlank(message = "【名称】不能为空")
     private String name;
 
-    @ApiModelProperty(value = "前缀")
+    /**
+    * 编码
+    */
+    @NotBlank(message = "【编码】不能为空")
+    private String code;
+
+    /**
+    * 前缀
+    */
     private String prefix;
 
-    @ApiModelProperty(value = "日期")
-    private String datePart;
+    /**
+    * 日期格式
+    */
+    private String dateFormat;
 
-    @ApiModelProperty(value = "流水号长度")
+    /**
+    * 长度
+    */
     private Integer length;
 
-    @ApiModelProperty(value = "连接符")
-    private String connectors;
+    /**
+    * 连接符
+    */
+    private String connector;
 
-    @ApiModelProperty(value = "当前流水号")
-    private Integer serialNo;
+    /**
+    * 当前值
+    */
+    private Integer currentValue;
 
-    @ApiModelProperty(value = "重置策略")
+    /**
+    * 重置策略
+    */
+    @NotBlank(message = "【重置策略】不能为空")
     private String resetStrategy;
 
-    @ApiModelProperty(value = "备注")
+    /**
+    * 排序
+    */
+    private String orderNo;
+
+    /**
+    * 备注
+    */
     private String remark;
 
-    @ApiModelProperty(value = "排序号")
-    private String orderNo;
-    /********自定义扩展*****/
+
+    /********非库表存储属性*****/
+
+
 
     /********字典类*****/
-    @ApiModelProperty(value = "重置策略")
+    /**
+    * 重置策略
+    */
     private String resetStrategyName;
+
+
+    /********实体类*****/
+    /**
+    * 模块
+    */
+    private String moduleName;
+
+
+    /********范围查询*****/
+
+    /********自定义扩展*****/
+
     /********子对象*****/
+
 
 
 

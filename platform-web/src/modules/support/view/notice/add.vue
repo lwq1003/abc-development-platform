@@ -13,7 +13,7 @@
         <el-input v-model="entityData.title" />
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <Editor v-model="entityData.content" />
+        <Editor v-model="entityData.content" :readonly="true" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <dictionary-radio-group v-model="entityData.status" code="Status" />

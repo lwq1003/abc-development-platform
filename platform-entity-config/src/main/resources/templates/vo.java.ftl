@@ -33,22 +33,19 @@ public class ${entity}VO extends BaseVO {
 public class ${entity} implements Serializable {
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list table.fields as field>
-    <#if field.keyFlag>
-        <#assign keyPropertyName="${field.propertyName}"/>
-    </#if>
-    <#if field.comment!?length gt 0>
+<#list entityModelPropertyList as field>
+    <#if field.name!?length gt 0>
     /**
-    * ${field.comment}
+    * ${field.name}
     */
     </#if>
-    <#if !field.metaInfo.nullable && field.propertyType=="String">
-    @NotBlank(message = "【${field.comment}】不能为空")
+    <#if field.nullFlag=="NO" && field.propertyDataType=="String">
+    @NotBlank(message = "【${field.name}】不能为空")
     </#if>
-    private ${field.propertyType} ${field.propertyName};
+    private ${field.propertyDataType} ${field.code};
 
 </#list>
-
+<#------------  END 字段循环遍历  ---------->
 
     /********非库表存储属性*****/
 <#list noDatabaseStoreEntityModelPropertyList as field>
@@ -59,7 +56,7 @@ public class ${entity} implements Serializable {
 
 </#list>
 
-<#------------  END 字段循环遍历  ---------->
+
 
     /********字典类*****/
 <#list entityModelPropertyList as item>

@@ -32,14 +32,6 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      if (!dictStore.getIsSetDict) {
-        // 获取所有字典
-        const res = await getDictApi()
-        if (res) {
-          dictStore.setDictObj(res.data)
-          dictStore.setIsSetDict(true)
-        }
-      }
       if (permissionStore.getIsAddRouters) {
         next()
         return

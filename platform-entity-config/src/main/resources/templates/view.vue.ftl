@@ -12,8 +12,12 @@
                 <#if item.dataType=="STRING">
                     <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
                     .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
-                        <el-input v-model="entityData.${item.code}" <#if item.readonlyFlag=="YES">:readonly='true' </#if>  <#if item
-                        .widgetType=="TEXTAREA">type="textarea" rows="4" </#if> />
+                        <#if item.widgetType!="RICH_TEXT">
+                            <el-input v-model="entityData.${item.code}" <#if item.readonlyFlag=="YES">:readonly='true' </#if>  <#if item
+                            .widgetType=="TEXTAREA">type="textarea" rows="4" </#if> />
+                        <#else>
+                            <Editor v-model="entityData.${item.code}"  <#if item.readonlyFlag=="YES">:readonly='true' </#if>  />
+                        </#if>
                     </el-form-item>
                 <#elseif item.dataType=="DATETIME"  >
                     <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item

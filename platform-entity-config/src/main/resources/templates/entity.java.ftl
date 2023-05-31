@@ -40,48 +40,23 @@ public class ${entity} implements Serializable {
     private static final long serialVersionUID = 1L;
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list table.fields as field>
-    <#if field.keyFlag>
-        <#assign keyPropertyName="${field.propertyName}"/>
-    </#if>
-    <#if field.comment!?length gt 0>
+<#list entityModelPropertyList as field>
+    <#if field.name!?length gt 0>
     /**
-     * ${field.comment}
-     */
+    * ${field.name}
+    */
     </#if>
-    <#if field.keyFlag>
-    <#-- 主键 -->
-        <#if field.keyIdentityFlag>
-    @TableId(value = "${field.name}", type = IdType.AUTO)
-        <#elseif idType??>
-    @TableId(value = "${field.name}", type = IdType.${idType})
-        <#elseif field.convert>
-    @TableId("${field.name}")
-        </#if>
-    <#elseif field.fill??>
-    <#-- -----   存在字段填充设置   ----->
-     @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
-    <#else>
-    <#-- 普通字段 -->
-    @TableField("${field.name}")
-    </#if>
-    <#-- 乐观锁注解 -->
-    <#if (versionFieldName!"") == field.name>
-    @Version
-    </#if>
-    <#-- 逻辑删除注解 -->
-    <#if (logicDeleteFieldName!"") == field.name>
-    @TableLogic
-    </#if>
-    private ${field.propertyType} ${field.propertyName};
-
+    @TableField("${field.code?uncap_first?replace("([A-Z])", "_$1", "r")?lower_case}")
+    private ${field.propertyDataType} ${field.code};
 </#list>
 <#------------  END 字段循环遍历  ---------->
     /********非库表存储属性*****/
 <#list noDatabaseStoreEntityModelPropertyList as field>
+    <#if field.name!?length gt 0>
     /**
     * ${field.name}
     */
+    </#if>
     @TableField(exist = false)
     private ${field.propertyDataType} ${field.code};
 

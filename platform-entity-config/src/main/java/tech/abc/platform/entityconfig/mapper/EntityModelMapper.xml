@@ -3,13 +3,13 @@
 <mapper namespace="tech.abc.platform.entityconfig.mapper.EntityModelMapper">
 
     <!--创建表-->
-    <update id="createTable"  statementType="STATEMENT">
+    <update id="createTable" statementType="STATEMENT">
         -- TODO 测试方便，每次生成前都删除库表，正式启用后去除删除，避免数据丢失
         DROP TABLE IF EXISTS `${tableName}`;
         CREATE TABLE `${tableName}`
         (
-        <foreach collection="tableFieldInfoList" separator="," item="item" >
-            `${item.code}`          ${item.dataType}  ${item.nullFlag}  ${item.defaultValue} COMMENT '${item.name}'
+        <foreach collection="tableFieldInfoList" separator="," item="item">
+            `${item.code}` ${item.dataType} COMMENT '${item.name}'
         </foreach>
         ,PRIMARY KEY (`id`)
         )

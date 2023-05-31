@@ -4,6 +4,12 @@ package tech.abc.platform.entityconfig.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.query.QueryGenerator;
@@ -14,12 +20,6 @@ import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
 import tech.abc.platform.entityconfig.vo.EntityModelPropertyVO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,6 +191,7 @@ public class EntityModelPropertyController extends BaseController {
         vo.setUniqueFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getUniqueFlag()));
         vo.setMainFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getMainFlag()));
         vo.setParentPropertyFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getParentPropertyFlag()));
+        vo.setDatabaseStoreFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getDatabaseStoreFlag()));
         return vo;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.util.StopWatch;
 import tech.abc.platform.cip.message.framework.MessageServer;
 
@@ -19,6 +20,7 @@ import tech.abc.platform.cip.message.framework.MessageServer;
 @SpringBootApplication(scanBasePackages = "tech.abc")
 @MapperScan("tech.abc.**.mapper")
 @Slf4j
+@EnableRetry
 public class PlatformBootApplication implements CommandLineRunner {
 
     @Autowired

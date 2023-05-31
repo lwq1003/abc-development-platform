@@ -1,14 +1,16 @@
 package tech.abc.platform.support.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import tech.abc.platform.support.entity.SerialNo;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 
 /**
- * 单据流水号 Mapper 接口
+ * 流水号 Mapper 接口
+ *
  * @author wqliu
- * *
+ * @date 2023-05-30
  */
 public interface SerialNoMapper extends BaseMapper<SerialNo> {
 
 }
+

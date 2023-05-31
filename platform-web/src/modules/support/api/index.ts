@@ -51,3 +51,8 @@ export const attachment = Object.assign({}, COMMON_METHOD, {
     return request.upload({ url: this.serveUrl + 'uploadImage', data: param })
   }
 })
+
+// 流水号
+export const serialNo = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'serialNo' + '/'
+})
