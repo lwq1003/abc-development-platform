@@ -52,9 +52,9 @@ import 'vue-simple-uploader/dist/style.css'
 import webSocket from '@/modules/notification/view/systemMessage/webSocket.js'
 
 
-// 消息通知
-// import { Notification } from 'element-ui'
-// Vue.prototype.$notification = Notification
+// 可自配置的网格布局
+import VueGridLayout from 'vue-grid-layout'
+
 
 // 创建实例
 const setupAll = async () => {
@@ -96,6 +96,9 @@ const setupAll = async () => {
 
   // 文件上传
   app.use(uploader)
+
+  // 可自配置的网格布局
+  app.use(VueGridLayout)
 
   app.mount('#app')
 }

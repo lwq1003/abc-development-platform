@@ -1,19 +1,18 @@
 package tech.abc.platform.support.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import tech.abc.platform.common.base.BaseService;
-import tech.abc.platform.support.entity.Portlet;
+import tech.abc.platform.support.entity.DesktopTemplate;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * 组件 服务接口类
+ * 桌面模板 服务接口类
  *
  * @author wqliu
- * @date 2023-06-01
+ * @date 2023-06-02
  */
-public interface PortletService extends BaseService<Portlet> {
+public interface DesktopTemplateService extends BaseService<DesktopTemplate> {
 
     /**
      * 获取标识与名称的Map集合
@@ -36,14 +35,6 @@ public interface PortletService extends BaseService<Portlet> {
      * @param id 标识
      */
     void disable(String id);
-
-    /**
-     * 获取组件列表
-     *
-     * @param queryWrapper 查询包装
-     * @return {@link List}<{@link Portlet}>
-     */
-    List<Portlet> getPortletList(QueryWrapper<Portlet> queryWrapper);
 }
 
 

@@ -99,8 +99,8 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
 
     @Override
     protected void afterModify(PermissionItem entity, PermissionItem orginEntity) {
-        // 若编码发生变化，则级联修改下级权限编码
-        if (entity.getCode().equals(orginEntity.getCode()) == false) {
+        // 若编码或上级发生变化，则级联修改下级权限编码
+        if (entity.getCode().equals(orginEntity.getCode()) == false || entity.getPermissionItem().equals(orginEntity.getPermissionItem()) == false) {
             List<PermissionItem> list = this.lambdaQuery().eq(PermissionItem::getPermissionItem, entity.getId()).list();
             if (CollectionUtils.isNotEmpty(list)) {
                 for (PermissionItem item : list) {

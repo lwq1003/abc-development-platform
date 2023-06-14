@@ -26,7 +26,7 @@ let that
 let webSocketInstance
 class MyWebSocket {
   constructor() {
-    // this.init()
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     that = this
   }
 

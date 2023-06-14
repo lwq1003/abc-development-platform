@@ -38,10 +38,11 @@ const loginOut = () => {
       if (res) {
         wsCache.clear()
         tagsViewStore.delAllViews()
-        resetRouter() // 重置静态路由表
-
+        // 重置静态路由表
+        resetRouter()
         // 关闭websocket连接
-        globalProperties.prototype.$webSocket.close()
+        globalProperties.$webSocket.close()
+        // 调整登录页
         replace('/login')
       }
     })

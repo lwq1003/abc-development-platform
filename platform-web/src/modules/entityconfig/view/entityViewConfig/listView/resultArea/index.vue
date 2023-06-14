@@ -91,7 +91,6 @@ export default {
 
     // 移除
     remove(queryConditionId) {
-      console.log(queryConditionId)
       this.$confirm('此操作将移除该列, 是否继续?', '确认', {
         type: 'warning'
       })

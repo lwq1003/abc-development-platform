@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
-* 组件参数 视图对象类
+* 桌面模板 视图对象类
 *
 * @author wqliu
 * @date 2023-06-02
@@ -18,13 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class PortletParamVO extends BaseVO {
-    /**
-    * 组件
-    */
-    @NotBlank(message = "【组件】不能为空")
-    private String portlet;
-
+public class DesktopTemplateVO extends BaseVO {
     /**
     * 名称
     */
@@ -38,9 +32,16 @@ public class PortletParamVO extends BaseVO {
     private String code;
 
     /**
-    * 值
+    * 配置
     */
-    private String value;
+    @NotBlank(message = "【配置】不能为空")
+    private String config;
+
+    /**
+    * 状态
+    */
+    @NotBlank(message = "【状态】不能为空")
+    private String status;
 
     /**
     * 排序
@@ -58,13 +59,13 @@ public class PortletParamVO extends BaseVO {
 
 
     /********字典类*****/
+    /**
+    * 状态
+    */
+    private String statusName;
+
 
     /********实体类*****/
-    /**
-    * 组件
-    */
-    private String portletName;
-
 
     /********范围查询*****/
 

@@ -104,7 +104,7 @@ export const referenceMixin = {
       this.displayName = selectedRow.name
       // 更新父组件绑定值
       this.$emit('update:modelValue', selectedRow.id)
-      this.$emit('my-change', selectedRow.id)
+      this.$emit('my-change', selectedRow.id, selectedRow)
       this.visible = false
     },
     // 关闭

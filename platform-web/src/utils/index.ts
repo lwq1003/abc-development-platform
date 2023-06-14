@@ -108,3 +108,24 @@ export function toAnyString() {
   })
   return str
 }
+
+function _tid() {
+  const mydate = new Date()
+  const uuid =
+    mydate.getDay() +
+    mydate.getHours() +
+    mydate.getMinutes() +
+    mydate.getSeconds() +
+    mydate.getMilliseconds() +
+    Math.round(Math.random() * 10000)
+  return uuid
+}
+function _rid() {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+}
+/**
+ * 生成前端使用的16位uuid 2304_b820_05f7_6c9e
+ */
+export function uuid() {
+  return `${_tid()}_${_rid()}_${_rid()}_${_rid()}`
+}

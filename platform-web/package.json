@@ -51,6 +51,7 @@
     "qs": "^6.11.0",
     "url": "^0.11.0",
     "vue": "3.2.47",
+    "vue-grid-layout": "3.0.0-beta1",
     "vue-i18n": "9.2.2",
     "vue-router": "^4.1.6",
     "vue-simple-uploader": "^1.0.1",

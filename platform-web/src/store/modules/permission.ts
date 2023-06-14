@@ -43,8 +43,30 @@ export const usePermissionStore = defineStore('permission', {
         // TODO:前后端动态路由临时添加固定路由，待去除
         let routerMap: AppRouteRecordRaw[] = asyncRouterMap
         if (type === 'admin') {
+          const tempRouter: AppRouteRecordRaw[] = [
+            {
+              path: '/configDesktop',
+              component: Layout,
+              name: 'configDesktop',
+              meta: {},
+              children: [
+                {
+                  path: 'index',
+                  component: () =>
+                    import('@/modules/support/view/desktopTemplate/configDesktop/index.vue'),
+                  name: 'config',
+                  meta: {
+                    title: '桌面配置',
+                    icon: 'Setting'
+                  }
+                }
+              ]
+            }
+          ]
           // 后端过滤菜单
-          routerMap = generateRoutesFn2(routers as AppCustomRouteRecordRaw[]).concat(routerMap)
+          routerMap = tempRouter
+            .concat(generateRoutesFn2(routers as AppCustomRouteRecordRaw[]))
+            .concat(routerMap)
         } else if (type === 'test') {
           // 模拟前端过滤菜单
           routerMap = generateRoutesFn1(cloneDeep(asyncRouterMap), routers as string[])

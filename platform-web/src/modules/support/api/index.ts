@@ -56,3 +56,38 @@ export const attachment = Object.assign({}, COMMON_METHOD, {
 export const serialNo = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'serialNo' + '/'
 })
+
+// 内容模板
+export const contentTemplate = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'contentTemplate' + '/'
+})
+
+// 组件
+export const portlet = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'portlet' + '/',
+  enable(id) {
+    return request.put({ url: this.serveUrl + id + '/enable' })
+  },
+  disable(id) {
+    return request.put({ url: this.serveUrl + id + '/disable' })
+  },
+  getPortletList() {
+    return request.get({ url: this.serveUrl + 'getPortletList' })
+  }
+})
+
+// 组件参数
+export const portletParam = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'portletParam' + '/'
+})
+
+// 桌面模板
+export const desktopTemplate = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'desktopTemplate' + '/',
+  enable(id) {
+    return request.put({ url: this.serveUrl + id + '/enable' })
+  },
+  disable(id) {
+    return request.put({ url: this.serveUrl + id + '/disable' })
+  }
+})

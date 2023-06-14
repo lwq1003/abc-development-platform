@@ -58,7 +58,7 @@ public class PortletCategoryServiceImpl extends BaseServiceImpl<PortletCategoryM
     public void beforeRemove(PortletCategory entity) {
         // 删除组件
         QueryWrapper<Portlet> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(Portlet::getCategoryId, entity.getId());
+        queryWrapper.lambda().eq(Portlet::getCategory, entity.getId());
         portletService.remove(queryWrapper);
     }
 
@@ -88,7 +88,7 @@ public class PortletCategoryServiceImpl extends BaseServiceImpl<PortletCategoryM
             portletCategoryList.stream().forEach(portletCategory -> {
 
                 List<Portlet> portletList = portletService.lambdaQuery()
-                        .eq(Portlet::getCategoryId, portletCategory.getId())
+                        .eq(Portlet::getCategory, portletCategory.getId())
                         .eq(Portlet::getStatus, StatusEnum.NORMAL.name())
                         .orderByAsc(Portlet::getOrderNo).list();
                 for (Portlet portlet : portletList) {
