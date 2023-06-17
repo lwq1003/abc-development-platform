@@ -45,18 +45,17 @@ export const usePermissionStore = defineStore('permission', {
         if (type === 'admin') {
           const tempRouter: AppRouteRecordRaw[] = [
             {
-              path: '/configDesktop',
+              path: '/desktop',
               component: Layout,
-              name: 'configDesktop',
+              name: 'desktop',
               meta: {},
               children: [
                 {
                   path: 'index',
-                  component: () =>
-                    import('@/modules/support/view/desktopTemplate/configDesktop/index.vue'),
+                  component: () => import('@/modules/support/view/desktopTemplate/desktop.vue'),
                   name: 'config',
                   meta: {
-                    title: '桌面配置',
+                    title: '桌面',
                     icon: 'Setting'
                   }
                 }

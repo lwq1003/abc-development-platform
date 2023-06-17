@@ -4,7 +4,7 @@
       <div class="card-header">
         <span v-if="!titleEdit"> {{ configData.name }}</span>
         <span v-if="titleEdit"><el-input v-model="configData.name" /> </span>
-        <span>
+        <span v-if="toolbarFlag">
           <el-icon style="cursor: pointer; margin-right: 12px" v-if="!titleEdit">
             <EditPen @click="titleEdit = true" />
           </el-icon>
@@ -23,15 +23,17 @@
     <component
       :is="configData.code"
       v-model:configVisible="configVisible"
-      v-model:config="configData"
+      v-model:config="configData.paramList"
     />
   </el-card>
 </template>
 <script lang="ts">
-import Favorite from '@/modules/support/view/portlet/favorite.vue'
+import Favorite from '@/modules/support/view/portletList/favorite.vue'
+import Notice from '@/modules/support/view/portletList/notice.vue'
 export default {
   components: {
-    Favorite
+    Favorite,
+    Notice
   },
   props: {
     config: {
@@ -44,11 +46,17 @@ export default {
       type: String,
       default: '',
       required: false
+    },
+    // 标识
+    toolbarFlag: {
+      type: Boolean,
+      default: false,
+      required: false
     }
   },
   data() {
     return {
-      configData: { name: '', code: '' },
+      configData: { name: '', code: '', paramList: [] },
       configVisible: false,
       //标题编辑状态
       titleEdit: false

@@ -62,6 +62,7 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
                 throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【名称】");
             }
         }
+
         // 验证 编码 同节点下唯一
         if (StringUtils.isNotBlank(entity.getCode())) {
             long countCode = this.lambdaQuery().eq(PermissionItem::getCode, entity.getCode())
@@ -70,6 +71,7 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
                 throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【编码】");
             }
         }
+
     }
 
     @Override
@@ -84,6 +86,7 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
                 throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【名称】");
             }
         }
+
         // 验证 编码 同节点下唯一
         if (StringUtils.isNotBlank(entity.getCode())) {
             long countCode = this.lambdaQuery().eq(PermissionItem::getCode, entity.getCode())
@@ -225,16 +228,33 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
     private String generateComponentPath(PermissionItem entity) {
 
 
-        PermissionItem tempEntity = null;
+        PermissionItem tempEntity = entity;
+
+        String moduleCode = "";
+        String folderCode = "";
+        String tempCode = "";
 
         do {
-            tempEntity = getById(entity.getPermissionItem());
-            if (tempEntity.getType().equals(PermissionTypeEnum.MODULE)) {
+            tempCode = tempEntity.getCode();
+            // 若为模块，终止循环
+            if (tempEntity.getType().equals(PermissionTypeEnum.MODULE.name())) {
+                moduleCode = tempEntity.getCode();
+                break;
+            }
+            // 替换为上级
+            tempEntity = getById(tempEntity.getPermissionItem());
+
+            // 若为模块，终止循环
+            if (tempEntity.getType().equals(PermissionTypeEnum.MODULE.name())) {
+                moduleCode = tempEntity.getCode();
+                // 模块直接子级为目录
+                folderCode = tempCode;
                 break;
             }
 
         } while (!tempEntity.getPermissionItem().equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_ID));
-        return MessageFormat.format("{0}/view/{1}/{2}", tempEntity.getCode(), entity.getCode(), entity.getViewCode());
+    
+        return MessageFormat.format("{0}/view/{1}/{2}", tempEntity.getCode(), folderCode, entity.getViewCode());
 
     }
 

@@ -1,6 +1,7 @@
 package tech.abc.platform.support.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.enums.YesOrNoEnum;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.support.entity.Attachment;
 import tech.abc.platform.support.entity.Notice;
@@ -19,7 +22,6 @@ import tech.abc.platform.support.service.NoticeReceiverService;
 import tech.abc.platform.support.service.NoticeService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,9 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
 
     @Autowired
     private AttachmentService attachmentService;
+
+    @Autowired
+    private NoticeMapper noticeMapper;
 
 
     @Override
@@ -90,36 +95,37 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
     @Override
     protected void afterQuery(Notice entity) {
         // 查询关联发布机构
-        // QueryWrapper<NoticeReceiver> noticeReceiverQueryWrapper = new QueryWrapper<>();
-        // noticeReceiverQueryWrapper.lambda().eq(NoticeReceiver::getNoticeId, entity.getId());
-        // List<NoticeReceiver> noticeReceiverList = noticeReceiverService.list(noticeReceiverQueryWrapper);
-        // List<String> organizationIdList = noticeReceiverList.stream().map(x -> x.getOrganizationId()).collect(Collectors.toList());
-        // entity.setOrganizationIdList(organizationIdList);
+        QueryWrapper<NoticeReceiver> noticeReceiverQueryWrapper = new QueryWrapper<>();
+        noticeReceiverQueryWrapper.lambda().eq(NoticeReceiver::getNotice, entity.getId());
+        List<NoticeReceiver> noticeReceiverList = noticeReceiverService.list(noticeReceiverQueryWrapper);
+        List<String> organizationIdList = noticeReceiverList.stream().map(x -> x.getOrganization()).collect(Collectors.toList());
+        entity.setPublishScope(organizationIdList);
 
     }
 
+
     @Override
     protected void beforeAddOrModifyOp(Notice entity) {
-        // // 先清空组织机构
-        // clearOrganizationData(entity);
-        //
-        // // 再重新插入当前选择的组织 机构
-        // List<String> organizationList = entity.getOrganizationIdList();
-        // if (CollectionUtils.isNotEmpty(organizationList)) {
-        //     for (String organizationId : organizationList) {
-        //         NoticeReceiver noticeReceiver = new NoticeReceiver();
-        //         noticeReceiver.setNoticeId(entity.getId());
-        //         noticeReceiver.setOrganizationId(organizationId);
-        //         noticeReceiverService.add(noticeReceiver);
-        //     }
-        // }
+        // 先清空组织机构
+        clearOrganizationData(entity);
+
+        // 再重新插入当前选择的组织 机构
+        List<String> organizationList = entity.getPublishScope();
+        if (CollectionUtils.isNotEmpty(organizationList)) {
+            for (String organizationId : organizationList) {
+                NoticeReceiver noticeReceiver = new NoticeReceiver();
+                noticeReceiver.setNotice(entity.getId());
+                noticeReceiver.setOrganization(organizationId);
+                noticeReceiverService.add(noticeReceiver);
+            }
+        }
         // 更新发布人
         entity.setPublisher(UserUtil.getName());
     }
 
     private void clearOrganizationData(Notice entity) {
         QueryWrapper<NoticeReceiver> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(NoticeReceiver::getNoticeId, entity.getId());
+        queryWrapper.lambda().eq(NoticeReceiver::getNotice, entity.getId());
         noticeReceiverService.remove(queryWrapper);
     }
 
@@ -137,26 +143,17 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
 
     @Override
     public List<Notice> getPortletData(int count) {
-        // TODO: 此处一次性取出组织机构下所有的通知公告id，数据量大时会存在性能问题
-        // 获取当前机构所能看到的所有公告
-        List<NoticeReceiver> noticeReceiverList = noticeReceiverService.lambdaQuery()
-                .eq(NoticeReceiver::getOrganizationId, UserUtil.getOrganizationId())
-                .list();
-        List<String> noticeIds = noticeReceiverList.stream()
-                .map(noticeReceiver -> noticeReceiver.getNoticeId())
-                .collect(Collectors.toList());
-        // 根据展示条数展示公告
-        List<Notice> noticeList = new ArrayList<>();
-        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(noticeIds)) {
-            noticeList = this.lambdaQuery()
-                    .in(Notice::getId, noticeIds)
-                    .eq(Notice::getStatus, StatusEnum.NORMAL.toString())
-                    .last("limit " + count)
-                    .orderByDesc(Notice::getTopFlag, Notice::getPublishTime, Notice::getCreateTime)
-                    .list();
-        }
+        List<Notice> noticeList = noticeMapper.getPortletData(UserUtil.getOrganizationId(), count);
         return noticeList;
     }
+
+
+    @Override
+    public IPage<Notice> getNoticeViewList(IPage<Notice> page, QueryWrapper<Notice> queryWrapper) {
+
+        return noticeMapper.getNoticeViewList(page, queryWrapper, UserUtil.getOrganizationId());
+    }
+
 
     @Override
     public void enable(String id) {
@@ -192,6 +189,34 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
         Notice entity = getEntity(id);
         entity.setReadCount(entity.getReadCount() + 1);
         modify(entity);
+    }
+
+    @Override
+    public Notice view(String id) {
+        // 查看前验证下数据权限，该条通知公告是否发布到当前用户的组织机构
+        if (this.checkDataPermission(id) == false) {
+            throw new CustomException(CommonException.NO_PRIVILEGE);
+        }
+        return query(id);
+    }
+
+
+    /**
+     * 检查数据权限
+     *
+     * @param id 通知公告标识
+     * @return true 有权限 false 无权限
+     */
+    private boolean checkDataPermission(String id) {
+
+        Long count = noticeReceiverService.lambdaQuery()
+                .eq(NoticeReceiver::getOrganization, UserUtil.getOrganizationId())
+                .eq(NoticeReceiver::getNotice, id).count();
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

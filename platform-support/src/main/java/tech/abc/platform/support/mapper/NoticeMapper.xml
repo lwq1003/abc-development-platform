@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tech.abc.platform.support.mapper.NoticeMapper">
+    <select id="getPortletData" resultType="tech.abc.platform.support.entity.Notice">
+        SELECT n.*
+        FROM spt_notice n
+                 LEFT JOIN spt_notice_receiver r ON n.id = r.notice
+        WHERE r.organization = #{organizationId}
+          and n.delete_flag = 'NO'
+          and r.delete_flag = 'NO'
+        ORDER BY n.top_flag DESC, n.publish_time DESC LIMIT #{count}
+    </select>
 
+    <select id="getNoticeViewList" resultType="tech.abc.platform.support.entity.Notice">
+        select *
+        from (SELECT n.*
+              FROM spt_notice n
+                       LEFT JOIN spt_notice_receiver r ON n.id = r.notice
+              WHERE r.organization = #{organizationId}
+                and n.delete_flag = 'NO'
+                and r.delete_flag = 'NO') t
+            ${ew.customSqlSegment}
+    </select>
 </mapper>

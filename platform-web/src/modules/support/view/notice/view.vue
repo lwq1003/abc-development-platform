@@ -9,10 +9,13 @@
     >
       <!--表单区域 -->
       <el-form-item label="标题" prop="title">
-        <el-input v-model="entityData.title" />
+        <el-input v-model="entityData.title" style="width: 85%" />
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <Editor v-model="entityData.content" />
+        <Editor v-model="entityData.content" :readonly="true" />
+      </el-form-item>
+      <el-form-item label="发布范围" prop="publishScope">
+        <OrganizationMultipleSelect v-model="entityData.publishScope" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <dictionary-radio-group v-model="entityData.status" code="Status" />

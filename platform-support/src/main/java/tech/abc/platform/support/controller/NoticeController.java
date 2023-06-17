@@ -161,10 +161,23 @@ public class NoticeController extends BaseController {
     // region 扩展操作
 
     /**
+     * 浏览
+     */
+    @GetMapping("/{id}/view")
+    @SystemLog(value = "通知公告-浏览")
+    @PreAuthorize("hasPermission(null,'support:notice:noticeView')")
+    public ResponseEntity<Result> view(@PathVariable("id") String id) {
+        Notice entity = noticeService.view(id);
+        NoticeVO vo = convert2VO(entity);
+        return ResultUtil.success(vo);
+    }
+
+
+    /**
      * 浏览列表
      */
     @GetMapping("/viewList")
-    @SystemLog(value = "通知公告-分页")
+    @SystemLog(value = "通知公告-浏览列表")
     @PreAuthorize("hasPermission(null,'support:notice:noticeViewList')")
     public ResponseEntity<Result> viewList(NoticeVO queryVO, PageInfo pageInfo, SortInfo sortInfo) {
 
@@ -177,7 +190,7 @@ public class NoticeController extends BaseController {
         QueryWrapper<Notice> queryWrapper = QueryGenerator.generateQueryWrapper(Notice.class, queryVO, sortInfo);
 
         // 查询数据
-        noticeService.page(page, queryWrapper);
+        noticeService.getNoticeViewList(page, queryWrapper);
         // 转换vo
         IPage<NoticeVO> pageVO = mapperFacade.map(page, IPage.class);
         List<NoticeVO> noticeVOList = new ArrayList<>();
@@ -256,7 +269,7 @@ public class NoticeController extends BaseController {
     /**
      * 获取组件数据
      */
- 
+
     @GetMapping("/portlet")
     public ResponseEntity<Result> getPortletData(@RequestParam Map<String, String> map) {
 

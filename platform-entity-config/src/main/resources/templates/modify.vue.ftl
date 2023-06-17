@@ -135,19 +135,19 @@ export default {
             ${modifyEntityView.afterInit}
         },
         </#if>
-        <#if addEntityView.validateData?? && addEntityView.validateData!="">
+        <#if modifyEntityView.validateData?? && modifyEntityView.validateData!="">
         validateData(){
-            ${addEntityView.validateData}
+            ${modifyEntityView.validateData}
         },
         </#if>
-        <#if addEntityView.beforeSave?? && addEntityView.beforeSave!="">
+        <#if modifyEntityView.beforeSave?? && modifyEntityView.beforeSave!="">
         beforeSave(){
-            ${addEntityView.beforeSave}
+            ${modifyEntityView.beforeSave}
         },
         </#if>
-        <#if addEntityView.afterSave?? && addEntityView.afterSave!="">
+        <#if modifyEntityView.afterSave?? && modifyEntityView.afterSave!="">
         afterSave(){
-            ${addEntityView.afterSave}
+            ${modifyEntityView.afterSave}
         },
         </#if>
     }

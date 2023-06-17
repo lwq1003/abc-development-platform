@@ -1,16 +1,21 @@
 package tech.abc.platform.support.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import tech.abc.platform.common.base.BaseEntity;
+import java.time.LocalDateTime;
 
 /**
- * 通知公告接收组织机构
+ * 通知接收 实体类
  *
  * @author wqliu
+ * @date 2023-06-15
+ *
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,19 +23,15 @@ import tech.abc.platform.common.base.BaseEntity;
 @TableName("spt_notice_receiver")
 public class NoticeReceiver extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 通知公告标识
-     */
-    @TableField("notice_id")
-    private String noticeId;
-
+    * 通知通告
+    */
+    @TableField("notice")
+    private String notice;
     /**
-     * 组织机构标识
-     */
-    @TableField("organization_id")
-    private String organizationId;
-
-
+    * 组织机构
+    */
+    @TableField("organization")
+    private String organization;
+    /********非库表存储属性*****/
 }

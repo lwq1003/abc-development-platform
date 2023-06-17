@@ -124,7 +124,7 @@ const signIn = async () => {
             })
             permissionStore.setIsAddRouters(true)
             // 设置首页
-            push({ path: '/dashboard/analysis' })
+            push({ path: '/desktop/index' })
           } else {
             await permissionStore.generateRoutes('none').catch(() => {})
             permissionStore.getAddRouters.forEach((route) => {

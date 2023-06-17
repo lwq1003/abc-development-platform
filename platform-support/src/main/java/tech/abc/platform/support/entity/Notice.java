@@ -78,8 +78,8 @@ public class Notice extends BaseEntity {
 
     /********非库表存储属性*****/
     /**
-     * 组织机构标识列表
+     * 发布范围
      */
     @TableField(exist = false)
-    private List<String> organizationIdList;
+    private List<String> publishScope;
 }

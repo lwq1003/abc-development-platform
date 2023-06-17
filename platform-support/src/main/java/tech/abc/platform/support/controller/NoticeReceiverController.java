@@ -1,114 +1,196 @@
 package tech.abc.platform.support.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import tech.abc.platform.common.annotation.SystemLog;
+import org.springframework.web.bind.annotation.RestController;
 import tech.abc.platform.common.base.BaseController;
-import tech.abc.platform.common.constant.TableFieldConstant;
-import tech.abc.platform.common.constant.TreeDefaultConstant;
-import tech.abc.platform.common.enums.StatusEnum;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
-import tech.abc.platform.common.utils.TreeUtil;
+import tech.abc.platform.common.vo.PageInfo;
 import tech.abc.platform.common.vo.Result;
-import tech.abc.platform.common.vo.TreeVO;
-import tech.abc.platform.support.entity.Notice;
+import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.support.entity.NoticeReceiver;
 import tech.abc.platform.support.service.NoticeReceiverService;
-import tech.abc.platform.support.service.NoticeService;
 import tech.abc.platform.support.vo.NoticeReceiverVO;
-import tech.abc.platform.system.entity.Organization;
-import tech.abc.platform.system.service.OrganizationService;
-
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.Map;
 
 /**
- * 通知公告接收组织机构 前端控制器
- *
- * @author wqliu
- */
+* 通知接收 前端控制器类
+*
+* @author wqliu
+* @date 2023-06-15
+*/
 @RestController
 @RequestMapping("/support/noticeReceiver")
+@Slf4j
 public class NoticeReceiverController extends BaseController {
-
     @Autowired
     private NoticeReceiverService noticeReceiverService;
 
-    @Autowired
-    private NoticeService noticeService;
-
-    @Autowired
-    private OrganizationService organizationService;
-
+    //region 基本操作
     /**
-     * 获取指定通知公告的发布机构
-     */
-    @ApiOperation(value = "获取指定通知公告的发布机构")
-    @ApiImplicitParam(name = "noticeId", value = "通知公告", required = true, dataType = "String", paramType = "query")
-    @GetMapping("/getOrganization")
-    @SystemLog(value = "通知公告-机构-详情")
-    public ResponseEntity<Result> getOrganization(@RequestParam("noticeId") String noticeId) {
-        NoticeReceiverVO vo = new NoticeReceiverVO();
-        // 填充角色信息
-        Notice notice = noticeService.getById(noticeId);
-        vo.setNoticeId(notice.getId());
-        vo.setNoticeTitle(notice.getTitle());
-        // 获取已发布的机构范围
-        QueryWrapper<NoticeReceiver> noticeReceiverQueryWrapper = new QueryWrapper<>();
-        noticeReceiverQueryWrapper.lambda().eq(NoticeReceiver::getNoticeId, noticeId);
-        List<NoticeReceiver> noticeReceiverList = noticeReceiverService.list(noticeReceiverQueryWrapper);
-        List<String> organizationIdList = noticeReceiverList.stream()
-                .map(noticeReceiver -> noticeReceiver.getOrganizationId())
-                .collect(Collectors.toList());
-        // 查询所有机构
-        QueryWrapper<Organization> organizationQueryWrapper = new QueryWrapper<>();
-        organizationQueryWrapper.lambda().eq(Organization::getStatus, StatusEnum.NORMAL.toString());
-        organizationQueryWrapper.orderByAsc(TableFieldConstant.DEFAULT_SORT_FILED);
-        List<Organization> organizationList = organizationService.list(organizationQueryWrapper);
-
-        // 转化成树结构数据
-        List<TreeVO> treeList = organizationList.stream()
-                .map(e -> convert2TreeVO(e, organizationIdList)).collect(Collectors.toList());
-        List<TreeVO> treeVOList = TreeUtil.buildTree(treeList, TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID);
-        vo.setTreeData(treeVOList);
+    * 初始化
+    */
+    @GetMapping("/init")
+    public ResponseEntity<Result> init() {
+        NoticeReceiver entity=noticeReceiverService.init();
+        NoticeReceiverVO vo = convert2VO(entity);
         return ResultUtil.success(vo);
     }
 
     /**
-     * 保存通知公告与机构的对应关系
-     */
-    @ApiOperation(value = "保存通知公告与机构的对应关系")
-    @PostMapping("/saveNoticeOrganization")
-    @SystemLog(value = "通知公告-机构-保存")
-    public ResponseEntity<Result> saveNoticeOrganization(@RequestBody NoticeReceiverVO vo) {
-        String noticeId = vo.getNoticeId();
-        List<String> organizationIdList = vo.getOrganizationIdList();
-        noticeReceiverService.saveNoticeOrganization(noticeId, organizationIdList);
+    * 新增
+    */
+    @PostMapping("/")
+    @SystemLog(value = "通知接收-新增")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:add')")
+    public ResponseEntity<Result> add(@Validated @RequestBody NoticeReceiverVO vo) {
+        NoticeReceiver entity=convert2Entity(vo);
+        noticeReceiverService.add(entity);
+        NoticeReceiverVO newVO = convert2VO(entity);
+        return ResultUtil.success(newVO);
+    }
+
+    /**
+    * 修改
+    */
+    @PutMapping("/")
+    @SystemLog(value = "通知接收-修改")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:modify')")
+    public ResponseEntity<Result> modify(@Validated @RequestBody NoticeReceiverVO vo) {
+        NoticeReceiver entity=convert2Entity(vo);
+        noticeReceiverService.modify(entity);
+        NoticeReceiverVO newVO = convert2VO(entity);
+        return ResultUtil.success(newVO);
+    }
+
+    /**
+    * 删除数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+    */
+    @DeleteMapping("/{id}")
+    @SystemLog(value = "通知接收-删除")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:remove')")
+    public ResponseEntity<Result> remove(@PathVariable("id") String id) {
+        noticeReceiverService.remove(id);
         return ResultUtil.success();
     }
 
     /**
-     * 通知公告转化为树视图对象
-     *
-     * @param entity             机构实体
-     * @param organizationIdList 公告拥有发布机构集合
-     * @return
-     */
-    private TreeVO convert2TreeVO(Organization entity, List<String> organizationIdList) {
-        TreeVO tree = new TreeVO();
-        tree.setId(entity.getId());
-        tree.setParentId(entity.getOrganization());
-        tree.setLabel(entity.getName());
-        if (organizationIdList.contains(entity.getId())) {
-            // 如果当前角色拥有该权限，则设置为勾选状态
-            tree.setChecked(true);
-        }
-        return tree;
+    * 分页
+    */
+    @GetMapping("/page")
+    @SystemLog(value = "通知接收-分页")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:query')")
+    public ResponseEntity<Result> page(NoticeReceiverVO queryVO, PageInfo pageInfo, SortInfo sortInfo) {
+        //构造分页对象
+        IPage<NoticeReceiver> page = new Page<NoticeReceiver>(pageInfo.getPageNum(), pageInfo.getPageSize());
+
+
+        //构造查询条件
+        QueryWrapper<NoticeReceiver> queryWrapper = QueryGenerator.generateQueryWrapper(NoticeReceiver.class,queryVO,sortInfo);
+
+        //查询数据
+        noticeReceiverService.page(page, queryWrapper);
+        //转换vo
+        IPage<NoticeReceiverVO> pageVO = mapperFacade.map(page, IPage.class);
+        List<NoticeReceiverVO>  noticeReceiverVOList=convert2VO(page.getRecords());
+        pageVO.setRecords(noticeReceiverVOList);
+        return ResultUtil.success(pageVO);
     }
-}
+
+
+    /**
+    * 列表
+    */
+    @GetMapping("/list")
+    @SystemLog(value = "通知接收-列表")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:query')")
+    public ResponseEntity<Result> list(NoticeReceiverVO queryVO, SortInfo sortInfo) {
+        //构造查询条件
+        QueryWrapper<NoticeReceiver> queryWrapper = QueryGenerator.generateQueryWrapper(NoticeReceiver.class, queryVO,sortInfo);
+        List<NoticeReceiver> list= noticeReceiverService.list(queryWrapper);
+        //转换vo
+        List<NoticeReceiverVO>  noticeReceiverVOList=convert2VO(list);
+        return ResultUtil.success(noticeReceiverVOList);
+    }
+
+    /**
+    * 获取单条数据
+    */
+    @GetMapping("/{id}")
+    @SystemLog(value = "通知接收-详情")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:view')")
+    public ResponseEntity<Result> get(@PathVariable("id") String id) {
+        NoticeReceiver entity = noticeReceiverService.query(id);
+        NoticeReceiverVO vo = convert2VO(entity);
+        return ResultUtil.success(vo);
+    }
+
+    /**
+    * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+    */
+    @PostMapping("/{id}")
+    @SystemLog(value = "通知接收-复制新增")
+    @PreAuthorize("hasPermission(null,'support:noticeReceiver:addByCopy')")
+    public ResponseEntity<Result> addByCopy(@PathVariable("id") String id) {
+        noticeReceiverService.addByCopy(id);
+        return ResultUtil.success();
+    }
+
+
+
+    //endregion
+
+    //region 扩展操作
+
+    //endregion
+
+    //region 辅助操作
+
+    /**
+    * 将单条实体转换为视图对象
+    *
+    * @param entity 实体
+    * @return {@link EntityVO} 视图对象
+    */
+    private NoticeReceiverVO convert2VO(NoticeReceiver entity){
+        NoticeReceiverVO vo=mapperFacade.map(entity,NoticeReceiverVO.class);
+        return vo;
+    }
+
+    /**
+    * 将实体列表转换为视图对象列表
+    *
+    * @param entityList 实体列表
+    * @return {@link List}<{@link EntityVO}> 视图对象列表
+    */
+    private List<NoticeReceiverVO> convert2VO(List<NoticeReceiver> entityList) {
+        List<NoticeReceiverVO> voList = new ArrayList<>(entityList.size());
+
+        entityList.stream().forEach(x -> {
+            NoticeReceiverVO vo = convert2VO(x);
+            voList.add(vo);
+        });
+        return voList;
+    }
+
+
+    private NoticeReceiver convert2Entity(NoticeReceiverVO vo){
+        NoticeReceiver entity=mapperFacade.map(vo,NoticeReceiver.class);
+        return entity;
+    }
+
+    //endregion
+ }

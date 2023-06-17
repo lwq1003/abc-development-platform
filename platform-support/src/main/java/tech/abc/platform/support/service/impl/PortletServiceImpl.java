@@ -126,7 +126,8 @@ public class PortletServiceImpl extends BaseServiceImpl<PortletMapper, Portlet> 
     public List<Portlet> getPortletList(QueryWrapper<Portlet> queryWrapper) {
         List<Portlet> list = this.list(queryWrapper);
         for (Portlet item : list) {
-            List<PortletParam> paramList = portletParamService.list();
+
+            List<PortletParam> paramList = portletParamService.lambdaQuery().eq(PortletParam::getPortlet, item.getId()).list();
             item.setParamList(paramList);
         }
         return list;

@@ -24,7 +24,7 @@ public interface GroupUserService extends BaseService<GroupUser> {
 
 
     /**
-     * 为用户组新增用户，如以存在则跳过，不会抛出异常
+     * 为用户组新增用户，如已存在则跳过，不会抛出异常
      *
      * @param groupId    用户组标识
      * @param userIdList 用户标识列表

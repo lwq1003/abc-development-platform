@@ -3,24 +3,16 @@
  */
 import { Dialog } from '@/components/abc/Dialog'
 
-export const treeMultipleReferenceMixin = {
+export const treeMultipleDirectReferenceMixin = {
   emits: ['confirm'],
   components: {
     Dialog
   },
-  props: {
-    modelValue: {
-      type: Array,
-      default: () => [],
-      required: false
-    }
-  },
+
   data() {
     return {
       treeData: [],
       cacheTreeExpandedKeys: [],
-      // 显示名称
-      displayName: '',
       // 搜索值
       searchValue: '',
       // 可见性
@@ -30,10 +22,6 @@ export const treeMultipleReferenceMixin = {
     }
   },
   watch: {
-    modelValue: {
-      immediate: true,
-      handler: 'getSelectedName'
-    },
     searchValue(value) {
       this.$refs.tree.filter(value)
     }
@@ -46,7 +34,7 @@ export const treeMultipleReferenceMixin = {
       }
       this.searchValue = ''
       this.cacheTreeExpandedKeys = []
-      this.selectedValue = this.modelValue
+      this.selectedValue = param.data
       this.loadData().then((res) => {
         if (this.afterInit) {
           this.afterInit(param)
@@ -62,6 +50,7 @@ export const treeMultipleReferenceMixin = {
           this.cacheTreeExpandedKeys.push(this.treeData[0].id)
           this.checkedNodesId = []
           this.getLeafNodeChecked(this.treeData)
+          // this.$refs.tree.setCheckedKeys(this.checkedNodesId)
           resolve()
         })
       })
@@ -75,42 +64,27 @@ export const treeMultipleReferenceMixin = {
     close() {
       this.visible = false
     },
-    // 清空选择
-    clear() {
-      this.displayName = ''
-      this.$emit('update:modelValue', [])
-    },
     confirm() {
       // 获取半选节点ID
       const halfCheckedKeys = this.$refs.tree.getHalfCheckedKeys()
       // 拼接全选节点ID
       const idList = halfCheckedKeys.concat(this.$refs.tree.getCheckedKeys())
-      this.$emit('update:modelValue', idList)
+      this.$emit('confirm', idList)
       this.visible = false
     },
     getLeafNodeChecked(node) {
-      if (this.selectedValue) {
-        // 遍历树节点，设置
-        for (const treeNode of node) {
-          // 如果节点有子节点，那他的选中状态不被考虑，继续往下找
-          if (treeNode.children && treeNode.children.length > 0) {
-            this.getLeafNodeChecked(treeNode.children)
-          } else {
-            // 是叶子节点，如果是check状态就记录
-            if (this.selectedValue.includes(treeNode.id)) {
-              this.checkedNodesId.push(treeNode.id)
-            }
+      // 遍历树节点，设置
+      for (const treeNode of node) {
+        // 如果节点有子节点，那他的选中状态不被考虑，继续往下找
+        if (treeNode.children && treeNode.children.length > 0) {
+          this.getLeafNodeChecked(treeNode.children)
+        } else {
+          // 是叶子节点，如果是check状态就记录
+          if (this.selectedValue.includes(treeNode.id)) {
+            this.checkedNodesId.push(treeNode.id)
           }
         }
       }
-    },
-    // 获取选中的名称
-    getSelectedName() {
-      let length = 0
-      if (this.modelValue) {
-        length = this.modelValue.length
-      }
-      this.displayName = '已选择[ ' + length + ' ]条'
     }
   }
 }

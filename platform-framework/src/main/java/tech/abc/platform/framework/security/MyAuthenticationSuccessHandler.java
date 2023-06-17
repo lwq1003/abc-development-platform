@@ -1,6 +1,13 @@
 package tech.abc.platform.framework.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.constant.TreeDefaultConstant;
@@ -20,13 +27,6 @@ import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.system.vo.MenuTreeVO;
 import tech.abc.platform.system.vo.MetaVO;
 import tech.abc.platform.system.vo.UserVO;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

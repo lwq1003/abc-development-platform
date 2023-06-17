@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div class="w-full">
     <div>
       <el-row>
         <el-col>
@@ -75,9 +75,10 @@ export default {
   },
   props: {
     config: {
-      type: Object,
-      default: () => {},
-      required: false
+      type: Array,
+      default: function () {
+        return []
+      }
     },
     configVisible: {
       type: Boolean,
@@ -101,8 +102,8 @@ export default {
     config: {
       handler() {
         this.configData = this.config
-        if (this.config) {
-          this.config.paramList.forEach((item) => {
+        if (this.configData) {
+          this.configData.forEach((item) => {
             if (item.code === 'item') {
               this.entityData = JSON.parse(item.value)
             }
@@ -118,8 +119,8 @@ export default {
         return
       }
 
-      if (this.configData && this.configData.paramList.length > 0) {
-        this.configData.paramList.forEach((item) => {
+      if (this.configData && this.configData.length > 0) {
+        this.configData.forEach((item) => {
           if (item.code === 'item') {
             if (this.entityData) {
               this.entityData = this.entityData.filter((e) => e.name)

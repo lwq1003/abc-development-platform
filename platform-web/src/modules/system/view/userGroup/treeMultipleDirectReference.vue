@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import { treeMultipleReferenceMixin } from '@/mixin/treeMultipleReferenceMixin.js'
+import { treeMultipleDirectReferenceMixin } from '@/mixin/treeMultipleDirectReferenceMixin.js'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'userGroup'
 export default {
-  mixins: [treeMultipleReferenceMixin],
+  mixins: [treeMultipleDirectReferenceMixin],
   data() {
     return {
       entityType: ENTITY_TYPE,

@@ -2,17 +2,16 @@ package tech.abc.platform.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
 
 /**
  * 权限项 实体类
  *
  * @author wqliu
  * @date 2023-04-25
- *
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -49,6 +48,7 @@ public class PermissionItem extends BaseEntity {
      */
     @TableField("permission_code")
     private String permissionCode;
+
 
     /**
      * 视图编码

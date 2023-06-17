@@ -92,9 +92,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     public void generateCode(String entityCode) {
 
 
-        // 创建代码生成器对象
-        AutoGenerator codeGenerator = getCodegGenerator();
-
         // 获取实体配置信息
         Entity entity = entityService.getByCode(entityCode);
 
@@ -105,33 +102,40 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             throw new CustomException(EntityException.MODEL_NOT_FOUND, entity.getName());
         }
 
+        for (EntityModel entityModel : entityModelList) {
+            // 创建代码生成器对象
+            AutoGenerator codeGenerator = getCodegGenerator();
 
-        // 获取模块配置信息
-        Module module = moduleService.query(entity.getModule());
+
+            // 获取模块配置信息
+            Module module = moduleService.query(entity.getModule());
 
 
-        // 配置全局信息
-        configGlobal(codeGenerator, entity.getAuthor());
+            // 配置全局信息
+            configGlobal(codeGenerator, entity.getAuthor());
 
-        // 配置包
-        configPackage(codeGenerator, module.getPackagePath(), module.getCode());
+            // 配置包
+            configPackage(codeGenerator, module.getPackagePath(), module.getCode());
 
-        // 配置模板
-        configTemplate(codeGenerator);
+            // 配置模板
+            configTemplate(codeGenerator);
 
-        // 配置注入
-        configInjection(codeGenerator, entity, module.getApp().toLowerCase(), module.getCode());
 
-        // 策略配置
-        configStrategy(codeGenerator, entity.getCode(), module.getAbbreviation());
+            // 配置注入
+            configInjection(codeGenerator, entity, module.getApp().toLowerCase(), module.getCode(), entityModel);
 
-        // 使用Freemarker替代默认的Velocity模板引擎
-        MyFreemarkerTemplateEngine freemarkerTemplateEngine = new MyFreemarkerTemplateEngine();
+            // 策略配置
+            configStrategy(codeGenerator, entity.getCode(), module.getAbbreviation(), entityModel);
 
-        // 生成代码
-        codeGenerator.execute(freemarkerTemplateEngine);
+            // 使用Freemarker替代默认的Velocity模板引擎
+            MyFreemarkerTemplateEngine freemarkerTemplateEngine = new MyFreemarkerTemplateEngine();
+
+            // 生成代码
+            codeGenerator.execute(freemarkerTemplateEngine);
+        }
 
     }
+
 
     @Override
     public void generateTable(String entityCode) {
@@ -188,7 +192,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             tableFieldInfo.setNullFlag(nullFlag);
             tableFieldInfo.setName(modelProperty.getName());
 
-            // TODO 去除库表默认值设定
+            // 库表默认值设定，实际不再使用
             String defaultValue = "";
             if (StringUtils.isNotBlank(modelProperty.getDefaultValue())) {
                 defaultValue = "DEFAULT '" + modelProperty.getDefaultValue() + "'";
@@ -238,23 +242,18 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     }
 
-    private void configStrategy(AutoGenerator codeGenerator, String entityCode, String moduleAbbreviation) {
+    private void configStrategy(AutoGenerator codeGenerator, String entityCode, String moduleAbbreviation, EntityModel entityModel) {
 
         String tablePrefix = moduleAbbreviation + "_";
-        String tableName = generateTableName(entityCode, moduleAbbreviation);
-        // 获取所有库表
-        Entity entity = entityService.getByCode(entityCode);
-        // 获取模型列表
-        List<EntityModel> entityModelList = entityModelService.getByEntityId(entity.getId());
-        // 获取表名列表
-        List<String> tableNameList = entityModelList.stream().map(x -> generateTableName(x.getCode(), moduleAbbreviation)).collect(Collectors.toList());
 
+
+        String tableName = generateTableName(entityModel.getCode(), moduleAbbreviation);
 
         StrategyConfig.Builder builder = new StrategyConfig.Builder()
                 .enableCapitalMode()
                 .enableSkipView()
                 .disableSqlFilter()
-                .addInclude(tableNameList)
+                .addInclude(tableName)
                 .addTablePrefix(tablePrefix);
 
         // 配置实体策略
@@ -692,7 +691,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     //#endregion
 
 
-    private void configInjection(AutoGenerator codeGenerator, Entity entity, String appCode, String moduleCode) {
+    private void configInjection(AutoGenerator codeGenerator, Entity entity, String appCode, String moduleCode, EntityModel entityModel) {
 
 
         // 设置自定义变量
@@ -711,117 +710,111 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         generateVO(customKeyValue, builder);
 
         // 视图处理
-        // 获取模型列表
-        List<EntityModel> entityModelList = entityModelService.getByEntityId(entity.getId());
-        // 找到主模型
-        Optional<EntityModel> mainModelOptional = entityModelList.stream().filter(x -> x.getMainModelFlag().equals(YesOrNoEnum.YES.name())).findFirst();
-        if (mainModelOptional.isPresent()) {
-            EntityModel entityModel = mainModelOptional.get();
-            // 设置实体模型是否为自关联变量
-            customKeyValue.put("entityModelSelfReferenceFlag", entityModel.getSelfReferenceFlag());
+        // 设置实体模型是否为自关联变量
+        customKeyValue.put("entityModelSelfReferenceFlag", entityModel.getSelfReferenceFlag());
 
 
-            // 获取实体模型属性列表
-            List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getByEntityModelId(entityModel.getId());
-            customKeyValue.put("entityModelPropertyList", entityModelPropertyList);
+        // 获取实体模型属性列表
+        List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getByEntityModelId(entityModel.getId());
+        customKeyValue.put("entityModelPropertyList", entityModelPropertyList);
 
-            // 获取非库存储的实体模型属性列表
-            List<EntityModelProperty> noDatabaseStoreEntityModelPropertyList = entityModelPropertyService.getNoDatabaseStoreListByEntityModelId(entityModel.getId());
-            customKeyValue.put("noDatabaseStoreEntityModelPropertyList", noDatabaseStoreEntityModelPropertyList);
+        // 获取非库存储的实体模型属性列表
+        List<EntityModelProperty> noDatabaseStoreEntityModelPropertyList = entityModelPropertyService.getNoDatabaseStoreListByEntityModelId(entityModel.getId());
+        customKeyValue.put("noDatabaseStoreEntityModelPropertyList", noDatabaseStoreEntityModelPropertyList);
 
-            // 默认设置不存在排序属性orderNo
-            customKeyValue.put("existOrderNo", YesOrNoEnum.NO.name());
-            entityModelPropertyList.forEach(x -> {
-                // 设置主属性编码
-                if (x.getMainFlag().equals(YesOrNoEnum.YES.name())) {
-                    customKeyValue.put("mainPropertyCode", x.getCode());
+        // 默认设置不存在排序属性orderNo
+        customKeyValue.put("existOrderNo", YesOrNoEnum.NO.name());
+        entityModelPropertyList.forEach(x -> {
+            // 设置主属性编码
+            if (x.getMainFlag().equals(YesOrNoEnum.YES.name())) {
+                customKeyValue.put("mainPropertyCode", x.getCode());
 
-                }
-                // 设置上级属性编码
-                if (x.getParentPropertyFlag().equals(YesOrNoEnum.YES.name())) {
-                    customKeyValue.put("parentPropertyCode", x.getCode());
+            }
+            // 设置上级属性编码
+            if (x.getParentPropertyFlag().equals(YesOrNoEnum.YES.name())) {
+                customKeyValue.put("parentPropertyCode", x.getCode());
 
-                }
+            }
 
-                // 属性中有orderNo属性
-                if ("orderNo".equals(x.getCode())) {
-                    customKeyValue.put("existOrderNo", YesOrNoEnum.YES.name());
-                }
-
-
-                // 设置关联实体主参照视图
-                if (x.getDataType().equals(EntityModelPropertyTypeEnum.ENTITY.name())) {
-                    String entityCode = StringUtils.capitalize(x.getCode());
-                    String mainReferenceViewCode = entityViewService.getMainReferenceViewCode(entityCode);
-                    Object mainReferenceViewMap = customKeyValue.get("mainReferenceViewMap");
-                    Map<String, String> mainReferenceView = new HashMap<>();
-                    if (mainReferenceViewMap != null) {
-                        mainReferenceView = (HashMap<String, String>) mainReferenceViewMap;
-                    }
-                    mainReferenceView.put(x.getCode(), mainReferenceViewCode);
-                    customKeyValue.put("mainReferenceViewMap", mainReferenceView);
-                    return;
-                }
-            });
-
-            // 获取所有视图
-            List<EntityView> entityViewList = entityViewService.getByModelId(entityModel.getId());
-            // 获取主视图
-            Optional<EntityView> mainView = entityViewList.stream().filter(x -> x.getMainViewFlag().equals(YesOrNoEnum.YES.name())).findFirst();
-            if (mainView.isPresent()) {
-                customKeyValue.put("mainViewCode", mainView.get().getCode());
-            } else {
-                // 此处不抛出异常是因为部分关系对应表无视图，设置为空，避免代码生成时报错
-                customKeyValue.put("mainViewCode", "");
+            // 属性中有orderNo属性
+            if ("orderNo".equals(x.getCode())) {
+                customKeyValue.put("existOrderNo", YesOrNoEnum.YES.name());
             }
 
 
-            // 遍历视图
-            entityViewList.stream().forEach(entityView -> {
-                EntityViewTypeEnum entityViewTypeEnum = EnumUtils.getEnum(EntityViewTypeEnum.class, entityView.getEntityViewType(), EntityViewTypeEnum.LIST);
-                switch (entityViewTypeEnum) {
-                    case LIST:
-                        // 列表视图
-                        generateListView(entityView, customKeyValue, builder);
-                        break;
-                    case ADD:
-                        // 新增视图
-                        generateAddView(entityView, customKeyValue, builder);
-                        break;
-                    case MODIFY:
-                        // 修改视图
-                        generateModifyView(entityView, customKeyValue, builder);
-                        break;
-                    case VIEW:
-                        // 查看视图
-                        generateViewView(entityView, customKeyValue, builder);
-                        break;
-                    case REFERENCE:
-                        // 查看视图
-                        generateReferenceView(entityView, customKeyValue, builder);
-                        break;
-                    case TREE:
-                        // 树视图
-                        generateTreeView(entityView, customKeyValue, builder);
-                        break;
-                    case TREE_LIST:
-                        // 树表视图
-                        generateTreeListView(entityView, customKeyValue, builder);
-                        break;
-                    case TREE_REFERENCE:
-                        // 树视图
-                        generateTreeReferenceView(entityView, customKeyValue, builder);
-                        break;
-                    case TREE_MULTIPLE_REFERENCE:
-                        // 树多选参照视图
-                        generateTreeMultipleReferenceView(entityView, customKeyValue, builder);
-                        break;
-                    default:
-                        break;
+            // 设置关联实体主参照视图
+            if (x.getDataType().equals(EntityModelPropertyTypeEnum.ENTITY.name())) {
+                String entityCode = StringUtils.capitalize(x.getCode());
+                String mainReferenceViewCode = entityViewService.getMainReferenceViewCode(entityCode);
+                Object mainReferenceViewMap = customKeyValue.get("mainReferenceViewMap");
+                Map<String, String> mainReferenceView = new HashMap<>();
+                if (mainReferenceViewMap != null) {
+                    mainReferenceView = (HashMap<String, String>) mainReferenceViewMap;
                 }
+                mainReferenceView.put(x.getCode(), mainReferenceViewCode);
+                customKeyValue.put("mainReferenceViewMap", mainReferenceView);
+                return;
+            }
+        });
 
-            });
+        // 获取所有视图
+        List<EntityView> entityViewList = entityViewService.getByModelId(entityModel.getId());
+        // 获取主视图
+        Optional<EntityView> mainView = entityViewList.stream().filter(x -> x.getMainViewFlag().equals(YesOrNoEnum.YES.name())).findFirst();
+        if (mainView.isPresent()) {
+            customKeyValue.put("mainViewCode", mainView.get().getCode());
+        } else {
+            // 此处不抛出异常是因为部分关系对应表无视图，设置为空，避免代码生成时报错
+            customKeyValue.put("mainViewCode", "");
         }
+
+
+        // 遍历视图
+        entityViewList.stream().forEach(entityView -> {
+            EntityViewTypeEnum entityViewTypeEnum = EnumUtils.getEnum(EntityViewTypeEnum.class, entityView.getEntityViewType(), EntityViewTypeEnum.LIST);
+            switch (entityViewTypeEnum) {
+                case LIST:
+                    // 列表视图
+                    generateListView(entityView, customKeyValue, builder);
+                    break;
+                case ADD:
+                    // 新增视图
+                    generateAddView(entityView, customKeyValue, builder);
+                    break;
+                case MODIFY:
+                    // 修改视图
+                    generateModifyView(entityView, customKeyValue, builder);
+                    break;
+                case VIEW:
+                    // 查看视图
+                    generateViewView(entityView, customKeyValue, builder);
+                    break;
+                case REFERENCE:
+                    // 查看视图
+                    generateReferenceView(entityView, customKeyValue, builder);
+                    break;
+                case TREE:
+                    // 树视图
+                    generateTreeView(entityView, customKeyValue, builder);
+                    break;
+                case TREE_LIST:
+                    // 树表视图
+                    generateTreeListView(entityView, customKeyValue, builder);
+                    break;
+                case TREE_REFERENCE:
+                    // 树视图
+                    generateTreeReferenceView(entityView, customKeyValue, builder);
+                    break;
+                case TREE_MULTIPLE_REFERENCE:
+                    // 树多选参照视图
+                    generateTreeMultipleReferenceView(entityView, customKeyValue, builder);
+                    break;
+                default:
+                    break;
+            }
+
+        });
+
         InjectionConfig injectionConfig = builder
                 // 自定义变量注入
                 .customMap(customKeyValue)

@@ -24,6 +24,7 @@
       <el-form-item label="类型" prop="type">
         <dictionary-select v-model="entityData.type" code="PermissionType" />
       </el-form-item>
+
       <el-form-item
         label="视图编码"
         prop="viewCode"

@@ -9,6 +9,7 @@ import { Breadcrumb } from '@/components/Breadcrumb'
 import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
 import Notification from '@/components/abc/Notification/index.vue'
+
 const { getPrefixCls, variables } = useDesign()
 
 const prefixCls = getPrefixCls('tool-header')

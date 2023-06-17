@@ -29,6 +29,10 @@ export const notice = Object.assign({}, COMMON_METHOD, {
       params: { showInfo: false }
     })
   },
+  // 浏览单条
+  view(id) {
+    return request.get({ url: this.serveUrl + id + '/view' })
+  },
   // 浏览列表
   viewList(params) {
     return request.get({ url: this.serveUrl + 'viewList', params })

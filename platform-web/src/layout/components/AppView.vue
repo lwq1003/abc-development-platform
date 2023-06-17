@@ -82,5 +82,6 @@ const getCaches = computed((): string[] => {
   >
     <ChangePassword @hidden="visible = false" />
   </ElDialog>
+
   <Footer v-if="footer" />
 </template>

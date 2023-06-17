@@ -113,10 +113,10 @@ public class NoticeVO extends BaseVO {
     /********自定义扩展*****/
 
     /**
-     * 组织机构标识列表
+     * 发布范围
      */
 
-    private List<String> organizationIdList;
+    private List<String> publishScope;
 
 
 }

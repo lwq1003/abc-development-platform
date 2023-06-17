@@ -9,6 +9,8 @@ import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeRefer
 import IconPicker from '@/components/abc/IconPicker/index.vue'
 import { Editor } from '@/components/abc/Editor'
 import CronExpression from '@/components/abc/CronExpression/index.vue'
+import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleReference.vue'
+
 export const addMixin = {
   components: {
     Dialog,
@@ -17,7 +19,8 @@ export const addMixin = {
     DataDictionarySelect,
     IconPicker,
     Editor,
-    CronExpression
+    CronExpression,
+    OrganizationMultipleSelect
   },
   data() {
     return {

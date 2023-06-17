@@ -202,14 +202,13 @@ export const dictionaryItem = Object.assign({}, COMMON_METHOD, {
     return request.put({ url: this.serveUrl + id + '/disable' })
   }
 })
-// // 用户设置
-// export const userProfile = Object.assign({}, COMMON_METHOD, {
-//   serveUrl: '/' + moduleName + '/' + 'userProfile' + '/',
-//   get() {
-//     return request.get({url:this.serveUrl)
-//   }
-// }
-// )
+// 用户设置
+export const userProfile = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'userProfile' + '/',
+  get() {
+    return request.get({ url: this.serveUrl })
+  }
+})
 
 // 系统管理
 export const systemManage = Object.assign(

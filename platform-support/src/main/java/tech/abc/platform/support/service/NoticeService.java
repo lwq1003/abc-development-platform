@@ -1,5 +1,7 @@
 package tech.abc.platform.support.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import tech.abc.platform.common.base.BaseService;
 import tech.abc.platform.support.entity.Notice;
 
@@ -30,6 +32,17 @@ public interface NoticeService extends BaseService<Notice> {
      * @return
      */
     List<Notice> getPortletData(int count);
+
+
+    /**
+     * 获取通知公告查看列表
+     * 附带组织机构过滤
+     *
+     * @param page         页面
+     * @param queryWrapper 查询包装
+     * @return {@link IPage}<{@link Notice}>
+     */
+    IPage<Notice> getNoticeViewList(IPage<Notice> page, QueryWrapper<Notice> queryWrapper);
 
 
     /**
@@ -67,5 +80,12 @@ public interface NoticeService extends BaseService<Notice> {
      */
     void updateReadCount(String id);
 
+    /**
+     * 浏览
+     *
+     * @param id 标识
+     * @return {@link Notice}
+     */
+    Notice view(String id);
 }
 

@@ -63,7 +63,12 @@
                 :h="item.h"
                 :i="item.i"
               >
-                <PortletContainer :id="item.i" v-model:config="item.config" @remove="remove" />
+                <PortletContainer
+                  :id="item.i"
+                  v-model:config="item.config"
+                  @remove="remove"
+                  :toolbarFlag="true"
+                />
               </grid-item>
             </grid-layout>
           </div>
@@ -74,13 +79,13 @@
 </template>
 
 <script>
-import PortletContainer from '@/modules/support/view/portlet/portletContainer.vue'
+import PortletContainer from '@/components/abc/PortletContainer/index.vue'
 import DesktopTemplate from '@/modules/support/view/desktopTemplate/reference.vue'
 import { Dialog } from '@/components/abc/Dialog'
 import { GridLayout, GridItem } from 'vue-grid-layout'
 import { uuid } from '@/utils'
 let mouseXY = { x: null, y: null }
-let DragPos = { x: null, y: null, w: 1, h: 1, i: null }
+let DragPos = { x: null, y: null, w: 4, h: 6, i: null }
 export default {
   components: {
     GridLayout,
@@ -99,13 +104,6 @@ export default {
       visible: false,
       categoryList: [],
       templateConfig: [],
-      config: [
-        {
-          paramName: '收藏项',
-          paramCode: 'item',
-          paramValue: '[]'
-        }
-      ],
       layout: []
     }
   },
@@ -176,13 +174,13 @@ export default {
         let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left)
 
         if (mouseInGrid === true) {
-          this.$refs.gridlayout.dragEvent('dragstart', portletCode, new_pos.x, new_pos.y, w, h)
+          this.$refs.gridlayout.dragEvent('dragstart', portletCode, new_pos.x, new_pos.y, h, w)
           DragPos.i = String(index)
           DragPos.x = this.layout[index].x
           DragPos.y = this.layout[index].y
         }
         if (mouseInGrid === false) {
-          this.$refs.gridlayout.dragEvent('dragend', portletCode, new_pos.x, new_pos.y, w, h)
+          this.$refs.gridlayout.dragEvent('dragend', portletCode, new_pos.x, new_pos.y, h, w)
           this.layout = this.layout.filter((obj) => obj.i !== portletCode)
         }
       }
@@ -220,7 +218,7 @@ export default {
         mouseInGrid = true
       }
       if (mouseInGrid === true) {
-        this.$refs.gridlayout.dragEvent('dragend', portletCode, DragPos.x, DragPos.y, w, h)
+        this.$refs.gridlayout.dragEvent('dragend', portletCode, DragPos.x, DragPos.y, h, w)
         this.layout = this.layout.filter((obj) => obj.i !== portletCode)
 
         this.layout.push({
@@ -261,15 +259,19 @@ export default {
         this.$message.warning('请先选择桌面模板')
         return
       }
-      this.$confirm('此操作将使用模板进行初始化，原配置将被替换, 是否继续?', '确认', {
-        type: 'warning'
-      })
-        .then(() => {
-          this.layout = this.templateConfig
+      if (this.layout.length == 0) {
+        this.layout = this.templateConfig
+      } else {
+        this.$confirm('此操作将使用模板进行初始化，原配置将被替换, 是否继续?', '确认', {
+          type: 'warning'
         })
-        .catch(() => {
-          this.$message.info('已取消')
-        })
+          .then(() => {
+            this.layout = this.templateConfig
+          })
+          .catch(() => {
+            this.$message.info('已取消')
+          })
+      }
     },
     // 清空配置
     clear() {
