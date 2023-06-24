@@ -32,10 +32,10 @@
       </el-form-item>
     </el-form>
     <el-form-item label="附件列表">
-      <attachment-manager ref="attachmentManager" :entity-id="entityData.id" />
+      <AttachmentManager ref="attachmentManager" :entity-id="entityData.id" />
     </el-form-item>
     <el-form-item label="附件上传">
-      <attachment-uploader
+      <AttachmentUploader
         entity-type="Notice"
         :entity-id="entityData.id"
         module-code="support"

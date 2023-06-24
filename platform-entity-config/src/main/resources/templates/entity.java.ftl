@@ -48,6 +48,7 @@ public class ${entity} implements Serializable {
     </#if>
     @TableField("${field.code?uncap_first?replace("([A-Z])", "_$1", "r")?lower_case}")
     private ${field.propertyDataType} ${field.code};
+
 </#list>
 <#------------  END 字段循环遍历  ---------->
     /********非库表存储属性*****/

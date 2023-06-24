@@ -2,17 +2,16 @@ package tech.abc.platform.entityconfig.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
 
 /**
  * 视图查询条件 实体类
  *
  * @author wqliu
  * @date 2023-04-15
- *
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -49,6 +48,18 @@ public class ViewQueryCondition extends BaseEntity {
      */
     @TableField("dictionary_type")
     private String dictionaryType;
+
+    /**
+     * 模块编码
+     */
+    @TableField("module_code")
+    private String moduleCode;
+
+    /**
+     * 实体编码
+     */
+    @TableField("entity_code")
+    private String entityCode;
 
     /**
      * 控件类型

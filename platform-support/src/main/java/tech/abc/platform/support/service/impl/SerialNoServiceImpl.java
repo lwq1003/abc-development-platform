@@ -12,10 +12,10 @@ import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.support.entity.SerialNo;
+import tech.abc.platform.support.enums.SerialNoResetStrategyEnum;
 import tech.abc.platform.support.exception.SerialNoExceptionEnum;
 import tech.abc.platform.support.mapper.SerialNoMapper;
 import tech.abc.platform.support.service.SerialNoService;
-import tech.abc.platform.system.enums.SerialNoResetStrategyEnum;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -111,6 +111,16 @@ public class SerialNoServiceImpl extends BaseServiceImpl<SerialNoMapper, SerialN
         List<String> list = generateBatch(code, 1);
         return list.get(0);
     }
+
+
+    @Override
+    @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 100L, multiplier = 2))
+    public String generateSingleById(String id) {
+        SerialNo entity = this.query(id);
+        List<String> list = generateBatch(entity.getCode(), 1);
+        return list.get(0);
+    }
+
 
     /**
      * 达到最大重试次数

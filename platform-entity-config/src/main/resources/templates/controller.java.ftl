@@ -48,6 +48,7 @@ public class ${table.controllerName} {
 </#if>
     @Autowired
     private ${entity}Service ${entity?uncap_first}Service;
+
 <#if entityModelPropertyList?? && (entityModelPropertyList?size > 0)>
 <#list entityModelPropertyList as item>
     <#if item.dataType=='ENTITY'>
@@ -55,6 +56,12 @@ public class ${table.controllerName} {
     @Autowired
     private ${item.code?cap_first}Service ${item.code}Service;
         </#if>
+    <#elseif item.dataType=='USER_SINGLE'>
+    @Autowired
+    private UserService userService;
+    <#elseif item.dataType=='ORGANIZATION_SINGLE'>
+    @Autowired
+    private OrganizationService organizationService;
     </#if>
 </#list>
 </#if>
@@ -252,10 +259,22 @@ public class ${table.controllerName} {
 
 <#if entityModelPropertyList?? && (entityModelPropertyList?size > 0)>
 <#list entityModelPropertyList as item>
-    <#if item.dataType=='ENTITY'>
+    <#if item.dataType=='ENTITY' >
+        // 获取 ${item.name} 集合
+        List<String> ${item.entityCode?uncap_first}List = entityList.stream().map(x -> x.get${item.code?cap_first}()).collect(Collectors.toList());
+        Map<String,String> ${item.entityCode?uncap_first}NameMap = ${item.entityCode?uncap_first}Service.getNameMap(${item.entityCode?uncap_first}List);
+
+    <#elseif item.dataType=='USER_SINGLE'>
         // 获取 ${item.name} 集合
         List<String> ${item.code}List = entityList.stream().map(x -> x.get${item.code?cap_first}()).collect(Collectors.toList());
-        Map<String,String> ${item.code}NameMap = ${item.code}Service.getNameMap(${item.code}List);
+        Map<String,String> ${item.code}NameMap = userService.getNameMap(${item.code}List);
+
+
+    <#elseif item.dataType=='ORGANIZATION_SINGLE'>
+        // 获取 ${item.name} 集合
+        List<String> ${item.code}List = entityList.stream().map(x -> x.get${item.code?cap_first}()).collect(Collectors.toList());
+        Map<String,String> ${item.code}NameMap = organizationService.getNameMap(${item.code}List);
+
     </#if>
 </#list>
 </#if>
@@ -263,10 +282,13 @@ public class ${table.controllerName} {
             ${entity}VO vo = convert2VO(x);
 <#if entityModelPropertyList?? && (entityModelPropertyList?size > 0)>
 <#list entityModelPropertyList as item>
-<#if item.dataType=='ENTITY'>
+    <#if item.dataType=='ENTITY' >
+            // 设置 ${item.name}
+            vo.set${item.code?cap_first}Name(${item.entityCode?uncap_first}NameMap.get(x.get${item.code?cap_first}()));
+    <#elseif item.dataType=='USER_SINGLE' || item.dataType=='ORGANIZATION_SINGLE'>
             // 设置 ${item.name}
             vo.set${item.code?cap_first}Name(${item.code}NameMap.get(x.get${item.code?cap_first}()));
-</#if>
+    </#if>
 </#list>
 </#if>
             voList.add(vo);

@@ -34,7 +34,30 @@
           @change="dictionaryTypeChange"
         />
       </el-form-item>
-      <el-form-item label="控件类型" prop="widgetType">
+      <el-form-item
+        v-show="entityData.dataType == $constant.DATA_TYPE.SERIAL_NO"
+        label="流水号"
+        prop="serialNo"
+      >
+        <SerialNoReference v-model="entityData.serialNo" :serialNo-param="serialNoParam" />
+      </el-form-item>
+      <el-form-item
+        v-show="entityData.dataType == $constant.DATA_TYPE.ENTITY"
+        label="实体"
+        prop="entityId"
+      >
+        <EntityReference v-model="entityData.entityId" />
+      </el-form-item>
+      <el-form-item
+        label="控件类型"
+        prop="widgetType"
+        v-show="
+          entityData.dataType != 'USER_SINGLE' &&
+          entityData.dataType != 'ORGANIZATION_SINGLE' &&
+          entityData.dataType != 'ORGANIZATION_MULTIPLE' &&
+          entityData.dataType != 'ICON'
+        "
+      >
         <dictionary-select v-model="entityData.widgetType" :code="widgetType" />
       </el-form-item>
       <el-form-item
@@ -109,11 +132,16 @@
 
 <script>
 import { viewMixin } from '@/mixin/viewMixin.js'
-
+import SerialNoReference from '@/modules/support/view/serialNo/reference.vue'
+import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityModelProperty'
 export default {
   name: ENTITY_TYPE + '-view',
+  components: {
+    SerialNoReference,
+    EntityReference
+  },
   mixins: [viewMixin],
   data() {
     return {
@@ -124,7 +152,8 @@ export default {
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
       entityData: {},
       // 实体属性列表
-      propertyList: []
+      propertyList: [],
+      serialNoParam: {}
     }
   },
   computed: {

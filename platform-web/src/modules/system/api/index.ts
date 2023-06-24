@@ -221,3 +221,8 @@ export const systemManage = Object.assign(
     }
   }
 )
+
+// 模块
+export const module = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'module' + '/'
+})

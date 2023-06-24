@@ -48,9 +48,31 @@ public class EntityModelPropertyVO extends BaseVO {
     private String dictionaryType;
 
     /**
+     * 流水号
+     */
+    private String serialNo;
+
+    /**
+     * 实体标识
+     */
+    private String entityId;
+
+
+    /**
+     * 模块编码
+     */
+    private String moduleCode;
+
+    /**
+     * 实体编码
+     */
+    private String entityCode;
+
+
+    /**
      * 控件类型
      */
-    @NotBlank(message = "控件类型不能为空")
+
     private String widgetType;
 
     /**

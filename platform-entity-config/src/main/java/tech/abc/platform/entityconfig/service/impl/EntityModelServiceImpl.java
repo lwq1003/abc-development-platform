@@ -12,10 +12,13 @@ import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
 import tech.abc.platform.entityconfig.entity.EntityView;
+import tech.abc.platform.entityconfig.enums.EntityModelPropertyTypeEnum;
+import tech.abc.platform.entityconfig.exception.EntityModelException;
 import tech.abc.platform.entityconfig.mapper.EntityModelMapper;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
 import tech.abc.platform.entityconfig.service.EntityModelService;
 import tech.abc.platform.entityconfig.service.EntityViewService;
+import tech.abc.platform.support.service.SerialNoService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +39,12 @@ public class EntityModelServiceImpl extends BaseServiceImpl<EntityModelMapper, E
 
     @Autowired
     private EntityViewService entityViewService;
+
+    @Autowired
+    private SerialNoService serialNoService;
+
+    @Autowired
+    private EntityModelService entityModelService;
 
 
     @Override
@@ -125,6 +134,27 @@ public class EntityModelServiceImpl extends BaseServiceImpl<EntityModelMapper, E
     @Override
     public String getIdByCode(String code) {
         return this.lambdaQuery().eq(EntityModel::getCode, code).one().getId();
+    }
+
+    @Override
+    public String generateSerialNo(String code) {
+        String entityModelId = entityModelService.getIdByCode(code);
+
+        List<EntityModelProperty> list = entityModelPropertyService.lambdaQuery()
+                .eq(EntityModelProperty::getEntityModel, entityModelId)
+                .eq(EntityModelProperty::getDataType, EntityModelPropertyTypeEnum.SERIAL_NO.name()).list();
+
+        if (CollectionUtils.isNotEmpty(list)) {
+            String serialNoId = list.get(0).getSerialNo();
+            String serialNo = serialNoService.generateSingleById(serialNoId);
+            log.info(serialNo);
+            return serialNo;
+
+        } else {
+            throw new CustomException(EntityModelException.SERIAL_CONFIG_NOT_FOUND, code);
+        }
+
+
     }
 
     @Override

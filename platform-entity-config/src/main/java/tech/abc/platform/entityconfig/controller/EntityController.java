@@ -20,8 +20,8 @@ import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.entityconfig.entity.Entity;
 import tech.abc.platform.entityconfig.service.EntityService;
-import tech.abc.platform.entityconfig.service.ModuleService;
 import tech.abc.platform.entityconfig.vo.EntityVO;
+import tech.abc.platform.system.service.ModuleService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
 package tech.abc.platform.entityconfig.vo;
 
 
-import tech.abc.platform.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseVO;
 
 import javax.validation.constraints.NotBlank;
 
@@ -47,10 +47,21 @@ public class ViewPropertyVO extends BaseVO {
      */
     private String dictionaryType;
 
+
+    /**
+     * 模块编码
+     */
+    private String moduleCode;
+
+    /**
+     * 实体编码
+     */
+    private String entityCode;
+
     /**
      * 控件类型
      */
-    @NotBlank(message = "控件类型不能为空")
+
     private String widgetType;
 
     /**

@@ -43,6 +43,15 @@ public interface EntityModelService extends BaseService<EntityModel> {
 
 
     /**
+     * 通过实体模型编码生成流水号
+     *
+     * @param code 代码
+     * @return {@link String}
+     */
+    String generateSerialNo(String code);
+
+
+    /**
      * 创建表
      *
      * @param tableName          表名

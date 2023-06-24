@@ -95,7 +95,7 @@ import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
-import ModuleReference from '@/modules/entityConfig/view/module/reference.vue'
+import ModuleReference from '@/modules/system/view/module/reference.vue'
 const MODULE_CODE = 'support'
 const ENTITY_TYPE = 'serialNo'
 export default {

@@ -1,23 +1,22 @@
-package tech.abc.platform.entityconfig.entity;
+package tech.abc.platform.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
 
 /**
  * 模块 实体类
  *
  * @author wqliu
  * @date 2023-04-09
- *
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("cfg_module")
+@TableName("sys_module")
 public class Module extends BaseEntity {
 
     /**

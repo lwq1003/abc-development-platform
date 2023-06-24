@@ -59,9 +59,61 @@
                 <#elseif item.dataType=="ENTITY">
                     <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
                     .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
-                        <${item.code?cap_first}Reference v-model="entityData.${item.code}" :${item.code}-param="${item.code}Param" <#if item
+                         <${item.entityCode}Reference v-model="entityData.${item.code}" :${item.entityCode?uncap_first}-param="${item.entityCode?uncap_first}Param" <#if
+                            item.readonlyFlag=="YES">:readonly='true'
+                            </#if> />
+                    </el-form-item>
+                <#elseif item.dataType=="ORGANIZATION_SINGLE">
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <OrganizationSingleSelect v-model="entityData.${item.code}"  <#if item
                         .readonlyFlag=="YES">:readonly='true'
-                        </#if> />
+                                </#if> />
+                    </el-form-item>
+                <#elseif item.dataType=="ORGANIZATION_MULTIPLE">
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <OrganizationMultipleSelect v-model="entityData.${item.code}"  <#if item
+                        .readonlyFlag=="YES">:readonly='true'
+                                </#if> />
+                    </el-form-item>
+                <#elseif item.dataType=="USER_SINGLE">
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <UserSingleSelect v-model="entityData.${item.code}"  <#if item
+                        .readonlyFlag=="YES">:readonly='true'
+                                </#if> />
+                    </el-form-item>
+                <#elseif item.dataType=="ICON">
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <IconPicker v-model="entityData.${item.code}"  <#if item
+                        .readonlyFlag=="YES">:readonly='true'
+                                </#if> />
+                    </el-form-item>
+                <#elseif item.dataType=="ATTACHMENT">
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <#if item.widgetType=="MANAGE">
+                            <AttachmentManager ref="attachmentManager" :entity-id="entityData.id" <#if item.readonlyFlag=="YES">:readonly='true'
+                                    </#if> />
+                        <#elseif item.widgetType=="UPLOAD">
+                            <AttachmentUploader
+                                    entity-type="${entity}"
+                                    :entity-id="entityData.id"
+                                    module-code="${package.ModuleName}"
+                                    :show-success-files="false"
+                                    :server-url="'/support/attachment/upload'"
+                                    @file-complete="fileComplete"
+                            />
+                        <#elseif item.widgetType=="VIEW">
+                            <AttachmentViewer :entity-id="entityData.id" />
+                        </#if>
+                    </el-form-item>
+                <#elseif item.dataType=="SERIAL_NO">
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <el-input v-model="entityData.${item.code}" :readonly='true' />
                     </el-form-item>
                 <#else>
                     <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
@@ -84,7 +136,7 @@
 import {viewMixin} from '@/mixin/viewMixin.js'
 <#list viewViewPropertyList as item>
 <#if item.dataType=="ENTITY">
-import ${item.code?cap_first}Reference from '@/modules/${package.ModuleName}/view/${item.code}/${mainReferenceViewMap[item.code]}.vue'
+import ${item.entityCode}Reference from '@/modules/${item.moduleCode}/view/${item.entityCode?uncap_first}/${mainReferenceViewMap[item.entityCode]}.vue'
 </#if>
 </#list>
 const MODULE_CODE = '${package.ModuleName}'
@@ -95,7 +147,7 @@ export default {
     components:{
         <#list viewViewPropertyList as item>
         <#if item.dataType=="ENTITY">
-        ${item.code?cap_first}Reference,
+        ${item.entityCode}Reference,
         </#if>
         </#list>
     },
@@ -109,7 +161,7 @@ export default {
             <#list viewViewPropertyList as item>
             <#if item.dataType=="ENTITY">
             // ${item.name}组件参数，用于传递数据
-            ${item.code}Param: {},
+            ${item.entityCode?uncap_first}Param: {},
             </#if>
             </#list>
             entityData: {}

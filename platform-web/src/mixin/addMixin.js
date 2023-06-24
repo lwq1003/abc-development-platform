@@ -6,21 +6,30 @@ import { Dialog } from '@/components/abc/Dialog'
 import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
 import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeReferenceUseCode.vue'
-import IconPicker from '@/components/abc/IconPicker/index.vue'
 import { Editor } from '@/components/abc/Editor'
 import CronExpression from '@/components/abc/CronExpression/index.vue'
-import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleReference.vue'
-
+import OrganizationSingleSelect from '@/modules/system/view/organization/treeReference.vue'
+import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
+import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
+import IconPicker from '@/components/abc/IconPicker/index.vue'
+import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
+import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
+import AttachmentViewer from '@/modules/support/view/attachment/attachmentViewer.vue'
 export const addMixin = {
   components: {
     Dialog,
     DictionaryRadioGroup,
     DictionarySelect,
     DataDictionarySelect,
-    IconPicker,
     Editor,
     CronExpression,
-    OrganizationMultipleSelect
+    OrganizationSingleSelect,
+    OrganizationMultipleSelect,
+    UserSingleSelect,
+    IconPicker,
+    AttachmentManager,
+    AttachmentUploader,
+    AttachmentViewer
   },
   data() {
     return {
@@ -82,6 +91,10 @@ export const addMixin = {
         .finally(() => {
           this.loading = false
         })
+    },
+    // 附件上传完成，刷新管理组件
+    fileComplete() {
+      this.$refs.attachmentManager.list()
     }
   }
 }

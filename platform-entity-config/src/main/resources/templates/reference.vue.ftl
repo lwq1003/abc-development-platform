@@ -93,7 +93,8 @@
                             </el-form-item>
                         <#elseif item.dataType=="ENTITY">
                             <el-form-item label="${item.name}"  <#if item.showFlag=="NO">v-show="false" </#if>>
-                                <${item.code?cap_first}Reference v-model="queryCondition.${item.code}" :${item.code}-param="${item.code}Param" <#if item.readonlyFlag=="YES">:readonly='true'
+                                <${item.entityCode}Reference v-model="queryCondition.${item.code}" :${item.entityCode?uncap_first}-param="${item.entityCode?uncap_first}Param" <#if
+                                item.readonlyFlag=="YES">:readonly='true'
                                 </#if> />
                             </el-form-item>
                         <#else>
@@ -160,19 +161,7 @@
     import { referenceMixin } from '@/mixin/referenceMixin.js'
     <#list queryConditionListReference as item>
     <#if item.dataType=="ENTITY">
-    <#if entityModelSelfReferenceFlag=="NO">
-    <#--模型为非自关联-->
-    <#if parentPropertyCode??>
-    <#--存在上级属性字段，使用树表参照视图-->
-    import ${item.code?cap_first}Reference from '@/modules/${package.ModuleName}/view/${item.code}/treelistreference.vue'
-    <#else>
-    <#--不存在上级属性字段，使用普通参照视图-->
-    import ${item.code?cap_first}Reference from '@/modules/${package.ModuleName}/view/${item.code}/reference.vue'
-    </#if>
-    <#else>
-    <#--模型为自关联，树形结构，使用树参照视图-->
-    import ${item.code?cap_first}Reference from '@/modules/${package.ModuleName}/view/${item.code}/treereference.vue'
-    </#if>
+    import ${item.entityCode}Reference from '@/modules/${item.moduleCode}/view/${item.entityCode?uncap_first}/${mainReferenceViewMap[item.entityCode]}.vue'
     </#if>
     </#list>
     const MODULE_CODE = '${package.ModuleName}'
@@ -182,7 +171,7 @@
         components: {
             <#list queryConditionListReference as item>
             <#if item.dataType=="ENTITY">
-            ${item.code?cap_first}Reference,
+            ${item.entityCode}Reference,
             </#if>
             </#list>
         },
@@ -200,10 +189,10 @@
                 // eslint-disable-next-line no-eval
                 api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
                 pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
-                <#list modifyViewPropertyList as item>
+                <#list queryConditionListReference as item>
                 <#if item.dataType=="ENTITY">
                 // ${item.name}组件参数，用于传递数据
-                ${item.code}Param: {},
+               ${item.entityCode?uncap_first}Param: {},
                 </#if>
                 </#list>
                 <#if existOrderNo=="NO">
@@ -268,6 +257,11 @@
             <#if referenceEntityView.afterInit?? && referenceEntityView.afterInit!="">
             afterInit(param){
                 ${referenceEntityView.afterInit}
+            },
+            </#if>
+            <#if referenceEntityView.commonParamChange?? && referenceEntityView.commonParamChange!="">
+            commonParamChange(param){
+                ${referenceEntityView.commonParamChange}
             },
             </#if>
         }

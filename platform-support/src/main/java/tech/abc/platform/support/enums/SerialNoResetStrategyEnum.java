@@ -1,4 +1,4 @@
-package tech.abc.platform.system.enums;
+package tech.abc.platform.support.enums;
 
 import lombok.Getter;
 

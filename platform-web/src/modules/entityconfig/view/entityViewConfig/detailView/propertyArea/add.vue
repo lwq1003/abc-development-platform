@@ -141,6 +141,10 @@ export default {
           code = this.$constant.WIDGET_TYPE.ENTITY
           break
         }
+        case this.$constant.DATA_TYPE.ATTACHMENT: {
+          code = this.$constant.WIDGET_TYPE.ATTACHMENT
+          break
+        }
         default: {
           code = this.$constant.WIDGET_TYPE.TEXT
           break

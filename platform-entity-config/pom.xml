@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>tech.abc</groupId>
-            <artifactId>platform-framework</artifactId>
+            <artifactId>platform-support</artifactId>
         </dependency>
 
 

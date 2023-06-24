@@ -1,18 +1,17 @@
 package tech.abc.platform.entityconfig.service;
 
-import tech.abc.platform.entityconfig.entity.Module;
+import tech.abc.platform.entityconfig.entity.Template;
 import tech.abc.platform.common.base.BaseService;
-
 import java.util.List;
 import java.util.Map;
 
 /**
- * 模块 服务接口类
+ * 模板 服务接口类
  *
  * @author wqliu
- * @date 2023-04-09
+ * @date 2023-06-24
  */
-public interface ModuleService extends BaseService<Module> {
+public interface TemplateService extends BaseService<Template> {
 
    /**
    * 获取标识与名称的Map集合

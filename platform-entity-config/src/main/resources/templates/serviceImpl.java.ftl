@@ -14,6 +14,8 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
+import tech.abc.platform.entityconfig.service.EntityModelService;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 /**
 * ${table.comment!} 服务实现类
 *
@@ -23,9 +25,18 @@ import java.util.HashMap;
 @Service
 @Slf4j
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+<#list entityModelPropertyList as item>
+    <#if item.dataType=="SERIAL_NO">
+    @Autowired
+    private EntityModelService entityModelService;
+    </#if>
+</#list>
+
     @Override
     public ${entity} init() {
         ${entity} entity=new ${entity}();
+        // 预先分配标识
+        entity.setId(IdWorker.getIdStr());
         //默认值处理
         <#list entityModelPropertyList as item>
             <#if item.defaultValue??>
@@ -66,6 +77,13 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                 </#if>
             </#if>
         </#list>
+
+<#list entityModelPropertyList as item>
+    <#if item.dataType=="SERIAL_NO">
+        //自动生成流水号
+        entity.setSerialNo(entityModelService.generateSerialNo("${entity}"));
+    </#if>
+</#list>
     }
 
     @Override

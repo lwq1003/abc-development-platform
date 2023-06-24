@@ -46,7 +46,7 @@
         />
       </el-form-item>
       <el-form-item label="附件列表">
-        <attachment-viewer :entity-id="entityData.id" />
+        <AttachmentViewer :entity-id="entityData.id" />
       </el-form-item>
     </el-form>
     <template #footer>

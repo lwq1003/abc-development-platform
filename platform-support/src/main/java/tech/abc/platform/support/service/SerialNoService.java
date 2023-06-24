@@ -30,6 +30,14 @@ public interface SerialNoService extends BaseService<SerialNo> {
      */
     String generateSingle(String code);
 
+    /**
+     * 生成单个流水号
+     *
+     * @param id 标识
+     * @return
+     */
+    String generateSingleById(String id);
+
 
     /**
      * 批量生成若干个流水号

@@ -64,7 +64,7 @@
 
 <script>
 import { referenceMixin } from '@/mixin/referenceMixin.js'
-import ModuleReference from '@/modules/entityConfig/view/module/reference.vue'
+import ModuleReference from '@/modules/system/view/module/reference.vue'
 const MODULE_CODE = 'support'
 const ENTITY_TYPE = 'serialNo'
 export default {

@@ -40,7 +40,7 @@
 
 <script>
 import { addMixin } from '@/mixin/addMixin.js'
-const MODULE_CODE = 'entityconfig'
+const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'module'
 export default {
   name: ENTITY_TYPE + '-add',

@@ -88,8 +88,42 @@
                         </el-form-item>
                     <#elseif item.dataType=="ENTITY">
                         <el-form-item label="${item.name}"  <#if item.showFlag=="NO">v-show="false" </#if>>
-                            <${item.code?cap_first}Reference v-model="queryCondition.${item.code}" :${item.code}-param="${item.code}Param" <#if item.readonlyFlag=="YES">:readonly='true'
+                            <${item.entityCode}Reference v-model="queryCondition.${item.code}" :${item.entityCode?uncap_first}-param="${item.entityCode?uncap_first}Param" <#if
+                            item.readonlyFlag=="YES">:readonly='true'
                             </#if> />
+                        </el-form-item>
+                    <#elseif item.dataType=="ORGANIZATION_SINGLE">
+                        <el-form-item label="${item.name}"   <#if item.showFlag=="NO">v-show='false'</#if>>
+                            <OrganizationSingleSelect v-model="queryCondition.${item.code}"  <#if item
+                            .readonlyFlag=="YES">:readonly='true'
+                                    </#if> />
+                        </el-form-item>
+                    <#elseif item.dataType=="ORGANIZATION_MULTIPLE">
+                        <el-form-item label="${item.name}"   <#if item.showFlag=="NO">v-show='false'</#if>>
+                            <OrganizationMultipleSelect v-model="queryCondition.${item.code}"  <#if item
+                            .readonlyFlag=="YES">:readonly='true'
+                                    </#if> />
+                        </el-form-item>
+                    <#elseif item.dataType=="USER_SINGLE">
+                        <el-form-item label="${item.name}"   <#if item.showFlag=="NO">v-show='false'</#if>>
+                            <UserSingleSelect v-model="queryCondition.${item.code}"  <#if item
+                            .readonlyFlag=="YES">:readonly='true'
+                                    </#if> />
+                        </el-form-item>
+                    <#elseif item.dataType=="ICON">
+                        <el-form-item label="${item.name}"   <#if item.showFlag=="NO">v-show='false'</#if>>
+                            <IconPicker v-model="queryCondition.${item.code}"  <#if item
+                            .readonlyFlag=="YES">:readonly='true'
+                                    </#if> />
+                        </el-form-item>
+                    <#elseif item.dataType=="SERIAL_NO">
+                        <el-form-item label="${item.name}"   <#if item.showFlag=="NO">v-show='false'</#if>>
+                            <QueryText v-model="queryCondition.${item.code}" type="LK"
+                                    <#if item.readonlyFlag=="YES">
+                                        :readonly='true'
+                                    </#if>
+                            >
+                            </QueryText>
                         </el-form-item>
                     <#else>
                         <el-form-item label="${item.name}"  <#if item.showFlag=="NO">v-show="false" </#if>>
@@ -241,7 +275,7 @@
     </#if>
     <#list queryConditionList as item>
     <#if item.dataType=="ENTITY">
-    import ${item.code?cap_first}Reference from '@/modules/${package.ModuleName}/view/${item.code}/${mainReferenceViewMap[item.code]}.vue'
+    import ${item.entityCode}Reference from '@/modules/${item.moduleCode}/view/${item.entityCode?uncap_first}/${mainReferenceViewMap[item.entityCode]}.vue'
     </#if>
     </#list>
     const MODULE_CODE = '${package.ModuleName}'
@@ -257,7 +291,7 @@
             ViewPage,
             <#list queryConditionList as item>
             <#if item.dataType=="ENTITY">
-            ${item.code?cap_first}Reference,
+            ${item.entityCode}Reference,
             </#if>
             </#list>
         },
@@ -271,7 +305,7 @@
                 <#list queryConditionList as item>
                 <#if item.dataType=="ENTITY">
                 // ${item.name}组件参数，用于传递数据
-                ${item.code}Param: {},
+                ${item.entityCode?uncap_first}Param: {},
                 </#if>
                 </#list>
                 <#if existOrderNo=="NO">
@@ -284,7 +318,8 @@
                 columnList: [
                     <#list queryResultList as field>
                     {
-                        <#if field.dataType=="DATA_DICTIONARY" || field.dataType=="ENTITY">
+                        <#if field.dataType=="DATA_DICTIONARY" || field.dataType=="ENTITY" || field.dataType=="USER_SINGLE"  || field
+                        .dataType=="ORGANIZATION_SINGLE">
                         prop: '${field.code}Name',
                         <#else>
                         prop: '${field.code}',
@@ -306,7 +341,11 @@
                         <#if field.formatFunction!?length gt 0>
                         , formatFunction: getFormatMethod('${field.formatFunction}')
                         </#if>
-                        <#if field.sortableFlag=="YES" && field.dataType!="DATA_DICTIONARY">
+                        <#if field.sortableFlag=="YES" && (field.dataType!="DATA_DICTIONARY"
+                        && field.dataType!="ENTITY" && field.dataType!="USER_SINGLE"  && field
+                        .dataType!="ORGANIZATION_SINGLE" && field
+                        .dataType!="ORGANIZATION_MULTIPLE")
+                        >
                         , sortable: true
                         </#if>
                     }<#if field_has_next>, </#if>

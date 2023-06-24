@@ -1,9 +1,8 @@
 <template>
-  <Dialog title="修改" v-model="visible" width="500px">
+  <Dialog title="查看" v-model="visible" width="500px">
     <el-form
       ref="form"
       :model="entityData"
-      :rules="rules"
       label-width="120px"
       label-position="right"
       style="width: 90%; margin: 0 auto"
@@ -32,21 +31,19 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="save" v-permission="pageCode + 'modify'">保存</el-button>
       <el-button @click="close">关闭</el-button>
     </template>
   </Dialog>
 </template>
 
 <script>
-import { modifyMixin } from '@/mixin/modifyMixin.js'
-
-const MODULE_CODE = 'entityconfig'
+import { viewMixin } from '@/mixin/viewMixin.js'
+const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'module'
 export default {
-  name: ENTITY_TYPE + '-modify',
+  name: ENTITY_TYPE + '-view',
   components: {},
-  mixins: [modifyMixin],
+  mixins: [viewMixin],
   data() {
     return {
       entityType: ENTITY_TYPE,
@@ -54,15 +51,7 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
-      entityData: {},
-      rules: {
-        //前端验证规则
-        app: [{ required: true, message: '【应用】不能为空', trigger: 'blur' }],
-        name: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }],
-        code: [{ required: true, message: '【编码】不能为空', trigger: 'blur' }],
-        abbreviation: [{ required: true, message: '【缩略码】不能为空', trigger: 'blur' }],
-        packagePath: [{ required: true, message: '【包路径】不能为空', trigger: 'blur' }]
-      }
+      entityData: {}
     }
   },
   methods: {}

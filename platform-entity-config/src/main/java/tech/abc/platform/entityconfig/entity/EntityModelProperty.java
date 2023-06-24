@@ -51,6 +51,30 @@ public class EntityModelProperty extends BaseEntity {
     private String dictionaryType;
 
     /**
+     * 实体标识
+     */
+    @TableField("entity_id")
+    private String entityId;
+
+    /**
+     * 模块编码
+     */
+    @TableField("module_code")
+    private String moduleCode;
+
+    /**
+     * 实体编码
+     */
+    @TableField("entity_code")
+    private String entityCode;
+
+    /**
+     * 流水号
+     */
+    @TableField("serial_no")
+    private String serialNo;
+
+    /**
      * 控件类型
      */
     @TableField("widget_type")

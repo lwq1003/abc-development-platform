@@ -35,6 +35,8 @@ import tech.abc.platform.entityconfig.enums.EntityViewTypeEnum;
 import tech.abc.platform.entityconfig.enums.ViewButtonTypeEnum;
 import tech.abc.platform.entityconfig.exception.EntityException;
 import tech.abc.platform.entityconfig.service.*;
+import tech.abc.platform.system.entity.Module;
+import tech.abc.platform.system.service.ModuleService;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -602,6 +604,62 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         builder.customFile(templateFile);
     }
 
+    /**
+     * 生成树表参照视图
+     *
+     * @param entityView     实体视图
+     * @param customKeyValue 自定义键值
+     * @param builder        构建器
+     */
+    private void generateTreeListReferenceView(EntityView entityView, Map<String, Object> customKeyValue, InjectionConfig.Builder builder) {
+
+        // 视图对象放入自定义键值map
+        customKeyValue.put("treeListReferenceEntityView", entityView);
+        // 获取查询条件配置
+        List<ViewQueryCondition> queryConditionList = viewQueryConditionService.listByView(entityView.getId());
+        customKeyValue.put("queryConditionListTreeListReference", queryConditionList);
+        // 查询条件中如有日期和数值类，则在vo中需生成对应的属性BeginForQuery和EndForQuery
+        Set<ViewQueryCondition> voRangeSet = queryConditionList.stream().filter(y -> {
+                    EntityModelPropertyTypeEnum dataTypeEnum = EnumUtils.getEnum(EntityModelPropertyTypeEnum.class, y.getDataType());
+                    if (dataTypeEnum.equals(EntityModelPropertyTypeEnum.INTEGER) ||
+                            dataTypeEnum.equals(EntityModelPropertyTypeEnum.LONG) ||
+                            dataTypeEnum.equals(EntityModelPropertyTypeEnum.DOUBLE) ||
+                            dataTypeEnum.equals(EntityModelPropertyTypeEnum.DECIMAL) ||
+                            dataTypeEnum.equals(EntityModelPropertyTypeEnum.DATETIME)) {
+                        return true;
+
+                    } else {
+                        return false;
+                    }
+                }
+
+        ).collect(Collectors.toSet());
+        // 合并列表视图和参照视图中的范围查询条件，生成变量，用于设置vo对象中的范围查询属性
+        Object voRangeSetObject = customKeyValue.get("voRangeSet");
+        if (voRangeSetObject != null) {
+            Set<ViewQueryCondition> voRangeCollection = (Set<ViewQueryCondition>) voRangeSetObject;
+            voRangeCollection.addAll(voRangeSet);
+            customKeyValue.put("voRangeSet", voRangeCollection);
+        } else {
+            customKeyValue.put("voRangeSet", voRangeSet);
+        }
+
+        // 获取查询结果配置
+        List<ViewQueryResult> queryResultList = viewQueryResultService.listByView(entityView.getId());
+        customKeyValue.put("queryResultListTreeListReference", queryResultList);
+
+
+        // 自定义参照视图模板
+        CustomFile templateFile = new CustomFile.Builder()
+                .fileName("treeListReference.vue")
+                .templatePath("/templates/treeListReference.vue.ftl")
+                .enableFileOverride()
+                .packageName(viewFolderName)
+                .build();
+
+        builder.customFile(templateFile);
+    }
+
 
     /**
      * 生成树视图
@@ -744,14 +802,14 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
             // 设置关联实体主参照视图
             if (x.getDataType().equals(EntityModelPropertyTypeEnum.ENTITY.name())) {
-                String entityCode = StringUtils.capitalize(x.getCode());
+                String entityCode = StringUtils.capitalize(x.getEntityCode());
                 String mainReferenceViewCode = entityViewService.getMainReferenceViewCode(entityCode);
                 Object mainReferenceViewMap = customKeyValue.get("mainReferenceViewMap");
                 Map<String, String> mainReferenceView = new HashMap<>();
                 if (mainReferenceViewMap != null) {
                     mainReferenceView = (HashMap<String, String>) mainReferenceViewMap;
                 }
-                mainReferenceView.put(x.getCode(), mainReferenceViewCode);
+                mainReferenceView.put(x.getEntityCode(), mainReferenceViewCode);
                 customKeyValue.put("mainReferenceViewMap", mainReferenceView);
                 return;
             }
@@ -790,7 +848,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                     generateViewView(entityView, customKeyValue, builder);
                     break;
                 case REFERENCE:
-                    // 查看视图
+                    // 参照视图
                     generateReferenceView(entityView, customKeyValue, builder);
                     break;
                 case TREE:
@@ -800,6 +858,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 case TREE_LIST:
                     // 树表视图
                     generateTreeListView(entityView, customKeyValue, builder);
+                    break;
+                case TREE_LIST_REFERENCE:
+                    // 树表参照视图
+                    generateTreeListReferenceView(entityView, customKeyValue, builder);
                     break;
                 case TREE_REFERENCE:
                     // 树视图

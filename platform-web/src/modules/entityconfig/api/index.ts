@@ -3,11 +3,6 @@ import request from '@/config/axios'
 
 const moduleName = 'entityconfig'
 
-// 模块
-export const module = Object.assign({}, COMMON_METHOD, {
-  serveUrl: '/' + moduleName + '/' + 'module' + '/'
-})
-
 // 实体
 export const entity = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'entity' + '/',
@@ -170,4 +165,9 @@ export const viewProperty = Object.assign({}, COMMON_METHOD, {
   addBatchFromModelProperty(viewId) {
     return request.post({ url: this.serveUrl + viewId + '/addBatchFromModelProperty' })
   }
+})
+
+// 模板
+export const template = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'template' + '/'
 })

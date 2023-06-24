@@ -197,7 +197,8 @@ export default {
       let viewType = ''
       switch (row.entityViewType) {
         case 'LIST':
-        case 'REFERENCE': {
+        case 'REFERENCE':
+        case 'TREE_LIST_REFERENCE': {
           viewType = 'list'
           break
         }

@@ -5,7 +5,7 @@
       :model="entityData"
       label-width="120px"
       label-position="right"
-      style="width: 90%; margin: 0 auto"
+      style="width: 90%; margin: 0px auto"
     >
       <!--表单区域 -->
       <el-form-item label="模块" prop="module">
@@ -35,7 +35,7 @@
 
 <script>
 import { viewMixin } from '@/mixin/viewMixin.js'
-import ModuleReference from '@/modules/entityconfig/view/module/reference.vue'
+import ModuleReference from '@/modules/system/view/module/reference.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entity'
 export default {

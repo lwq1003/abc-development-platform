@@ -9,8 +9,10 @@ import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeRefer
 import IconPicker from '@/components/abc/IconPicker/index.vue'
 import { Editor } from '@/components/abc/Editor'
 import CronExpression from '@/components/abc/CronExpression/index.vue'
-import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleReference.vue'
-
+import OrganizationSingleSelect from '@/modules/system/view/organization/treeReference.vue'
+import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
+import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
+import AttachmentViewer from '@/modules/support/view/attachment/attachmentViewer.vue'
 export const viewMixin = {
   components: {
     Dialog,
@@ -20,7 +22,10 @@ export const viewMixin = {
     IconPicker,
     Editor,
     CronExpression,
-    OrganizationMultipleSelect
+    OrganizationSingleSelect,
+    OrganizationMultipleSelect,
+    UserSingleSelect,
+    AttachmentViewer
   },
   data() {
     return {

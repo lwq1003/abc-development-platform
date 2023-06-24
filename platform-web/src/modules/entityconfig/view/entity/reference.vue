@@ -5,7 +5,7 @@
       <el-button icon="grid" @click="init" style="border-left-width: 0; padding: 10px" />
       <el-button icon="delete" @click="clear" style="border-left-width: 0; padding: 10px" />
     </el-button-group>
-    <Dialog title="实体选择" v-model="visible" width="60%">
+    <Dialog title="实体选择" v-model="visible" class="w-150">
       <CollapseTab>
         <el-form :inline="true" :model="queryCondition" label-width="80px" @keyup.enter="query">
           <!--查询条件区 -->
@@ -27,12 +27,8 @@
           <div class="clearfix"></div>
         </el-form>
       </CollapseTab>
-      <div class="mb-10px mt-10px">
-        <el-button type="primary" icon="check" @click="confirm">确定</el-button>
-      </div>
-
       <el-card style="width: 100%">
-        <div style="float: right; margin-top: 0; margin-bottom: 10px">
+        <div style="margin-top: 0; margin-bottom: 10px; float: right">
           <ColumnsController :value="columnList" :tableKey="tableKey" />
         </div>
         <el-table
@@ -43,7 +39,6 @@
           border
           @sort-change="sortChange"
           @current-change="rowChange"
-          @row-dblclick="rowDoubleClick"
         >
           <el-table-column
             v-for="(item, index) in showCols"
@@ -62,21 +57,22 @@
           :page-total="pageTotal"
         />
       </el-card>
-      <ViewPage ref="viewPage" />
+      <template #footer>
+        <el-button type="primary" @click="confirm">确定</el-button>
+        <el-button @click="close">关闭</el-button>
+      </template>
     </Dialog>
   </div>
 </template>
 
 <script>
 import { referenceMixin } from '@/mixin/referenceMixin.js'
-import ViewPage from './view.vue'
-import ModuleReference from '@/modules/entityconfig/view/module/reference.vue'
+import ModuleReference from '@/modules/system/view/module/reference.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entity'
 export default {
   name: ENTITY_TYPE + '-reference',
   components: {
-    ViewPage,
     ModuleReference
   },
   mixins: [referenceMixin],
@@ -108,6 +104,7 @@ export default {
           label: '编码',
           show: true,
           showOverflowTooltip: true,
+          width: '120',
           sortable: true
         },
         {
@@ -115,6 +112,7 @@ export default {
           label: '作者',
           show: true,
           showOverflowTooltip: true,
+          width: '120',
           sortable: true
         },
         {
@@ -122,6 +120,7 @@ export default {
           label: '排序',
           show: true,
           showOverflowTooltip: true,
+          width: '120',
           sortable: true
         },
         {
@@ -129,6 +128,7 @@ export default {
           label: '模块',
           show: true,
           showOverflowTooltip: true,
+          width: '120',
           sortable: true
         }
       ],

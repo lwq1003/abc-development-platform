@@ -37,8 +37,7 @@
 
 <script>
 import { modifyMixin } from '@/mixin/modifyMixin.js'
-import ModuleReference from '@/modules/entityconfig/view/module/reference.vue'
-
+import ModuleReference from '@/modules/system/view/module/reference.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entity'
 export default {

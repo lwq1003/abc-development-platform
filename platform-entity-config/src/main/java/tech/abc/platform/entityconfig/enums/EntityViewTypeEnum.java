@@ -47,6 +47,14 @@ public enum EntityViewTypeEnum {
      */
     TREE_REFERENCE,
     /**
+     * 树表参照
+     */
+    TREE_LIST_REFERENCE,
+    /**
+     * 树表多选参照
+     */
+    TREE_LIST_MULTIPLE_REFERENCE,
+    /**
      * 树多选参照
      */
     TREE_MULTIPLE_REFERENCE,

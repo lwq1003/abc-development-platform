@@ -35,7 +35,31 @@
           @change="dictionaryTypeChange"
         />
       </el-form-item>
-      <el-form-item label="控件类型" prop="widgetType">
+      <el-form-item
+        v-show="entityData.dataType == $constant.DATA_TYPE.SERIAL_NO"
+        label="流水号"
+        prop="serialNo"
+      >
+        <SerialNoReference v-model="entityData.serialNo" :serialNo-param="serialNoParam" />
+      </el-form-item>
+      <el-form-item
+        v-show="entityData.dataType == $constant.DATA_TYPE.ENTITY"
+        label="实体"
+        prop="entityId"
+      >
+        <EntityReference v-model="entityData.entityId" />
+      </el-form-item>
+      <el-form-item
+        label="控件类型"
+        prop="widgetType"
+        v-show="
+          entityData.dataType != 'USER_SINGLE' &&
+          entityData.dataType != 'ORGANIZATION_SINGLE' &&
+          entityData.dataType != 'ORGANIZATION_MULTIPLE' &&
+          entityData.dataType != 'ICON' &&
+          entityData.dataType != 'ENTITY'
+        "
+      >
         <dictionary-select v-model="entityData.widgetType" :code="widgetType" />
       </el-form-item>
       <el-form-item
@@ -111,12 +135,16 @@
 
 <script>
 import { modifyMixin } from '@/mixin/modifyMixin.js'
-
+import SerialNoReference from '@/modules/support/view/serialNo/reference.vue'
+import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityModelProperty'
 export default {
   name: ENTITY_TYPE + '-modify',
-  components: {},
+  components: {
+    SerialNoReference,
+    EntityReference
+  },
   mixins: [modifyMixin],
   data() {
     return {
@@ -132,7 +160,7 @@ export default {
         name: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }],
         code: [{ required: true, message: '【编码】不能为空', trigger: 'blur' }],
         dataType: [{ required: true, message: '【数据类型】不能为空', trigger: 'blur' }],
-        widgetType: [{ required: true, message: '【控件类型】不能为空', trigger: 'blur' }],
+
         uniqueFlag: [{ required: true, message: '【是否唯一】不能为空', trigger: 'blur' }],
         mainFlag: [{ required: true, message: '【是否主属性】不能为空', trigger: 'blur' }],
         parentPropertyFlag: [
@@ -140,7 +168,8 @@ export default {
         ]
       },
       // 实体属性列表
-      propertyList: []
+      propertyList: [],
+      serialNoParam: {}
     }
   },
   computed: {
@@ -210,6 +239,32 @@ export default {
         this.$message.warning('请选择字典类型')
         return false
       }
+      if (
+        this.entityData.dataType === this.$constant.DATA_TYPE.SERIAL_NO &&
+        !this.entityData.serialNo
+      ) {
+        this.$message.warning('请选择流水号')
+        return false
+      }
+      if (
+        this.entityData.dataType === this.$constant.DATA_TYPE.ENTITY &&
+        !this.entityData.entityId
+      ) {
+        this.$message.warning('请选择实体')
+        return false
+      }
+      if (
+        this.entityData.dataType != 'USER_SINGLE' &&
+        this.entityData.dataType != 'ORGANIZATION_SINGLE' &&
+        this.entityData.dataType != 'ORGANIZATION_MULTIPLE' &&
+        this.entityData.dataType != 'ICON' &&
+        this.entityData.dataType != 'ATTACHMENT' &&
+        !this.entityData.widgetType
+      ) {
+        this.$message.warning('请选择控件类型')
+        return false
+      }
+
       if (
         this.entityData.dataType === this.$constant.DATA_TYPE.DATETIME &&
         !this.entityData.formatPattern

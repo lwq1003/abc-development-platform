@@ -1,11 +1,11 @@
 <template>
   <el-table :data="entityData" highlight-current-row border>
-    <el-table-column type="index" label="序号" sortable width="65" />
+    <el-table-column type="index" label="序号" sortable width="55" />
     <el-table-column prop="name" label="名称" show-overflow-tooltip />
     <el-table-column prop="size" label="大小" width="80" />
 
     <el-table-column prop="createTime" label="时间" width="100" />
-    <el-table-column fixed="right" label="操作" width="200">
+    <el-table-column fixed="right" label="操作" width="170">
       <template #default="scope">
         <el-button
           type="primary"

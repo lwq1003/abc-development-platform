@@ -1,7 +1,7 @@
-package tech.abc.platform.entityconfig.mapper;
+package tech.abc.platform.system.mapper;
 
-import tech.abc.platform.entityconfig.entity.Module;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import tech.abc.platform.system.entity.Module;
 
 
 /**

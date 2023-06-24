@@ -3,8 +3,8 @@
     <CollapseTab>
       <el-form :inline="true" :model="queryCondition" label-width="120px" @keyup.enter="query">
         <!--查询条件区 -->
-        <el-form-item label="应用">
-          <dictionary-select v-model="queryCondition.app" code="AppCode" />
+        <el-form-item label="用户">
+          <UserReference v-model="queryCondition.entity" :user-param="userParam" />
         </el-form-item>
         <el-form-item label="名称">
           <QueryText v-model="queryCondition.name" type="LK" />
@@ -30,10 +30,17 @@
         @click="batchRemove"
         >删除</el-button
       >
+      <el-button
+        v-permission="pageCode + 'addByCopy'"
+        type="primary"
+        icon="CopyDocument"
+        @click="addByCopy"
+        >复制新增</el-button
+      >
     </div>
 
     <el-card style="width: 100%">
-      <div style="float: right; margin-top: 0; margin-bottom: 10px">
+      <div style="margin-top: 0; margin-bottom: 10px; float: right">
         <ColumnsController :value="columnList" :tableKey="tableKey" />
       </div>
 
@@ -59,10 +66,14 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="180">
+        <el-table-column fixed="right" label="操作" width="250">
           <template #default="scope">
-            <el-button type="primary" @click="modify(scope.row)">编辑</el-button>
-            <el-button type="primary" @click="remove(scope.row)">删除</el-button>
+            <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
+              >修改</el-button
+            >
+            <el-button v-permission="pageCode + 'remove'" type="primary" @click="remove(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -84,14 +95,15 @@ import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
+import UserReference from '@/modules/system/view/user/treeListReference.vue'
 const MODULE_CODE = 'entityconfig'
-const ENTITY_TYPE = 'module'
+const ENTITY_TYPE = 'template'
 export default {
-  name: ENTITY_TYPE,
   components: {
     AddPage,
     ModifyPage,
-    ViewPage
+    ViewPage,
+    UserReference
   },
   mixins: [listMixin],
   data() {
@@ -101,7 +113,41 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
+      // 用户组件参数，用于传递数据
+      userParam: {},
       columnList: [
+        {
+          prop: 'entityName',
+          label: '用户',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
+          prop: 'userSingleName',
+          label: '用户单选',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
+          prop: 'organizationSingleName',
+          label: '组织机构单选',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
+          prop: 'icon',
+          label: '图标',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
+        },
+        {
+          prop: 'serialNo',
+          label: '流水号',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
+        },
         {
           prop: 'name',
           label: '名称',
@@ -117,28 +163,41 @@ export default {
           sortable: true
         },
         {
-          prop: 'abbreviation',
-          label: '缩略码',
+          prop: 'date',
+          label: '日期',
           show: true,
           showOverflowTooltip: true,
           sortable: true
         },
         {
-          prop: 'packagePath',
-          label: '包路径',
+          prop: 'time',
+          label: '时间',
           show: true,
           showOverflowTooltip: true,
           sortable: true
         },
         {
-          prop: 'appName',
-          label: '应用',
+          prop: 'yesOrNoName',
+          label: '是否',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
+          prop: 'statusName',
+          label: '状态',
           show: true,
           showOverflowTooltip: true
         },
         {
           prop: 'orderNo',
-          label: '排序号',
+          label: '排序',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
+        },
+        {
+          prop: 'remark',
+          label: '备注',
           show: true,
           showOverflowTooltip: true,
           sortable: true
@@ -146,7 +205,6 @@ export default {
       ],
       queryCondition: {
         //默认值处理
-        app: ''
       }
     }
   },

@@ -99,7 +99,10 @@ public enum CommonException implements ExceptionInterface {
      * 上级不能为子节点
      */
     UP_CANNOT_BE_CHILD("上级不能为子节点"),
-
+    /**
+     * 未找到对应的枚举类型
+     */
+    ENUM_TYPE_NOT_FOUNT("未找到对应的枚举类型：【{0}】"),
 
     ;
 

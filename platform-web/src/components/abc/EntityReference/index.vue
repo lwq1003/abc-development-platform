@@ -20,7 +20,7 @@
 
 <script>
 import DataDictionarySelect from '@/components/abc/CommonSelect/DataDictionary/DataDictionaryModal.vue'
-import ModuleReference from '@/modules/entityconfig/view/module/reference.vue' // import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
+import ModuleReference from '@/modules/system/view/module/reference.vue' // import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
 // import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
 export default {
   name: 'EntityReference',

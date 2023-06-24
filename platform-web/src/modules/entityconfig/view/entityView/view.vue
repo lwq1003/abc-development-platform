@@ -36,7 +36,9 @@
         v-show="
           entityData.entityViewType === 'REFERENCE' ||
           entityData.entityViewType === 'TREE_REFERENCE' ||
-          entityData.entityViewType === 'TREELISTREFERENCE'
+          entityData.entityViewType === 'TREE_MULTIPLE_REFERENCE' ||
+          entityData.entityViewType === 'TREE_LIST_REFERENCE' ||
+          entityData.entityViewType === 'TREE_LIST_MULTIPLE_REFERENCE'
         "
       >
         <dictionary-radio-group v-model="entityData.mainReferenceViewFlag" code="YesOrNo" />
@@ -64,14 +66,22 @@
       <el-form-item
         label="通用参数变更"
         prop="commonParamChange"
-        v-show="entityData.entityViewType === 'LIST' || entityData.entityViewType === 'REFERENCE'"
+        v-show="
+          entityData.entityViewType === 'LIST' ||
+          entityData.entityViewType === 'REFERENCE' ||
+          entityData.entityViewType === 'TREE_LIST_REFERENCE'
+        "
       >
         <el-input v-model="entityData.commonParamChange" type="textarea" rows="4" />
       </el-form-item>
       <el-form-item
         label="树路径"
         prop="treePath"
-        v-show="entityData.entityViewType === 'TREE_LIST'"
+        v-show="
+          entityData.entityViewType === 'TREE_LIST' ||
+          entityData.entityViewType === 'TREE_LIST_REFERENCE' ||
+          entityData.entityViewType === 'TREE_LIST_MULTIPLE_REFERENCE'
+        "
       >
         <el-input v-model="entityData.treePath" />
       </el-form-item>

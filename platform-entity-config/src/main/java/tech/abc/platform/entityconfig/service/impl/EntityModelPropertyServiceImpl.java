@@ -11,12 +11,16 @@ import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.entityconfig.entity.Entity;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
 import tech.abc.platform.entityconfig.enums.EntityModelPropertyTypeEnum;
 import tech.abc.platform.entityconfig.mapper.EntityModelPropertyMapper;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
 import tech.abc.platform.entityconfig.service.EntityModelService;
+import tech.abc.platform.entityconfig.service.EntityService;
+import tech.abc.platform.system.entity.Module;
+import tech.abc.platform.system.service.ModuleService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +38,11 @@ import java.util.stream.Collectors;
 public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelPropertyMapper, EntityModelProperty> implements EntityModelPropertyService {
     @Autowired
     private EntityModelService entityModelService;
+
+    @Autowired
+    private EntityService entityService;
+    @Autowired
+    private ModuleService moduleService;
 
     @Override
     public EntityModelProperty init() {
@@ -83,6 +92,7 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
             throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【编码】");
         }
     }
+
 
     @Override
     public Map<String, String> getNameMap(List<String> idList) {
@@ -152,8 +162,23 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
 
     @Override
     protected void beforeAddOrModifyOp(EntityModelProperty entity) {
+        // 转换类型
         String propertyDataType = generatePropertyDataType(entity);
         entity.setPropertyDataType(propertyDataType);
+
+        // 若为实体类型，获取并设置对应的模块编码和实体编码
+        if (entity.getDataType().equals(EntityModelPropertyTypeEnum.ENTITY.name())) {
+            if (StringUtils.isNotBlank(entity.getEntityId())) {
+                // 设置实体编码
+                Entity referenceEntity = entityService.query(entity.getEntityId());
+                entity.setEntityCode(referenceEntity.getCode());
+                // 设置模块编码
+                Module module = moduleService.query(referenceEntity.getModule());
+                entity.setModuleCode(module.getCode());
+            }
+        }
+
+
     }
 
     /**
@@ -164,7 +189,13 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
      */
     private String generatePropertyDataType(EntityModelProperty modelProperty) {
         String result = StringUtils.EMPTY;
-        EntityModelPropertyTypeEnum dataType = EnumUtils.getEnum(EntityModelPropertyTypeEnum.class, modelProperty.getDataType());
+        EntityModelPropertyTypeEnum dataType = EntityModelPropertyTypeEnum.STRING;
+        try {
+            dataType = EnumUtils.getEnum(EntityModelPropertyTypeEnum.class, modelProperty.getDataType());
+
+        } catch (Exception e) {
+            throw new CustomException(CommonException.ENUM_TYPE_NOT_FOUNT, modelProperty.getDataType());
+        }
         switch (dataType) {
             case STRING:
                 result = "String";

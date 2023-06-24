@@ -18,7 +18,7 @@
 
         <dependency>
             <groupId>tech.abc</groupId>
-            <artifactId>platform-entity-config</artifactId>
+            <artifactId>platform-system</artifactId>
         </dependency>
 
 

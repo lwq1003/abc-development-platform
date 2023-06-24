@@ -23,7 +23,9 @@ export const DATA_TYPE = {
   DECIMAL: 'DECIMAL',
   DATETIME: 'DATETIME',
   DATA_DICTIONARY: 'DATA_DICTIONARY',
-  ENTITY: 'ENTITY'
+  ENTITY: 'ENTITY',
+  ATTACHMENT: 'ATTACHMENT',
+  SERIAL_NO: 'SERIAL_NO'
 }
 
 // 显示控件类型
@@ -32,7 +34,8 @@ export const WIDGET_TYPE = {
   NUMBER: 'NumberDisplayComponent',
   DATETIME: 'DateTimeDisplayComponent',
   DATA_DICTIONARY: 'DataDictionaryDisplayComponent',
-  ENTITY: 'EntityDisplayComponent'
+  ENTITY: 'EntityDisplayComponent',
+  ATTACHMENT: 'AttachmentComponent'
 }
 
 // 视图按钮类型

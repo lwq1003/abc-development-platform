@@ -17,10 +17,10 @@ import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.PageInfo;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
-import tech.abc.platform.entityconfig.service.ModuleService;
 import tech.abc.platform.support.entity.SerialNo;
 import tech.abc.platform.support.service.SerialNoService;
 import tech.abc.platform.support.vo.SerialNoVO;
+import tech.abc.platform.system.service.ModuleService;
 
 import java.util.ArrayList;
 import java.util.List;

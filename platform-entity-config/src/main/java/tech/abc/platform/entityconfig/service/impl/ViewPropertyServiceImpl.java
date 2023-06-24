@@ -135,6 +135,8 @@ public class ViewPropertyServiceImpl extends BaseServiceImpl<ViewPropertyMapper,
         entity.setFormatPattern(entityModelProperty.getFormatPattern());
         entity.setDictionaryType(entityModelProperty.getDictionaryType());
         entity.setDefaultValue(entityModelProperty.getDefaultValue());
+        entity.setModuleCode(entityModelProperty.getModuleCode());
+        entity.setEntityCode(entityModelProperty.getEntityCode());
         this.add(entity);
     }
 

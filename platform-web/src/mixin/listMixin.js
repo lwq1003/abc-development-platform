@@ -9,6 +9,10 @@ import ListPager from '@/components/abc/ListPager/index.vue'
 import ColumnsController from '@/components/abc/ColumnsController/index.vue'
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
 import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
+import OrganizationSingleSelect from '@/modules/system/view/organization/treeReference.vue'
+import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
+import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
+import IconPicker from '@/components/abc/IconPicker/index.vue'
 
 export const listMixin = {
   components: {
@@ -19,7 +23,11 @@ export const listMixin = {
     ListPager,
     ColumnsController,
     DictionarySelect,
-    DictionaryRadioGroup
+    DictionaryRadioGroup,
+    OrganizationSingleSelect,
+    OrganizationMultipleSelect,
+    UserSingleSelect,
+    IconPicker
   },
 
   data() {

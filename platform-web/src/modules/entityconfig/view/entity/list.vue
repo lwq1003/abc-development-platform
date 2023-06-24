@@ -115,7 +115,7 @@ import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
-import ModuleReference from '@/modules/entityconfig/view/module/reference.vue'
+import ModuleReference from '@/modules/system/view/module/reference.vue'
 
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entity'

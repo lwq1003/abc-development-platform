@@ -44,9 +44,31 @@ public enum EntityModelPropertyTypeEnum {
     /**
      * 实体
      */
-    ENTITY
-
-
+    ENTITY,
+    /**
+     * 用户单选
+     */
+    USER_SINGLE,
+    /**
+     * 组织机构单选
+     */
+    ORGANIZATION_SINGLE,
+    /**
+     * 组织机构多选
+     */
+    ORGANIZATION_MULTIPLE,
+    /**
+     * 图标
+     */
+    ICON,
+    /**
+     * 附件
+     */
+    ATTACHMENT,
+    /**
+     * 流水号
+     */
+    SERIAL_NO
 
 
 }

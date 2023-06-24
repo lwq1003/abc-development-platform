@@ -78,10 +78,10 @@ public class ${entity} implements Serializable {
     </#if>
 </#list>
 
-    /********实体类*****/
+    /********实体类、用户单选、组织机构单选*****/
 <#if entityModelPropertyList?? && (entityModelPropertyList?size > 0)>
 <#list entityModelPropertyList as item>
-    <#if item.dataType=='ENTITY'>
+    <#if item.dataType=='ENTITY' || item.dataType=='USER_SINGLE' || item.dataType=='ORGANIZATION_SINGLE'>
     /**
     * ${item.name}
     */

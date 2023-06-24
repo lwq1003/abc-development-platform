@@ -319,6 +319,14 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
         meta: {
           title: t('router.sticky')
         }
+      },
+      {
+        path: 'CommonSelect',
+        component: () => import('@/views/Components/CommonSelect.vue'),
+        name: 'CommonSelect',
+        meta: {
+          title: '通用选择'
+        }
       }
     ]
   },
