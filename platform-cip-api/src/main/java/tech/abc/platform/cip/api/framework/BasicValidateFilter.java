@@ -1,18 +1,16 @@
 package tech.abc.platform.cip.api.framework;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.validator.routines.TimeValidator;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.stereotype.Component;
 import tech.abc.platform.cip.api.exception.ApiException;
 import tech.abc.platform.cip.common.entity.ApiRequest;
 import tech.abc.platform.cip.common.entity.ApiResponse;
-import tech.abc.platform.common.constant.DateConstant;
+import tech.abc.platform.cip.common.tool.ValidateUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.Calendar;
 import java.util.Set;
 
 /**
@@ -50,8 +48,7 @@ public class BasicValidateFilter implements ApiFilter {
      */
     private void validateRequestTimeFormat(String requestTime) {
 
-        Calendar validate = TimeValidator.getInstance().validate(requestTime, DateConstant.DATE_FORMAT_FULL);
-        if (validate == null) {
+        if (!ValidateUtil.dateIsFormat(requestTime)) {
             throw new ApiException("S01", "请求时间格式不符合要求");
         }
     }

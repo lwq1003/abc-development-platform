@@ -8,7 +8,6 @@ import lombok.experimental.Accessors;
 import tech.abc.platform.common.base.BaseEntity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 通知公告 实体类
@@ -81,5 +80,5 @@ public class Notice extends BaseEntity {
      * 发布范围
      */
     @TableField(exist = false)
-    private List<String> publishScope;
+    private String publishScope;
 }

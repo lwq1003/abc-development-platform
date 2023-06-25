@@ -28,13 +28,6 @@
             <artifactId>platform-boot-starter-oss</artifactId>
         </dependency>
 
-        <!--任务调度-->
-        <dependency>
-            <groupId>tech.abc</groupId>
-            <artifactId>platform-boot-starter-scheduler</artifactId>
-        </dependency>
-
-
         <!--模板组件-->
         <dependency>
             <groupId>org.freemarker</groupId>

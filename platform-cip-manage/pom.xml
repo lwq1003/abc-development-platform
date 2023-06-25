@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>tech.abc</groupId>
-            <artifactId>platform-framework</artifactId>
+            <artifactId>platform-system</artifactId>
             <version>2.0.0</version>
         </dependency>
 

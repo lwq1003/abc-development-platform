@@ -17,6 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import tech.abc.platform.common.annotation.AllowAll;
+import tech.abc.platform.common.annotation.AllowAuthenticated;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.exception.CustomException;
@@ -40,7 +42,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,6 +166,7 @@ public class AttachmentController extends BaseController {
      * 分片上传
      */
     @PostMapping("/upload")
+    @AllowAuthenticated
     public ResponseEntity<Result> upload(FileChunkVO fileChunkVO, HttpServletRequest request) {
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (isMultipart) {
@@ -183,6 +185,7 @@ public class AttachmentController extends BaseController {
      * 根据实体标识获取附件列表
      */
     @GetMapping("/list")
+    @AllowAuthenticated
     public ResponseEntity<Result> list(String entityId) {
         // 构造查询条件
         QueryWrapper<Attachment> queryWrapper = new QueryWrapper<>();
@@ -204,6 +207,7 @@ public class AttachmentController extends BaseController {
      * @param response
      */
     @GetMapping("/{id}/download")
+    @AllowAuthenticated
     public void downloadFile(@PathVariable String id, HttpServletResponse response) {
 
         try (InputStream is = attachmentService.getFile(id);
@@ -229,27 +233,14 @@ public class AttachmentController extends BaseController {
 
 
     @PostMapping("/uploadImage")
+    @AllowAuthenticated
     public ResponseEntity<Result> uploadImage(MultipartFile image) {
         String id = attachmentService.uploadImage(image);
-        String url = MessageFormat.format("http://localhost:4000/support/attachment/{0}/download", id);
         return ResultUtil.success(id);
-        // ImageVO imageVO = new ImageVO();
-        // imageVO.setUrl(url);
-        // ImageUploadReturnVO imageUploadReturnVO = new ImageUploadReturnVO();
-        // imageUploadReturnVO.setErrno(0);
-        // imageUploadReturnVO.setData(imageVO);
-
-
-        // Map<String, Object> result = new HashMap<>();
-        // result.put("errno", 0);
-        // Map<String, String> data = new HashMap<>();
-        // data.put("url", url);
-        // result.put("data", data);
-
-        // return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/getImage")
+    @AllowAll
     public void getImage(@PathVariable("id") String id, HttpServletResponse response) {
         Attachment attachment = attachmentService.getById(id);
         String fileName = attachment.getName();
@@ -276,6 +267,7 @@ public class AttachmentController extends BaseController {
      * @return
      */
     @PostMapping("/uploadFile")
+    @AllowAuthenticated
     public ResponseEntity<Result> uploadFile(AttachmentVO vo, HttpServletRequest request) {
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
         FileChunk fileChunk = new FileChunk();

@@ -8,7 +8,6 @@ import tech.abc.platform.common.base.BaseVO;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 通知公告 视图对象类
@@ -116,7 +115,7 @@ public class NoticeVO extends BaseVO {
      * 发布范围
      */
 
-    private List<String> publishScope;
+    private String publishScope;
 
 
 }

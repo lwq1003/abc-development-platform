@@ -121,10 +121,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         ;
 
-        // 配置其他请求,需认证
+        // 配置其他请求
         http.authorizeRequests()
                 .anyRequest()
-                .authenticated();
+                // 注意：此处若设置为authenticated，则基于url的过滤器优先级高于方法体上的@PreAuthorize
+                // 如通知公告中的图片请求，会因为没有附加token导致未认证被拦截
+                .permitAll();
 
         // 配置JWT过滤器
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
@@ -98,7 +100,7 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
         QueryWrapper<NoticeReceiver> noticeReceiverQueryWrapper = new QueryWrapper<>();
         noticeReceiverQueryWrapper.lambda().eq(NoticeReceiver::getNotice, entity.getId());
         List<NoticeReceiver> noticeReceiverList = noticeReceiverService.list(noticeReceiverQueryWrapper);
-        List<String> organizationIdList = noticeReceiverList.stream().map(x -> x.getOrganization()).collect(Collectors.toList());
+        String organizationIdList = noticeReceiverList.stream().map(x -> x.getOrganization()).collect(Collectors.joining(","));
         entity.setPublishScope(organizationIdList);
 
     }
@@ -110,8 +112,8 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
         clearOrganizationData(entity);
 
         // 再重新插入当前选择的组织 机构
-        List<String> organizationList = entity.getPublishScope();
-        if (CollectionUtils.isNotEmpty(organizationList)) {
+        String[] organizationList = StringUtils.split(entity.getPublishScope(), ',');
+        if (ArrayUtils.isNotEmpty(organizationList)) {
             for (String organizationId : organizationList) {
                 NoticeReceiver noticeReceiver = new NoticeReceiver();
                 noticeReceiver.setNotice(entity.getId());

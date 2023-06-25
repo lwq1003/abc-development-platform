@@ -73,25 +73,23 @@ const editorConfig = computed((): IEditorConfig => {
     // 单个文件的最大体积限制，默认为 2M
     maxFileSize: 5 * 1024 * 1024,
     // 低于指定体积以base64编码方式插入
-    base64LimitSize: 5 * 1024 * 1024,
+    base64LimitSize: 5 * 1024,
     // 最多可上传几个文件，默认为 100
     maxNumberOfFiles: 10,
 
     // 选择文件时的类型限制，默认为 ['image/*'] 。如不想限制，则设置为 []
-    allowedFileTypes: ['image/*']
+    allowedFileTypes: ['image/*'],
 
-    // TODO 以下方式可实现插入图片，但受权限管控因素影响，会暴露插入图片的操作人的token
-    // 根源上解决该问题，只能为图片设置一个不控权限的存储与访问路径
-    // // 自定义上传
-    // async customUpload(file: File, insertFn: InsertFnType) {
-    //   const formData = new FormData()
-    //   formData.append('image', file)
-    //   api.support.attachment.uploadImage(formData).then((res) => {
-    //     const id = res.data
-    //     let url = '/support/attachment/' + id + '/download?X-Token=' + token
-    //     insertFn(url, '', '')
-    //   })
-    // }
+    // 自定义上传
+    async customUpload(file: File, insertFn: InsertFnType) {
+      const formData = new FormData()
+      formData.append('image', file)
+      api.support.attachment.uploadImage(formData).then((res) => {
+        const id = res.data
+        let url = '/support/attachment/' + id + '/getImage'
+        insertFn(url, '', '')
+      })
+    }
   }
 
   return Object.assign(
@@ -176,3 +174,51 @@ defineExpose({
 </template>
 
 <style src="@wangeditor/editor/dist/css/style.css"></style>
+
+<style scoped>
+/* :deep(h2, .h2) {
+  font-size: 20px;
+  font-weight: bold;
+} */
+
+/*
+  *  以下样式由于全局reset文件被覆盖，所以需要重新定义
+  */
+::v-deep h5,
+.h5 {
+  font-size: 14px;
+}
+
+::v-deep h4,
+.h4 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+::v-deep h3,
+.h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+::v-deep h2,
+.h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+::v-deep h1,
+.h1 {
+  font-size: 22px;
+  font-weight: bold;
+}
+::v-deep i {
+  font-style: italic;
+}
+::v-deep .w-e-toolbar .w-e-menu i {
+  font-style: normal;
+}
+::v-deep ol {
+  list-style-type: decimal;
+}
+</style>

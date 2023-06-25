@@ -29,6 +29,6 @@
             left join sys_user u on ru.user_id=u.id
         where u.id=#{id}
           and r.status='NORMAL'
-          and p.path_code=#{permissionCode}
+          and p.permission_code=#{permissionCode}
     </select>
 </mapper>
