@@ -11,7 +11,7 @@
         :is-resizable="false"
         :vertical-compact="true"
         :use-css-transforms="true"
-        style="height: 700px"
+        style="height: 1050px"
       >
         <grid-item
           ref="gridItem"

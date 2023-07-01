@@ -327,6 +327,14 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
         meta: {
           title: '通用选择'
         }
+      },
+      {
+        path: 'MyEchart',
+        component: () => import('@/views/Components/MyEchart.vue'),
+        name: 'MyEchart',
+        meta: {
+          title: '图表测试'
+        }
       }
     ]
   },

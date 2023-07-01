@@ -169,6 +169,7 @@ public class PermissionItemController extends BaseController {
      */
     @PutMapping("/{id}/enable")
     @SystemLog(value = "权限-启用")
+    @PreAuthorize("hasPermission(null,'system:permissionItem:enable')")
     public ResponseEntity<Result> enable(@PathVariable("id") String id) {
 
         permissionItemService.enable(id);
@@ -180,6 +181,7 @@ public class PermissionItemController extends BaseController {
      */
     @PutMapping("/{id}/disable")
     @SystemLog(value = "权限-停用")
+    @PreAuthorize("hasPermission(null,'system:permissionItem:disable')")
     public ResponseEntity<Result> disable(@PathVariable("id") String id) {
 
         permissionItemService.disable(id);

@@ -174,7 +174,7 @@ public class SystemMessageController extends BaseController {
 
     @PutMapping("/{id}/read")
     @SystemLog(value = "消息-设置单条已读")
-    @PreAuthorize("hasPermission(null,'notification:systemMessage:read')")
+    @PreAuthorize("hasPermission(null,'notification:systemMessage:view')")
     public ResponseEntity<Result> setRead(@PathVariable("id") String id) {
 
         SystemMessage entity = systemMessageService.setRead(id);

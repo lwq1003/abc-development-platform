@@ -30,10 +30,18 @@
 <script lang="ts">
 import Favorite from '@/modules/support/view/portletList/favorite.vue'
 import Notice from '@/modules/support/view/portletList/notice.vue'
+import UserSource from '@/modules/echart/userSource.vue'
+import WeeklyUserActivity from '@/modules/echart/weeklyUserActivity.vue'
+import MonthlySales from '@/modules/echart/monthlySales.vue'
+import StageSpeedGauge from '@/modules/echart/stageSpeedGauge.vue'
 export default {
   components: {
     Favorite,
-    Notice
+    Notice,
+    UserSource,
+    WeeklyUserActivity,
+    MonthlySales,
+    StageSpeedGauge
   },
   props: {
     config: {

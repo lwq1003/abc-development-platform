@@ -98,16 +98,7 @@ husky install
 
 cip-client是一个模拟的接口平台客户端，是一个独立的springboot，相当于第三方系统，有自己独立的数据库，数据库脚本参见\cip-client\src\main\resources\init.sql
 
-### 常见问题
 
-1.项目克隆后，初始运行有可能编译错误，lombok插件失效，编辑器报类似如下警告：
-java: You aren't using a compiler supported by lombok, so lombok will not work and has been disabled.
-Your processor is: com.sun.proxy.$Proxy8
-Lombok supports: OpenJDK javac, ECJ
-
-解决方式1是彻底清理缓存，即执行invalidate caches，一般能解决，不过更推荐如下设置
-![3.jpg](resource%2F3.jpg)
--Djps.track.ap.dependencies=false
 
 ### 未来规划
 
@@ -117,7 +108,7 @@ Lombok supports: OpenJDK javac, ECJ
 后面几块是平台欠缺的，需要补全和完善，每一块都是硬骨头，难度和工作量都不小，做了一些简单初步的了解，具体如下：
 
 输出系统使用手册
-集成图表组件
+集成图表组件（已完成）
 集成工作流
 实现可视化表单
 移动端实现

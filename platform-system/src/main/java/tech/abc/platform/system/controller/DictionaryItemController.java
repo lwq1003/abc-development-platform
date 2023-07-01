@@ -167,7 +167,7 @@ public class DictionaryItemController extends BaseController {
      */
     @PutMapping("/{id}/enable")
     @SystemLog(value = "字典项-启用")
-    @PreAuthorize("hasPermission(null,'system:dictionaryType:item')")
+    @PreAuthorize("hasPermission(null,'system:dictionaryItem:enable')")
     public ResponseEntity<Result> enable(@PathVariable("id") String id) {
 
         dictionaryItemService.enable(id);
@@ -179,7 +179,7 @@ public class DictionaryItemController extends BaseController {
      */
     @PutMapping("/{id}/disable")
     @SystemLog(value = "字典项-停用")
-    @PreAuthorize("hasPermission(null,'system:dictionaryType:item')")
+    @PreAuthorize("hasPermission(null,'system:dictionaryItem:disable')")
     public ResponseEntity<Result> disable(@PathVariable("id") String id) {
 
         dictionaryItemService.disable(id);

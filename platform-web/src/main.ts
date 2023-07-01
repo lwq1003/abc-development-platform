@@ -55,6 +55,12 @@ import webSocket from '@/modules/notification/view/systemMessage/webSocket.js'
 // 可自配置的网格布局
 import VueGridLayout from 'vue-grid-layout'
 
+// echart图表
+import "echarts"
+import ECharts from "vue-echarts"
+
+
+
 
 // 创建实例
 const setupAll = async () => {
@@ -99,6 +105,9 @@ const setupAll = async () => {
 
   // 可自配置的网格布局
   app.use(VueGridLayout)
+
+  // echart图表
+  app.component('v-chart', ECharts)
 
   app.mount('#app')
 }

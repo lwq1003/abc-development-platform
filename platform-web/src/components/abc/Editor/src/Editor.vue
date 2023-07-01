@@ -176,49 +176,39 @@ defineExpose({
 <style src="@wangeditor/editor/dist/css/style.css"></style>
 
 <style scoped>
-/* :deep(h2, .h2) {
-  font-size: 20px;
-  font-weight: bold;
-} */
-
 /*
   *  以下样式由于全局reset文件被覆盖，所以需要重新定义
   */
-::v-deep h5,
-.h5 {
+:deep(h5, .h5) {
   font-size: 14px;
 }
 
-::v-deep h4,
-.h4 {
+:deep(h4, .h4) {
   font-size: 16px;
   font-weight: bold;
 }
 
-::v-deep h3,
-.h3 {
+:deep(h3, .h3) {
   font-size: 18px;
   font-weight: bold;
 }
 
-::v-deep h2,
-.h2 {
+:deep(h2, .h2) {
   font-size: 20px;
   font-weight: bold;
 }
 
-::v-deep h1,
-.h1 {
+:deep(h1, .h1) {
   font-size: 22px;
   font-weight: bold;
 }
-::v-deep i {
+:deep(i) {
   font-style: italic;
 }
-::v-deep .w-e-toolbar .w-e-menu i {
+:deep(.w-e-toolbar .w-e-menu i) {
   font-style: normal;
 }
-::v-deep ol {
+:deep(ol) {
   list-style-type: decimal;
 }
 </style>

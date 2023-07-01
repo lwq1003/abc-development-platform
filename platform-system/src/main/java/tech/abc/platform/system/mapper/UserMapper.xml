@@ -3,12 +3,12 @@
 <mapper namespace="tech.abc.platform.system.mapper.UserMapper">
 
     <select id="getPermission" resultType="tech.abc.platform.system.entity.PermissionItem">
-        select *
+        select distinct p.*
         from sys_permission_item p
-                 left join sys_group_permission_item rp on p.id = rp.PERMISSION_ITEM_ID
-                 left join sys_user_group r on r.id = rp.group_ID
-                 left join sys_group_user ru on ru.group_id = r.id
-                 left join sys_user u on ru.user_id = u.id
+         left join sys_group_permission_item rp on p.id = rp.PERMISSION_ITEM_ID
+         left join sys_user_group r on r.id = rp.group_ID
+         left join sys_group_user ru on ru.group_id = r.id
+         left join sys_user u on ru.user_id = u.id
         where u.id = #{id}
           and r.status = 'NORMAL'
           and u.delete_flag = 'NO'
