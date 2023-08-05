@@ -1,13 +1,17 @@
 package tech.abc.platform.entityconfig.controller;
 
 
-import org.springframework.web.bind.annotation.RestController;
-import tech.abc.platform.common.base.BaseController;
-import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.PageInfo;
@@ -15,16 +19,13 @@ import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.service.EntityModelService;
+import tech.abc.platform.entityconfig.service.EntityService;
 import tech.abc.platform.entityconfig.vo.EntityModelVO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
 * 实体模型 前端控制器类
@@ -38,6 +39,9 @@ import java.util.List;
 public class EntityModelController extends BaseController {
     @Autowired
     private EntityModelService entityModelService;
+
+    @Autowired
+    private EntityService entityService;
 
     //region 基本操作
     /**
@@ -165,7 +169,6 @@ public class EntityModelController extends BaseController {
     */
     private EntityModelVO convert2VO(EntityModel entity){
         EntityModelVO vo=mapperFacade.map(entity,EntityModelVO.class);
-        vo.setParentModelName(dictionaryUtil.getNameByCode("BaseModel", entity.getParentModel()));
         vo.setMainModelFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getMainModelFlag()));
         vo.setSelfReferenceFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getSelfReferenceFlag()));
         return vo;
@@ -180,8 +183,20 @@ public class EntityModelController extends BaseController {
     private List<EntityModelVO> convert2VO(List<EntityModel> entityList) {
         List<EntityModelVO> voList = new ArrayList<>(entityList.size());
 
+        // 获取 实体 集合
+        List<String> list = entityList.stream().map(x -> x.getEntity()).collect(Collectors.toList());
+        Map<String, String> entityNameMap = entityService.getNameMap(list);
+
+        // 获取 父级模型 集合
+        List<String> parentModelList = entityList.stream().map(x -> x.getParentModel()).collect(Collectors.toList());
+        Map<String, String> parentModelNameMap = entityModelService.getNameMap(parentModelList);
+
         entityList.stream().forEach(x -> {
             EntityModelVO vo = convert2VO(x);
+            // 设置 实体
+            vo.setEntityName(entityNameMap.get(x.getEntity()));
+            vo.setParentModelName(parentModelNameMap.get(x.getParentModel()));
+
             voList.add(vo);
         });
         return voList;

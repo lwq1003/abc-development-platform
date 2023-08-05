@@ -29,6 +29,7 @@ import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.entityconfig.codegenerator.constant.FieldConstant;
 import tech.abc.platform.entityconfig.codegenerator.entity.TableFieldInfo;
 import tech.abc.platform.entityconfig.codegenerator.extention.MyFreemarkerTemplateEngine;
+import tech.abc.platform.entityconfig.constant.EntityConfigConstant;
 import tech.abc.platform.entityconfig.entity.*;
 import tech.abc.platform.entityconfig.enums.EntityModelPropertyTypeEnum;
 import tech.abc.platform.entityconfig.enums.EntityViewTypeEnum;
@@ -156,17 +157,30 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 遍历列表
         entityModelList.stream().forEach((entityModel) -> {
 
+            // 获取自身标识
+            String entityModelId=entityModel.getId();
             // 获取库表名称
             String tableName = generateTableName(entityModel.getCode(), module.getAbbreviation());
             // 获取库表备注
             String tableComment = entityModel.getName();
             // 获取父级模型属性列表
-            String parentModelId = entityModelService.getIdByCode(entityModel.getParentModel());
-            List<EntityModelProperty> parentModelPropertyList = entityModelPropertyService.getByEntityModelId(parentModelId);
+            List<EntityModelProperty> parentModelPropertyList=new ArrayList<>();
+            // 循环向上查找父级模型
+            while(true){
+                entityModel=entityModelService.query(entityModel.getParentModel());
+                // 获取父级模型属性列表
+                List<EntityModelProperty> currentPropertyList = entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModel.getId());
+                CollectionUtils.addAll(parentModelPropertyList, currentPropertyList.iterator());
 
+                // 找到顶层节点标识模型停止
+                if(entityModel.getId().equals(EntityConfigConstant.ID_MODEL_ID)){
+                    break;
+                }
+
+            };
 
             // 获取实体模型属性列表,非库表存储字段忽略
-            List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModel.getId());
+            List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModelId);
             CollectionUtils.addAll(entityModelPropertyList, parentModelPropertyList.iterator());
             // 将实体模型属性转换为库表字段信息
             List<TableFieldInfo> tableFieldInfoList = convertModelPropertyData(entityModelPropertyList);
@@ -759,7 +773,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         customKeyValue.put("appCode", appCode);
 
         // 设置视图文件夹名称
-        viewFolderName = "view/" + moduleCode + "/" + StringUtils.uncapitalize(entity.getCode());
+        viewFolderName = "0view/" + moduleCode + "/" + StringUtils.uncapitalize(entity.getCode());
 
 
         InjectionConfig.Builder builder = new InjectionConfig.Builder();

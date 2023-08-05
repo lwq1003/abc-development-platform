@@ -110,6 +110,24 @@ const setupAll = async () => {
   app.component('v-chart', ECharts)
 
   app.mount('#app')
+
+  app.directive('focus', {
+    mounted(el) {
+      el.focus()
+    }
+  })
+
+  app.directive('enterNumber', {
+    mounted(el, { value = 100 }, vnode) {
+      el = el.nodeName == "INPUT" ? el : el.children[0]
+      var RegStr = value == 0 ? `^[\\+\\-]?\\d+\\d{0,0}` : `^[\\+\\-]?\\d+\\.?\\d{0,${value}}`
+      el.addEventListener('input', function () {
+        el.value = el.value.match(new RegExp(RegStr, 'g'));
+        el.dispatchEvent(new Event('input'))
+      })
+    }
+  })
+  
 }
 
 setupAll()

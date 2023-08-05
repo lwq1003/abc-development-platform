@@ -66,6 +66,8 @@ export const usePermissionStore = defineStore('permission', {
           routerMap = tempRouter
             .concat(generateRoutesFn2(routers as AppCustomRouteRecordRaw[]))
             .concat(routerMap)
+          // 输出路由，用于调试
+          // console.log(routerMap)
         } else if (type === 'test') {
           // 模拟前端过滤菜单
           routerMap = generateRoutesFn1(cloneDeep(asyncRouterMap), routers as string[])

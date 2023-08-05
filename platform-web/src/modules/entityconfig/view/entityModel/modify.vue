@@ -10,7 +10,7 @@
     >
       <!--表单区域 -->
       <el-form-item label="父级模型" prop="parentModel">
-        <dictionary-radio-group v-model="entityData.parentModel" code="BaseModel" />
+        <EntityModelReference v-model="entityData.parentModel" />
       </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="entityData.name" />
@@ -43,12 +43,12 @@
 
 <script>
 import { modifyMixin } from '@/mixin/modifyMixin.js'
-
+import EntityModelReference from '@/modules/entityconfig/view/entityModel/singleSelect.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityModel'
 export default {
   name: ENTITY_TYPE + '-modify',
-  components: {},
+  components: { EntityModelReference },
   mixins: [modifyMixin],
   data() {
     return {

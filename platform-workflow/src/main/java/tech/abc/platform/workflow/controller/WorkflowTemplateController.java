@@ -1,0 +1,224 @@
+package tech.abc.platform.workflow.controller;
+
+
+import org.springframework.web.bind.annotation.RestController;
+import tech.abc.platform.common.base.BaseController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.query.QueryGenerator;
+import tech.abc.platform.common.utils.ResultUtil;
+import tech.abc.platform.common.vo.PageInfo;
+import tech.abc.platform.common.vo.Result;
+import tech.abc.platform.common.vo.SortInfo;
+import tech.abc.platform.workflow.entity.WorkflowTemplate;
+import tech.abc.platform.workflow.service.WorkflowTemplateService;
+import tech.abc.platform.workflow.vo.WorkflowTemplateVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+* 流程模板 前端控制器类
+*
+* @author wqliu
+* @date 2023-07-06
+*/
+@RestController
+@RequestMapping("/workflow/workflowTemplate")
+@Slf4j
+public class WorkflowTemplateController extends BaseController {
+    @Autowired
+    private WorkflowTemplateService flowTemplateService;
+
+
+    //region 基本操作
+    /**
+    * 初始化
+    */
+    @GetMapping("/init")
+    public ResponseEntity<Result> init() {
+        WorkflowTemplate entity=flowTemplateService.init();
+        WorkflowTemplateVO vo = convert2VO(entity);
+        return ResultUtil.success(vo);
+    }
+
+    /**
+    * 新增
+    */
+    @PostMapping("/")
+    @SystemLog(value = "流程模板-新增")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:add')")
+    public ResponseEntity<Result> add(@Validated @RequestBody WorkflowTemplateVO vo) {
+        WorkflowTemplate entity=convert2Entity(vo);
+        flowTemplateService.add(entity);
+        WorkflowTemplateVO newVO = convert2VO(entity);
+        return ResultUtil.success(newVO);
+    }
+
+    /**
+    * 修改
+    */
+    @PutMapping("/")
+    @SystemLog(value = "流程模板-修改")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:modify')")
+    public ResponseEntity<Result> modify(@Validated @RequestBody WorkflowTemplateVO vo) {
+        WorkflowTemplate entity=convert2Entity(vo);
+        flowTemplateService.modify(entity);
+        WorkflowTemplateVO newVO = convert2VO(entity);
+        return ResultUtil.success(newVO);
+    }
+
+    /**
+    * 删除数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+    */
+    @DeleteMapping("/{id}")
+    @SystemLog(value = "流程模板-删除")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:remove')")
+    public ResponseEntity<Result> remove(@PathVariable("id") String id) {
+        flowTemplateService.remove(id);
+        return ResultUtil.success();
+    }
+
+    /**
+    * 分页
+    */
+    @GetMapping("/page")
+    @SystemLog(value = "流程模板-分页")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:query')")
+    public ResponseEntity<Result> page(WorkflowTemplateVO queryVO, PageInfo pageInfo, SortInfo sortInfo) {
+        //构造分页对象
+        IPage<WorkflowTemplate> page = new Page<WorkflowTemplate>(pageInfo.getPageNum(), pageInfo.getPageSize());
+
+
+        //构造查询条件
+        QueryWrapper<WorkflowTemplate> queryWrapper = QueryGenerator.generateQueryWrapper(WorkflowTemplate.class,queryVO,sortInfo);
+
+        //查询数据
+        flowTemplateService.page(page, queryWrapper);
+        //转换vo
+        IPage<WorkflowTemplateVO> pageVO = mapperFacade.map(page, IPage.class);
+        List<WorkflowTemplateVO>  flowTemplateVOList=convert2VO(page.getRecords());
+        pageVO.setRecords(flowTemplateVOList);
+        return ResultUtil.success(pageVO);
+    }
+
+
+    /**
+    * 列表
+    */
+    @GetMapping("/list")
+    @SystemLog(value = "流程模板-列表")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:query')")
+    public ResponseEntity<Result> list(WorkflowTemplateVO queryVO, SortInfo sortInfo) {
+        //构造查询条件
+        QueryWrapper<WorkflowTemplate> queryWrapper = QueryGenerator.generateQueryWrapper(WorkflowTemplate.class, queryVO,sortInfo);
+        List<WorkflowTemplate> list= flowTemplateService.list(queryWrapper);
+        //转换vo
+        List<WorkflowTemplateVO>  flowTemplateVOList=convert2VO(list);
+        return ResultUtil.success(flowTemplateVOList);
+    }
+
+    /**
+    * 获取单条数据
+    */
+    @GetMapping("/{id}")
+    @SystemLog(value = "流程模板-详情")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:view')")
+    public ResponseEntity<Result> get(@PathVariable("id") String id) {
+        WorkflowTemplate entity = flowTemplateService.query(id);
+        WorkflowTemplateVO vo = convert2VO(entity);
+        return ResultUtil.success(vo);
+    }
+
+    /**
+    * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+    */
+    @PostMapping("/{id}")
+    @SystemLog(value = "流程模板-复制新增")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:addByCopy')")
+    public ResponseEntity<Result> addByCopy(@PathVariable("id") String id) {
+        flowTemplateService.addByCopy(id);
+        return ResultUtil.success();
+    }
+
+
+
+    //endregion
+
+    //region 扩展操作
+    /**
+     * 启用
+     */
+
+    @PutMapping("/{id}/enable")
+    @SystemLog(value = "流程模板-启用")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:enable')")
+    public ResponseEntity<Result> enable(@PathVariable("id") String id) {
+
+        flowTemplateService.enable(id);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 停用
+     */
+
+    @PutMapping("/{id}/disable")
+    @SystemLog(value = "流程模板-停用")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:disable')")
+    public ResponseEntity<Result> disable(@PathVariable("id") String id) {
+
+        flowTemplateService.disable(id);
+        return ResultUtil.success();
+    }
+
+
+    //endregion
+
+    //region 辅助操作
+
+    /**
+    * 将单条实体转换为视图对象
+    *
+    * @param entity 实体
+    * @return {@link EntityVO} 视图对象
+    */
+    private WorkflowTemplateVO convert2VO(WorkflowTemplate entity){
+        WorkflowTemplateVO vo=mapperFacade.map(entity, WorkflowTemplateVO.class);
+        vo.setCategoryName(dictionaryUtil.getNameByCode("ProcessDefinitionCategory", entity.getCategory()));
+        vo.setStatusName(dictionaryUtil.getNameByCode("Status", entity.getStatus()));
+        return vo;
+    }
+
+    /**
+    * 将实体列表转换为视图对象列表
+    *
+    * @param entityList 实体列表
+    * @return {@link List}<{@link EntityVO}> 视图对象列表
+    */
+    private List<WorkflowTemplateVO> convert2VO(List<WorkflowTemplate> entityList) {
+        List<WorkflowTemplateVO> voList = new ArrayList<>(entityList.size());
+
+        entityList.stream().forEach(x -> {
+            WorkflowTemplateVO vo = convert2VO(x);
+            voList.add(vo);
+        });
+        return voList;
+    }
+
+
+    private WorkflowTemplate convert2Entity(WorkflowTemplateVO vo){
+        WorkflowTemplate entity=mapperFacade.map(vo, WorkflowTemplate.class);
+        return entity;
+    }
+
+    //endregion
+ }

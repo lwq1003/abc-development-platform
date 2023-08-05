@@ -40,8 +40,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private CacheUtil cacheUtil;
 
 
+
     @Override
     public UserDetails loadUserByUsername(String account) {
+
+
         // 登录系统时，对用户名大小写不敏感
         account = account.toLowerCase();
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
@@ -73,6 +76,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * 填充用户对象常用属性
      */
     private void fillMyUserDetails(MyUserDetails userDetails, User user) {
+        // TODO：基于JWT令牌模式，每次请求都会填充如下信息，进行大量数据库查询操作，性能低，考虑使用redis缓存
+
+
         userDetails.setUserId(user.getId());
         userDetails.setName(user.getName());
         userDetails.setOrganizationId(user.getOrganization());

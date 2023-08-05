@@ -205,6 +205,12 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
                     menus.addAll(children);
                 }
 
+            }else if (permission.getType().equals(PermissionTypeEnum.GROUP.toString())) {
+                // 实际存在模块-分组-页面的情况，该分支将此部分的页面也纳入路由
+                List<MenuTreeVO> children = generateMenu(list, permission.getId());
+                if (children != null && children.size() > 0) {
+                    menus.addAll(children);
+                }
             }
         }
         return menus;

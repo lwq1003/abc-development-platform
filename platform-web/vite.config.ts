@@ -144,6 +144,16 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '/notification': {
           target: env.VITE_BASE_URL,
           changeOrigin: true
+        },
+        //  工作流模块
+        '/workflow': {
+          target: env.VITE_BASE_URL,
+          changeOrigin: true
+        },
+        //  业务流程模块
+        '/businessflow': {
+          target: env.VITE_BASE_URL,
+          changeOrigin: true
         }
         // ,
         // // 选项写法

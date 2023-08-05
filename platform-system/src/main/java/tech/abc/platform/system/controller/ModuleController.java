@@ -139,6 +139,17 @@ public class ModuleController extends BaseController {
         return ResultUtil.success(vo);
     }
 
+    /**
+     * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+     */
+    @PostMapping("/{id}")
+    @SystemLog(value = "模块-复制新增")
+    @PreAuthorize("hasPermission(null,'system:module:addByCopy')")
+    public ResponseEntity<Result> addByCopy(@PathVariable("id") String id) {
+        moduleService.addByCopy(id);
+        return ResultUtil.success();
+    }
+
     // endregion
 
     // region 扩展操作

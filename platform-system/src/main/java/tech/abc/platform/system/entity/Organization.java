@@ -62,4 +62,7 @@ public class Organization extends BaseEntity {
     @TableField("remark")
     private String remark;
 
+
+
+
 }

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.abc.platform.workflow.mapper.ProcessTaskMapper">
+
+    <!-- 公用查询-->
+    <sql id="query">select * from (
+        select t1.ID_ AS id, #任务标识
+        t1.NAME_ as node_name, #环节名称
+        t1.CREATE_TIME_ as create_time, #任务创建时间
+        t1.ASSIGNEE_ as assignee,  #处理人
+        t5.name as assignee_name,  #处理人姓名
+        t1.TASK_DEF_KEY_ as task_definition_key, #任务定义标识
+        t1.OWNER_ as owner, #任务拥有者
+        t1.PROC_INST_ID_ AS process_instance_id, #流程实例标识
+        t3.PROC_DEF_ID_ as process_definition_id, #流程定义标识
+        t2.NAME_ as process_definition_name, #流程名称
+        t3.PROC_DEF_KEY_ as process_definition_key, #流程编码
+        t3.START_USER_ID_ as process_apply_id, #申请人id
+        t4.name as process_apply_name, #申请人姓名
+        t3.BUSINESS_KEY_ as business_no, #单号
+        t1.DELEGATION_ as delegation, #委派状态
+        t1.EXECUTION_ID_ as  execution_id #执行流标识
+        from act_ru_task t1
+        LEFT JOIN act_re_procdef t2
+        on t1.PROC_DEF_ID_=t2.id_
+        LEFT JOIN act_hi_procinst t3
+        on t1.PROC_INST_ID_=t3.PROC_INST_ID_
+        LEFT JOIN sys_user t4
+        on t3.START_USER_ID_=t4.id
+        LEFT JOIN sys_user t5
+        on t1.ASSIGNEE_=t5.id
+        ) t
+        ${ew.customSqlSegment}
+    </sql>
+
+
+
+    <!-- 流程任务 结果映射 -->
+    <resultMap id="resultMap" type="tech.abc.platform.workflow.entity.ProcessTask">
+        <id property="id" column="id"/>
+        <result property="nodeName" column="node_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="assignee" column="assignee"/>
+        <result property="assigneeName" column="assignee_name"/>
+        <result property="taskDefinitionKey" column="task_definition_key"/>
+        <result property="owner" column="owner"/>
+        <result property="processInstanceId" column="process_instance_id"/>
+        <result property="processDefinitionId" column="process_definition_id"/>
+        <result property="processDefinitionName" column="process_definition_name"/>
+        <result property="processDefinitionKey" column="process_definition_key"/>
+        <result property="processApplyId" column="process_apply_id"/>
+        <result property="processApplyName" column="process_apply_name"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="delegation" column="delegation"/>
+        <result property="executionId" column="execution_id"/>
+    </resultMap>
+    <!-- 待办任务查询-->
+    <sql id="toTodoTaskQuery">select * from (
+        select t1.ID_ AS id, #任务标识
+        t1.NAME_ as node_name, #环节名称
+        t1.CREATE_TIME_ as create_time, #任务创建时间
+        t1.ASSIGNEE_ as assignee,  #处理人
+        t5.name as assignee_name,  #处理人姓名
+        t1.TASK_DEF_KEY_ as task_definition_key, #任务定义标识
+        t1.OWNER_ as owner, #任务拥有者
+        t1.PROC_INST_ID_ AS process_instance_id, #流程实例标识
+        t3.PROC_DEF_ID_ as process_definition_id, #流程定义标识
+        t2.NAME_ as process_definition_name, #流程名称
+        t3.PROC_DEF_KEY_ as process_definition_key, #流程编码
+        t3.START_USER_ID_ as process_apply_id, #申请人id
+        t4.name as process_apply_name, #申请人姓名
+        t3.BUSINESS_KEY_ as business_no, #单号
+        t1.DELEGATION_ as delegation, #委派状态
+        t8.user_id as candidate_user, # 候选人
+        t1.EXECUTION_ID_ as  execution_id #执行流标识
+        from act_ru_task t1
+        LEFT JOIN act_re_procdef t2
+        on t1.PROC_DEF_ID_=t2.id_
+        LEFT JOIN act_hi_procinst t3
+        on t1.PROC_INST_ID_=t3.PROC_INST_ID_
+        LEFT JOIN sys_user t4
+        on t3.START_USER_ID_=t4.id
+        LEFT JOIN sys_user t5
+        on t1.ASSIGNEE_=t5.id
+        LEFT JOIN act_ru_identitylink t6
+        on t1.ID_=t6.TASK_ID_
+        LEFT JOIN sys_user_group t7
+        on t7.ID=t6.GROUP_ID_
+        LEFT JOIN sys_group_user t8
+        on t8.group_id=t7.id
+        ) t
+        ${ew.customSqlSegment}
+    </sql>
+
+
+
+    <!-- 待办任务 结果映射 -->
+    <resultMap id="toTodoTaskResultMap" type="tech.abc.platform.workflow.entity.ProcessTask">
+        <id property="id" column="id"/>
+        <result property="nodeName" column="node_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="assignee" column="assignee"/>
+        <result property="assigneeName" column="assignee_name"/>
+        <result property="taskDefinitionKey" column="task_definition_key"/>
+        <result property="owner" column="owner"/>
+        <result property="processInstanceId" column="process_instance_id"/>
+        <result property="processDefinitionId" column="process_definition_id"/>
+        <result property="processDefinitionName" column="process_definition_name"/>
+        <result property="processDefinitionKey" column="process_definition_key"/>
+        <result property="processApplyId" column="process_apply_id"/>
+        <result property="processApplyName" column="process_apply_name"/>
+        <result property="businessNo" column="business_no"/>
+        <result property="delegation" column="delegation"/>
+        <result property="candidateUser" column="candidate_user"/>
+        <result property="executionId" column="execution_id"/>
+    </resultMap>
+
+    <!-- 分页查询 -->
+    <select id="customPage"  resultMap="resultMap">
+        <include refid="query"></include>
+    </select>
+
+    <!-- 单条查询 -->
+    <select id="get"  resultMap="resultMap">
+        <include refid="query"></include>
+    </select>
+
+
+    <!-- 待办任务查询 -->
+    <select id="todoTask"  resultMap="toTodoTaskResultMap">
+        <include refid="toTodoTaskQuery"></include>
+    </select>
+
+</mapper>

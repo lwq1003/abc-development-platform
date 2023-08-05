@@ -137,6 +137,16 @@ platform-config:
     senderAddress: sealy321@126.com
 
 
-
+#工作流配置
+camunda:
+  bpm:
+#    admin-user:
+#      id: admin
+#      password: admin
+#      firstName: Kermit
+    database:
+      type: mysql
+      schema-update: true
+    history-level: full
 
 

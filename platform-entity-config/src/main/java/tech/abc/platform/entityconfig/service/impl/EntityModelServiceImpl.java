@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.entityconfig.constant.EntityConfigConstant;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
 import tech.abc.platform.entityconfig.entity.EntityView;
@@ -51,7 +52,7 @@ public class EntityModelServiceImpl extends BaseServiceImpl<EntityModelMapper, E
     public EntityModel init() {
         EntityModel entity = new EntityModel();
         // 默认值处理
-        entity.setParentModel("BUSINESS_MODEL");
+        entity.setParentModel(EntityConfigConstant.BUSINESS_MODEL_ID);
         entity.setMainModelFlag("NO");
         entity.setSelfReferenceFlag("NO");
         return entity;

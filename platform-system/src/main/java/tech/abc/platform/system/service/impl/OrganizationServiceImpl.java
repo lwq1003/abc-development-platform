@@ -3,15 +3,18 @@ package tech.abc.platform.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
+import tech.abc.platform.common.constant.TreeDefaultConstant;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.notification.service.SystemMessageService;
 import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.entity.User;
+import tech.abc.platform.system.enums.OrganizationTypeEnum;
 import tech.abc.platform.system.exception.OrganizationExceptionEnum;
 import tech.abc.platform.system.mapper.OrganizationMapper;
 import tech.abc.platform.system.service.OrganizationService;
@@ -139,6 +142,31 @@ public class OrganizationServiceImpl extends BaseServiceImpl<OrganizationMapper,
         Organization entity = query(id);
         entity.setStatus(StatusEnum.DEAD.name());
         modify(entity);
+    }
+
+    @Override
+    public String getFullName(String id) {
+        // 逐级查找组织机构类型
+        List<Organization> list = this.list();
+        String currentOrganizationId = id;
+        StringBuilder organizationFullName = new StringBuilder();
+
+        do {
+            // 取当前组织机构
+            Organization currentOrganization = null;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getId().equals(currentOrganizationId)) {
+                    currentOrganization = list.get(i);
+                    break;
+                }
+            }
+            organizationFullName.insert(0, currentOrganization.getName()).insert(0, "/");
+
+            // 指向上级
+            currentOrganizationId = currentOrganization.getOrganization();
+        }
+        while (!currentOrganizationId.equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID));
+        return organizationFullName.toString();
     }
 
 

@@ -7,6 +7,7 @@ import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.system.entity.Module;
+import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.mapper.ModuleMapper;
 import tech.abc.platform.system.service.ModuleService;
 
@@ -95,6 +96,14 @@ public class ModuleServiceImpl extends BaseServiceImpl<ModuleMapper, Module> imp
         }
         return result;
     }
+
+
+    @Override
+    protected void copyPropertyHandle(Module entity, String... value) {
+        // 主属性后附加“副本”用于区分
+        entity.setName(entity.getName() + " 副本");
+    }
+
 
 }
 

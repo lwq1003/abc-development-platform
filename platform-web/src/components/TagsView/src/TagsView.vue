@@ -13,6 +13,12 @@ import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
 import { useScrollTo } from '@/hooks/event/useScrollTo'
 
+import { useEmitt } from '@/hooks/web/useEmitt'
+const { emitter } = useEmitt()
+emitter.on('closeCurrentTab', () => {
+  closeSelectedTag(unref(selectedTag) as RouteLocationNormalizedLoaded)
+})
+
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('tags-view')

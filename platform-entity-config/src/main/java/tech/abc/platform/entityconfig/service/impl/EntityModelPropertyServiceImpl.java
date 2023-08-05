@@ -11,6 +11,7 @@ import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.entityconfig.constant.EntityConfigConstant;
 import tech.abc.platform.entityconfig.entity.Entity;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
@@ -22,6 +23,7 @@ import tech.abc.platform.entityconfig.service.EntityService;
 import tech.abc.platform.system.entity.Module;
 import tech.abc.platform.system.service.ModuleService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,12 +145,22 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
     @Override
     public List<EntityModelProperty> getFullPropertyByEntityModelId(String entityModelId) {
         EntityModel entityModel = entityModelService.query(entityModelId);
-        String parentModelId = entityModelService.getIdByCode(entityModel.getParentModel());
+        List<EntityModelProperty> parentModelPropertyList=new ArrayList<>();
+        // 循环向上查找父级模型
+        while(true){
+            entityModel=entityModelService.query(entityModel.getParentModel());
+            // 获取父级模型属性列表
+            List<EntityModelProperty> currentPropertyList = getByEntityModelId(entityModel.getId());
+            CollectionUtils.addAll(parentModelPropertyList, currentPropertyList.iterator());
 
-        // 获取父级模型属性列表
-        List<EntityModelProperty> parentModelPropertyList = getByEntityModelId(parentModelId);
+            // 找到顶层节点标识模型停止
+            if(entityModel.getId().equals(EntityConfigConstant.ID_MODEL_ID)){
+                break;
+            }
 
-        // 获取实体模型属性列表
+        };
+
+        // 获取实体模型自身属性列表
         List<EntityModelProperty> entityModelPropertyList = getByEntityModelId(entityModelId);
 
         CollectionUtils.addAll(entityModelPropertyList, parentModelPropertyList.iterator());

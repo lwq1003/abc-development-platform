@@ -25,6 +25,10 @@ public enum CommonException implements ExceptionInterface {
      */
     NOT_EXIST("对象不存在"),
     /**
+     * 对象不存在
+     */
+    OBJECT_NOT_EXIST("对象不存在:{0}"),
+    /**
      * 编码已存在
      */
     CODE_EXIST("编码已存在"),

@@ -4,7 +4,7 @@
 import { Dialog } from '@/components/abc/Dialog'
 
 export const treeReferenceMixin = {
-  emits: ['update:modelValue', 'my-change', 'change-selected', 'change'],
+  emits: ['update:modelValue', 'my-change', 'change-selected'],
   components: {
     Dialog
   },
@@ -111,17 +111,18 @@ export const treeReferenceMixin = {
     confirm() {
       // 更新父组件绑定值
       this.$emit('update:modelValue', this.currentId)
-      this.$emit('my-change', this.currentId)
+      this.$emit('my-change', this.currentId, this.currentName)
       this.visible = false
     },
     // 清空选择
     clear() {
       this.displayName = ''
       this.$emit('update:modelValue', '')
-      this.$emit('my-change', '')
+      this.$emit('my-change', '', '')
     },
     // 获取选中的名称
     getSelectedName() {
+      console.log(this.modelValue)
       if (this.modelValue) {
         this.api.get(this.modelValue).then((res) => {
           this.displayName = res.data[this.nameKey]

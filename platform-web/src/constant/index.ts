@@ -8,6 +8,8 @@ import * as entityconfig from '@/modules/entityconfig/constant'
 import * as cip from '@/modules/cip/constant'
 import * as scheduler from '@/modules/scheduler/constant'
 import * as notification from '@/modules/notification/constant'
+import * as workflow from '@/modules/workflow/constant'
+import * as businessflow from '@/modules/businessflow/constant'
 export default {
   ...common,
   ...system,
@@ -15,5 +17,7 @@ export default {
   ...entityconfig,
   ...cip,
   ...scheduler,
-  ...notification
+  ...notification,
+  ...workflow,
+  ...businessflow
 }

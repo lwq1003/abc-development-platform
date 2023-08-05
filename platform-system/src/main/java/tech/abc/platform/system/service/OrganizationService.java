@@ -36,5 +36,13 @@ public interface OrganizationService extends BaseService<Organization> {
      */
     void disable(String id);
 
+    /**
+     * 获取全路径
+     *
+     * @param id id
+     * @return {@link String}
+     */
+     String getFullName(String id);
+
 }
 

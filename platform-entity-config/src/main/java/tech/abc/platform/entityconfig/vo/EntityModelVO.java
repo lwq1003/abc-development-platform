@@ -81,6 +81,10 @@ public class EntityModelVO extends BaseVO {
     private String selfReferenceFlagName;
 
     /********实体类*****/
+    /**
+     * 实体
+     */
+    private String entityName;
 
     /********范围查询*****/
 

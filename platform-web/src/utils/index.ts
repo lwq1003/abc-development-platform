@@ -65,6 +65,20 @@ export const trim = (str: string) => {
   return str.replace(/(^\s*)|(\s*$)/g, '')
 }
 
+// 缩略
+export const abbreviate = (str: string, length: number) => {
+  // 长度未超出时，直接返回原字符串
+  if (str) {
+    if (str.length <= length) {
+      return str
+    }
+    // 否则返回缩略
+    return str.substring(0, length) + '……'
+  } else {
+    return ''
+  }
+}
+
 /**
  * @param {Date | number | string} time 需要转换的时间
  * @param {String} fmt 需要转换的格式 如 yyyy-MM-dd、yyyy-MM-dd HH:mm:ss
@@ -128,4 +142,15 @@ function _rid() {
  */
 export function uuid() {
   return `${_tid()}_${_rid()}_${_rid()}_${_rid()}`
+}
+
+import { useEmitt } from '@/hooks/web/useEmitt'
+const { emitter } = useEmitt()
+/**
+ * @param path 路由path
+ * @param name 路由name
+ * 关闭tab页，和头部的tab button关闭效果一致
+ */
+export function closeCurrentTab() {
+  emitter.emit('closeCurrentTab')
 }

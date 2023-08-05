@@ -14,7 +14,11 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
+<#list entityModelPropertyList as item>
+    <#if item.dataType=="SERIAL_NO">
 import tech.abc.platform.entityconfig.service.EntityModelService;
+    </#if>
+</#list>
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 /**
 * ${table.comment!} 服务实现类
@@ -81,7 +85,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 <#list entityModelPropertyList as item>
     <#if item.dataType=="SERIAL_NO">
         //自动生成流水号
-        entity.setSerialNo(entityModelService.generateSerialNo("${entity}"));
+        entity.set${item.code?cap_first}(entityModelService.generateSerialNo("${entity}"));
     </#if>
 </#list>
     }

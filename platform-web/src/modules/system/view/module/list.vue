@@ -30,6 +30,13 @@
         @click="batchRemove"
         >删除</el-button
       >
+      <el-button
+        v-permission="pageCode + 'addByCopy'"
+        type="primary"
+        icon="CopyDocument"
+        @click="addByCopy"
+        >复制新增</el-button
+      >
     </div>
 
     <el-card style="width: 100%">
