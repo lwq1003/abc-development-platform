@@ -12,6 +12,19 @@ export const workflowTemplate = Object.assign({}, COMMON_METHOD, {
   },
   disable(id) {
     return request.put({ url: this.serveUrl + id + '/disable' })
+  },
+  publish(id) {
+    return request.put({ url: this.serveUrl + id + '/publish' })
+  },
+  upgrade(id) {
+    return request.put({ url: this.serveUrl + id + '/upgrade' })
+  },
+  // 生成临时版本
+  generateTemporaryVersion(processDefinitionKey) {
+    return request.get({
+      url: this.serveUrl + 'generateTemporaryVersion',
+      params: { processDefinitionKey }
+    })
   }
 })
 
@@ -101,74 +114,25 @@ export const workflowNodeConfig = Object.assign({}, COMMON_METHOD, {
     return request.get({
       url: this.serveUrl + 'getNodeConfig?' + qs.stringify({ processDefinitionId, definitionKey })
     })
-  },
-  // 重置环节设置
-  resetNodeConfig(processDefinitionId, tempProcessDefinitionId, definitionKey) {
-    return request.put({
-      url: this.serveUrl + 'resetNodeConfig',
-      data: qs.stringify({ processDefinitionId, tempProcessDefinitionId, definitionKey })
-    })
-  },
-  // 保存环节设置
-  saveNodeConfig(params) {
-    return request.post({ url: this.serveUrl + 'saveNodeConfig', data: params })
   }
 })
 
-// // 环节权限设置
-// export const workflowRightConfig = Object.assign({}, COMMON_METHOD, {
-//   serveUrl: '/' + moduleName + '/' + 'workflowRightConfig' + '/',
-//   // 获取首环节权限设置
-//   getFirstNodeConfig(processDefinitionId) {
-//     return request.get({ url: this.serveUrl + 'getFirstNodeConfig?' + qs.stringify({ processDefinitionId }))
-//   },
-//   // 获取环节权限设置
-//   getNodeConfig(processDefinitionId, taskDefinitionKey) {
-//     return request.get({ url: this.serveUrl + 'getNodeConfig?' + qs.stringify({ processDefinitionId, taskDefinitionKey }))
-//   },
-//   // 获取浏览模式环节权限设置
-//   getNodeConfigForView(processDefinitionId) {
-//     return request.get({ url: this.serveUrl + 'getNodeConfigForView?' + qs.stringify({ processDefinitionId }))
-//   },
-
-//   // 获取设置
-//   getConfig(processDefinitionId, processDefinitionKey, definitionKey) {
-//     return request.get({ url: this.serveUrl + 'getConfig?' + qs.stringify({ processDefinitionId, processDefinitionKey, definitionKey }))
-//   },
-//   // 保存设置
-//   saveConfig(params) {
-//     return request.post({ url: this.serveUrl + 'saveConfig', params)
-//   }
-// }
-// )
-
-// // 监听器
-// export const workflowListener = Object.assign({}, COMMON_METHOD, {
-//   serveUrl: '/' + moduleName + '/' + 'workflowListener' + '/',
-//   enable(id) {
-//     return request.put({ url: this.serveUrl + id + '/enable')
-//   },
-//   disable(id) {
-//     return request.put({ url: this.serveUrl + id + '/disable')
-//   }
-
-// }
-// )
-
-// // 监听器设置
-// export const workflowListenerConfig = Object.assign({}, COMMON_METHOD, {
-//   serveUrl: '/' + moduleName + '/' + 'workflowListenerConfig' + '/'
-//   // // 获取环节设置
-//   // getNodeConfig(processDefinitionId, definitionKey) {
-//   //   return request.get({ url: this.serveUrl + 'getNodeConfig?' + qs.stringify({ processDefinitionId, definitionKey }))
-//   // },
-//   // // 重置环节设置
-//   // resetNodeConfig(processDefinitionId, tempProcessDefinitionId, definitionKey) {
-//   //   return request.put({ url: this.serveUrl + 'resetNodeConfig', qs.stringify({ processDefinitionId, tempProcessDefinitionId, definitionKey }))
-//   // },
-//   // // 保存环节设置
-//   // saveNodeConfig(params) {
-//   //   return request.post({ url: this.serveUrl + 'saveNodeConfig', params)
-//   // }
-// }
-// )
+// 环节权限设置
+export const workflowNodePermissionConfig = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'workflowNodePermissionConfig' + '/',
+  // 获取流程环节权限设置
+  getNodePermissionConfig(processDefinitionId, definitionKey) {
+    return request.get({
+      url:
+        this.serveUrl +
+        'getNodePermissionConfig?' +
+        qs.stringify({ processDefinitionId, definitionKey })
+    })
+  },
+  // 获取浏览模式环节权限设置(查询所有区域，将权限设置为只读)
+  getNodePermissionConfigForView(processDefinitionId) {
+    return request.get({
+      url: this.serveUrl + 'getNodePermissionConfigForView?' + qs.stringify({ processDefinitionId })
+    })
+  }
+})

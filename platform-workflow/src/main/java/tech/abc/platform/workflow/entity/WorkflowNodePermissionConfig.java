@@ -11,11 +11,11 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 /**
+ * 工作流节点权限配置
  * 工作流程环节权限配置 实体类
  *
  * @author wqliu
- * @date 2023-07-26
- *
+ * @date 2023-08-08
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -24,10 +24,10 @@ import java.time.LocalDateTime;
 public class WorkflowNodePermissionConfig extends BaseEntity {
 
     /**
-    * 流程实例
+    * 流程定义
     */
-    @TableField("process_instance_id")
-    private String processInstanceId;
+    @TableField("process_definition_id")
+    private String processDefinitionId;
 
     /**
     * 环节标识
@@ -36,40 +36,22 @@ public class WorkflowNodePermissionConfig extends BaseEntity {
     private String nodeId;
 
     /**
-    * 环节名称
-    */
-    @TableField("node_name")
-    private String nodeName;
-
-    /**
-    * 区域标识
-    */
-    @TableField("area_id")
-    private String areaId;
-
-    /**
-    * 处理意见
-    */
-    @TableField("comment")
-    private String comment;
-
-    /**
     * 区域编码
     */
     @TableField("area_code")
     private String areaCode;
 
     /**
-    * 是否可见
+    * 区域名称
     */
-    @TableField("visible_flag")
-    private String visibleFlag;
+    @TableField("area_name")
+    private String areaName;
 
     /**
-    * 是否只读
+    * 权限
     */
-    @TableField("readonly_flag")
-    private String readonlyFlag;
+    @TableField("permission")
+    private String permission;
 
     /********非库表存储属性*****/
 }

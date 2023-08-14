@@ -13,17 +13,17 @@ import lombok.experimental.Accessors;
 * 工作流程环节权限配置 视图对象类
 *
 * @author wqliu
-* @date 2023-07-26
+* @date 2023-08-08
 */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class WorkflowNodePermissionConfigVO extends BaseVO {
     /**
-    * 流程实例
+    * 流程定义
     */
-    @NotBlank(message = "【流程实例】不能为空")
-    private String processInstanceId;
+    @NotBlank(message = "【流程定义】不能为空")
+    private String processDefinitionId;
 
     /**
     * 环节标识
@@ -32,40 +32,22 @@ public class WorkflowNodePermissionConfigVO extends BaseVO {
     private String nodeId;
 
     /**
-    * 环节名称
-    */
-    @NotBlank(message = "【环节名称】不能为空")
-    private String nodeName;
-
-    /**
-    * 区域标识
-    */
-    @NotBlank(message = "【区域标识】不能为空")
-    private String areaId;
-
-    /**
-    * 处理意见
-    */
-    @NotBlank(message = "【处理意见】不能为空")
-    private String comment;
-
-    /**
     * 区域编码
     */
     @NotBlank(message = "【区域编码】不能为空")
     private String areaCode;
 
     /**
-    * 是否可见
+    * 区域名称
     */
-    @NotBlank(message = "【是否可见】不能为空")
-    private String visibleFlag;
+    @NotBlank(message = "【区域名称】不能为空")
+    private String areaName;
 
     /**
-    * 是否只读
+    * 权限
     */
-    @NotBlank(message = "【是否只读】不能为空")
-    private String readonlyFlag;
+    @NotBlank(message = "【权限】不能为空")
+    private String permission;
 
 
     /********非库表存储属性*****/
@@ -74,14 +56,9 @@ public class WorkflowNodePermissionConfigVO extends BaseVO {
 
     /********字典类*****/
     /**
-    * 是否可见
+    * 权限
     */
-    private String visibleFlagName;
-
-    /**
-    * 是否只读
-    */
-    private String readonlyFlagName;
+    private String permissionName;
 
 
     /********实体类、用户单选、组织机构单选*****/

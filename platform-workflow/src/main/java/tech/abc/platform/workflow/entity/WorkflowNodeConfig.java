@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 流程环节配置 实体类
+ * 流程环节人员配置 实体类
  *
  * @author wqliu
  * @date 2023-07-16

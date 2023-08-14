@@ -122,7 +122,6 @@ export const treeReferenceMixin = {
     },
     // 获取选中的名称
     getSelectedName() {
-      console.log(this.modelValue)
       if (this.modelValue) {
         this.api.get(this.modelValue).then((res) => {
           this.displayName = res.data[this.nameKey]

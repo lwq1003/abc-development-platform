@@ -1,17 +1,20 @@
 package tech.abc.platform.workflow.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import java.time.LocalDateTime;
 
 /**
- * 流程模板 实体类
+ * 工作流程模板 实体类
  *
  * @author wqliu
- * @date 2023-07-06
+ * @date 2023-08-10
  *
  */
 @Data
@@ -45,7 +48,7 @@ public class WorkflowTemplate extends BaseEntity {
     private String templateVersion;
 
     /**
-    * 状态
+    * 启用状态
     */
     @TableField("status")
     private String status;
@@ -57,10 +60,22 @@ public class WorkflowTemplate extends BaseEntity {
     private String model;
 
     /**
-     * 排序
-     */
+    * 排序
+    */
     @TableField("order_no")
     private String orderNo;
+
+    /**
+    * 模板状态
+    */
+    @TableField("template_status")
+    private String templateStatus;
+
+    /**
+    * 流程定义
+    */
+    @TableField("process_definition_id")
+    private String processDefinitionId;
 
     /********非库表存储属性*****/
 }

@@ -2,12 +2,15 @@ package tech.abc.platform.workflow.enums;
 
 import lombok.Getter;
 
+
 /**
- * 用户状态
+ * 流程实例状态
+ *
  * @author wqliu
+ * @date 2023-08-10
  */
 @Getter
-public enum FlowStatusEnum {
+public enum WorkflowInstanceStatusEnum {
 
     /**
      * 运行

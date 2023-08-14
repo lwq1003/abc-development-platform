@@ -16,8 +16,15 @@
         <el-form-item label="编码">
           <QueryText v-model="queryCondition.code" type="LK" />
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="启用状态">
           <dictionary-select v-model="queryCondition.status" code="Status" multiple />
+        </el-form-item>
+        <el-form-item label="模板状态">
+          <dictionary-select
+            v-model="queryCondition.templateStatus"
+            code="WorkflowTemplateStatus"
+            multiple
+          />
         </el-form-item>
         <el-form-item style="float: right">
           <QueryButton :page-code="pageCode" />
@@ -43,13 +50,6 @@
         icon="CopyDocument"
         @click="addByCopy"
         >复制新增</el-button
-      >
-      <el-button
-        v-permission="pageCode + 'importTemplate'"
-        type="primary"
-        icon="Download"
-        @click="importTemplate"
-        >导入</el-button
       >
     </div>
 
@@ -82,12 +82,28 @@
         />
         <el-table-column fixed="right" label="操作" width="250">
           <template #default="scope">
-            <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
+            <el-button
+              v-permission="pageCode + 'modify'"
+              type="primary"
+              v-show="scope.row.templateStatus == 'UNPUBLISHED'"
+              @click="modify(scope.row)"
               >修改</el-button
             >
-            <el-button v-permission="pageCode + 'remove'" type="primary" @click="remove(scope.row)"
-              >删除</el-button
+            <el-button
+              v-show="scope.row.templateStatus == 'RUNNING'"
+              type="primary"
+              v-permission="pageCode + 'upgrade'"
+              @click="upgrade(scope.row)"
+              >升级</el-button
             >
+            <el-button
+              v-show="scope.row.templateStatus == 'UNPUBLISHED'"
+              type="primary"
+              v-permission="pageCode + 'publish'"
+              @click="publish(scope.row)"
+              >发布</el-button
+            >
+
             <el-dropdown class="ml-10px">
               <el-button type="primary">
                 更多
@@ -107,10 +123,11 @@
                   </el-dropdown-item>
                   <el-dropdown-item>
                     <el-button
+                      v-show="scope.row.templateStatus == 'UNPUBLISHED'"
+                      v-permission="pageCode + 'remove'"
                       text
-                      v-permission="pageCode + 'exportTemplate'"
-                      @click="exportTemplate(scope.row)"
-                      >导出</el-button
+                      @click="remove(scope.row)"
+                      >删除</el-button
                     >
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -154,18 +171,7 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
-      // 排序信息
-      sortInfo: {
-        sort_field: 'id',
-        sort_sortType: 'descending'
-      },
       columnList: [
-        {
-          prop: 'categoryName',
-          label: '类别',
-          show: true,
-          showOverflowTooltip: true
-        },
         {
           prop: 'name',
           label: '名称',
@@ -188,10 +194,29 @@ export default {
           sortable: true
         },
         {
-          prop: 'statusName',
-          label: '状态',
+          prop: 'categoryName',
+          label: '类别',
           show: true,
           showOverflowTooltip: true
+        },
+        {
+          prop: 'statusName',
+          label: '启用状态',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
+          prop: 'templateStatusName',
+          label: '模板状态',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
+          prop: 'processDefinitionId',
+          label: '流程定义',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
         },
         {
           prop: 'orderNo',
@@ -204,17 +229,38 @@ export default {
       queryCondition: {
         //默认值处理
         category: '',
-        status: 'NORMAL'
+        status: 'NORMAL',
+        templateStatus: ['UNPUBLISHED', 'RUNNING']
       }
     }
   },
 
   methods: {
-    importTemplate() {
-      console.log('待实现')
+    publish(row) {
+      this.$confirm('是否发布？', '确认', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.api.publish(row.id).then(() => {
+            this.refresh()
+          })
+        })
+        .catch(() => {
+          this.$message.info('已取消')
+        })
     },
-    exportTemplate(row) {
-      console.log('export')
+    upgrade(row) {
+      this.$confirm('是否升级？', '确认', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.api.upgrade(row.id).then(() => {
+            this.refresh()
+          })
+        })
+        .catch(() => {
+          this.$message.info('已取消')
+        })
     }
   }
 }

@@ -1,6 +1,7 @@
 package tech.abc.platform.workflow.controller;
 
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RestController;
 import tech.abc.platform.common.base.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import tech.abc.platform.common.vo.PageInfo;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.workflow.entity.WorkflowNodePermissionConfig;
+
 import tech.abc.platform.workflow.service.WorkflowNodePermissionConfigService;
 import tech.abc.platform.workflow.vo.WorkflowNodePermissionConfigVO;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tech.abc.platform.workflow.vo.WorkflowRightConfigVO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +34,7 @@ import java.util.Map;
 * 工作流程环节权限配置 前端控制器类
 *
 * @author wqliu
-* @date 2023-07-26
+* @date 2023-08-07
 */
 @RestController
 @RequestMapping("/workflow/workflowNodePermissionConfig")
@@ -155,6 +159,38 @@ public class WorkflowNodePermissionConfigController extends BaseController {
     //endregion
 
     //region 扩展操作
+    /**
+     * 获取环节权限设置
+     */
+    @SystemLog(value = "工作流程环节权限配置-获取环节权限设置")
+    @GetMapping("/getNodePermissionConfig")
+    @PreAuthorize("hasPermission(null,'workflow:workflowNodePermissionConfig:query')")
+    public ResponseEntity<Result> getNodePermissionConfig(String processDefinitionId,
+                                          String definitionKey) {
+        List<WorkflowNodePermissionConfig> list = workflowNodePermissionConfigService.getNodePermissionConfig(processDefinitionId,
+                definitionKey);
+        //转换vo
+        //转换vo
+        List<WorkflowNodePermissionConfigVO>  workflowNodePermissionConfigVOList=convert2VO(list);
+        return ResultUtil.success(workflowNodePermissionConfigVOList);
+    }
+
+
+    /**
+     * 获取环节权限设置
+     */
+    @SystemLog(value = "工作流程环节权限配置-获取表单浏览模式下权限")
+    @GetMapping("/getNodePermissionConfigForView")
+    @PreAuthorize("hasPermission(null,'workflow:workflowNodePermissionConfig:query')")
+    public ResponseEntity<Result> getNodePermissionConfigForView(String processDefinitionId,
+                                                          String definitionKey) {
+        List<WorkflowNodePermissionConfig> list = workflowNodePermissionConfigService.getNodePermissionConfigForView(processDefinitionId);
+
+        //转换vo
+        List<WorkflowNodePermissionConfigVO>  workflowNodePermissionConfigVOList=convert2VO(list);
+        return ResultUtil.success(workflowNodePermissionConfigVOList);
+    }
+
 
     //endregion
 
@@ -168,8 +204,7 @@ public class WorkflowNodePermissionConfigController extends BaseController {
     */
     private WorkflowNodePermissionConfigVO convert2VO(WorkflowNodePermissionConfig entity){
         WorkflowNodePermissionConfigVO vo=mapperFacade.map(entity,WorkflowNodePermissionConfigVO.class);
-        vo.setVisibleFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getVisibleFlag()));
-        vo.setReadonlyFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getReadonlyFlag()));
+        vo.setPermissionName(dictionaryUtil.getNameByCode("NodePermissionCode", entity.getPermission()));
         return vo;
     }
 

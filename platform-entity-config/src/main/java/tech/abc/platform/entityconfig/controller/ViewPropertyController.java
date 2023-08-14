@@ -218,7 +218,6 @@ public class ViewPropertyController extends BaseController {
     @SystemLog(value = "视图属性-清空")
     @PreAuthorize("hasPermission(null,'entityconfig:viewQueryCondition:remove')")
     public ResponseEntity<Result> clear(@PathVariable String viewId) {
-        log.info("视图标识：{}", viewId);
         viewPropertyService.clear(viewId);
         return ResultUtil.success();
     }

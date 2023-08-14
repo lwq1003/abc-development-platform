@@ -1,7 +1,7 @@
 <template>
   <div>
     <basic-info :entity-data="entityData" />
-    <el-card v-show="rightConfigData.applyArea.visible" class="box-card">
+    <el-card v-show="permissionConfigData.applyArea != 'INVISIBLE'">
       <template #header>
         <span>申请信息</span>
       </template>
@@ -12,7 +12,7 @@
         :rules="rules"
         label-width="80px"
         label-position="right"
-        :disabled="rightConfigData.applyArea.readonly"
+        :disabled="permissionConfigData.applyArea == 'READONLY'"
       >
         <el-row>
           <el-col :span="12">
@@ -62,7 +62,7 @@
       </el-form>
     </el-card>
 
-    <el-card v-show="rightConfigData.organizationApproval.visible" class="box-card">
+    <el-card v-show="permissionConfigData.organizationApproval != 'INVISIBLE'">
       <template #header>
         <span>部门审批</span>
       </template>
@@ -73,7 +73,7 @@
         :rules="rules"
         label-width="80px"
         label-position="right"
-        :disabled="rightConfigData.organizationApproval.readonly"
+        :disabled="permissionConfigData.organizationApproval == 'READONLY'"
       >
         <el-row>
           <el-col :span="12">
@@ -102,7 +102,7 @@
       </el-form>
     </el-card>
 
-    <el-card v-show="rightConfigData.hrApproval.visible" class="box-card">
+    <el-card v-show="permissionConfigData.hrApproval != 'INVISIBLE'">
       <template #header>
         <span>人事审批</span>
       </template>
@@ -112,7 +112,7 @@
         :rules="rules"
         label-width="80px"
         label-position="right"
-        :disabled="rightConfigData.hrApproval.readonly"
+        :disabled="permissionConfigData.hrApproval == 'READONLY'"
       >
         <el-row>
           <el-col :span="12">

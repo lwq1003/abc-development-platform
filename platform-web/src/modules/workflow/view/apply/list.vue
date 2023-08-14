@@ -158,7 +158,7 @@ export default {
     },
     // 查看任务实例
     view(row) {
-      this.$router.push({ name: 'flowView', query: { processInstanceId: row.processInstanceId } })
+      this.$router.push({ name: 'flowView', query: { processInstanceId: row.id } })
     }
   }
 }

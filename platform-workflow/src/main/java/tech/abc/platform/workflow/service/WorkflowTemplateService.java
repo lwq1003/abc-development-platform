@@ -70,7 +70,20 @@ public interface WorkflowTemplateService extends BaseService<WorkflowTemplate> {
     * @param processDefinitionKey 流程定义键
     * @return {@link String}
     */
-   String generateTempVersion(String processDefinitionKey);
+   String generateTemporaryVersion(String processDefinitionKey);
 
+   /**
+    * 发布
+    *
+    * @param id id
+    */
+   void publish(String id);
+
+   /**
+    * 升级
+    *
+    * @param id id
+    */
+   void upgrade(String id);
 }
 

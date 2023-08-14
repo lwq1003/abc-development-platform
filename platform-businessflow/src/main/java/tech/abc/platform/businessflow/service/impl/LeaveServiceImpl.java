@@ -20,7 +20,7 @@ import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.workflow.constant.WorkFlowConstant;
 import tech.abc.platform.workflow.entity.WorkflowTemplate;
-import tech.abc.platform.workflow.enums.FlowStatusEnum;
+import tech.abc.platform.workflow.enums.WorkflowInstanceStatusEnum;
 import tech.abc.platform.workflow.service.WorkflowTemplateService;
 
 import java.time.LocalDateTime;
@@ -117,7 +117,7 @@ public class LeaveServiceImpl extends BaseServiceImpl<LeaveMapper, Leave> implem
         //流程实例标识
         entity.setFlowInstanceId(processInstance.getProcessInstanceId());
         //流程状态
-        entity.setFlowStatus(FlowStatusEnum.ACTIVE.name());
+        entity.setFlowStatus(WorkflowInstanceStatusEnum.ACTIVE.name());
         //发起时间
         entity.setInitiateTime(LocalDateTime.now());
 

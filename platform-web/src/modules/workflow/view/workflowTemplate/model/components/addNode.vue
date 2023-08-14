@@ -49,7 +49,10 @@ const addHandle = () => {
     name: '办理环节',
     id: 'node' + uuid(),
     type: 'HANDLE',
-    config: {},
+    config: {
+      personConfig: {},
+      permissionConfig: []
+    },
     child: {}
   }
   emits('update:childNodeP', data)
@@ -188,6 +191,7 @@ const addType = (type) => {
 }
 </style>
 <style lang="less" scoped>
+@import '../css/workflow.css';
 .add-node-popover-body {
   display: flex;
   .add-node-popover-item {

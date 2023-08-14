@@ -44,6 +44,7 @@
 
         <HandleNodeConfig />
         <ConditionNodeConfig />
+        <RootNodeConfig />
       </div>
     </Dialog>
   </div>
@@ -54,14 +55,18 @@ import { Dialog } from '@/components/abc/Dialog'
 import errorDialog from './dialog/errorDialog.vue'
 import nodeWrap from './nodeWrap.vue'
 import HandleNodeConfig from './drawer/HandleNodeConfig.vue'
+import RootNodeConfig from './drawer/RootNodeConfig.vue'
 import ConditionNodeConfig from './drawer/ConditionNodeConfig.vue'
+import { useStore } from '../stores/index'
+let store = useStore()
 export default {
   components: {
     Dialog,
     errorDialog,
     nodeWrap,
     HandleNodeConfig,
-    ConditionNodeConfig
+    ConditionNodeConfig,
+    RootNodeConfig
   },
   props: {
     modelValue: {
@@ -69,6 +74,10 @@ export default {
     },
     // 流程模板名称
     workflowTemplateName: {
+      type: String
+    },
+    // 流程模板编码
+    workflowTemplateCode: {
       type: String
     }
   },
@@ -86,9 +95,9 @@ export default {
       // 默认节点数据
       defaultNodeData: {
         name: '填报',
-        id: '1',
+        id: 'root',
         type: 'ROOT',
-        config: {},
+        config: { permissionConfig: {} },
         branchList: [],
         child: {}
       }
@@ -103,6 +112,12 @@ export default {
         // 否则，加载默认配置
         this.nodeData = this.defaultNodeData
       }
+      // 获取临时版本
+      this.$api.workflow.workflowTemplate
+        .generateTemporaryVersion(this.workflowTemplateCode)
+        .then((res) => {
+          store.setProcessDefinitionId(res.data)
+        })
 
       this.visible = true
     },
@@ -150,7 +165,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import '../css/workflow.css';
 .error-modal-list {
   width: 455px;

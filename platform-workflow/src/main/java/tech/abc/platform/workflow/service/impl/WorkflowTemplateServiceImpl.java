@@ -1,6 +1,8 @@
 package tech.abc.platform.workflow.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -14,44 +16,50 @@ import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
 import org.camunda.bpm.model.bpmn.builder.StartEventBuilder;
-import org.camunda.bpm.model.bpmn.impl.instance.ConditionExpressionImpl;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.*;
 import org.camunda.bpm.model.bpmn.instance.camunda.CamundaTaskListener;
 import org.camunda.bpm.model.xml.ModelInstance;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.StatusEnum;
+import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.system.entity.PermissionItem;
 import tech.abc.platform.system.enums.PermissionTypeEnum;
 import tech.abc.platform.system.service.UserService;
-import tech.abc.platform.workflow.entity.MyConditionNode;
-import tech.abc.platform.workflow.entity.MyFlowNode;
-import tech.abc.platform.workflow.entity.WorkflowNodeConfig;
-import tech.abc.platform.workflow.entity.WorkflowTemplate;
+import tech.abc.platform.workflow.entity.*;
 import tech.abc.platform.workflow.enums.FlowCodeTypeEnum;
 import tech.abc.platform.workflow.enums.NodeModeEnum;
+import tech.abc.platform.workflow.enums.WorkflowTemplateStatusEnum;
+import tech.abc.platform.workflow.exception.WorkflowException;
 import tech.abc.platform.workflow.mapper.WorkflowTemplateMapper;
 import tech.abc.platform.workflow.service.WorkflowNodeConfigService;
+import tech.abc.platform.workflow.service.WorkflowNodePermissionConfigService;
 import tech.abc.platform.workflow.service.WorkflowTemplateService;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
-* 流程模板 服务实现类
-*
-* @author wqliu
-* @date 2023-07-06
-*/
+ * 流程模板 服务实现类
+ *
+ * @author wqliu
+ * @date 2023-07-06
+ */
 @Service
 @Slf4j
 public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplateMapper, WorkflowTemplate> implements WorkflowTemplateService {
 
+    /**
+     * 默认模板版本
+     */
+    public static final String DEFAULT_TEMPLATE_VERSION = "1.0";
     @Autowired
     private RepositoryService repositoryService;
 
@@ -59,36 +67,40 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     private UserService userService;
 
     @Autowired
-    private WorkflowNodeConfigService flowNodeConfigService;
+    private WorkflowNodeConfigService workflowNodeConfigService;
+
+    @Autowired
+    private WorkflowNodePermissionConfigService workflowNodePermissionConfigService;
 
 
     @Override
     public WorkflowTemplate init() {
-        WorkflowTemplate entity=new WorkflowTemplate();
+        WorkflowTemplate entity = new WorkflowTemplate();
         // 预先分配标识
         entity.setId(IdWorker.getIdStr());
-        //默认值处理
+        // 默认值处理
         entity.setCategory("");
         entity.setStatus("NORMAL");
-        entity.setTemplateVersion("1.0.0");
+        entity.setTemplateStatus("UNPUBLISHED");
+        entity.setTemplateVersion(DEFAULT_TEMPLATE_VERSION);
         return entity;
     }
 
     @Override
     public void beforeAdd(WorkflowTemplate entity) {
-        //唯一性验证
-        //验证 名称 全局唯一
+        // 唯一性验证
+        // 验证 名称 全局唯一
         if (StringUtils.isNotBlank(entity.getName())) {
             long countName = this.lambdaQuery().eq(WorkflowTemplate::getName, entity.getName()).count();
             if (countName > 0) {
-                throw new CustomException(CommonException.PROPERTY_EXIST,"【名称】");
+                throw new CustomException(CommonException.PROPERTY_EXIST, "【名称】");
             }
         }
-        //验证 编码 全局唯一
+        // 验证 编码 全局唯一
         if (StringUtils.isNotBlank(entity.getCode())) {
             long countCode = this.lambdaQuery().eq(WorkflowTemplate::getCode, entity.getCode()).count();
             if (countCode > 0) {
-                throw new CustomException(CommonException.PROPERTY_EXIST,"【编码】");
+                throw new CustomException(CommonException.PROPERTY_EXIST, "【编码】");
             }
         }
 
@@ -96,21 +108,23 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     @Override
     public void beforeModify(WorkflowTemplate entity) {
-        //唯一性验证
-        //验证 名称 全局唯一
+        // 唯一性验证
+        // 验证 名称 全局唯一
         if (StringUtils.isNotBlank(entity.getName())) {
             long countName = this.lambdaQuery().eq(WorkflowTemplate::getName, entity.getName())
-                .ne(WorkflowTemplate::getId, entity.getId()).count();
+                    .eq(WorkflowTemplate::getTemplateStatus, entity.getTemplateStatus())
+                    .ne(WorkflowTemplate::getId, entity.getId()).count();
             if (countName > 0) {
-                throw new CustomException(CommonException.PROPERTY_EXIST,"【名称】");
+                throw new CustomException(CommonException.PROPERTY_EXIST, "【名称】");
             }
         }
-        //验证 编码 全局唯一
+        // 验证 编码 全局唯一
         if (StringUtils.isNotBlank(entity.getCode())) {
             long countCode = this.lambdaQuery().eq(WorkflowTemplate::getCode, entity.getCode())
-                .ne(WorkflowTemplate::getId, entity.getId()).count();
+                    .eq(WorkflowTemplate::getTemplateStatus, entity.getTemplateStatus())
+                    .ne(WorkflowTemplate::getId, entity.getId()).count();
             if (countCode > 0) {
-                throw new CustomException(CommonException.PROPERTY_EXIST,"【编码】");
+                throw new CustomException(CommonException.PROPERTY_EXIST, "【编码】");
             }
         }
     }
@@ -131,8 +145,20 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     @Override
     protected void copyPropertyHandle(WorkflowTemplate entity, String... value) {
-        // 主属性后附加“副本”用于区分
-        entity.setName (entity.getName() + " 副本");
+        // 重置属性
+        entity.setTemplateStatus(WorkflowTemplateStatusEnum.UNPUBLISHED.name());
+        entity.setProcessDefinitionId(null);
+        // 版本升级时，模板版本号小段自动加1
+        if(StringUtils.isNotBlank(value[0]) && value[0].equals(YesOrNoEnum.YES.name())) {
+            String templateVersion = entity.getTemplateVersion();
+            String[] versionArray = templateVersion.split("\\.");
+            int minVersion = Integer.parseInt(versionArray[1]);
+            String newVersion = versionArray[0] +"." +(minVersion + 1);
+            entity.setTemplateVersion(newVersion);
+        }else{
+            // 复制新增时，模板版本号默认
+            entity.setTemplateVersion(DEFAULT_TEMPLATE_VERSION);
+        }
     }
 
 
@@ -151,90 +177,144 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     }
 
     @Override
+    protected void afterAdd(WorkflowTemplate entity) {
+
+        convertJsonToModel(entity,false);
+    }
+
+    @Override
     protected void afterModify(WorkflowTemplate entity, WorkflowTemplate orginEntity) {
 
-        convertJsonToModel(entity);
+        convertJsonToModel(entity,false);
+    }
+
+    @Override
+    protected void beforeRemove(WorkflowTemplate entity) {
+        // 获取临时流程定义标识
+        String tempProcessDefinitionId = this.generateTemporaryVersion(entity.getCode());
+
+        // 删除节点配置
+        workflowNodeConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
+
+        // 删除流程权限
+         workflowNodePermissionConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
+
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void publish(String id) {
+        WorkflowTemplate entity = query(id);
+        // 状态检查，仅未发布的模板允许执行发布操作
+        if (entity.getTemplateStatus().equals(WorkflowTemplateStatusEnum.UNPUBLISHED.name()) == false) {
+            throw new CustomException(WorkflowException.HAVE_PUBLISHED);
+        }
+
+        // 获取临时流程定义标识
+        String tempProcessDefinitionId = this.generateTemporaryVersion(entity.getCode());
+
+        // 生成模型及配置信息
+        BpmnModelInstance modelInstance = convertJsonToModel(entity, true);
+        // 发布
+        String name = entity.getName();
+        Deployment deployment = repositoryService.createDeployment().name(name)
+                .addModelInstance(name + ".bpmn", modelInstance).deploy();
+        String deploymentId = deployment.getId();
+
+
+        // 获取流程定义标识
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .deploymentId(deploymentId).singleResult();
+        String processDefinitionId = processDefinition.getId();
+
+
+        // 更新环节设置，使用正式流程定义标识替换临时流程定义标识
+        workflowNodeConfigService.updateProcessDefinitionId(processDefinitionId, tempProcessDefinitionId);
+        // 更新环节权限设置，使用正式流程定义标识替换临时流程定义标识
+        workflowNodePermissionConfigService.updateProcessDefinitionId(processDefinitionId, tempProcessDefinitionId);
+
+        // 将现有运行中的模板归档
+        setArchived(entity.getCode());
+
+        // 补填流程模板中的流程定义标识
+        entity.setProcessDefinitionId(processDefinitionId);
+        // 更新状态
+        entity.setTemplateStatus(WorkflowTemplateStatusEnum.RUNNING.name());
+        super.updateById(entity);
+
+
+
+    }
+
+    private void setArchived(String templateCode){
+        Optional<WorkflowTemplate> workflowTemplate = this.lambdaQuery().eq(WorkflowTemplate::getTemplateStatus, WorkflowTemplateStatusEnum.RUNNING.name())
+                .eq(WorkflowTemplate::getCode, templateCode).oneOpt();
+        if(workflowTemplate.isPresent()){
+            WorkflowTemplate entity = workflowTemplate.get();
+            entity.setTemplateStatus(WorkflowTemplateStatusEnum.ARCHIVED.name());
+            modify(entity);
+        }
+
     }
 
 
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void upgrade(String id) {
+
+        // 获取模板
+        WorkflowTemplate originEntity = query(id);
+        // 状态检查，仅运行中的模板允许执行升级操作
+        if (originEntity.getTemplateStatus().equals(WorkflowTemplateStatusEnum.RUNNING.name()) == false) {
+            throw new CustomException(WorkflowException.IS_NOT_RUNNING);
+        }
+        // 拷贝记录
+        addByCopy(id, YesOrNoEnum.YES.name());
+
+    }
+
+    @Override
+    protected void afterAddByCopy(WorkflowTemplate sourceEntity, WorkflowTemplate entity) {
+        // // 获取原流程定义标识
+        // String processDefinitionId = sourceEntity.getProcessDefinitionId();
+        // // 获取临时流程定义标识
+        // String tempProcessDefinitionId = this.generateTemporaryVersion(entity.getCode());
+        //
+        // // 复制节点配置
+        // List<WorkflowNodeConfig> workflowNodeConfigList = workflowNodeConfigService.getByProcessDefinitionId(processDefinitionId);
+        // for (WorkflowNodeConfig item : workflowNodeConfigList) {
+        //     workflowNodeConfigService.addByCopy(item.getId(), tempProcessDefinitionId);
+        // }
+        //
+        // // 复制流程权限
+        // List<WorkflowNodePermissionConfig> workflowNodePermissionConfigList =
+        //         workflowNodePermissionConfigService.getByProcessDefinitionId(processDefinitionId);
+        // for (WorkflowNodePermissionConfig item : workflowNodePermissionConfigList) {
+        //     workflowNodePermissionConfigService.addByCopy(item.getId(), tempProcessDefinitionId);
+        // }
+
+
+    }
+
     // region  模型转换
-    public void convertJsonToModel(WorkflowTemplate entity) {
+    public BpmnModelInstance convertJsonToModel(WorkflowTemplate entity, boolean generateConfigFlag) {
+        // 流程模型未配置，直接返回null对象
+        if (StringUtils.isBlank(entity.getModel())) {
+            return null;
+        }
+
+
         // 流程定义编码
-        String processDefinitionKey=entity.getCode();
+        String processDefinitionKey = entity.getCode();
         // 临时流程定义标识
-        String tempProcessDefinitionId=this.generateTempVersion(processDefinitionKey);
-
-
-        // String json="{\n" +
-        //         "\t\"name\": \"填报\",\n" +
-        //         "\t\"id\": \"1\",\n" +
-        //         "\t\"type\": \"ROOT\",\n" +
-        //         "\t\"config\": {},\n" +
-        //         "\t\"branchList\": [],\n" +
-        //         "\t\"child\": {\n" +
-        //         "\t\t\"name\": \"处理人\",\n" +
-        //         "\t\t\"id\": \"2\",\n" +
-        //         "\t\t\"type\": \"HANDLE\",\n" +
-        //         "\t\t\"config\": {\n" +
-        //         "\t\t\t\"mode\": \"NORMAL\",\n" +
-        //         "\t\t\t\"setAssigneeFlag\": \"YES\",\n" +
-        //         "\t\t\t\"userGroup\": \"99\"\n" +
-        //         "\t\t},\n" +
-        //         "\t\t\"child\": {},\n" +
-        //         "\t\t\"error\": true\n" +
-        //         "\t}\n" +
-        //         "}";
-
-        // String json="{\n" +
-        //         "\t\"name\": \"填报\",\n" +
-        //         "\t\"id\": \"1\",\n" +
-        //         "\t\"type\": \"ROOT\",\n" +
-        //         "\t\"config\": {},\n" +
-        //         "\t\"branchList\": [],\n" +
-        //         "\t\"child\": {\n" +
-        //         "\t\t\"name\": \"处理人\",\n" +
-        //         "\t\t\"id\": \"2\",\n" +
-        //         "\t\t\"type\": \"HANDLE\",\n" +
-        //         "\t\t\"config\": {\n" +
-        //         "\t\t\t\"mode\": \"NORMAL\",\n" +
-        //         "\t\t\t\"setAssigneeFlag\": \"YES\",\n" +
-        //         "\t\t\t\"userGroup\": \"99\"\n" +
-        //         "\t\t},\n" +
-        //         "\t\t\"child\": {\n" +
-        //         "\t\t\t\"name\": \"条件路由\",\n" +
-        //         "\t\t\t\"id\": \"node3278_00b0_e238_a105\",\n" +
-        //         "\t\t\t\"type\": \"INCLUSIVE_GATEWAY\",\n" +
-        //         "\t\t\t\"config\": {},\n" +
-        //         "\t\t\t\"child\": null,\n" +
-        //         "\t\t\t\"branchList\": [{\n" +
-        //         "\t\t\t\t\"name\": \"3天以内\",\n" +
-        //         "\t\t\t\t\"id\": \"condition5914_12fb_e783_f171\",\n" +
-        //         "\t\t\t\t\"type\": \"CONDITION\",\n" +
-        //         "\t\t\t\t\"config\": {\n" +
-        //         "\t\t\t\t\t\"expression\": \"${total<=3}\"\n" +
-        //         "\t\t\t\t},\n" +
-        //         "\t\t\t\t\"branchList\": [],\n" +
-        //         "\t\t\t\t\"child\": {}\n" +
-        //         "\t\t\t}, {\n" +
-        //         "\t\t\t\t\"name\": \"超过3天\",\n" +
-        //         "\t\t\t\t\"id\": \"condition10081_fd56_1fb6_f8ed\",\n" +
-        //         "\t\t\t\t\"type\": \"CONDITION\",\n" +
-        //         "\t\t\t\t\"config\": {\n" +
-        //         "\t\t\t\t\t\"expression\": \"${total>3}\"\n" +
-        //         "\t\t\t\t},\n" +
-        //         "\t\t\t\t\"branchList\": []\n" +
-        //         "\t\t\t}]\n" +
-        //         "\t\t},\n" +
-        //         "\t\t\"error\": true\n" +
-        //         "\t}\n" +
-        //         "}";
-
-        String json=entity.getModel();
+        String tempProcessDefinitionId = this.generateTemporaryVersion(processDefinitionKey);
 
 
         //  解析json，反序列化为节点对象
-        MyFlowNode flowNode = JSON.parseObject(json, MyFlowNode.class);
-        log.info("json数据：{}",JSON.toJSONString(flowNode));
+        MyFlowNode flowNode = JSON.parseObject(entity.getModel(), MyFlowNode.class);
+        log.info("json数据：{}", JSON.toJSONString(flowNode));
 
         // 新建流程
         ProcessBuilder processBuilder = Bpmn.createProcess()
@@ -247,84 +327,79 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         StartEventBuilder startEventBuilder = processBuilder.startEvent().name("流程开始");
 
         // 流程节点转换
-        FlowNode lastNode = convertJsonToModel(process, startEventBuilder.getElement(), flowNode, tempProcessDefinitionId,null);
+        FlowNode lastNode = convertJsonToModel(process, startEventBuilder.getElement(), flowNode, tempProcessDefinitionId, null, generateConfigFlag);
 
         // 附加结束环节
         appendEndNode(process, lastNode);
 
         // 构建模型
-        BpmnModelInstance modelInstance =startEventBuilder.done();
+        BpmnModelInstance modelInstance = startEventBuilder.done();
 
         // 验证模型
         Bpmn.validateModel(modelInstance);
 
-        // 转换为xml
-        String xmlString = Bpmn.convertToString(modelInstance);
-        log.info(xmlString);
-
-        // 发布
-        String name=entity.getName();
-        Deployment deployment = repositoryService.createDeployment().name(name)
-                .addModelInstance(name + ".bpmn", modelInstance).deploy();
-        String deploymentId = deployment.getId();
-
-
-        // 获取流程定义标识
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .deploymentId(deploymentId).singleResult();
-        String processDefinitionId = processDefinition.getId();
-        log.info(processDefinitionId);
-
-
-        // 更新环节设置
-        flowNodeConfigService.updateProcessDefinitionId(processDefinitionKey,tempProcessDefinitionId);
+        return modelInstance;
 
     }
+
 
 
     /**
      * 将json转换为模型
      * 流程节点转换
      *
-     * @param process       流程
-     * @param parentElement 父元素
-     * @param flowNode      流程节点
-     * @param tempVersion   临时版本
-     * @param expression    表达式
+     * @param process            流程
+     * @param parentElement      父元素
+     * @param flowNode           流程节点
+     * @param tempVersion        临时版本
+     * @param expression         表达式
+     * @param generateConfigFlag 是否生成配置信息
      * @return {@link FlowNode}
      */
-    private  FlowNode convertJsonToModel(Process process, FlowNode parentElement,
-                                     MyFlowNode flowNode,String tempVersion,String expression) {
+    private FlowNode convertJsonToModel(Process process, FlowNode parentElement,
+                                        MyFlowNode flowNode, String tempVersion, String expression, boolean generateConfigFlag) {
         // 获取模型实例
         ModelInstance modelInstance = process.getModelInstance();
         // 构建节点
-        FlowNode element=null;
+        FlowNode element = null;
         FlowCodeTypeEnum type = EnumUtils.getEnum(FlowCodeTypeEnum.class, flowNode.getType());
-        switch (type){
+        switch (type) {
             case ROOT:
                 UserTask firstNode = modelInstance.newInstance(UserTask.class);
                 firstNode.setName(flowNode.getName());
                 firstNode.setCamundaAssignee("${firstNodeAssignee}");
-                firstNode.setId("node"+ UUID.randomUUID().toString());
+                firstNode.setId(flowNode.getId());
                 process.addChildElement(firstNode);
-                element=firstNode;
+                element = firstNode;
                 // 构建边
                 createSequenceFlow(process, parentElement, element);
+                if(generateConfigFlag) {
+                    // 环节配置
+                    String rootConfig = flowNode.getConfig();
+                    JSONObject nodeConfig = JSON.parseObject(rootConfig);
+
+                    // 权限配置
+                    List<WorkflowNodePermissionConfig> rootPermissionList = JSON.parseArray(nodeConfig.getString("permissionConfig"),
+                            WorkflowNodePermissionConfig.class);
+                    configPermission(tempVersion, firstNode.getId(), rootPermissionList);
+                }
                 break;
             case HANDLE:
                 UserTask userTask = modelInstance.newInstance(UserTask.class);
                 // 基本属性设置
                 userTask.setName(flowNode.getName());
-                userTask.setId("node"+UUID.randomUUID().toString());
+                userTask.setId(flowNode.getId());
                 // 环节配置
-                String config=flowNode.getConfig();
-                WorkflowNodeConfig userTaskNodeConfig =JSON.parseObject(config, WorkflowNodeConfig.class) ;
-                userTask.setCamundaCandidateGroups(userTaskNodeConfig.getUserGroup());
-                if (userTaskNodeConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
-                    //会签模式
-                    //设置处理人为变量
+                String config = flowNode.getConfig();
+                JSONObject handleNodeConfig = JSON.parseObject(config);
+                // 人员配置
+                WorkflowNodeConfig personConfig = JSON.parseObject(handleNodeConfig.getString("personConfig"), WorkflowNodeConfig.class);
+                userTask.setCamundaCandidateGroups(personConfig.getUserGroup());
+                if (personConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
+                    // 会签模式
+                    // 设置处理人为变量
                     userTask.setCamundaAssignee("${assignee}");
-                    //设置多实例
+                    // 设置多实例
                     MultiInstanceLoopCharacteristics loopCharacteristics =
                             modelInstance.newInstance(MultiInstanceLoopCharacteristics.class);
 
@@ -333,38 +408,45 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
                     loopCharacteristics.setCamundaElementVariable("assignee");
                     userTask.addChildElement(loopCharacteristics);
                 } else {
-                    //普通模式
-                    //设置处理人为变量
+                    // 普通模式
+                    // 设置处理人为变量
                     userTask.setCamundaAssignee("${singleHandler}");
+                }
+                // 权限配置
+                if(generateConfigFlag) {
+                    List<WorkflowNodePermissionConfig> permissionList = JSON.parseArray(handleNodeConfig.getString("permissionConfig"),
+                            WorkflowNodePermissionConfig.class);
+                    configPermission(tempVersion, userTask.getId(), permissionList);
                 }
 
                 // 附加固化的人员指派监听器
-                ExtensionElements extensionElements=modelInstance.newInstance(ExtensionElements.class);
+                ExtensionElements extensionElements = modelInstance.newInstance(ExtensionElements.class);
 
-                CamundaTaskListener listener=modelInstance.newInstance(CamundaTaskListener.class);
+                CamundaTaskListener listener = modelInstance.newInstance(CamundaTaskListener.class);
                 listener.setCamundaEvent("create");
                 listener.setCamundaClass("tech.abc.platform.workflow.listener.ApproverTaskListener");
                 extensionElements.addChildElement(listener);
                 userTask.setExtensionElements(extensionElements);
 
                 process.addChildElement(userTask);
-                element=userTask;
+                element = userTask;
                 // 构建边
                 SequenceFlow sequenceFlow = createSequenceFlow(process, parentElement, element);
                 // 如表达式不为空，则意味着需要设置条件边
-                if(StringUtils.isNotBlank(expression)){
-                    ConditionExpression conditionExpression= modelInstance.newInstance(ConditionExpression.class);
+                if (StringUtils.isNotBlank(expression)) {
+                    ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
                     conditionExpression.setTextContent(expression);
                     sequenceFlow.setConditionExpression(conditionExpression);
                     // 使用一次后置空
-                    expression=null;
+                    expression = null;
                 }
-
-                // 生成环节配置
-                userTaskNodeConfig.setProcessDefinitionId(tempVersion);
-                userTaskNodeConfig.setName(userTask.getName());
-                userTaskNodeConfig.setNodeId(userTask.getId());
-                flowNodeConfigService.add(userTaskNodeConfig);
+                if(generateConfigFlag) {
+                    // 生成环节配置
+                    personConfig.setProcessDefinitionId(tempVersion);
+                    personConfig.setName(userTask.getName());
+                    personConfig.setNodeId(userTask.getId());
+                    workflowNodeConfigService.add(personConfig);
+                }
 
                 break;
             case INCLUSIVE_GATEWAY:
@@ -376,40 +458,40 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
                 // 构建入边
                 SequenceFlow inflow = createSequenceFlow(process, parentElement, node);
                 // 如表达式不为空，则意味着需要设置条件边
-                if(StringUtils.isNotBlank(expression)){
-                    ConditionExpression conditionExpression= modelInstance.newInstance(ConditionExpression.class);
+                if (StringUtils.isNotBlank(expression)) {
+                    ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
                     conditionExpression.setTextContent(expression);
                     inflow.setConditionExpression(conditionExpression);
                     // 使用一次后置空
-                    expression=null;
+                    expression = null;
                 }
                 // 生成虚拟的汇聚节点
                 InclusiveGateway convergeNode = modelInstance.newInstance(InclusiveGateway.class);
                 process.addChildElement(convergeNode);
                 convergeNode.setName("汇聚节点");
-                convergeNode.setId("convergeNode"+UUID.randomUUID().toString());
-                element=convergeNode;
+                convergeNode.setId("convergeNode" + UUID.randomUUID().toString());
+                element = convergeNode;
 
                 // 分支处理
                 List<MyFlowNode> branchList = flowNode.getBranchList();
                 // 转换分支
-                branchList.stream().forEach(item->{
+                branchList.stream().forEach(item -> {
                     // 分支首节点涉及到在边上设置条件表达式
                     MyConditionNode myConditionNode = JSON.parseObject(item.getConfig(), MyConditionNode.class);
-                    String branchExpression=myConditionNode.getExpression();
-                    log.info("expression:{}",branchExpression);
+                    String branchExpression = myConditionNode.getExpression();
+                    log.info("expression:{}", branchExpression);
 
-                    if(item.getChild()!=null && StringUtils.isNotBlank(item.getChild().getName())) {
+                    if (item.getChild() != null && StringUtils.isNotBlank(item.getChild().getName())) {
 
 
                         FlowNode brachEndNode = convertJsonToModel(process, node,
-                                item.getChild(), tempVersion,branchExpression);
+                                item.getChild(), tempVersion, branchExpression, generateConfigFlag);
                         // 附加汇聚节点
                         createSequenceFlow(process, brachEndNode, convergeNode);
-                    }else{
+                    } else {
                         // 附加汇聚节点
                         SequenceFlow endFlow = createSequenceFlow(process, node, convergeNode);
-                        ConditionExpression conditionExpression= modelInstance.newInstance(ConditionExpression.class);
+                        ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
                         conditionExpression.setTextContent(branchExpression);
                         inflow.setConditionExpression(conditionExpression);
 
@@ -427,16 +509,37 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
         }
 
-        //递归处理子节点
-        if(flowNode.getChild()!=null && StringUtils.isNotBlank(flowNode.getChild().getName())){
-            return convertJsonToModel(process,element,flowNode.getChild(),tempVersion,expression);
-        }else{
+        // 递归处理子节点
+        if (flowNode.getChild() != null && StringUtils.isNotBlank(flowNode.getChild().getName())) {
+            return convertJsonToModel(process, element, flowNode.getChild(), tempVersion, expression, generateConfigFlag);
+        } else {
             return element;
         }
 
     }
 
+    private void configPermission(String tempVersion, String nodeId, List<WorkflowNodePermissionConfig> permissionList) {
+        // 基础权限
+        List<WorkflowNodePermissionConfig> nodePermissionConfigList = workflowNodePermissionConfigService.getNodePermissionConfig(tempVersion,
+                nodeId);
 
+        // 使用前端传入权限设置更新基础权限数据
+        if (CollectionUtils.isNotEmpty(permissionList)) {
+            nodePermissionConfigList.stream().forEach(item -> {
+                permissionList.stream().forEach(permission -> {
+                    if (permission.getAreaCode().equals(item.getAreaCode())) {
+                        item.setPermission(permission.getPermission());
+                        return;
+                    }
+                });
+            });
+        }
+
+        // 存库
+        nodePermissionConfigList.stream().forEach(item -> {
+            workflowNodePermissionConfigService.modify(item);
+        });
+    }
 
 
     private List<String> getFlowTemplateCodeListByPermission() {
@@ -456,7 +559,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     @Override
     public List<WorkflowTemplate> listByPermission() {
         List<String> flowTemplateCodeList = getFlowTemplateCodeListByPermission();
-        if(CollectionUtils.isNotEmpty(flowTemplateCodeList)){
+        if (CollectionUtils.isNotEmpty(flowTemplateCodeList)) {
             List<WorkflowTemplate> list = this.lambdaQuery().in(WorkflowTemplate::getCode, flowTemplateCodeList)
                     .eq(WorkflowTemplate::getStatus, StatusEnum.NORMAL.toString()).orderByAsc(WorkflowTemplate::getOrderNo).list();
             return list;
@@ -467,7 +570,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     @Override
     public void checkProcessStartPermission(String code) {
-        boolean hasPermission=false;
+        boolean hasPermission = false;
         List<String> flowTemplateCodeList = getFlowTemplateCodeListByPermission();
         if (CollectionUtils.isEmpty(flowTemplateCodeList) || !flowTemplateCodeList.contains(code)) {
             // 不包含时，抛出异常
@@ -479,33 +582,32 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     @Override
     public WorkflowTemplate getByCode(String code) {
         Optional<WorkflowTemplate> workflowTemplate = this.lambdaQuery().eq(WorkflowTemplate::getCode, code).oneOpt();
-        if(workflowTemplate.isPresent()){
+        if (workflowTemplate.isPresent()) {
             return workflowTemplate.get();
-        }else{
-            throw new CustomException(CommonException.OBJECT_NOT_EXIST,"流程模板");
+        } else {
+            throw new CustomException(CommonException.OBJECT_NOT_EXIST, "流程模板");
         }
 
     }
 
+
     @Override
-    public String generateTempVersion(String processDefinitionKey){
+    public String generateTemporaryVersion(String processDefinitionKey) {
         // 获取最新发布的版本
         // 默认版本为0，首次创建模板
         int latestVersion = 0;
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
         if (processDefinition != null) {
-            latestVersion = processDefinition.getVersion();
+            latestVersion = processDefinition.getVersion()+1;
         }
 
         // 获取临时版本标识
-        String tempProcessDefinitionId = processDefinitionKey+":"+latestVersion;
+        String tempProcessDefinitionId = processDefinitionKey + ":" + latestVersion;
         return tempProcessDefinitionId;
 
 
     }
-
-
 
 
 
@@ -534,8 +636,8 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
      * @return {@link SequenceFlow}
      */
     private SequenceFlow createSequenceFlow(Process process, FlowNode from, FlowNode to) {
-        String identifier = "SequenceFlow"+UUID.randomUUID().toString();
-        SequenceFlow sequenceFlow = createElement(process,identifier, SequenceFlow.class);
+        String identifier = "SequenceFlow" + UUID.randomUUID().toString();
+        SequenceFlow sequenceFlow = createElement(process, identifier, SequenceFlow.class);
         process.addChildElement(sequenceFlow);
         sequenceFlow.setSource(from);
         from.getOutgoing().add(sequenceFlow);
@@ -554,9 +656,9 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         EndEvent endEvent = process.getModelInstance().newInstance(EndEvent.class);
         // endEvent.setAttributeValue("name", "流程结束");
         process.addChildElement(endEvent);
-        createSequenceFlow(process,flowNode, endEvent);
+        createSequenceFlow(process, flowNode, endEvent);
     }
-    //endregion
+    // endregion
 }
 
 

@@ -13,7 +13,7 @@
           v-for="template in category.workflowTemplateVOList"
           :key="template.code"
           type="primary"
-          @click="createFlow(template.code, template.name, template.id)"
+          @click="createFlow(template.code, template.name, template.processDefinitionId)"
           >{{ template.name }}</el-button
         >
       </el-collapse-item>

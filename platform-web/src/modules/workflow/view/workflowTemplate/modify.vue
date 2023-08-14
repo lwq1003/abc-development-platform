@@ -9,6 +9,7 @@
       style="width: 90%; margin: 0px auto"
     >
       <!--表单区域 -->
+
       <el-form-item label="类别" prop="category">
         <dictionary-select v-model="entityData.category" code="ProcessDefinitionCategory" />
       </el-form-item>
@@ -18,17 +19,31 @@
       <el-form-item label="编码" prop="code">
         <el-input v-model="entityData.code" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <dictionary-radio-group v-model="entityData.status" code="Status" />
-      </el-form-item>
       <el-form-item label="模板版本" prop="templateVersion">
-        <el-input v-model="entityData.templateVersion" :readonly="true" />
+        <el-input v-model="entityData.templateVersion" />
+      </el-form-item>
+      <el-form-item label="启用状态" prop="status">
+        <dictionary-select v-model="entityData.status" code="Status" />
       </el-form-item>
       <el-form-item label="模型" prop="model">
-        <FlowDesign v-model="entityData.model" :workflowTemplateName="entityData.name" />
+        <FlowDesign
+          v-model="entityData.model"
+          :workflowTemplateName="entityData.name"
+          :workflowTemplateCode="entityData.code"
+        />
       </el-form-item>
       <el-form-item label="排序" prop="orderNo">
         <el-input v-model="entityData.orderNo" />
+      </el-form-item>
+      <el-form-item label="模板状态" prop="templateStatus">
+        <dictionary-select
+          v-model="entityData.templateStatus"
+          code="WorkflowTemplateStatus"
+          readonly="readonly"
+        />
+      </el-form-item>
+      <el-form-item label="流程定义" prop="processDefinitionId" v-show="false">
+        <el-input v-model="entityData.processDefinitionId" />
       </el-form-item>
     </el-form>
     <template #footer>

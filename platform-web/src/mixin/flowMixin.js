@@ -55,20 +55,20 @@ export const flowMixin = {
         assignee: ''
       },
       // 权限配置
-      // TODO 环节权限设置
-      rightConfigData: {
-        applyArea: {
-          visible: true,
-          readonly: false
-        },
-        organizationApproval: {
-          visible: true,
-          readonly: false
-        },
-        hrApproval: {
-          visible: true,
-          readonly: false
-        }
+
+      permissionConfigData: {
+        // applyArea: {
+        //   visible: true,
+        //   readonly: false
+        // },
+        // organizationApproval: {
+        //   visible: true,
+        //   readonly: false
+        // },
+        // hrApproval: {
+        //   visible: true,
+        //   readonly: true
+        // }
       }
     }
   },
@@ -83,12 +83,8 @@ export const flowMixin = {
 
       this.api.init().then((res) => {
         this.entityData = res.data
-        // 获取首环节权限设置
-        // this.$api.workflow.workflowRightConfig
-        //   .getFirstNodeConfig(processDefinitionId)
-        //   .then((res) => {
-        //     this.rightConfigData = res.data
-        //   })
+        // 获取发起环节权限设置
+        this.getNodePermissionConfig(processDefinitionId, 'root')
 
         // TODO：为测试方便，填充值，需过后删除
         this.entityData = Object.assign({}, this.entityData, {
@@ -108,23 +104,22 @@ export const flowMixin = {
       this.mode = 'modify'
       this.api.getByBillNo(billNo).then((res) => {
         this.entityData = res.data
-        //TODO 获取环节权限设置
-        // this.$api.workflow.workflowRightConfig
-        //   .getNodeConfig(processDefinitionId, taskDefinitionKey)
-        //   .then((res) => {
-        //     this.rightConfigData = res.data
-        //   })
+        this.getNodePermissionConfig(processDefinitionId, taskDefinitionKey)
       })
     },
     // 查看
     view(billNo, processDefinitionId) {
+      this.mode = 'view'
       this.api.getByBillNo(billNo).then((res) => {
         this.entityData = res.data
         // 获取环节权限设置
-        this.$api.workflow.workflowRightConfig
-          .getNodeConfigForView(processDefinitionId)
+        this.$api.workflow.workflowNodePermissionConfig
+          .getNodePermissionConfigForView(processDefinitionId)
           .then((res) => {
-            this.rightConfigData = res.data
+            this.permissionConfigData = {}
+            res.data.forEach((item) => {
+              this.permissionConfigData[item.areaCode] = item.permission
+            })
           })
         if (this.afterView) {
           this.afterView()
@@ -133,7 +128,17 @@ export const flowMixin = {
       this.readonly = true
       this.visible = true
     },
-
+    getNodePermissionConfig(processDefinitionId, nodeId) {
+      // 获取发起环节权限设置
+      this.$api.workflow.workflowNodePermissionConfig
+        .getNodePermissionConfig(processDefinitionId, nodeId)
+        .then((res) => {
+          this.permissionConfigData = {}
+          res.data.forEach((item) => {
+            this.permissionConfigData[item.areaCode] = item.permission
+          })
+        })
+    },
     // 获取流程类型
     getProcessType() {
       return this.entityType
@@ -153,7 +158,6 @@ export const flowMixin = {
     },
     // 提交
     commit() {
-      console.log('1', this.taskData.taskId)
       if (this.taskData.taskId === '') {
         // 流程创建时保存后，无任务标识，通过流程标识获取任务标识
         this.$api.workflow.processInstance

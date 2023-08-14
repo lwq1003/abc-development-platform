@@ -8,17 +8,11 @@ import { defineStore } from 'pinia'
 
 export const useStore = defineStore('store', {
   state: () => ({
-    tableId: '',
     isTried: false,
-
-    approverDrawer: false,
-    approverConfig1: {},
-    copyerDrawer: false,
-    copyerConfig1: {},
-    conditionDrawer: false,
-    conditionsConfig1: {
-      conditionNodes: []
-    },
+    // 发起节点配置可见性
+    rootNodeConfigVisible: false,
+    // 发起节点配置
+    rootNodeConfig: {},
     // 办理节点配置可见性
     handleNodeConfigVisible: false,
     // 办理节点配置
@@ -26,35 +20,20 @@ export const useStore = defineStore('store', {
     // 条件节点配置可见性
     conditionNodeConfigVisible: false,
     // 条件节点配置
-    conditionNodeConfig: {}
+    conditionNodeConfig: {},
+    // 工作流程定义
+    processDefinitionId: ''
   }),
   actions: {
-    setTableId(payload) {
-      this.tableId = payload
-    },
     setIsTried(payload) {
       this.isTried = payload
     },
-
-    setApprover(payload) {
-      this.approverDrawer = payload
+    setRootNodeConfigVisible(showFlag) {
+      this.rootNodeConfigVisible = showFlag
     },
-    setApproverConfig(payload) {
-      this.approverConfig1 = payload
+    setRootNodeConfig(config) {
+      this.rootNodeConfig = config
     },
-    setCopyer(payload) {
-      this.copyerDrawer = payload
-    },
-    setCopyerConfig(payload) {
-      this.copyerConfig1 = payload
-    },
-    setCondition(payload) {
-      this.conditionDrawer = payload
-    },
-    setConditionsConfig(payload) {
-      this.conditionsConfig1 = payload
-    },
-    // 已确认
     setHandleNodeConfigVisible(showFlag) {
       this.handleNodeConfigVisible = showFlag
     },
@@ -66,6 +45,9 @@ export const useStore = defineStore('store', {
     },
     setConditionNodeConfig(config) {
       this.conditionNodeConfig = config
+    },
+    setProcessDefinitionId(processDefinitionId) {
+      this.processDefinitionId = processDefinitionId
     }
   }
 })

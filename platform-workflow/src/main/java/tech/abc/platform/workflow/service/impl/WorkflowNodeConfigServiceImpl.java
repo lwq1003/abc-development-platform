@@ -79,21 +79,34 @@ public class WorkflowNodeConfigServiceImpl extends BaseServiceImpl<WorkflowNodeC
     }
 
     @Override
-    public void updateProcessDefinitionId(String processDefinitionKey,String tempProcessDefinitionId) {
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+    public void updateProcessDefinitionId(String processDefinitionId,String tempProcessDefinitionId) {
 
         UpdateWrapper<WorkflowNodeConfig> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().set(WorkflowNodeConfig::getProcessDefinitionId, processDefinition.getId())
+        updateWrapper.lambda().set(WorkflowNodeConfig::getProcessDefinitionId, processDefinitionId)
                 .eq(WorkflowNodeConfig::getProcessDefinitionId, tempProcessDefinitionId);
         update(updateWrapper);
 
     }
 
     @Override
+    public List<WorkflowNodeConfig> getByProcessDefinitionId(String processDefinitionId) {
+        return this.lambdaQuery().eq(WorkflowNodeConfig::getProcessDefinitionId, processDefinitionId).list();
+    }
+
+    @Override
+    public void removeByProcessDefinitionId(String processDefinitionId) {
+
+        List<WorkflowNodeConfig> workflowNodeConfigList = getByProcessDefinitionId(processDefinitionId);
+        for(WorkflowNodeConfig item:workflowNodeConfigList ){
+            removeById(item.getId());
+        }
+    }
+
+    @Override
     protected void copyPropertyHandle(WorkflowNodeConfig entity, String... value) {
-        // 主属性后附加“副本”用于区分
-        entity.setName (entity.getName() + " 副本");
+
+        entity.setProcessDefinitionId(value[0]);
+
     }
 
 }

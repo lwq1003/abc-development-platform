@@ -105,7 +105,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import '../css/workflow.css';
 .error-modal-list {
   width: 455px;

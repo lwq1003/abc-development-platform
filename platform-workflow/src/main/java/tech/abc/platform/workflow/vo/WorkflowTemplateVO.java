@@ -2,18 +2,18 @@ package tech.abc.platform.workflow.vo;
 
 
 import tech.abc.platform.common.base.BaseVO;
-
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
-
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
-* 流程模板 视图对象类
+* 工作流程模板 视图对象类
 *
 * @author wqliu
-* @date 2023-07-06
+* @date 2023-08-10
 */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -43,7 +43,7 @@ public class WorkflowTemplateVO extends BaseVO {
     private String templateVersion;
 
     /**
-    * 状态
+    * 启用状态
     */
     private String status;
 
@@ -52,11 +52,20 @@ public class WorkflowTemplateVO extends BaseVO {
     */
     private String model;
 
+    /**
+    * 排序
+    */
+    private String orderNo;
 
     /**
-     * 排序
-     */
-    private String orderNo;
+    * 模板状态
+    */
+    private String templateStatus;
+
+    /**
+    * 流程定义
+    */
+    private String processDefinitionId;
 
 
     /********非库表存储属性*****/
@@ -70,11 +79,14 @@ public class WorkflowTemplateVO extends BaseVO {
     private String categoryName;
 
     /**
-    * 状态
+    * 启用状态
     */
     private String statusName;
 
-
+    /**
+    * 模板状态
+    */
+    private String templateStatusName;
 
 
     /********实体类、用户单选、组织机构单选*****/
@@ -82,12 +94,6 @@ public class WorkflowTemplateVO extends BaseVO {
     /********范围查询*****/
 
     /********自定义扩展*****/
-    private String tempDefinitionId;
-
-    public String getTempDefinitionId(){
-        return code+":"+templateVersion;
-    }
-
 
     /********子对象*****/
 

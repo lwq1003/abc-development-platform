@@ -2,12 +2,15 @@ package tech.abc.platform.workflow.enums;
 
 import lombok.Getter;
 
+
 /**
- * 访问编码
+ * 环节权限编码
+ *
  * @author wqliu
+ * @date 2023-08-05
  */
 @Getter
-public enum AccessCodeEnum {
+public enum NodePermissionCodeEnum {
 
     /**
      * 不可见
@@ -18,9 +21,9 @@ public enum AccessCodeEnum {
      */
     READONLY,
     /**
-     * 编辑
+     * 可编辑
      */
-    EDIT,
+    EDITABLE,
     ;
 
 }

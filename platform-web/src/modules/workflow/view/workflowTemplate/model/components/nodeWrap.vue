@@ -15,8 +15,9 @@
       <div class="title" :style="`background: rgb(87, 106, 149);`">
         <span v-if="modelValue.type == 'ROOT'">{{ modelValue.name }}</span>
       </div>
-      <div class="content">
+      <div class="content" @click="setRootNode">
         <div class="text"> 发起环节 </div>
+        <i class="anticon anticon-right arrow"></i>
       </div>
       <div class="error_tip" v-if="isTried && modelValue.error">
         <i class="anticon anticon-exclamation-circle"></i>
@@ -43,8 +44,12 @@
       </div>
       <div class="content" @click="setHandleNode">
         <div class="text">
-          <span class="placeholder" v-if="!modelValue.config.userGroupName">待配置</span>
-          {{ modelValue.config.userGroupName }}
+          <span
+            class="placeholder"
+            v-if="!modelValue.config.personConfig || !modelValue.config.personConfig.userGroupName"
+            >待配置</span
+          >
+          <template v-else> {{ modelValue.config.personConfig.userGroupName }}</template>
         </div>
         <i class="anticon anticon-right arrow"></i>
       </div>
@@ -110,47 +115,6 @@
       <addNode v-model:childNodeP="modelValue.child" />
     </div>
   </div>
-  <!-- 抄送 -->
-  <!-- <div class="node-wrap" v-else-if="modelValue.type == 2">
-    <div
-      class="node-wrap-box"
-      :class="
-        (modelValue.type == 0 ? 'start-node ' : '') +
-        (isTried && modelValue.error ? 'active error' : '')
-      "
-    >
-      <div class="title" :style="`background: rgb(50, 150, 250);`">
-        <span v-if="modelValue.type == 0">{{ modelValue.name }}</span>
-        <template v-else>
-          <span class="iconfont">{{ modelValue.type == 1 ? '' : '' }}</span>
-          <input
-            v-if="isInput"
-            type="text"
-            class="ant-input editable-title-input"
-            @blur="blurEvent()"
-            @focus="$event.currentTarget.select()"
-            v-focus
-            v-model="modelValue.name"
-            :placeholder="defaultText"
-          />
-          <span v-else class="editable-title" @click="clickEvent()">{{ modelValue.name }}</span>
-          <i class="anticon anticon-close close" @click="delNode"></i>
-        </template>
-      </div>
-      <div class="content" @click="setPerson">
-        <div class="text">
-          <span class="placeholder" v-if="!showText">请选择{{ defaultText }}</span>
-          {{ showText }}
-        </div>
-        <i class="anticon anticon-right arrow"></i>
-      </div>
-      <div class="error_tip" v-if="isTried && modelValue.error">
-        <i class="anticon anticon-exclamation-circle"></i>
-      </div>
-    </div>
-    <addNode v-model:childNodeP="modelValue.child" />
-  </div> -->
-
   <nodeWrap v-if="modelValue.child" v-model:modelValue="modelValue.child" />
 </template>
 <script setup>
@@ -170,10 +134,6 @@ let props = defineProps({
 
 let defaultText = computed(() => {
   return placeholderList[props.modelValue.type]
-})
-// TODO 待处理
-let showText = computed(() => {
-  return $func.copyerStr(props.modelValue)
 })
 
 let isInputList = ref([])
@@ -201,37 +161,14 @@ onMounted(() => {
 let emits = defineEmits(['update:modelValue'])
 let store = useStore()
 let {
-  setCopyer,
-  setCondition,
-  setCopyerConfig,
-  setConditionsConfig,
-
+  setRootNodeConfigVisible,
+  setRootNodeConfig,
   setHandleNodeConfigVisible,
   setHandleNodeConfig,
   setConditionNodeConfigVisible,
   setConditionNodeConfig
 } = store
 let isTried = computed(() => store.isTried)
-
-let approverConfig1 = computed(() => store.approverConfig1)
-let copyerConfig1 = computed(() => store.copyerConfig1)
-let conditionsConfig1 = computed(() => store.conditionsConfig1)
-
-watch(approverConfig1, (approver) => {
-  if (approver.flag && approver.id === _uid) {
-    emits('update:modelValue', approver.value)
-  }
-})
-watch(copyerConfig1, (copyer) => {
-  if (copyer.flag && copyer.id === _uid) {
-    emits('update:modelValue', copyer.value)
-  }
-})
-watch(conditionsConfig1, (condition) => {
-  if (condition.flag && condition.id === _uid) {
-    emits('update:modelValue', condition.value)
-  }
-})
 
 const clickEvent = (index) => {
   if (index || index === 0) {
@@ -292,25 +229,6 @@ const reData = (data, addData) => {
     reData(data.child, addData)
   }
 }
-const setPerson = (priorityLevel) => {
-  var { type } = props.modelValue
-  if (type == 2) {
-    setCopyer(true)
-    setCopyerConfig({
-      value: JSON.parse(JSON.stringify(props.modelValue)),
-      flag: false,
-      id: _uid
-    })
-  } else {
-    setCondition(true)
-    setConditionsConfig({
-      value: JSON.parse(JSON.stringify(props.modelValue)),
-      priorityLevel,
-      flag: false,
-      id: _uid
-    })
-  }
-}
 
 const arrTransfer = (index, type = 1) => {
   //向左-1,向右1
@@ -327,13 +245,38 @@ const arrTransfer = (index, type = 1) => {
   emits('update:modelValue', props.modelValue)
 }
 
+// 设置发起环节配置
+const setRootNode = () => {
+  setRootNodeConfigVisible(true)
+  const nodeConfig = {
+    config: props.modelValue.config,
+    flag: false,
+    componentId: _uid,
+    id: props.modelValue.id
+  }
+
+  setRootNodeConfig(nodeConfig)
+}
+let rootNodeConfig = computed(() => store.rootNodeConfig)
+watch(
+  rootNodeConfig,
+  (myConfig) => {
+    if (myConfig.flag && myConfig.componentId === _uid) {
+      const modelValue = Object.assign(props.modelValue, { config: myConfig.config })
+      emits('update:modelValue', modelValue)
+    }
+  },
+  { deep: true }
+)
+
 // 设置办理环节配置
 const setHandleNode = () => {
   setHandleNodeConfigVisible(true)
   const handleNodeConfig = {
-    ...props.modelValue.config,
+    config: props.modelValue.config,
     flag: false,
-    componentId: _uid
+    componentId: _uid,
+    id: props.modelValue.id
   }
   setHandleNodeConfig(handleNodeConfig)
 }
@@ -343,15 +286,7 @@ watch(
   handleNodeConfig,
   (myConfig) => {
     if (myConfig.flag && myConfig.componentId === _uid) {
-      // 只保留必要属性，移除辅助使用的componentId和flag
-      const handleNodeConfig = {
-        mode: myConfig.mode,
-        setAssigneeFlag: myConfig.setAssigneeFlag,
-        userGroup: myConfig.userGroup,
-        userGroupName: myConfig.userGroupName
-      }
-      const modelValue = Object.assign(props.modelValue, { config: handleNodeConfig })
-
+      const modelValue = Object.assign(props.modelValue, { config: myConfig.config })
       emits('update:modelValue', modelValue)
     }
   },
@@ -359,7 +294,6 @@ watch(
 )
 
 // 设置条件节点配置
-
 const setConditionNode = (condition) => {
   setConditionNodeConfigVisible(true)
   const conditionNodeConfig = {

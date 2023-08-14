@@ -31,11 +31,26 @@ public interface WorkflowNodeConfigService extends BaseService<WorkflowNodeConfi
     WorkflowNodeConfig getNodeConfig(String processDefinitionId, String definitionKey);
 
     /**
-     * 更新流程定义id
+     * 更新流程定义标识
      *
-     * @param processDefinitionKey    流程定义键
-     * @param tempProcessDefinitionId 临时流程定义id
+     * @param processDefinitionId    流程定义标识
+     * @param tempProcessDefinitionId 临时流程定义标识
      */
-    void updateProcessDefinitionId(String processDefinitionKey,String tempProcessDefinitionId);
+    void updateProcessDefinitionId(String processDefinitionId,String tempProcessDefinitionId);
+
+    /**
+     * 通过流程定义标识获取节点配置
+     *
+     * @param processDefinitionId 流程定义id
+     * @return {@link List}<{@link WorkflowNodeConfig}>
+     */
+    List<WorkflowNodeConfig> getByProcessDefinitionId(String processDefinitionId);
+
+    /**
+     * 通过流程定义标识清除数据
+     *
+     * @param processDefinitionId 流程定义标识
+     */
+    void removeByProcessDefinitionId(String processDefinitionId);
 }
 
