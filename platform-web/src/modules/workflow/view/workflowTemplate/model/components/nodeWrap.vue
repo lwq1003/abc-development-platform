@@ -37,7 +37,6 @@
           @focus="$event.currentTarget.select()"
           v-focus
           v-model="modelValue.name"
-          :placeholder="defaultText"
         />
         <span v-else class="editable-title" @click="clickEvent()">{{ modelValue.name }}</span>
         <i class="anticon anticon-close close" @click="delNode"></i>
@@ -122,7 +121,7 @@ import { onMounted, ref, watch, getCurrentInstance, computed } from 'vue'
 import addNode from './addNode.vue'
 import $func from '../utils/index'
 import { useStore } from '../stores/index'
-import { placeholderList } from '../utils/const'
+
 let _uid = getCurrentInstance().uid
 
 let props = defineProps({
@@ -130,10 +129,6 @@ let props = defineProps({
     type: Object,
     default: () => ({})
   }
-})
-
-let defaultText = computed(() => {
-  return placeholderList[props.modelValue.type]
 })
 
 let isInputList = ref([])
@@ -146,18 +141,7 @@ const resetConditionNodesErr = () => {
       i != props.modelValue.branchList.length - 1
   }
 }
-onMounted(() => {
-  if (props.modelValue.type == 'HANDLE') {
-    // eslint-disable-next-line vue/no-mutating-props
-    props.modelValue.error = !$func.setApproverStr(props.modelValue)
-  }
-  // else if (props.modelValue.type == 2) {
-  //   // eslint-disable-next-line vue/no-mutating-props
-  //   props.modelValue.error = !$func.copyerStr(props.modelValue)
-  // } else if (props.modelValue.type == 4) {
-  //   resetConditionNodesErr()
-  // }
-})
+onMounted(() => {})
 let emits = defineEmits(['update:modelValue'])
 let store = useStore()
 let {
@@ -185,7 +169,7 @@ const blurEvent = (index) => {
   } else {
     isInput.value = false
     // eslint-disable-next-line vue/no-mutating-props
-    props.modelValue.name = props.modelValue.name || defaultText
+    props.modelValue.name = props.modelValue.name
   }
 }
 const delNode = () => {
@@ -252,7 +236,8 @@ const setRootNode = () => {
     config: props.modelValue.config,
     flag: false,
     componentId: _uid,
-    id: props.modelValue.id
+    id: props.modelValue.id,
+    model: props.modelValue
   }
 
   setRootNodeConfig(nodeConfig)
@@ -276,7 +261,8 @@ const setHandleNode = () => {
     config: props.modelValue.config,
     flag: false,
     componentId: _uid,
-    id: props.modelValue.id
+    id: props.modelValue.id,
+    model: props.modelValue
   }
   setHandleNodeConfig(handleNodeConfig)
 }

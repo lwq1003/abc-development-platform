@@ -1,24 +1,24 @@
 <template>
-  <div class="demo-collapse">
-    <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item
-        v-for="category in templateData"
-        :key="category.code"
-        :title="category.name"
-        :name="category.code"
-        style="margin: 10px; padding: 5px; font-size: large"
+  <el-collapse v-model="activeNames" @change="handleChange">
+    <el-collapse-item
+      v-for="category in templateData"
+      :key="category.code"
+      :name="category.code"
+      class="m-3"
+    >
+      <template #title>
+        <div class="m-3 font-bold font-black" style="font-size: 18px"> {{ category.name }}</div>
+      </template>
+      <el-button
+        v-for="template in category.workflowTemplateVOList"
+        :key="template.code"
+        type="primary"
+        class="m-3"
+        @click="createFlow(template.code, template.name, template.processDefinitionId)"
+        >{{ template.name }}</el-button
       >
-        <!-- TODO:布局美观性待调整 -->
-        <el-button
-          v-for="template in category.workflowTemplateVOList"
-          :key="template.code"
-          type="primary"
-          @click="createFlow(template.code, template.name, template.processDefinitionId)"
-          >{{ template.name }}</el-button
-        >
-      </el-collapse-item>
-    </el-collapse>
-  </div>
+    </el-collapse-item>
+  </el-collapse>
 </template>
 
 <script lang="ts">

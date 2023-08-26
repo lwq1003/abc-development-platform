@@ -107,12 +107,12 @@ public class LeaveServiceImpl extends BaseServiceImpl<LeaveMapper, Leave> implem
         instanceParams.put("total",entity.getTotal());
 
 
+        WorkflowTemplate workflowTemplate=flowTemplateService.getByCode(code);
         //启动流程
-        ProcessInstance processInstance =runtimeService.startProcessInstanceByKey(code,entity.getBillNo(),instanceParams);
+        ProcessInstance processInstance =runtimeService.startProcessInstanceById(workflowTemplate.getProcessDefinitionId(),entity.getBillNo(),instanceParams);
 
         //更新流程相关字段
         //流程类型
-        WorkflowTemplate workflowTemplate=flowTemplateService.getByCode(code);
         entity.setFlowTypeName(workflowTemplate.getName());
         //流程实例标识
         entity.setFlowInstanceId(processInstance.getProcessInstanceId());

@@ -103,6 +103,13 @@ public class WorkflowNodeConfigServiceImpl extends BaseServiceImpl<WorkflowNodeC
     }
 
     @Override
+    public List<WorkflowNodeConfig> getByIdList(String processDefinitionId,List<String> idList) {
+        return this.lambdaQuery().eq(WorkflowNodeConfig::getProcessDefinitionId,processDefinitionId)
+                .in(WorkflowNodeConfig::getNodeId,idList).list();
+
+    }
+
+    @Override
     protected void copyPropertyHandle(WorkflowNodeConfig entity, String... value) {
 
         entity.setProcessDefinitionId(value[0]);

@@ -1,12 +1,13 @@
 <template>
   <el-container>
     <el-header height="35" style="padding: 0">
-      <el-row style="background-color: #1890ff; padding: 0">
+      <el-row style="background-color: #1890ff; padding: 0; align-items: center">
         <span class="title">{{ taskData.processDefinitionName }}</span>
         <el-button-group style="position: absolute; right: 0">
-          <!-- <view-diagram-button :process-definition-id="taskData.processDefinitionId" /> -->
+          <el-button type="primary" @click="viewDiagram">流程图</el-button>
           <el-button type="primary" @click="close">关闭</el-button>
         </el-button-group>
+        <FlowPreview ref="flowPreview" />
       </el-row>
     </el-header>
     <el-main style="padding: 0">
@@ -25,7 +26,6 @@
 <script>
 import HistoryStep from '@/modules/workflow/view/task/historyStep.vue'
 import * as flowComponent from '@/modules/businessflow/view/dictionary/list'
-// import ViewDiagramButton from '@/components/popsoft/FlowModel/ViewDiagramButton'
 import { flowMixin } from '@/mixin/flowMixin'
 export default {
   name: 'FlowView',
@@ -35,7 +35,6 @@ export default {
     return {}
   },
   mounted() {
-    console.log(this.$route.query.processInstanceId)
     // 获取流程实例标识
     this.taskData.processInstanceId = this.$route.query.processInstanceId
     // 查询流程实例信息
@@ -54,7 +53,11 @@ export default {
       this.$refs.historyStep.view(this.taskData.processInstanceId)
     })
   },
-  methods: {}
+  methods: {
+    viewDiagram() {
+      this.$refs.flowPreview.show(this.taskData.processDefinitionId)
+    }
+  }
 }
 </script>
 

@@ -57,6 +57,19 @@ public class ProcessTaskController extends BaseController {
  }
 
  /**
+  * 任务跳转
+  */
+ @PutMapping("{id}/jump")
+ @SystemLog(value = "待办任务-任务跳转")
+ public ResponseEntity<Result> jump(@PathVariable String id, @RequestBody TaskCommitVO vo) {
+
+  processTaskService.jump(vo.getTaskId(),vo.getComment(),vo.getNextStepId(),
+          vo.getAssigneeList());
+  return ResultUtil.success();
+ }
+
+
+ /**
   * 任务转办
   */
  @PutMapping("{id}/transfer")
@@ -127,6 +140,20 @@ public class ProcessTaskController extends BaseController {
   return ResultUtil.success(voList);
 
  }
+
+ /**
+  * 获取跳转节点
+  */
+ @GetMapping("{taskId}/getJumpNodeList")
+ public ResponseEntity<Result> getJumpNodeList(@PathVariable String taskId) {
+
+  List<WorkflowNodeConfig> nodeConfigList=processTaskService.getJumpNodeList(taskId);
+  List<WorkflowNodeConfigVO> voList = mapperFacade.mapAsList(nodeConfigList, WorkflowNodeConfigVO.class);
+  return ResultUtil.success(voList);
+
+ }
+
+
 
  /**
   * 任务查看

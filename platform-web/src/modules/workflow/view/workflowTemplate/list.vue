@@ -104,6 +104,13 @@
               >发布</el-button
             >
 
+            <el-button
+              v-show="scope.row.templateStatus == 'ARCHIVED'"
+              type="primary"
+              v-permission="pageCode + 'valid'"
+              @click="valid(scope.row)"
+              >启用版本</el-button
+            >
             <el-dropdown class="ml-10px">
               <el-button type="primary">
                 更多
@@ -255,6 +262,19 @@ export default {
       })
         .then(() => {
           this.api.upgrade(row.id).then(() => {
+            this.refresh()
+          })
+        })
+        .catch(() => {
+          this.$message.info('已取消')
+        })
+    },
+    valid(row) {
+      this.$confirm('是否启用当前版本的流程模板？', '确认', {
+        type: 'warning'
+      })
+        .then(() => {
+          this.api.valid(row.id).then(() => {
             this.refresh()
           })
         })

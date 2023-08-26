@@ -1,5 +1,6 @@
 package tech.abc.platform.workflow.service;
 
+import tech.abc.platform.workflow.entity.FlowStep;
 import tech.abc.platform.workflow.entity.WorkflowTemplate;
 import tech.abc.platform.common.base.BaseService;
 import java.util.List;
@@ -85,5 +86,29 @@ public interface WorkflowTemplateService extends BaseService<WorkflowTemplate> {
     * @param id id
     */
    void upgrade(String id);
+
+
+   /**
+    * 启用版本
+    *
+    * @param id id
+    */
+   void valid(String id);
+
+   /**
+    * 获取模型
+    *
+    * @param processDefinitionId 流程定义标识
+    * @return {@link String}
+    */
+   String getModelByProcessDefinitionId(String processDefinitionId);
+
+   /**
+    * 获取用户任务节点
+    *
+    * @param processDefinitionId 流程定义id
+    * @return {@link String}
+    */
+   List<FlowStep> getUserTaskNodeByProcessDefinitionId(String processDefinitionId);
 }
 

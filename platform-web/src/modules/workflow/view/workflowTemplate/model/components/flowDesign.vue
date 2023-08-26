@@ -13,7 +13,9 @@
           </div>
           <div class="fd-nav-right">
             <el-button type="primary" @click="save">保存</el-button>
-            <el-button @click="close">关闭</el-button>
+            <el-button type="primary" @click="view">查看</el-button>
+            <el-button type="primary" @click="importModel">导入</el-button>
+            <el-button type="primary" @click="close">关闭</el-button>
           </div>
         </div>
         <div class="fd-nav-content">
@@ -42,9 +44,11 @@
         </div>
         <errorDialog v-model:visible="tipVisible" :list="tipList" />
 
-        <HandleNodeConfig />
+        <HandleNodeConfig :modelData="nodeData" />
         <ConditionNodeConfig />
         <RootNodeConfig />
+        <ViewDialog ref="viewDialog" />
+        <ImportDialog ref="importDialog" @update="updateModel" />
       </div>
     </Dialog>
   </div>
@@ -53,10 +57,13 @@
 <script>
 import { Dialog } from '@/components/abc/Dialog'
 import errorDialog from './dialog/errorDialog.vue'
+
 import nodeWrap from './nodeWrap.vue'
 import HandleNodeConfig from './drawer/HandleNodeConfig.vue'
 import RootNodeConfig from './drawer/RootNodeConfig.vue'
 import ConditionNodeConfig from './drawer/ConditionNodeConfig.vue'
+import ViewDialog from './dialog/ViewDialog.vue'
+import ImportDialog from './dialog/ImportDialog.vue'
 import { useStore } from '../stores/index'
 let store = useStore()
 export default {
@@ -66,7 +73,9 @@ export default {
     nodeWrap,
     HandleNodeConfig,
     ConditionNodeConfig,
-    RootNodeConfig
+    RootNodeConfig,
+    ViewDialog,
+    ImportDialog
   },
   props: {
     modelValue: {
@@ -160,6 +169,15 @@ export default {
         .catch(() => {
           this.$message.info('已取消')
         })
+    },
+    view() {
+      this.$refs.viewDialog.show(JSON.stringify(this.nodeData))
+    },
+    importModel() {
+      this.$refs.importDialog.show()
+    },
+    updateModel(value) {
+      this.nodeData = JSON.parse(value)
     }
   }
 }

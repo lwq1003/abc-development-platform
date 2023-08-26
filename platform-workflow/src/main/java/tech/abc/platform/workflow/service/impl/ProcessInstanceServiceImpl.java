@@ -133,16 +133,7 @@ public class ProcessInstanceServiceImpl extends BaseServiceImpl<ProcessInstanceM
                             .eq(User::getStatus, UserStatusEnum.NORMAL.name()).in(User::getId, userIdList);
                     List<User> userList = userService.list(userQueryWrapper);
                     result = userList;
-                    // 获取流程启动人
-                    String startUserId = processInstance.getProcessApplyId();
-                    User startUser = userService.query(startUserId);
-                    String startOrganizationId = startUser.getOrganization();
-                    // 优先获取与流程启动人所在部门一致的人员
-                    List<User> userListInSameOrganization = userList.stream()
-                            .filter(x -> x.getOrganization().equals(startOrganizationId)).collect(Collectors.toList());
-                    if (CollectionUtils.isNotEmpty(userListInSameOrganization)) {
-                        result = userListInSameOrganization;
-                    }
+
                 }
             }
         }

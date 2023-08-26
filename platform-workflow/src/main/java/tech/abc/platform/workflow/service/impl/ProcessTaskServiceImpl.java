@@ -2,24 +2,9 @@ package tech.abc.platform.workflow.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import tech.abc.platform.common.base.BaseServiceImpl;
-import tech.abc.platform.common.enums.YesOrNoEnum;
-import tech.abc.platform.common.exception.CommonException;
-import tech.abc.platform.common.exception.CustomException;
-import tech.abc.platform.system.service.UserService;
-import tech.abc.platform.workflow.constant.WorkFlowConstant;
-import tech.abc.platform.workflow.entity.ProcessTask;
-import tech.abc.platform.workflow.entity.WorkflowNodeConfig;
-import tech.abc.platform.workflow.enums.CommitTypeEnum;
-import tech.abc.platform.workflow.enums.NodeModeEnum;
-import tech.abc.platform.workflow.mapper.ProcessTaskMapper;
-
-import tech.abc.platform.workflow.service.ProcessTaskService;
-import tech.abc.platform.workflow.service.WorkflowCommentService;
-import tech.abc.platform.workflow.service.WorkflowNodeConfigService;
-import tech.abc.platform.common.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.IdentityService;
@@ -35,6 +20,19 @@ import org.camunda.bpm.model.bpmn.instance.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.abc.platform.common.base.BaseServiceImpl;
+import tech.abc.platform.common.enums.YesOrNoEnum;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.common.utils.UserUtil;
+import tech.abc.platform.system.service.UserService;
+import tech.abc.platform.workflow.constant.WorkFlowConstant;
+import tech.abc.platform.workflow.entity.ProcessTask;
+import tech.abc.platform.workflow.entity.WorkflowNodeConfig;
+import tech.abc.platform.workflow.enums.CommitTypeEnum;
+import tech.abc.platform.workflow.enums.NodeModeEnum;
+import tech.abc.platform.workflow.mapper.ProcessTaskMapper;
+import tech.abc.platform.workflow.service.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,7 +74,14 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     private WorkflowCommentService workflowCommentService;
 
     @Autowired
-    private WorkflowNodeConfigService flowNodeConfigService;
+    private WorkflowNodeConfigService workflowNodeConfigService;
+
+    @Autowired
+    private WorkflowJumpNodeConfigService workflowJumpNodeConfigService;
+
+    @Autowired
+    private WorkflowBackNodeConfigService workflowBackNodeConfigService;
+
 
 
     @Override
@@ -120,7 +125,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         instanceVariable.put(WorkFlowConstant.INSTANCE_NEXT_STEP, nextStepId);
         //获取环节设置
         ProcessTask processTask = get(taskId);
-        WorkflowNodeConfig nodeConfig = flowNodeConfigService
+        WorkflowNodeConfig nodeConfig = workflowNodeConfigService
                 .getNodeConfig(processTask.getProcessDefinitionId(), nextStepId);
         if (nodeConfig != null) {
             if (nodeConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
@@ -144,7 +149,20 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void reject(String taskId, String comment, String nextStepId, List<String> assigneeList) {
-        // TODO: 验证当前操作人是否有权限提交
+
+        // 设置当前处理人
+        jumpTargetStep(taskId, comment, nextStepId, assigneeList);
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void jump(String taskId, String comment, String nextStepId, List<String> assigneeList) {
+        jumpTargetStep(taskId, comment, nextStepId, assigneeList);
+    }
+
+    private void jumpTargetStep(String taskId, String comment, String nextStepId, List<String> assigneeList) {
+
         // 设置当前处理人
         identityService.setAuthenticatedUserId(UserUtil.getId());
 
@@ -154,13 +172,13 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         // 记录处理意见
         workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), comment, CommitTypeEnum.REJECT);
 
-        // 驳回任务
+        // 跳转任务
         // 设置下一环节及处理人实例变量
         Map<String, Object> instanceVariable = new HashMap<String, Object>(2);
         instanceVariable.put(WorkFlowConstant.INSTANCE_NEXT_STEP, nextStepId);
         //获取环节设置
         ProcessTask processTask = get(taskId);
-        WorkflowNodeConfig nodeConfig = flowNodeConfigService
+        WorkflowNodeConfig nodeConfig = workflowNodeConfigService
                 .getNodeConfig(processTask.getProcessDefinitionId(), nextStepId);
         if (nodeConfig != null) {
             if (nodeConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
@@ -324,7 +342,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             QueryWrapper<WorkflowNodeConfig> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda().eq(WorkflowNodeConfig::getProcessDefinitionId, task.getProcessDefinitionId())
                     .in(WorkflowNodeConfig::getNodeId, nodeIdList);
-            list.addAll(flowNodeConfigService.list(queryWrapper));
+            list.addAll(workflowNodeConfigService.list(queryWrapper));
         }
 
         //判断是否包括结束环节
@@ -369,56 +387,33 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     public List<WorkflowNodeConfig> getBackNodeList(String taskId) {
         // 获取任务
         ProcessTask task = get(taskId);
-        // 获取流程模型
-        BpmnModelInstance modelInstance = repositoryService.getBpmnModelInstance(task.getProcessDefinitionId());
-        // 获取当前任务在模型中对应节点定义
-        UserTask userTask = (UserTask) modelInstance.getModelElementById(task.getTaskDefinitionKey());
 
+        // 从任务信息中获取对应的流程定义标识和环节标识
+        String processDefinitionId=task.getProcessDefinitionId();
+        String nodeId=task.getTaskDefinitionKey();
 
-        //初始化返回结果
-        List<WorkflowNodeConfig> result = new ArrayList<>();
-        // 获取存在回退标记的流出环节
-        List<String> backIdList = userTask.getOutgoing().stream()
-                .filter(x -> x.getConditionExpression() != null && x.getConditionExpression()
-                        .getTextContent().equals(WorkFlowConstant.REJECT_FLAG_VALUE))
-                .map(x -> x.getTarget().getId())
-                .collect(Collectors.toList());
+        // 从环节跳转配置中获取可跳转的目标节点列表
+        List<String> targetNodeIdList=workflowBackNodeConfigService.getTargetNodeIdList(processDefinitionId,nodeId);
 
-        //获取类型为用户任务的流入环节
-        List<String> previousNodeIdList = userTask.getIncoming().stream()
-                .filter(x -> x.getSource().getElementType().getTypeName()
-                        .equals(WorkFlowConstant.USER_TASK_TYPE_NAME))
-                .map(x -> x.getSource().getId())
-                .collect(Collectors.toList());
-        // 合并去重
-        List<String> nodeIdList = (List<String>) CollectionUtils.union(backIdList, previousNodeIdList);
-
-        if (CollectionUtils.isNotEmpty(nodeIdList)) {
-            //获取类型普通模式的用户任务环节设置（不支持回退到会签环节，排除）
-            QueryWrapper<WorkflowNodeConfig> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(WorkflowNodeConfig::getProcessDefinitionId, task.getProcessDefinitionId())
-                    .eq(WorkflowNodeConfig::getMode, NodeModeEnum.NORMAL.name())
-                    .in(WorkflowNodeConfig::getNodeId, nodeIdList);
-            result = flowNodeConfigService.list(queryWrapper);
+        // 根据目标节点列表获取环节配置信息
+        List<WorkflowNodeConfig> entityList=new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(targetNodeIdList)){
+            entityList = workflowNodeConfigService.getByIdList(processDefinitionId, targetNodeIdList);
         }
 
+        // 发起环节处理
+        if(targetNodeIdList.contains("root")){
+            WorkflowNodeConfig root=new WorkflowNodeConfig();
+            root.setSetAssigneeFlag(YesOrNoEnum.YES.name());
+            root.setNodeId("root");
+            root.setMode(NodeModeEnum.NORMAL.name());
+            root.setName("填报");
+            entityList.add(root);
 
-        //判断是否包括首环节,如包含，追加
-        Collection<StartEvent> startEventList = modelInstance.getModelElementsByType(StartEvent.class);
-        StartEvent startEvent = startEventList.iterator().next();
-        List<FlowNode> nodeList = startEvent.getOutgoing().stream().map(x -> x.getTarget())
-                .collect(Collectors.toList());
-        FlowNode firstNode = nodeList.iterator().next();
-        if (nodeIdList.contains(firstNode.getId())) {
-            WorkflowNodeConfig startConfig = new WorkflowNodeConfig();
-            startConfig.setSetAssigneeFlag(YesOrNoEnum.YES.name());
-            startConfig.setNodeId(firstNode.getId());
-            startConfig.setMode(NodeModeEnum.NORMAL.name());
-            startConfig.setName(firstNode.getName());
-            result.add(startConfig);
         }
 
-        return result;
+        return entityList;
+
 
     }
 
@@ -468,5 +463,30 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             throw new CustomException(CommonException.NOT_EXIST);
         }
         return entity;
+    }
+
+    @Override
+    public List<WorkflowNodeConfig> getJumpNodeList(String taskId) {
+        // 获取任务
+        ProcessTask task = get(taskId);
+
+        // 从任务信息中获取对应的流程定义标识和环节标识
+        String processDefinitionId=task.getProcessDefinitionId();
+        String nodeId=task.getTaskDefinitionKey();
+
+        // 从环节跳转配置中获取可跳转的目标节点列表
+        List<String> targetNodeIdList=workflowJumpNodeConfigService.getTargetNodeIdList(processDefinitionId,nodeId);
+
+        // 根据目标节点列表获取环节配置信息
+        List<WorkflowNodeConfig> entityList=new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(targetNodeIdList)){
+            entityList = workflowNodeConfigService.getByIdList(processDefinitionId, targetNodeIdList);
+        }
+
+        // TODO 发起环节处理
+
+        return entityList;
+
+
     }
 }

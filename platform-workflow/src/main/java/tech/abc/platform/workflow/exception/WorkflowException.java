@@ -18,9 +18,13 @@ public enum WorkflowException  implements ExceptionInterface {
      */
     HAVE_PUBLISHED("流程模板已发布过"),
     /**
-     * 流程模板已发布过
+     * 流程模板当前未处于运行状态
      */
     IS_NOT_RUNNING("流程模板当前未处于运行状态"),
+    /**
+     * 流程模板当前未处于已归档状态
+     */
+    IS_NOT_ARCHIVED("流程模板当前未处于运行状态"),
     // PROCESS_TEMPLATE_HAVE_PUBLISHED("流程模板已发布，请先撤销"),
     //
     //

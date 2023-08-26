@@ -19,11 +19,28 @@ export const workflowTemplate = Object.assign({}, COMMON_METHOD, {
   upgrade(id) {
     return request.put({ url: this.serveUrl + id + '/upgrade' })
   },
+  valid(id) {
+    return request.put({ url: this.serveUrl + id + '/valid' })
+  },
   // 生成临时版本
   generateTemporaryVersion(processDefinitionKey) {
     return request.get({
       url: this.serveUrl + 'generateTemporaryVersion',
       params: { processDefinitionKey }
+    })
+  },
+  // 获取模型
+  getModelByProcessDefinitionId(processDefinitionId) {
+    return request.get({
+      url: this.serveUrl + 'getModelByProcessDefinitionId',
+      params: { processDefinitionId }
+    })
+  },
+  // 获取所有用户类型节点
+  getUserTaskNodeByProcessDefinitionId(processDefinitionId) {
+    return request.get({
+      url: this.serveUrl + 'getUserTaskNodeByProcessDefinitionId',
+      params: { processDefinitionId }
     })
   }
 })
@@ -75,6 +92,10 @@ export const task = Object.assign({}, COMMON_METHOD, {
   reject(taskData) {
     return request.put({ url: this.serveUrl + taskData.taskId + '/reject', data: taskData })
   },
+  // 跳转
+  jump(taskData) {
+    return request.put({ url: this.serveUrl + taskData.taskId + '/jump', data: taskData })
+  },
   // 转办
   transfer(taskId, assignee, comment) {
     return request.put({ url: this.serveUrl + taskId + '/transfer', params: { assignee, comment } })
@@ -98,6 +119,10 @@ export const task = Object.assign({}, COMMON_METHOD, {
   // 获取回退环节列表
   getBackNodeList(id) {
     return request.get({ url: this.serveUrl + id + '/getBackNodeList' })
+  },
+  // 获取跳转环节列表
+  getJumpNodeList(id) {
+    return request.get({ url: this.serveUrl + id + '/getJumpNodeList' })
   }
 })
 

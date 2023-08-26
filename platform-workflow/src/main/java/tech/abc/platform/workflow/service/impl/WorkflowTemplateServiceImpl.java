@@ -1,8 +1,8 @@
 package tech.abc.platform.workflow.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,9 +39,7 @@ import tech.abc.platform.workflow.enums.NodeModeEnum;
 import tech.abc.platform.workflow.enums.WorkflowTemplateStatusEnum;
 import tech.abc.platform.workflow.exception.WorkflowException;
 import tech.abc.platform.workflow.mapper.WorkflowTemplateMapper;
-import tech.abc.platform.workflow.service.WorkflowNodeConfigService;
-import tech.abc.platform.workflow.service.WorkflowNodePermissionConfigService;
-import tech.abc.platform.workflow.service.WorkflowTemplateService;
+import tech.abc.platform.workflow.service.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,6 +70,11 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     @Autowired
     private WorkflowNodePermissionConfigService workflowNodePermissionConfigService;
 
+    @Autowired
+    private WorkflowJumpNodeConfigService workflowJumpNodeConfigService;
+
+    @Autowired
+    private WorkflowBackNodeConfigService workflowBackNodeConfigService;
 
     @Override
     public WorkflowTemplate init() {
@@ -147,7 +150,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     protected void copyPropertyHandle(WorkflowTemplate entity, String... value) {
         // 重置属性
         entity.setTemplateStatus(WorkflowTemplateStatusEnum.UNPUBLISHED.name());
-        entity.setProcessDefinitionId(null);
+        entity.setProcessDefinitionId(this.generateTemporaryVersion(entity.getCode()));
         // 版本升级时，模板版本号小段自动加1
         if(StringUtils.isNotBlank(value[0]) && value[0].equals(YesOrNoEnum.YES.name())) {
             String templateVersion = entity.getTemplateVersion();
@@ -199,6 +202,13 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         // 删除流程权限
          workflowNodePermissionConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
 
+        // 删除环节回退配置
+        workflowBackNodeConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
+
+        // 删除环节跳转配置
+        workflowJumpNodeConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
+
+
     }
 
     @Override
@@ -232,6 +242,11 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         workflowNodeConfigService.updateProcessDefinitionId(processDefinitionId, tempProcessDefinitionId);
         // 更新环节权限设置，使用正式流程定义标识替换临时流程定义标识
         workflowNodePermissionConfigService.updateProcessDefinitionId(processDefinitionId, tempProcessDefinitionId);
+        // 更新环节回退设置，使用正式流程定义标识替换临时流程定义标识
+        workflowBackNodeConfigService.updateProcessDefinitionId(processDefinitionId, tempProcessDefinitionId);
+        // 更新环节跳转设置，使用正式流程定义标识替换临时流程定义标识
+        workflowJumpNodeConfigService.updateProcessDefinitionId(processDefinitionId, tempProcessDefinitionId);
+
 
         // 将现有运行中的模板归档
         setArchived(entity.getCode());
@@ -252,7 +267,8 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         if(workflowTemplate.isPresent()){
             WorkflowTemplate entity = workflowTemplate.get();
             entity.setTemplateStatus(WorkflowTemplateStatusEnum.ARCHIVED.name());
-            modify(entity);
+            // 此处直接调用底层更新，避免修改前检查名称是否相同（同一流程多版本，名称通常是一样的）
+            super.updateById(entity);
         }
 
     }
@@ -275,30 +291,72 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     }
 
-    @Override
-    protected void afterAddByCopy(WorkflowTemplate sourceEntity, WorkflowTemplate entity) {
-        // // 获取原流程定义标识
-        // String processDefinitionId = sourceEntity.getProcessDefinitionId();
-        // // 获取临时流程定义标识
-        // String tempProcessDefinitionId = this.generateTemporaryVersion(entity.getCode());
-        //
-        // // 复制节点配置
-        // List<WorkflowNodeConfig> workflowNodeConfigList = workflowNodeConfigService.getByProcessDefinitionId(processDefinitionId);
-        // for (WorkflowNodeConfig item : workflowNodeConfigList) {
-        //     workflowNodeConfigService.addByCopy(item.getId(), tempProcessDefinitionId);
-        // }
-        //
-        // // 复制流程权限
-        // List<WorkflowNodePermissionConfig> workflowNodePermissionConfigList =
-        //         workflowNodePermissionConfigService.getByProcessDefinitionId(processDefinitionId);
-        // for (WorkflowNodePermissionConfig item : workflowNodePermissionConfigList) {
-        //     workflowNodePermissionConfigService.addByCopy(item.getId(), tempProcessDefinitionId);
-        // }
 
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void valid(String id) {
+
+        // 获取模板
+        WorkflowTemplate entity = query(id);
+        // 状态检查，仅已归档的模板允许执行操作
+        if (entity.getTemplateStatus().equals(WorkflowTemplateStatusEnum.ARCHIVED.name()) == false) {
+            throw new CustomException(WorkflowException.IS_NOT_ARCHIVED);
+        }
+
+        // 将现有运行中的模板归档
+        setArchived(entity.getCode());
+
+        // 将当前选中置为运行状态
+        entity.setTemplateStatus(WorkflowTemplateStatusEnum.RUNNING.name());
+        // 此处直接调用底层更新，避免修改前检查名称是否相同（同一流程多版本，名称通常是一样的）
+        super.updateById(entity);
 
     }
 
+    @Override
+    public String getModelByProcessDefinitionId(String processDefinitionId) {
+        WorkflowTemplate entity = this.lambdaQuery().eq(WorkflowTemplate::getProcessDefinitionId, processDefinitionId).one();
+        return entity.getModel();
+    }
+
+    @Override
+    public List<FlowStep> getUserTaskNodeByProcessDefinitionId(String processDefinitionId) {
+
+        String model = getModelByProcessDefinitionId(processDefinitionId);
+        MyFlowNode flowNode = JSON.parseObject(model, MyFlowNode.class);
+        List<FlowStep> result=new ArrayList<>();
+        // 添加发起环节
+        FlowStep rootStep=new FlowStep();
+        BeanUtils.copyProperties(flowNode, rootStep);
+        result.add(rootStep);
+        // 遍历后续环节，跳过路由分支
+        MyFlowNode child=flowNode.getChild();
+        while(true){
+            if(child==null || StringUtils.isBlank(child.getName())){
+                break;
+            }
+            if(child.getType().equals(FlowCodeTypeEnum.HANDLE.name())){
+                FlowStep handleStep=new FlowStep();
+                BeanUtils.copyProperties(child, handleStep);
+                result.add(handleStep);
+            }
+            child = child.getChild();
+        }
+
+        return result;
+    }
+
+
     // region  模型转换
+
+    /**
+     * 将json数据局转换为模型
+     *
+     * @param entity             流程模板实体
+     * @param generateConfigFlag 是否生成配置
+     * @return {@link BpmnModelInstance}
+     */
     public BpmnModelInstance convertJsonToModel(WorkflowTemplate entity, boolean generateConfigFlag) {
         // 流程模型未配置，直接返回null对象
         if (StringUtils.isBlank(entity.getModel())) {
@@ -382,7 +440,11 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
                     List<WorkflowNodePermissionConfig> rootPermissionList = JSON.parseArray(nodeConfig.getString("permissionConfig"),
                             WorkflowNodePermissionConfig.class);
                     configPermission(tempVersion, firstNode.getId(), rootPermissionList);
+
+                    // 跳转环节配置
+                    configJumpNodeList(tempVersion, firstNode.getId(), nodeConfig.getString("jumpNodeList"));
                 }
+
                 break;
             case HANDLE:
                 UserTask userTask = modelInstance.newInstance(UserTask.class);
@@ -417,6 +479,11 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
                     List<WorkflowNodePermissionConfig> permissionList = JSON.parseArray(handleNodeConfig.getString("permissionConfig"),
                             WorkflowNodePermissionConfig.class);
                     configPermission(tempVersion, userTask.getId(), permissionList);
+
+                    // 回退环节配置
+                    configBackNodeList(tempVersion, userTask.getId(), handleNodeConfig.getString("backNodeList"));
+                    // 跳转环节配置
+                    configJumpNodeList(tempVersion, userTask.getId(), handleNodeConfig.getString("jumpNodeList"));
                 }
 
                 // 附加固化的人员指派监听器
@@ -518,6 +585,43 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     }
 
+    private void configJumpNodeList(String tempVersion, String id,String configString) {
+
+        if(StringUtils.isNoneBlank(configString)) {
+
+            List<WorkflowJumpNodeConfig> jumpNodeList = new ArrayList<>();
+            JSONArray jsonArray = JSON.parseArray(configString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                WorkflowJumpNodeConfig entity = new WorkflowJumpNodeConfig();
+                entity.setTargetNodeId(jsonObject.getString("id"));
+                entity.setTargetNodeName(jsonObject.getString("name"));
+                jumpNodeList.add(entity);
+
+            }
+
+            workflowJumpNodeConfigService.updateConfig(tempVersion, id, jumpNodeList);
+        }
+
+    }
+
+    private void configBackNodeList(String tempVersion, String id,String configString) {
+        if(StringUtils.isNoneBlank(configString)) {
+
+            List<WorkflowBackNodeConfig> backNodeList = new ArrayList<>();
+            JSONArray jsonArray = JSON.parseArray(configString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                WorkflowBackNodeConfig entity = new WorkflowBackNodeConfig();
+                entity.setTargetNodeId(jsonObject.getString("id"));
+                entity.setTargetNodeName(jsonObject.getString("name"));
+                backNodeList.add(entity);
+            }
+            workflowBackNodeConfigService.updateConfig(tempVersion, id, backNodeList);
+        }
+
+    }
+
     private void configPermission(String tempVersion, String nodeId, List<WorkflowNodePermissionConfig> permissionList) {
         // 基础权限
         List<WorkflowNodePermissionConfig> nodePermissionConfigList = workflowNodePermissionConfigService.getNodePermissionConfig(tempVersion,
@@ -561,7 +665,9 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         List<String> flowTemplateCodeList = getFlowTemplateCodeListByPermission();
         if (CollectionUtils.isNotEmpty(flowTemplateCodeList)) {
             List<WorkflowTemplate> list = this.lambdaQuery().in(WorkflowTemplate::getCode, flowTemplateCodeList)
-                    .eq(WorkflowTemplate::getStatus, StatusEnum.NORMAL.toString()).orderByAsc(WorkflowTemplate::getOrderNo).list();
+                    .eq(WorkflowTemplate::getStatus, StatusEnum.NORMAL.toString())
+                    .eq(WorkflowTemplate::getTemplateStatus, WorkflowTemplateStatusEnum.RUNNING.toString())
+                    .orderByAsc(WorkflowTemplate::getOrderNo).list();
             return list;
         }
 
@@ -581,7 +687,9 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     @Override
     public WorkflowTemplate getByCode(String code) {
-        Optional<WorkflowTemplate> workflowTemplate = this.lambdaQuery().eq(WorkflowTemplate::getCode, code).oneOpt();
+        Optional<WorkflowTemplate> workflowTemplate = this.lambdaQuery().eq(WorkflowTemplate::getCode, code)
+                .eq(WorkflowTemplate::getTemplateStatus, WorkflowTemplateStatusEnum.RUNNING.name())
+                .oneOpt();
         if (workflowTemplate.isPresent()) {
             return workflowTemplate.get();
         } else {

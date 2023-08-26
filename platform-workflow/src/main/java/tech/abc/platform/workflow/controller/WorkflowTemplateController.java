@@ -1,27 +1,28 @@
 package tech.abc.platform.workflow.controller;
 
 
-import org.springframework.web.bind.annotation.RestController;
-import tech.abc.platform.common.base.BaseController;
-import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import tech.abc.platform.common.annotation.SystemLog;
-import tech.abc.platform.common.query.QueryGenerator;
-import tech.abc.platform.common.utils.ResultUtil;
-import tech.abc.platform.common.vo.PageInfo;
-import tech.abc.platform.common.vo.Result;
-import tech.abc.platform.common.vo.SortInfo;
-import tech.abc.platform.workflow.entity.WorkflowTemplate;
-import tech.abc.platform.workflow.service.WorkflowTemplateService;
-import tech.abc.platform.workflow.vo.WorkflowTemplateVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tech.abc.platform.common.annotation.AllowAll;
+import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.base.BaseController;
+import tech.abc.platform.common.query.QueryGenerator;
+import tech.abc.platform.common.utils.ResultUtil;
+import tech.abc.platform.common.vo.PageInfo;
+import tech.abc.platform.common.vo.Result;
+import tech.abc.platform.common.vo.SortInfo;
+import tech.abc.platform.workflow.entity.FlowStep;
+import tech.abc.platform.workflow.entity.WorkflowTemplate;
+import tech.abc.platform.workflow.service.WorkflowTemplateService;
+import tech.abc.platform.workflow.vo.WorkflowTemplateVO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -208,6 +209,20 @@ public class WorkflowTemplateController extends BaseController {
 
 
     /**
+     * 启用版本（使生效）
+     */
+
+    @PutMapping("/{id}/valid")
+    @SystemLog(value = "流程模板-启用版本")
+    @PreAuthorize("hasPermission(null,'workflow:workflowTemplate:valid')")
+    public ResponseEntity<Result> valid(@PathVariable("id") String id) {
+
+        workflowTemplateService.valid(id);
+        return ResultUtil.success();
+    }
+
+
+    /**
      * 生成临时版本
      */
     @GetMapping("/generateTemporaryVersion")
@@ -217,6 +232,31 @@ public class WorkflowTemplateController extends BaseController {
         String temporaryVersion = workflowTemplateService.generateTemporaryVersion(processDefinitionKey);
         return ResultUtil.success(temporaryVersion);
     }
+
+
+    /**
+     * 获取模型数据
+     */
+    @GetMapping("/getModelByProcessDefinitionId")
+    @SystemLog(value = "流程模板-获取模型数据")
+    @AllowAll
+    public ResponseEntity<Result> getModelByProcessDefinitionId(String processDefinitionId) {
+        String model = workflowTemplateService.getModelByProcessDefinitionId(processDefinitionId);
+        return ResultUtil.success(model);
+    }
+
+
+    /**
+     * 获取模型数据
+     */
+    @GetMapping("/getUserTaskNodeByProcessDefinitionId")
+    @SystemLog(value = "流程模板-获取所有用户类型节点")
+    @AllowAll
+    public ResponseEntity<Result> getUserTaskNodeByProcessDefinitionId(String processDefinitionId) {
+        List<FlowStep> flowStepList = workflowTemplateService.getUserTaskNodeByProcessDefinitionId(processDefinitionId);
+        return ResultUtil.success(flowStepList);
+    }
+
 
 
     //endregion

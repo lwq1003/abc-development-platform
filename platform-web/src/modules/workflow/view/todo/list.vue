@@ -150,7 +150,6 @@ export default {
     },
     // 处理任务
     handle(row) {
-      console.log(row)
       this.$router.push({ name: 'taskHandle', query: { taskId: row.id } })
     }
   }

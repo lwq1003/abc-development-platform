@@ -52,5 +52,15 @@ public interface WorkflowNodeConfigService extends BaseService<WorkflowNodeConfi
      * @param processDefinitionId 流程定义标识
      */
     void removeByProcessDefinitionId(String processDefinitionId);
+
+ /**
+
+  * 通过id列表获取
+  *
+  * @param processDefinitionId 流程定义标识
+  * @param idList id列表
+  * @return {@link List}<{@link WorkflowNodeConfig}>
+  */
+   List<WorkflowNodeConfig> getByIdList(String processDefinitionId,List<String> idList);
 }
 

@@ -1,14 +1,6 @@
 <template>
-  <Dialog title="流程建模" v-model="visible" fullscreen>
+  <el-dialog title="流程图" v-model="visible" fullscreen>
     <div>
-      <div class="fd-nav">
-        <div class="fd-nav-left">
-          <div class="fd-nav-title">{{ workflowTemplateName }}</div>
-        </div>
-        <div class="fd-nav-right">
-          <el-button @click="close">关闭</el-button>
-        </div>
-      </div>
       <div class="fd-nav-content">
         <section class="dingflow-design">
           <div class="zoom">
@@ -34,56 +26,45 @@
         </section>
       </div>
     </div>
-  </Dialog>
+    <template #footer>
+      <el-button type="primary" @click="close">关闭</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
-import { Dialog } from '@/components/abc/Dialog'
-
 import nodeWrap from './nodeWrap.vue'
-import HandleNodeConfig from './drawer/HandleNodeConfig.vue'
-import ConditionNodeConfig from './drawer/ConditionNodeConfig.vue'
+
 export default {
   components: {
-    Dialog,
     nodeWrap
   },
   props: {
     modelValue: {
-      type: String
-    },
-    // 流程模板名称
-    workflowTemplateName: {
       type: String
     }
   },
   data() {
     return {
       visible: false,
-      // 缩放值
-      scaleValue: 100,
       // 节点数据
       nodeData: {},
-      // 错误提示可见性
-      tipVisible: false,
-      // 错误列表
-      tipList: [],
-      // 默认节点数据
-      defaultNodeData: {
-        name: '填报',
-        id: '1',
-        type: 'ROOT',
-        config: {},
-        branchList: [],
-        child: {}
-      }
+      // 缩放值
+      scaleValue: 100
     }
   },
   methods: {
-    show() {
-      // TODO 加载模型数据
+    show(processDefinitionId) {
+      this.$api.workflow.workflowTemplate
+        .getModelByProcessDefinitionId(processDefinitionId)
+        .then((res) => {
+          this.nodeData = JSON.parse(res.data)
+        })
 
       this.visible = true
+    },
+    close() {
+      this.visible = false
     },
     zoomSize(type) {
       if (type == 1) {
@@ -97,9 +78,6 @@ export default {
         }
         this.scaleValue += 10
       }
-    },
-    close() {
-      this.visible = false
     }
   }
 }
@@ -107,7 +85,4 @@ export default {
 
 <style scoped>
 @import '../css/workflow.css';
-.error-modal-list {
-  width: 455px;
-}
 </style>

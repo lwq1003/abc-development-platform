@@ -2,7 +2,7 @@
   <el-dialog
     title="任务驳回"
     v-model="visible"
-    width="200"
+    width="350"
     append-to-body
     destroy-on-close
     @close="close"
@@ -14,7 +14,7 @@
             <dictionary-select
               ref="commonComment"
               v-model="commonComment"
-              :code="constant.DICTIONARY_TYPE_CODES.COMMON_ADVICE"
+              code="CommonAdvice"
               class="form-item"
               @change="commonCommentChange"
             />
@@ -29,19 +29,21 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="驳回环节" prop="nextStepId">
+        <el-col :span="24">
+          <el-form-item label="下一环节" prop="nextStepId">
             <el-select v-model="taskData.nextStepId" placeholder="请选择">
               <el-option
                 v-for="item in nextStep"
-                :key="item.definitionKey"
+                :key="item.nodeId"
                 :label="item.name"
-                :value="item.definitionKey"
+                :value="item.nodeId"
               />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row>
+        <el-col v-show="handlerVisible" :span="24">
           <el-form-item label="处理人" prop="assignee">
             <el-select v-model="assigneeList" placeholder="请选择" :multiple="selectMode">
               <el-option
@@ -149,21 +151,19 @@ export default {
         this.nextStep = res.data
         // 如只有一条记录，默认选中
         if (this.nextStep && this.nextStep.length === 1) {
-          this.taskData.nextStepId = this.nextStep[0].definitionKey
+          this.taskData.nextStepId = this.nextStep[0].nodeId
         }
       })
     },
     getNodeHandler() {
       if (this.taskData.nextStepId) {
         // 获取选中的环节配置信息
-        const nodeConfig = this.nextStep.filter(
-          (x) => x.definitionKey === this.taskData.nextStepId
-        )[0]
-        if (nodeConfig && nodeConfig.setAssigneeFlag === this.constant.YES_OR_NO.YES) {
+        const nodeConfig = this.nextStep.filter((x) => x.nodeId === this.taskData.nextStepId)[0]
+        if (nodeConfig && nodeConfig.setAssigneeFlag === 'YES') {
           // 需要指定人员
           this.handlerVisible = true
           // 根据节点类型是普通还是会签，设置控件多选还是单选
-          if (nodeConfig.mode === this.constant.NODE_MODE.NORMAL) {
+          if (nodeConfig.mode === 'NORMAL') {
             this.selectMode = false
           } else {
             this.selectMode = true

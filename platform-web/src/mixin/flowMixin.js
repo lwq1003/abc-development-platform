@@ -9,7 +9,7 @@ import OrganizationSingleSelect from '@/modules/system/view/organization/treeRef
 import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
 import { closeCurrentTab } from '@/utils'
 import BasicInfo from '@/modules/workflow/view/task/basicInfo.vue'
-
+import FlowPreview from '@/modules/workflow/view/workflowTemplate/model/components/flowPreview.vue'
 export const flowMixin = {
   components: {
     DictionarySelect,
@@ -17,7 +17,8 @@ export const flowMixin = {
     OrganizationSingleSelect,
     OrganizationMultipleSelect,
     DataDictionarySelect,
-    BasicInfo
+    BasicInfo,
+    FlowPreview
   },
   data() {
     return {
@@ -55,21 +56,7 @@ export const flowMixin = {
         assignee: ''
       },
       // 权限配置
-
-      permissionConfigData: {
-        // applyArea: {
-        //   visible: true,
-        //   readonly: false
-        // },
-        // organizationApproval: {
-        //   visible: true,
-        //   readonly: false
-        // },
-        // hrApproval: {
-        //   visible: true,
-        //   readonly: true
-        // }
-      }
+      permissionConfigData: {}
     }
   },
   computed: {},
@@ -153,7 +140,6 @@ export const flowMixin = {
     },
     // 获取保存状态
     getSaveStatus() {
-      console.log(this.taskData.isSaved)
       return this.taskData.isSaved
     },
     // 提交
@@ -177,6 +163,21 @@ export const flowMixin = {
     // 驳回
     reject() {
       this.$refs.reject.show(this.taskData.processInstanceId, this.taskData.taskId)
+    },
+    // 跳转
+    jump() {
+      console.log(this.taskData.taskId)
+      if (this.taskData.taskId === '') {
+        // 流程创建时保存后，无任务标识，通过流程标识获取任务标识
+        this.$api.workflow.processInstance
+          .getTaskId(this.taskData.processInstanceId)
+          .then((res) => {
+            this.taskData.taskId = res.data
+            this.$refs.jump.show(this.taskData.processInstanceId, this.taskData.taskId)
+          })
+      } else {
+        this.$refs.jump.show(this.taskData.processInstanceId, this.taskData.taskId)
+      }
     },
     // 保存
     save() {

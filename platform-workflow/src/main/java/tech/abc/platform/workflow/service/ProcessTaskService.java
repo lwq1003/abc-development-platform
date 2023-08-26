@@ -38,6 +38,19 @@ public interface ProcessTaskService extends BaseService<ProcessTask> {
                 List<String> assigneeList);
 
 
+
+    /**
+     * 跳转
+     * @param taskId 任务标识
+     * @param comment 处理意见
+     * @param nextStepId 环节标识
+     * @param assigneeList 处理人列表
+     */
+    void jump(String taskId, String comment,String nextStepId,
+                List<String> assigneeList);
+
+
+
     /**
      * 转办
      * @param taskId 任务标识
@@ -96,4 +109,14 @@ public interface ProcessTaskService extends BaseService<ProcessTask> {
      * @return 任务信息
      */
     ProcessTask get(String id);
+
+    /**
+     * 获取跳转环节
+     *
+     * @param taskId 任务id
+     * @return {@link List}<{@link WorkflowNodeConfig}>
+     */
+    List<WorkflowNodeConfig> getJumpNodeList(String taskId);
+
+
 }
