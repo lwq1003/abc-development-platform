@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { asyncRouterMap, constantRouterMap } from '@/router'
+import { asyncRouterMap } from '@/router'
 import { generateRoutesFn1, generateRoutesFn2, flatMultiLevelRoutes } from '@/utils/routerHelper'
 import { store } from '../index'
 import { cloneDeep } from 'lodash-es'
@@ -35,46 +35,36 @@ export const usePermissionStore = defineStore('permission', {
     }
   },
   actions: {
-    generateRoutes(
-      type: 'admin' | 'test' | 'none',
-      routers?: AppCustomRouteRecordRaw[] | string[]
-    ): Promise<unknown> {
+    generateRoutes(routers?: AppCustomRouteRecordRaw[] | string[]): Promise<unknown> {
       return new Promise<void>((resolve) => {
-        // TODO:前后端动态路由临时添加固定路由，待去除
-        let routerMap: AppRouteRecordRaw[] = asyncRouterMap
-        if (type === 'admin') {
-          const tempRouter: AppRouteRecordRaw[] = [
-            {
-              path: '/desktop',
-              component: Layout,
-              name: 'desktop',
-              meta: {},
-              children: [
-                {
-                  path: 'index',
-                  component: () => import('@/modules/support/view/desktopTemplate/desktop.vue'),
-                  name: 'config',
-                  meta: {
-                    title: '桌面',
-                    icon: 'Setting'
-                  }
+        let routerMap: AppRouteRecordRaw[] = []
+        const tempRouter: AppRouteRecordRaw[] = [
+          {
+            path: '/desktop',
+            component: Layout,
+            name: 'desktop',
+            meta: {},
+            children: [
+              {
+                path: 'index',
+                component: () => import('@/modules/support/view/desktopTemplate/desktop.vue'),
+                name: 'config',
+                meta: {
+                  title: '桌面',
+                  icon: 'HomeFilled',
+                  affix: true
                 }
-              ]
-            }
-          ]
-          // 后端过滤菜单
-          routerMap = tempRouter
-            .concat(generateRoutesFn2(routers as AppCustomRouteRecordRaw[]))
-            .concat(routerMap)
-          // 输出路由，用于调试
-          // console.log(routerMap)
-        } else if (type === 'test') {
-          // 模拟前端过滤菜单
-          routerMap = generateRoutesFn1(cloneDeep(asyncRouterMap), routers as string[])
-        } else {
-          // 直接读取静态路由表
-          routerMap = cloneDeep(asyncRouterMap)
-        }
+              }
+            ]
+          }
+        ]
+        // 后端过滤菜单
+        routerMap = tempRouter
+          .concat(generateRoutesFn2(routers as AppCustomRouteRecordRaw[]))
+          .concat(routerMap)
+        // 输出路由，用于调试
+        // console.log(routerMap)
+
         // 动态路由，404一定要放到最后面
         this.addRouters = routerMap.concat([
           {
@@ -88,7 +78,7 @@ export const usePermissionStore = defineStore('permission', {
           }
         ])
         // 渲染菜单的所有路由
-        this.routers = cloneDeep(constantRouterMap).concat(routerMap)
+        this.routers = routerMap
         resolve()
       })
     },

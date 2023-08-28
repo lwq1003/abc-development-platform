@@ -34,15 +34,8 @@ router.beforeEach(async (to, from, next) => {
         return
       }
 
-      // 是否使用动态路由
-      if (appStore.getDynamicRouter) {
-        await permissionStore.generateRoutes(
-          'admin',
-          userInfo.menuPermission as AppCustomRouteRecordRaw[]
-        )
-      } else {
-        await permissionStore.generateRoutes('none')
-      }
+      // 使用动态路由
+      await permissionStore.generateRoutes(userInfo.menuPermission as AppCustomRouteRecordRaw[])
 
       permissionStore.getAddRouters.forEach((route) => {
         router.addRoute(route as unknown as RouteRecordRaw) // 动态添加可访问路由表

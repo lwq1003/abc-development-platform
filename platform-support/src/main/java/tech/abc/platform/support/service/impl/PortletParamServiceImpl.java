@@ -1,5 +1,6 @@
 package tech.abc.platform.support.service.impl;
 
+import org.apache.commons.lang3.ArrayUtils;
 import tech.abc.platform.support.entity.PortletParam;
 import tech.abc.platform.support.mapper.PortletParamMapper;
 import tech.abc.platform.support.service.PortletParamService;
@@ -90,9 +91,21 @@ public class PortletParamServiceImpl extends BaseServiceImpl<PortletParamMapper,
     }
 
     @Override
+    public List<PortletParam> getByPortletId(String portletId) {
+        return this.lambdaQuery().eq(PortletParam::getPortlet,portletId).list();
+    }
+
+    @Override
     protected void copyPropertyHandle(PortletParam entity, String... value) {
-        // 主属性后附加“副本”用于区分
-        entity.setName (entity.getName() + " 副本");
+        if (ArrayUtils.isNotEmpty(value)) {
+            // 复制父级
+            // 设置关联的组件标识
+            entity.setPortlet(value[0]);
+        } else {
+            // 直接复制
+            // 名称后附加“副本”用于区分
+            entity.setName(entity.getName() + " 副本");
+        }
     }
 
 }

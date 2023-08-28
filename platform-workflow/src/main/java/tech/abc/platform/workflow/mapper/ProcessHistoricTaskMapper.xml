@@ -4,34 +4,50 @@
 
     <!-- 公用查询-->
     <sql id="query">
-        select * from (
-        select t1.ID_ AS id, #任务标识
-        t1.NAME_ as node_name, #环节名称
-        t1.START_TIME_ as start_time, #任务开始时间
-        t1.END_TIME_ as end_time, #任务结束时间
-        t1.DELETE_REASON_ as delete_reason, #任务移除原因
-        t1.ASSIGNEE_ as assignee,  #处理人
-        t5.name as assignee_name,  #处理人姓名
-        t1.TASK_DEF_KEY_ as task_definition_key, #任务定义标识
-        t1.OWNER_ as owner, #任务拥有者
-        t1.PROC_INST_ID_ AS process_instance_id, #流程实例标识
-        t3.PROC_DEF_ID_ as process_definition_id, #流程定义标识
-        t2.NAME_ as process_definition_name, #流程名称
-        t3.PROC_DEF_KEY_ as process_definition_key, #流程编码
-        t3.START_USER_ID_ as process_apply_id, #申请人id
-        t4.name as process_apply_name, #申请人姓名
-        t3.BUSINESS_KEY_ as business_no #单号
-        from act_hi_taskinst t1
-        LEFT JOIN act_re_procdef t2
-        on t1.PROC_DEF_ID_=t2.id_
-        LEFT JOIN act_hi_procinst t3
-        on t1.PROC_INST_ID_=t3.PROC_INST_ID_
-        LEFT JOIN sys_user t4
-        on t3.START_USER_ID_=t4.id
-        LEFT JOIN sys_user t5
-        on t1.ASSIGNEE_=t5.id
-        ) t
-        ${ew.customSqlSegment}
+        select *
+        from (select
+                  -- 任务标识
+                  t1.ID_            AS id,
+                  -- 环节名称
+                  t1.NAME_          as node_name,
+                  -- 任务开始时间
+                  t1.START_TIME_    as start_time,
+                  -- 任务结束时间
+                  t1.END_TIME_      as end_time,
+                  -- 任务移除原因
+                  t1.DELETE_REASON_ as delete_reason,
+                  -- 处理人
+                  t1.ASSIGNEE_      as assignee,
+                  -- 处理人姓名
+                  t5.name           as assignee_name,
+                  -- 任务定义标识
+                  t1.TASK_DEF_KEY_  as task_definition_key,
+                  -- 任务拥有者
+                  t1.OWNER_         as owner,
+                  -- 流程实例标识
+                  t1.PROC_INST_ID_  AS process_instance_id,
+                  -- 流程定义标识
+                  t3.PROC_DEF_ID_   as process_definition_id,
+                  -- 流程名称
+                  t2.NAME_          as process_definition_name,
+                  -- 流程编码
+                  t3.PROC_DEF_KEY_  as process_definition_key,
+                  -- 申请人id
+                  t3.START_USER_ID_ as process_apply_id,
+                  -- 申请人姓名
+                  t4.name           as process_apply_name,
+                  -- 单号
+                  t3.BUSINESS_KEY_  as business_no
+              from act_hi_taskinst t1
+                       LEFT JOIN act_re_procdef t2
+                                 on t1.PROC_DEF_ID_ = t2.id_
+                       LEFT JOIN act_hi_procinst t3
+                                 on t1.PROC_INST_ID_ = t3.PROC_INST_ID_
+                       LEFT JOIN sys_user t4
+                                 on t3.START_USER_ID_ = t4.id
+                       LEFT JOIN sys_user t5
+                                 on t1.ASSIGNEE_ = t5.id) t
+            ${ew.customSqlSegment}
     </sql>
 
 

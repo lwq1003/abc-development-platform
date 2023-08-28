@@ -3,6 +3,7 @@ package tech.abc.platform.workflow.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.workflow.constant.WorkFlowConstant;
 import tech.abc.platform.workflow.entity.ProcessInstance;
+import tech.abc.platform.workflow.entity.ProcessTask;
 import tech.abc.platform.workflow.mapper.ProcessInstanceMapper;
 import tech.abc.platform.workflow.service.ProcessInstanceService;
 
@@ -157,6 +159,22 @@ public class ProcessInstanceServiceImpl extends BaseServiceImpl<ProcessInstanceM
         }
         return entityList.get(0);
 
+    }
+
+    @Override
+    public List<ProcessInstance> getApplyPortletData(Integer count) {
+
+        // 复用分页查询逻辑，构造参数
+
+        //构造分页对象
+        IPage<ProcessInstance> page = new Page<ProcessInstance>(1, count);
+        //构造查询条件
+        QueryWrapper<ProcessInstance> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().orderByDesc(ProcessInstance::getStartTime);
+
+        IPage<ProcessInstance> apply = this.getApply(page, queryWrapper);
+
+        return apply.getRecords();
     }
 
 }

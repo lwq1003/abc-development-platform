@@ -15,6 +15,7 @@ import tech.abc.platform.support.entity.PortletParam;
 import tech.abc.platform.support.mapper.PortletMapper;
 import tech.abc.platform.support.service.PortletParamService;
 import tech.abc.platform.support.service.PortletService;
+import tech.abc.platform.system.entity.PermissionItem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,20 @@ public class PortletServiceImpl extends BaseServiceImpl<PortletMapper, Portlet> 
     public void afterRemove(Portlet entity) {
         removeParam(entity);
     }
+
+    @Override
+    protected void afterAddByCopy(Portlet sourceEntity, Portlet entity) {
+
+        String sourceId = sourceEntity.getId();
+        String id = entity.getId();
+
+        // 复制模型
+        List<PortletParam> entityList = portletParamService.getByPortletId(sourceId);
+        for (PortletParam item : entityList) {
+            portletParamService.addByCopy(item.getId(), id);
+        }
+    }
+
 
     @Override
     public void enable(String id) {

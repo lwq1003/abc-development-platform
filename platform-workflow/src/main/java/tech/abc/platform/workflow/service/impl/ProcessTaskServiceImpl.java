@@ -2,9 +2,9 @@ package tech.abc.platform.workflow.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.IdentityService;
@@ -24,6 +24,7 @@ import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
+import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.workflow.constant.WorkFlowConstant;
@@ -49,6 +50,10 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         implements ProcessTaskService {
 
 
+    /**
+     * 发起环节编码
+     */
+    public static final String ROOT_CODE = "root";
     @Autowired
     private ProcessTaskMapper processTaskMapper;
 
@@ -402,10 +407,10 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         }
 
         // 发起环节处理
-        if(targetNodeIdList.contains("root")){
+        if(targetNodeIdList.contains(ROOT_CODE)){
             WorkflowNodeConfig root=new WorkflowNodeConfig();
             root.setSetAssigneeFlag(YesOrNoEnum.YES.name());
-            root.setNodeId("root");
+            root.setNodeId(ROOT_CODE);
             root.setMode(NodeModeEnum.NORMAL.name());
             root.setName("填报");
             entityList.add(root);
@@ -434,7 +439,6 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
                 .or(x -> x.eq(ProcessTask::getAssignee, userId)
                         .and(y -> y.eq(ProcessTask::getCandidateUser, userId)
                                 .or(z -> z.isNull(ProcessTask::getAssignee))
-//                                .or(b->b.eq(ProcessTask::getAssignee,""))
                                 .or(a -> a.isNull(ProcessTask::getCandidateUser))))
 
                 .or(x -> x.isNull(ProcessTask::getAssignee).eq(ProcessTask::getCandidateUser, userId));
@@ -483,10 +487,34 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             entityList = workflowNodeConfigService.getByIdList(processDefinitionId, targetNodeIdList);
         }
 
-        // TODO 发起环节处理
+        // 发起环节处理
+        if(targetNodeIdList.contains(ROOT_CODE)){
+            WorkflowNodeConfig root=new WorkflowNodeConfig();
+            root.setSetAssigneeFlag(YesOrNoEnum.YES.name());
+            root.setNodeId(ROOT_CODE);
+            root.setMode(NodeModeEnum.NORMAL.name());
+            root.setName("填报");
+            entityList.add(root);
+
+        }
 
         return entityList;
 
 
+    }
+
+    @Override
+    public List<ProcessTask> getTodoPortletData(Integer count) {
+        // 复用分页查询逻辑，构造参数
+
+        //构造分页对象
+        IPage<ProcessTask> page = new Page<ProcessTask>(1, count);
+        //构造查询条件
+        QueryWrapper<ProcessTask> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().orderByDesc(ProcessTask::getCreateTime);
+
+        IPage<ProcessTask> todo = this.getTodo(page, queryWrapper);
+
+        return todo.getRecords();
     }
 }

@@ -50,4 +50,12 @@ public interface ProcessInstanceService extends BaseService<ProcessInstance> {
      * @return 流程实例
      */
     ProcessInstance get(String id);
+
+    /**
+     * 获取 我的申请 组件数据
+     *
+     * @param count 数
+     * @return {@link List}<{@link ProcessInstance}>
+     */
+    List<ProcessInstance> getApplyPortletData(Integer count);
 }

@@ -4,19 +4,33 @@
 
     <!-- 公用查询-->
     <sql id="query">  select * from (
-        select t1.PROC_INST_ID_ AS id, #流程实例标识
-        t1.BUSINESS_KEY_ as business_no, #单号
-        t1.PROC_DEF_ID_ as process_definition_id, #流程定义标识
-        t1.PROC_DEF_KEY_ as process_definition_key, #流程编码
-        t2.NAME_ as process_definition_name, #流程名称
-        t1.START_TIME_ as start_time, #启动时间
-        t1.END_TIME_ as end_time, #结束时间
-        t1.STATE_ as state, #状态
-        t1.START_USER_ID_ as process_apply_id, #申请人id
-        t4.NAME as process_apply_name, #申请人姓名
-        t3.NAME_ as node_name, #环节名称
-        t3.ASSIGNEE_ as node_assignee,  #环节处理人
-        t5.NAME as node_assignee_name #环节处理人姓名
+        select
+        -- 流程实例标识
+        t1.PROC_INST_ID_ AS id,
+        -- 单号
+        t1.BUSINESS_KEY_ as business_no,
+        -- 流程定义标识
+        t1.PROC_DEF_ID_ as process_definition_id,
+        -- 流程编码
+        t1.PROC_DEF_KEY_ as process_definition_key,
+        -- 流程名称
+        t2.NAME_ as process_definition_name,
+        -- 启动时间
+        t1.START_TIME_ as start_time,
+        -- 结束时间
+        t1.END_TIME_ as end_time,
+        -- 状态
+        t1.STATE_ as state,
+        -- 申请人id
+        t1.START_USER_ID_ as process_apply_id,
+        -- 申请人姓名
+        t4.NAME as process_apply_name,
+        -- 环节名称
+        t3.NAME_ as node_name,
+        -- 环节处理人
+        t3.ASSIGNEE_ as node_assignee,
+        -- 环节处理人姓名
+        t5.NAME as node_assignee_name
         from act_hi_procinst t1
         LEFT JOIN act_re_procdef t2
         on t1.PROC_DEF_ID_=t2.id_

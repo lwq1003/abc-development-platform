@@ -119,4 +119,11 @@ public interface ProcessTaskService extends BaseService<ProcessTask> {
     List<WorkflowNodeConfig> getJumpNodeList(String taskId);
 
 
+    /**
+     * 获取组件数据
+     *
+     * @param count 数量
+     * @return {@link List}<{@link ProcessTask}>
+     */
+    List<ProcessTask> getTodoPortletData(Integer count);
 }

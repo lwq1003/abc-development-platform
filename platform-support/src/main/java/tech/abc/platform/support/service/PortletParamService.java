@@ -20,5 +20,13 @@ public interface PortletParamService extends BaseService<PortletParam> {
    * @return 集合
    */
    Map<String,String> getNameMap(List<String> idList);
+
+    /**
+     * 通过组件标识获取参数列表
+     *
+     * @param portletId 组件标识
+     * @return {@link List}<{@link PortletParam}>
+     */
+    List<PortletParam> getByPortletId(String portletId);
 }
 

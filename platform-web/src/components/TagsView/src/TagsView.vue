@@ -12,7 +12,7 @@ import { useDesign } from '@/hooks/web/useDesign'
 import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
 import { useScrollTo } from '@/hooks/event/useScrollTo'
-
+import IconDisplay from '@/components/abc/IconDisplay/index.vue'
 import { useEmitt } from '@/hooks/web/useEmitt'
 const { emitter } = useEmitt()
 emitter.on('closeCurrentTab', () => {
@@ -75,7 +75,7 @@ const closeSelectedTag = (view: RouteLocationNormalizedLoaded) => {
 
 // 关闭全部
 const closeAllTags = () => {
-  tagsViewStore.delAllViews()
+  tagsViewStore.delAllViewsExcludeFixed()
   toLastView()
 }
 
@@ -359,17 +359,9 @@ watch(
                   @click="navigate"
                   class="h-full flex justify-center items-center whitespace-nowrap pl-15px"
                 >
-                  <Icon
-                    v-if="
-                      item?.matched &&
-                      item?.matched[1] &&
-                      item?.matched[1]?.meta?.icon &&
-                      tagsViewIcon
-                    "
-                    :icon="item?.matched[1]?.meta?.icon"
-                    :size="12"
-                    class="mr-5px"
-                  />
+                  <el-icon :size="12" class="mr-5px">
+                    <IconDisplay v-model="item.meta.icon" />
+                  </el-icon>
                   {{ t(item?.meta?.title as string) }}
                   <Icon
                     :class="`${prefixCls}__item--close`"

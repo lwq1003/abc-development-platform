@@ -113,26 +113,17 @@ const signIn = async () => {
           userStore.setUserAction(res.data)
           // 登录成功，启动websocket连接
           globalProperties.$webSocket.init()
-          // 是否使用动态路由
-          if (appStore.getDynamicRouter) {
-            const routers = res.data.menuPermission || []
-            await permissionStore.generateRoutes('admin', routers).catch(() => {})
+          // 使用动态路由
+          const routers = res.data.menuPermission || []
+          await permissionStore.generateRoutes(routers).catch(() => {})
 
-            permissionStore.getAddRouters.forEach((route) => {
-              // 动态添加可访问路由表
-              addRoute(route as RouteRecordRaw)
-            })
-            permissionStore.setIsAddRouters(true)
-            // 设置首页
-            push({ path: '/desktop/index' })
-          } else {
-            await permissionStore.generateRoutes('none').catch(() => {})
-            permissionStore.getAddRouters.forEach((route) => {
-              addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
-            })
-            permissionStore.setIsAddRouters(true)
-            push({ path: redirect.value || permissionStore.addRouters[0].path })
-          }
+          permissionStore.getAddRouters.forEach((route) => {
+            // 动态添加可访问路由表
+            addRoute(route as RouteRecordRaw)
+          })
+          permissionStore.setIsAddRouters(true)
+          // 设置首页
+          push({ path: '/desktop/index' })
         }
       } finally {
         loading.value = false

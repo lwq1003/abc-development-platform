@@ -1,20 +1,29 @@
 <template>
   <div class="w-full">
     <div>
-      <el-row>
-        <el-col>
-          <ul style="margin: 0px; padding: 0px">
-            <li v-for="item in entityData" :key="item.id" class="view-li">
-              <el-tag v-if="item.topFlag === 'YES'" type="danger">置顶</el-tag>
-              <el-tag v-if="item.importantFlag === 'YES'" type="warning">重要</el-tag>
-              <a :title="item.title" @click="view(item)">
-                <span>&nbsp;&nbsp;{{ item.title }}&nbsp;&nbsp;</span>
-                <span>{{ $dateFormatter.formatUTCDate(item.publishTime) }}</span>
-              </a>
-            </li>
-          </ul>
-        </el-col>
-      </el-row>
+      <el-table
+        v-loading="loading"
+        :data="tableData"
+        style="width: 100%"
+        highlight-current-row
+        border
+      >
+        <el-table-column
+          v-for="(item, index) in columnList"
+          :key="index"
+          :label="item.label"
+          :prop="item.prop"
+          :show-overflow-tooltip="item.showOverflowTooltip"
+          :width="item.width"
+          :formatter="item.formatFunc"
+          :sortable="item.sortable"
+        />
+        <el-table-column fixed="right" label="操作" width="100">
+          <template #default="scope">
+            <el-button type="primary" @click="view(scope.row)">查看</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
       <div
         style="
           color: grey;
@@ -58,8 +67,9 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/TableColumnFormatter.js'
 export default {
-  name: 'NoticePortlet',
+  name: 'ApplyPortlet',
   components: {},
   props: {
     config: {
@@ -76,8 +86,29 @@ export default {
   data() {
     return {
       visible: false,
-      entityData: [],
-      configData: []
+      loading: false,
+      tableData: [],
+      configData: [],
+      columnList: [
+        { prop: 'processDefinitionName', label: '流程类型', show: true, showOverflowTooltip: true },
+
+        { prop: 'businessNo', label: '单号', show: true },
+        {
+          prop: 'startTime',
+          label: '发起日期',
+          show: true,
+          formatFunc: formatDate
+        },
+        { prop: 'nodeName', label: '当前环节', show: true, showOverflowTooltip: true },
+        { prop: 'nodeAssigneeName', label: '当前处理人', show: true },
+        {
+          prop: 'endTime',
+          label: '结束日期',
+          show: true,
+          formatFunc: formatDate
+        },
+        { prop: 'stateName', label: '状态', show: true, width: '60px' }
+      ]
     }
   },
   watch: {
@@ -97,13 +128,20 @@ export default {
   methods: {
     // 加载数据
     getData() {
+      this.loading = true
       const params = {}
       for (const item of this.configData) {
         params[item.code] = item.value
       }
-      this.$api.support.notice.portlet(params).then((res) => {
-        this.entityData = res.data
-      })
+
+      this.$api.workflow.apply
+        .portlet(params)
+        .then((res) => {
+          this.tableData = res.data
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     close() {
       this.visible = false
@@ -113,11 +151,13 @@ export default {
       this.$emit('update:config', this.configData)
       this.close()
     },
+
+    // 查看任务实例
     view(row) {
-      this.$router.push({ path: '/support/noticeView', query: { id: row.id } })
+      this.$router.push({ name: 'flowView', query: { processInstanceId: row.id } })
     },
     moreView() {
-      this.$router.push({ path: '/support/noticeViewList' })
+      this.$router.push({ path: '/workflow/apply' })
     }
   }
 }

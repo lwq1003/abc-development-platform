@@ -40,7 +40,10 @@ import java.util.Map;
 @RequestMapping("/support/notice")
 @Slf4j
 public class NoticeController extends BaseController {
-    public static final int MAX_COUNT = 100;
+    /**
+     * 最大数量
+     */
+    public static final int MAX_COUNT = 20;
     @Autowired
     private NoticeService noticeService;
 
@@ -273,11 +276,12 @@ public class NoticeController extends BaseController {
     @GetMapping("/portlet")
     public ResponseEntity<Result> getPortletData(@RequestParam Map<String, String> map) {
 
-        // 验证数量参数
+        // 数量参数处理
         String countString = StringUtils.getDigits(map.get("count"));
         Integer count = Integer.parseInt(countString);
+        // 如参数不正确，则设置为最大值
         if (count <= 0 || count > MAX_COUNT) {
-            throw new CustomException(PortalExceptionEnum.PORTLET_PARAM_ERROR, "通知公告", "显示数量不正确");
+            count=MAX_COUNT;
         }
 
         List<Notice> list = noticeService.getPortletData(count);

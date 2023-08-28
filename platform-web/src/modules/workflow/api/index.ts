@@ -47,12 +47,18 @@ export const workflowTemplate = Object.assign({}, COMMON_METHOD, {
 
 // 我的申请
 export const apply = Object.assign({}, COMMON_METHOD, {
-  serveUrl: '/' + moduleName + '/' + 'apply' + '/'
+  serveUrl: '/' + moduleName + '/' + 'apply' + '/',
+  portlet(params) {
+    return request.get({ url: this.serveUrl + 'portlet', params })
+  }
 })
 
 // 我的待办
 export const todo = Object.assign({}, COMMON_METHOD, {
-  serveUrl: '/' + moduleName + '/' + 'todo' + '/'
+  serveUrl: '/' + moduleName + '/' + 'todo' + '/',
+  portlet(params) {
+    return request.get({ url: this.serveUrl + 'portlet', params })
+  }
 })
 
 // 我的已办
