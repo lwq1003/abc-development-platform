@@ -1,28 +1,38 @@
 package tech.abc.platform.workflow.service;
 
-import tech.abc.platform.common.base.BaseService;
 import tech.abc.platform.workflow.entity.WorkflowListener;
-
+import tech.abc.platform.common.base.BaseService;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 流程监听器 服务类
- * @author wqliu
- * @date 2020-07-13
+ * 工作流监听器 服务接口类
  *
+ * @author wqliu
+ * @date 2023-08-29
  */
 public interface WorkflowListenerService extends BaseService<WorkflowListener> {
 
-    /**
-     * 启用
-     *
-     * @param id 标识
-     */
-    void enable(String id);
+   /**
+   * 获取标识与名称的Map集合
+   *
+   * @param idList 标识列表
+   * @return 集合
+   */
+   Map<String,String> getNameMap(List<String> idList);
 
-    /**
-     * 停用
-     *
-     * @param id 标识
-     */
-    void disable(String id);
+   /**
+    * 启用
+    *
+    * @param id 标识
+    */
+   void enable(String id);
+
+   /**
+    * 停用
+    *
+    * @param id 标识
+    */
+   void disable(String id);
 }
+

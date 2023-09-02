@@ -57,7 +57,6 @@ public class OrganizationExcelImportExtensionController extends ExcelImportExten
     @Override
     @PreAuthorize("hasPermission(null,'system:organization:import')")
     @SystemLog(value = "导入excel", logRequestParam = false)
-    @Transactional
     public ResponseEntity<Result> importExcel(MultipartFile file) {
         ReadDataListener readListener = new ReadDataListener<OrganizationForImportVO, Organization>(organizationService) {
             @Override

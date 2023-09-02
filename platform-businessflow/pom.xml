@@ -19,10 +19,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>tech.abc</groupId>
-            <artifactId>platform-support</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>tech.abc</groupId>
             <artifactId>platform-workflow</artifactId>

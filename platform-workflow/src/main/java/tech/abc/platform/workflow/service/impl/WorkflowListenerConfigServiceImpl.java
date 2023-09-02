@@ -1,129 +1,108 @@
 package tech.abc.platform.workflow.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import tech.abc.platform.common.base.BaseServiceImpl;
-import tech.abc.platform.common.exception.CommonException;
-import tech.abc.platform.common.exception.CustomException;
+import org.springframework.transaction.annotation.Transactional;
+import tech.abc.platform.workflow.entity.WorkflowBackNodeConfig;
 import tech.abc.platform.workflow.entity.WorkflowListenerConfig;
 import tech.abc.platform.workflow.mapper.WorkflowListenerConfigMapper;
 import tech.abc.platform.workflow.service.WorkflowListenerConfigService;
-import tech.abc.platform.workflow.utils.WorkflowUtil;
-import org.camunda.bpm.engine.RepositoryService;
-import org.camunda.bpm.engine.repository.ProcessDefinition;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.camunda.bpm.model.bpmn.instance.ExtensionElements;
-import org.camunda.bpm.model.bpmn.instance.Process;
-import org.camunda.bpm.model.bpmn.instance.UserTask;
-import org.camunda.bpm.model.bpmn.instance.camunda.CamundaTaskListener;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import tech.abc.platform.common.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
+import java.math.BigDecimal;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.Map;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 /**
- * 流程监听器配置 服务实现类
- * @author wqliu
- * @date 2020-10-08
- *
- */
+* 工作流程监听器配置 服务实现类
+*
+* @author wqliu
+* @date 2023-08-29
+*/
 @Service
+@Slf4j
 public class WorkflowListenerConfigServiceImpl extends BaseServiceImpl<WorkflowListenerConfigMapper, WorkflowListenerConfig> implements WorkflowListenerConfigService {
 
-    @Autowired
-    private RepositoryService repositoryService;
-   
     @Override
     public WorkflowListenerConfig init() {
         WorkflowListenerConfig entity=new WorkflowListenerConfig();
-
+        // 预先分配标识
+        entity.setId(IdWorker.getIdStr());
+        //默认值处理
+        entity.setCategory("");
+        entity.setType("CLASS");
         return entity;
     }
 
-
-
     @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void generateTempListenerConfig(String tempProcessDefinitionId,String processDefinitionId) {
-        //查询是否已存在
-        long count=this.lambdaQuery().eq(WorkflowListenerConfig::getProcessDefinitionId,tempProcessDefinitionId).count();
-        //已存在则不处理，不存在则生成
-        if (count==0) {
-            // 查询当前版本环节设置
-            LambdaQueryWrapper<WorkflowListenerConfig> queryWrapper=new LambdaQueryWrapper<>();
-            queryWrapper.eq(WorkflowListenerConfig::getProcessDefinitionId,processDefinitionId);
-            List<WorkflowListenerConfig> configList=list(queryWrapper);
-            for(WorkflowListenerConfig config:configList){
-                //插入数据
-                WorkflowListenerConfig tempListenerConfig=new WorkflowListenerConfig();
-                //拷贝属性
-                BeanUtils.copyProperties(config,tempListenerConfig);
-                tempListenerConfig.setId(null);
-                tempListenerConfig.setProcessDefinitionId(tempProcessDefinitionId);
-                add(tempListenerConfig);
-            }
+    public void beforeAdd(WorkflowListenerConfig entity) {
+        //唯一性验证
 
-        }
     }
 
     @Override
-    public void updateProcessDefinitionId(String key) {
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(key).latestVersion().singleResult();
-        Integer version=processDefinition.getVersion();
-        UpdateWrapper<WorkflowListenerConfig> updateWrapper=new UpdateWrapper<>();
-        updateWrapper.lambda().set(WorkflowListenerConfig::getProcessDefinitionId,processDefinition.getId())
-                .eq(WorkflowListenerConfig::getProcessDefinitionId,key+":"+version);
-        update(updateWrapper);
+    public void beforeModify(WorkflowListenerConfig entity) {
+        //唯一性验证
+    }
 
+    @Override
+    public Map<String, String> getNameMap(List<String> idList) {
+        Map<String, String> result = new HashMap<>(5);
+        if (CollectionUtils.isNotEmpty(idList)) {
+            List<WorkflowListenerConfig> list = this.lambdaQuery().in(WorkflowListenerConfig::getId, idList).list();
+            if (CollectionUtils.isNotEmpty(list)) {
+                list.stream().forEach(x -> {
+                    result.put(x.getId(), x.getName());
+                });
+            }
+        }
+        return result;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateModel(BpmnModelInstance modelInstance) {
-        // 读取模型中流程定义信息
-        List<Process> process = (ArrayList) modelInstance.getModelElementsByType(Process.class);
-        String processDefinitionKey=process.get(0).getId();
-
-
-        // 获取最新发布的版本
-        // 默认版本为0，首次创建模板
-        int latestVersion = 0;
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
-        if (processDefinition != null) {
-            latestVersion = processDefinition.getVersion();
-        }
-        // 获取临时版本标识
-        String tempProcessDefinitionId=WorkflowUtil.generateTempVersionId(processDefinitionKey,latestVersion);
-
-        // 获取库表中保存的监听器设置
-        LambdaQueryWrapper<WorkflowListenerConfig> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(WorkflowListenerConfig::getProcessDefinitionId,tempProcessDefinitionId);
-        List<WorkflowListenerConfig> configList=list(queryWrapper);
-
-        // 获取模型中所有用户任务节点
-        Collection<UserTask> userTaskList = modelInstance.getModelElementsByType(UserTask.class);
-        for(UserTask userTask:userTaskList){
-            ExtensionElements extensionElements=modelInstance.newInstance(ExtensionElements.class);
-            //获取库表中该节点监听器设置
-            List<WorkflowListenerConfig> nodeConfigList =
-                    configList.stream().filter(x -> x.getDefinitionKey().equals(userTask.getId()))
-                            .collect(Collectors.toList());
-            for(WorkflowListenerConfig listenerConfig:nodeConfigList){
-                //TODO:只实现了类这一种方式，待日后根据需要扩展表达式和委托类
-                CamundaTaskListener listener=modelInstance.newInstance(CamundaTaskListener.class);
-                listener.setCamundaEvent(listenerConfig.getEvent().toLowerCase());
-                listener.setCamundaClass(listenerConfig.getListenerCode());
-                extensionElements.addChildElement(listener);
+    public void updateConfig(String processDefinitionId, String nodeId, String configString) {
+        // 先清空配置
+        QueryWrapper<WorkflowListenerConfig> queryWrapper=new QueryWrapper<>();
+        queryWrapper.lambda().eq(WorkflowListenerConfig::getProcessDefinitionId,processDefinitionId)
+                .eq(WorkflowListenerConfig::getNodeId,nodeId);
+        remove(queryWrapper);
+        // 后生成配置
+        if(StringUtils.isNotBlank(configString)) {
+            List<WorkflowListenerConfig> listenerConfigList = JSON.parseArray(configString, WorkflowListenerConfig.class);
+            for (WorkflowListenerConfig config:listenerConfigList) {
+                config.setProcessDefinitionId(processDefinitionId);
+                config.setNodeId(nodeId);
+                add(config);
             }
-            userTask.setExtensionElements(extensionElements);
         }
 
     }
+
+    @Override
+    public void updateProcessDefinitionId(String processDefinitionId, String tempProcessDefinitionId) {
+        UpdateWrapper<WorkflowListenerConfig> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda().set(WorkflowListenerConfig::getProcessDefinitionId, processDefinitionId)
+                .eq(WorkflowListenerConfig::getProcessDefinitionId, tempProcessDefinitionId);
+        update(updateWrapper);
+    }
+
+    @Override
+    protected void copyPropertyHandle(WorkflowListenerConfig entity, String... value) {
+        // 主属性后附加“副本”用于区分
+        entity.setName (entity.getName() + " 副本");
+    }
+
 }
+

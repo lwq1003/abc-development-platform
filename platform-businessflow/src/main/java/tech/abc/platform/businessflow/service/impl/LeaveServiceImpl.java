@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import tech.abc.platform.businessflow.entity.Leave;
 import tech.abc.platform.businessflow.mapper.LeaveMapper;
 import tech.abc.platform.businessflow.service.LeaveService;
+import tech.abc.platform.common.base.BaseFlowBill;
 import tech.abc.platform.common.base.BaseServiceImpl;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.entityconfig.service.EntityModelService;
 import tech.abc.platform.system.entity.Organization;
@@ -100,7 +103,7 @@ public class LeaveServiceImpl extends BaseServiceImpl<LeaveMapper, Leave> implem
         identityService.setAuthenticatedUserId(userId);
 
         // 首环节处理人默认为启动人
-        Map<String,Object> instanceParams=new HashMap<>();
+        Map<String,Object> instanceParams=new HashMap<>(5);
         instanceParams.put(WorkFlowConstant.INSTANCE_FIRST_STEP_HANDLER,userId);
 
         //设置请假天数
@@ -143,6 +146,18 @@ public class LeaveServiceImpl extends BaseServiceImpl<LeaveMapper, Leave> implem
             }
         }
         return result;
+    }
+
+    @Override
+    public Leave getByprocessInstanceId(String processInstanceId) {
+
+        List<Leave> list = this.lambdaQuery().eq(BaseFlowBill::getFlowInstanceId, processInstanceId).list();
+        if(CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }else{
+            throw new CustomException(CommonException.NOT_EXIST);
+        }
+
     }
 
     @Override

@@ -20,5 +20,13 @@ public interface LeaveService extends BaseService<Leave> {
    * @return 集合
    */
    Map<String,String> getNameMap(List<String> idList);
+
+    /**
+     * 通过流程实例标识获取实体
+     *
+     * @param processInstanceId 流程实例id
+     * @return {@link Leave}
+     */
+    Leave getByprocessInstanceId(String processInstanceId);
 }
 

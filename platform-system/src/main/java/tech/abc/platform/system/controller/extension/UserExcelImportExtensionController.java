@@ -63,7 +63,6 @@ public class UserExcelImportExtensionController extends ExcelImportExtension<Use
     @Override
     @PreAuthorize("hasPermission(null,'system:user:import')")
     @SystemLog(value = "导入excel", logRequestParam = false)
-    @Transactional
     public ResponseEntity<Result> importExcel(MultipartFile file) {
         ReadDataListener readListener = new ReadDataListener<UserForImportVO, User>(userService) {
             @Override

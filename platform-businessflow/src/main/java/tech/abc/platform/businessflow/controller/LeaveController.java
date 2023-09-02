@@ -1,7 +1,6 @@
 package tech.abc.platform.businessflow.controller;
 
 
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RestController;
 import tech.abc.platform.common.base.BaseController;
@@ -26,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
 * 请假单 前端控制器类
@@ -164,7 +162,7 @@ public class LeaveController extends BaseController {
     @GetMapping("/getByBillNo/{billNo}")
     @SystemLog(value = "请假申请-详情")
     @PreAuthorize("hasPermission(null,'businessflow:leave:query')")
-    public ResponseEntity<Result> getByBillNO(@PathVariable String billNo) {
+    public ResponseEntity<Result> getByBillNo(@PathVariable String billNo) {
         Leave entity = leaveService.lambdaQuery().eq(Leave::getBillNo,billNo).one();
         LeaveVO vo = convert2VO(entity);
         return ResultUtil.success(vo);

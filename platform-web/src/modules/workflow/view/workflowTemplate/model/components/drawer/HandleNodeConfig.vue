@@ -80,9 +80,30 @@
           </el-table-column>
         </el-table>
       </el-collapse-item>
+      <el-collapse-item title="监听器" name="listenerListConfig">
+        <div class="mb-10px mt-10px">
+          <el-button type="primary" icon="plus" @click="addListener">新增</el-button>
+        </div>
+        <el-table :data="listenerList" style="width: 100%" highlight-current-row border>
+          <el-table-column label="事件">
+            <template #default="scope">{{ scope.row.eventName }}</template>
+          </el-table-column>
+          <el-table-column label="名称">
+            <template #default="scope">{{ scope.row.name }}</template>
+          </el-table-column>
+
+          <el-table-column fixed="right" label="操作" width="90">
+            <template #default="scope">
+              <el-button type="primary" @click="removeListener(scope.row)">移除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-collapse-item>
     </el-collapse>
     <FlowStepSelect ref="flowStepSelectBack" @update="updateBack" />
     <FlowStepSelect ref="flowStepSelectJump" @update="updateJump" />
+    <FlowListenerSelect ref="flowListenerSelect" @update="updateListener" />
+
     <template #footer>
       <el-button type="primary" @click="save">确 定</el-button>
       <el-button @click="close">取 消</el-button>
@@ -93,13 +114,14 @@
 import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
 import UserGroupReference from '@/modules/system/view/userGroup/treeReference.vue'
 import FlowStepSelect from '../dialog/FlowStepSelect.vue'
+import FlowListenerSelect from '../dialog/FlowListenerSelect.vue'
 import { useStore } from '../../stores/index'
 let store = useStore()
 const MODULE_CODE = 'workflow'
 const ENTITY_TYPE = 'workflowNodeConfig'
 export default {
   name: ENTITY_TYPE + '-modify',
-  components: { DictionaryRadioGroup, UserGroupReference, FlowStepSelect },
+  components: { DictionaryRadioGroup, UserGroupReference, FlowStepSelect, FlowListenerSelect },
   props: {
     modelData: {
       type: Object
@@ -119,13 +141,21 @@ export default {
         setAssigneeFlag: [{ required: true, message: '【指定处理人】不能为空', trigger: 'blur' }],
         userGroup: [{ required: true, message: '【用户组】不能为空', trigger: 'blur' }]
       },
-      activeName: ['personConfig', 'permissionConfig', 'backNodeListConfig', 'jumpNodeListConfig'],
+      activeName: [
+        'personConfig',
+        'permissionConfig',
+        'backNodeListConfig',
+        'jumpNodeListConfig',
+        'listenerListConfig'
+      ],
       // 权限数据
       permissionData: [],
       // 回退环节
       backNodeList: [],
       // 跳转环节
-      jumpNodeList: []
+      jumpNodeList: [],
+      // 监听器
+      listenerList: []
     }
   },
   computed: {
@@ -168,6 +198,8 @@ export default {
       this.backNodeList = value.config.backNodeList
       // 加载跳转环节列表
       this.jumpNodeList = value.config.jumpNodeList
+      // 加载监听器列表
+      this.listenerList = value.config.listenerList || []
     }
   },
   methods: {
@@ -190,7 +222,8 @@ export default {
                 personConfig: this.entityData,
                 permissionConfig: permissionConfig,
                 backNodeList: this.backNodeList,
-                jumpNodeList: this.jumpNodeList
+                jumpNodeList: this.jumpNodeList,
+                listenerList: this.listenerList
               }
             },
             { flag: true }
@@ -249,6 +282,23 @@ export default {
       // 使用splice方法移除该元素
       if (index !== -1) {
         this.jumpNodeList.splice(index, 1)
+      }
+    },
+    addListener() {
+      // 限定只能是任务监听器
+      const category = ['TASK']
+      this.$refs.flowListenerSelect.init(category)
+    },
+    updateListener(listener) {
+      this.listenerList.push(listener)
+    },
+    removeListener(row) {
+      // 找到要移除的元素的索引
+      let index = this.listenerList.findIndex((item) => item.id === row.id)
+
+      // 使用splice方法移除该元素
+      if (index !== -1) {
+        this.listenerList.splice(index, 1)
       }
     }
   }

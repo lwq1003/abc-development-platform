@@ -182,7 +182,6 @@ public class DictionaryTypeController extends BaseController {
      * 获取指定字典编码下所有字典项列表
      */
     @GetMapping("/getItem")
-    // @AllowAuthenticated
     public ResponseEntity<Result> getItem(String code) {
         List<DictionaryItem> dictionaryItemList = dictionaryTypeService.getItem(code);
 

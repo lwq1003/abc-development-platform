@@ -1,10 +1,15 @@
 package tech.abc.platform.workflow.controller;
 
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.RestController;
+import tech.abc.platform.common.base.BaseController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import tech.abc.platform.common.annotation.SystemLog;
-import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.PageInfo;
@@ -13,35 +18,34 @@ import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.workflow.entity.WorkflowListener;
 import tech.abc.platform.workflow.service.WorkflowListenerService;
 import tech.abc.platform.workflow.vo.WorkflowListenerVO;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 流程监听器 前端控制器
- * @author wqliu
- * @date 2020-07-13
- *
- */
+* 工作流监听器 前端控制器类
+*
+* @author wqliu
+* @date 2023-08-29
+*/
 @RestController
 @RequestMapping("/workflow/workflowListener")
 @Slf4j
 public class WorkflowListenerController extends BaseController {
- @Autowired
- private WorkflowListenerService workflowListenerService;
+    @Autowired
+    private WorkflowListenerService workflowListenerService;
 
+
+    //region 基本操作
     /**
-     * 初始化
-     */
-    @ApiOperation(value = "初始化")
+    * 初始化
+    */
     @GetMapping("/init")
     public ResponseEntity<Result> init() {
         WorkflowListener entity=workflowListenerService.init();
@@ -50,11 +54,10 @@ public class WorkflowListenerController extends BaseController {
     }
 
     /**
-     * 新增
-     */
-    @ApiOperation(value = "新增")
+    * 新增
+    */
     @PostMapping("/")
-    @SystemLog(value = "流程监听器-新增")
+    @SystemLog(value = "工作流监听器-新增")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:add')")
     public ResponseEntity<Result> add(@Validated @RequestBody WorkflowListenerVO vo) {
         WorkflowListener entity=convert2Entity(vo);
@@ -64,28 +67,23 @@ public class WorkflowListenerController extends BaseController {
     }
 
     /**
-     * 修改
-     */
-    @ApiOperation(value = "修改")
+    * 修改
+    */
     @PutMapping("/")
-    @SystemLog(value = "流程监听器-修改")
+    @SystemLog(value = "工作流监听器-修改")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:modify')")
-    public ResponseEntity<Result> modify(@Validated @RequestBody WorkflowListenerVO vo)  {
+    public ResponseEntity<Result> modify(@Validated @RequestBody WorkflowListenerVO vo) {
         WorkflowListener entity=convert2Entity(vo);
-        //此处数据库会更新 更新人和更新时间，但数据模型不会刷新
-        //个别需展示的该类信息的地方可以重新查询后返回
         workflowListenerService.modify(entity);
         WorkflowListenerVO newVO = convert2VO(entity);
         return ResultUtil.success(newVO);
     }
 
     /**
-     * 删除数据
-     */
-    @ApiOperation(value = "删除")
-    @ApiImplicitParam(name = "id", value = "标识", required = true, dataType = "String",paramType ="path")
+    * 删除数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+    */
     @DeleteMapping("/{id}")
-    @SystemLog(value = "流程监听器-删除")
+    @SystemLog(value = "工作流监听器-删除")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:remove')")
     public ResponseEntity<Result> remove(@PathVariable("id") String id) {
         workflowListenerService.remove(id);
@@ -93,16 +91,16 @@ public class WorkflowListenerController extends BaseController {
     }
 
     /**
-     * 分页
-     */
-    @ApiOperation(value = "分页查询")
+    * 分页
+    */
     @GetMapping("/page")
-    @SystemLog(value = "流程监听器-分页")
+    @SystemLog(value = "工作流监听器-分页")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:query')")
     public ResponseEntity<Result> page(WorkflowListenerVO queryVO, PageInfo pageInfo, SortInfo sortInfo) {
-
         //构造分页对象
         IPage<WorkflowListener> page = new Page<WorkflowListener>(pageInfo.getPageNum(), pageInfo.getPageSize());
+
+
         //构造查询条件
         QueryWrapper<WorkflowListener> queryWrapper = QueryGenerator.generateQueryWrapper(WorkflowListener.class,queryVO,sortInfo);
 
@@ -110,54 +108,60 @@ public class WorkflowListenerController extends BaseController {
         workflowListenerService.page(page, queryWrapper);
         //转换vo
         IPage<WorkflowListenerVO> pageVO = mapperFacade.map(page, IPage.class);
-        List<WorkflowListenerVO>  workflowListenerVOList=new ArrayList<>();
-        for (int i = 0; i < page.getRecords().size(); i++) {
-            WorkflowListenerVO vo = convert2VO(page.getRecords().get(i));
-            workflowListenerVOList.add(vo);
-        }
-        pageVO.setRecords(workflowListenerVOList);        ;
+        List<WorkflowListenerVO>  workflowListenerVOList=convert2VO(page.getRecords());
+        pageVO.setRecords(workflowListenerVOList);
         return ResultUtil.success(pageVO);
     }
 
 
     /**
-     * 列表
-     */
-    @ApiOperation(value = "获取列表")
+    * 列表
+    */
     @GetMapping("/list")
-    @SystemLog(value = "流程监听器-列表")
+    @SystemLog(value = "工作流监听器-列表")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:query')")
     public ResponseEntity<Result> list(WorkflowListenerVO queryVO, SortInfo sortInfo) {
         //构造查询条件
         QueryWrapper<WorkflowListener> queryWrapper = QueryGenerator.generateQueryWrapper(WorkflowListener.class, queryVO,sortInfo);
         List<WorkflowListener> list= workflowListenerService.list(queryWrapper);
         //转换vo
-        List<WorkflowListenerVO> workflowListenerVOList = mapperFacade.mapAsList(list, WorkflowListenerVO.class);
+        List<WorkflowListenerVO>  workflowListenerVOList=convert2VO(list);
         return ResultUtil.success(workflowListenerVOList);
     }
 
     /**
-     * 获取单条数据
-     */
-    @ApiOperation(value = "获取单条数据")
-    @ApiImplicitParam(name = "id", value = "标识", required = true, dataType = "String",paramType ="path")
+    * 获取单条数据
+    */
     @GetMapping("/{id}")
-    @SystemLog(value = "流程监听器-详情")
-    @PreAuthorize("hasPermission(null,'workflow:workflowListener:query')")
+    @SystemLog(value = "工作流监听器-详情")
+    @PreAuthorize("hasPermission(null,'workflow:workflowListener:view')")
     public ResponseEntity<Result> get(@PathVariable("id") String id) {
         WorkflowListener entity = workflowListenerService.query(id);
         WorkflowListenerVO vo = convert2VO(entity);
         return ResultUtil.success(vo);
     }
 
+    /**
+    * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+    */
+    @PostMapping("/{id}")
+    @SystemLog(value = "工作流监听器-复制新增")
+    @PreAuthorize("hasPermission(null,'workflow:workflowListener:addByCopy')")
+    public ResponseEntity<Result> addByCopy(@PathVariable("id") String id) {
+        workflowListenerService.addByCopy(id);
+        return ResultUtil.success();
+    }
 
+
+
+    //endregion
+
+    //region 扩展操作
     /**
      * 启用
      */
-    @ApiOperation(value = "启用")
     @PutMapping("/{id}/enable")
-    @ApiImplicitParam(name = "id", value = "标识", required = true, dataType = "String",paramType ="path")
-    @SystemLog(value = "流程监听器-启用")
+    @SystemLog(value = "工作流监听器-启用")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:enable')")
     public ResponseEntity<Result> enable(@PathVariable("id") String id) {
 
@@ -168,10 +172,9 @@ public class WorkflowListenerController extends BaseController {
     /**
      * 停用
      */
-    @ApiOperation(value = "停用")
+
     @PutMapping("/{id}/disable")
-    @ApiImplicitParam(name = "id", value = "标识", required = true, dataType = "String",paramType ="path")
-    @SystemLog(value = "流程监听器-停用")
+    @SystemLog(value = "工作流监听器-停用")
     @PreAuthorize("hasPermission(null,'workflow:workflowListener:disable')")
     public ResponseEntity<Result> disable(@PathVariable("id") String id) {
 
@@ -179,32 +182,45 @@ public class WorkflowListenerController extends BaseController {
         return ResultUtil.success();
     }
 
+    //endregion
 
+    //region 辅助操作
 
-
+    /**
+    * 将单条实体转换为视图对象
+    *
+    * @param entity 实体
+    * @return {@link EntityVO} 视图对象
+    */
     private WorkflowListenerVO convert2VO(WorkflowListener entity){
         WorkflowListenerVO vo=mapperFacade.map(entity,WorkflowListenerVO.class);
-        String statusName = dictionaryUtil.getNameByCode("Status", entity.getStatus());
-        vo.setStatusName(statusName);
-        String categoryName = dictionaryUtil.getNameByCode("WorkflowListenerCategory", entity.getCategory());
-        vo.setCategoryName(categoryName);
-//        String typeCode="";
-//        if(vo.getCategory().equals(FlowListenerCategoryEnum.TASK.name())){
-//            typeCode="TaskListenerEventCategory";
-//
-//        }else if(vo.getCategory().equals(FlowListenerCategoryEnum.TASK.name())) {
-//            typeCode="ExecutionListenerEventCategory";
-//        }
-        String typeName = dictionaryUtil.getNameByCode("WorkflowListenerType", entity.getType());
-        vo.setTypeName(typeName);
+        vo.setCategoryName(dictionaryUtil.getNameByCode("WorkflowListenerCategory", entity.getCategory()));
+        vo.setTypeName(dictionaryUtil.getNameByCode("WorkflowListenerType", entity.getType()));
+        vo.setStatusName(dictionaryUtil.getNameByCode("Status", entity.getStatus()));
         return vo;
     }
 
+    /**
+    * 将实体列表转换为视图对象列表
+    *
+    * @param entityList 实体列表
+    * @return {@link List}<{@link EntityVO}> 视图对象列表
+    */
+    private List<WorkflowListenerVO> convert2VO(List<WorkflowListener> entityList) {
+        List<WorkflowListenerVO> voList = new ArrayList<>(entityList.size());
+
+        entityList.stream().forEach(x -> {
+            WorkflowListenerVO vo = convert2VO(x);
+            voList.add(vo);
+        });
+        return voList;
+    }
+
+
     private WorkflowListener convert2Entity(WorkflowListenerVO vo){
-
         WorkflowListener entity=mapperFacade.map(vo,WorkflowListener.class);
-
         return entity;
     }
 
-}
+    //endregion
+ }

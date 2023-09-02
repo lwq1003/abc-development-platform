@@ -8,6 +8,7 @@ import tech.abc.platform.cip.common.entity.ResponseMessage;
 import tech.abc.platform.cip.common.enums.MessageResponseResultEnum;
 import tech.abc.platform.cip.message.framework.MessageServerHolder;
 import tech.abc.platform.cip.message.framework.sender.ResponseMessageSender;
+import tech.abc.platform.cip.message.sender.request.lms.transportbill.ConsignmentBillCreateRequestSender;
 import tech.abc.platform.cip.service.AppService;
 import tech.abc.platform.common.utils.SpringUtil;
 
@@ -40,9 +41,9 @@ public class LoginResponseSender extends ResponseMessageSender {
             // 登录成功后，将channel添加到全局集合
             MessageServerHolder.addChannel(channel, appCode);
 
-            // TODO：业务接口测试
-            // ConsignmentBillCreateRequestSender sender=new ConsignmentBillCreateRequestSender();
-            // sender.sendMessage("委托单创建");
+            // 业务接口测试
+            ConsignmentBillCreateRequestSender sender=new ConsignmentBillCreateRequestSender();
+            sender.sendMessage("委托单创建");
 
         } catch (Exception e) {
             responseMessage.setResult(MessageResponseResultEnum.ERROR.name());

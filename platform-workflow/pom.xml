@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>tech.abc</groupId>
-            <artifactId>platform-support</artifactId>
+            <artifactId>platform-system</artifactId>
         </dependency>
         <!-- 工作流 -->
         <dependency>

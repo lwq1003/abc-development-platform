@@ -67,15 +67,17 @@ public interface MessageLogService extends BaseService<MessageLog> {
     /**
      * 创建日志，填充请求消息部分
      *
-     * @param message
+     * @param message 消息
+     * @return {@link MessageLog}
      */
     MessageLog createRequestPart(RequestMessage message);
 
     /**
      * 创建日志，填充请求消息部分
      *
-     * @param message
      * @param responseAppCode 响应应用编码
+     * @param message         消息
+     * @return {@link MessageLog}
      */
     MessageLog createRequestPart(RequestMessage message, String responseAppCode);
 

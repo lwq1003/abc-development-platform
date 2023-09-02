@@ -39,7 +39,11 @@
           <commit ref="commit" default-comment="同意" @success="close" />
           <reject ref="reject" default-comment="驳回" @success="close" />
           <jump ref="jump" default-comment="跳转" @success="close" />
-          <component :is="taskData.processDefinitionKey" ref="flowComponent" />
+          <component
+            v-if="taskData.processDefinitionKey"
+            :is="taskData.processDefinitionKey"
+            ref="flowComponent"
+          />
         </el-aside>
         <el-main width="30%" style="padding: 0">
           <history-step ref="historyStep" />
@@ -63,9 +67,9 @@ export default {
   name: 'TaskHandle',
   components: {
     HistoryStep,
-    Commit,
     Transfer,
     Delegate,
+    Commit,
     Reject,
     Jump,
     ...flowComponent

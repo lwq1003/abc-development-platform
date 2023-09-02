@@ -1,10 +1,6 @@
 package tech.abc.platform.framework.aspect;
 
 import com.alibaba.fastjson.JSON;
-import tech.abc.platform.common.annotation.SystemLog;
-import tech.abc.platform.common.constant.CommonConstant;
-import tech.abc.platform.common.modules.system.api.LogApi;
-import tech.abc.platform.common.modules.system.params.LogDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,6 +8,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.constant.CommonConstant;
+import tech.abc.platform.common.modules.system.api.LogApi;
+import tech.abc.platform.common.modules.system.params.LogDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +29,7 @@ import java.util.stream.Collectors;
  * @date 2023-03-08
  */
 @Aspect
-// TODO: 开发阶段停用，避免控制台输出日志sql语句
-// @Component
+@Component
 @Slf4j
 public class SystemLogAspect {
 

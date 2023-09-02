@@ -66,6 +66,17 @@ export const done = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'done' + '/'
 })
 
+// 工作流监听器
+export const workflowListener = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'workflowListener' + '/',
+  enable(id) {
+    return request.put({ url: this.serveUrl + id + '/enable' })
+  },
+  disable(id) {
+    return request.put({ url: this.serveUrl + id + '/disable' })
+  }
+})
+
 // 流程
 export const processInstance = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'processInstance' + '/',
@@ -166,4 +177,9 @@ export const workflowNodePermissionConfig = Object.assign({}, COMMON_METHOD, {
       url: this.serveUrl + 'getNodePermissionConfigForView?' + qs.stringify({ processDefinitionId })
     })
   }
+})
+
+// 监听器配置
+export const workflowListenerConfig = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'workflowListenerConfig' + '/'
 })

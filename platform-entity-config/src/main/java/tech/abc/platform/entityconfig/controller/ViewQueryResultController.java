@@ -153,6 +153,12 @@ public class ViewQueryResultController extends BaseController {
     // endregion
 
     // region 扩展操作
+
+    /**
+     * 列表
+     * @param viewId
+     * @return
+     */
     @GetMapping("/{viewId}/list")
     @SystemLog(value = "视图查询结果-列表")
     @AllowAll

@@ -101,7 +101,6 @@ public class EntityViewConfigController extends BaseController {
     @ApiOperation(value = "分页查询")
     @GetMapping("/page")
     @SystemLog(value = "实体视图-分页")
-    //@PreAuthorize("hasPermission(null,'entityconfig:entityViewConfig:query')")
     public ResponseEntity<Result> page(EntityViewVO queryVO, PageInfo pageInfo, SortInfo sortInfo) {
 
         //构造分页对象
@@ -131,7 +130,6 @@ public class EntityViewConfigController extends BaseController {
     @GetMapping("/list")
     @SystemLog(value = "实体视图-列表")
     @AllowAll
-    //@PreAuthorize("hasPermission(null,'entityconfig:entityView:query')")
     public ResponseEntity<Result> list(EntityViewVO queryVO, SortInfo sortInfo) {
         //构造查询条件
         QueryWrapper<EntityView> queryWrapper = QueryGenerator.generateQueryWrapper(EntityView.class, queryVO, sortInfo);

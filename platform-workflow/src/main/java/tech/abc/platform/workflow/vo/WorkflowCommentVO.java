@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 * 处理意见 视图对象类
 *
 * @author wqliu
-* @date 2023-07-25
+* @date 2023-08-30
 */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -24,6 +24,12 @@ public class WorkflowCommentVO extends BaseVO {
     */
     @NotBlank(message = "【流程实例】不能为空")
     private String processInstanceId;
+
+    /**
+    * 环节标识
+    */
+    @NotBlank(message = "【环节标识】不能为空")
+    private String nodeId;
 
     /**
     * 环节名称

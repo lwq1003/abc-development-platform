@@ -1,35 +1,42 @@
 package tech.abc.platform.workflow.service;
 
-import tech.abc.platform.common.base.BaseService;
 import tech.abc.platform.workflow.entity.WorkflowListenerConfig;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-
+import tech.abc.platform.common.base.BaseService;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 流程监听器配置 服务类
- * @author wqliu
- * @date 2020-10-08
+ * 工作流程监听器配置 服务接口类
  *
+ * @author wqliu
+ * @date 2023-08-29
  */
 public interface WorkflowListenerConfigService extends BaseService<WorkflowListenerConfig> {
 
-    /**
-     * 生成临时版本监听器设置
-     * 先查询是否已存在，不存在则生成
-     * @param tempProcessDefinitionId 流程定义临时版本标识
-     * @param processDefinitionId 流程定义最新版本标识
-     */
-    void generateTempListenerConfig(String tempProcessDefinitionId,String processDefinitionId);
+   /**
+   * 获取标识与名称的Map集合
+   *
+   * @param idList 标识列表
+   * @return 集合
+   */
+   Map<String,String> getNameMap(List<String> idList);
 
-    /**
-     * 更新监听器设置中的临时流程定义标识
-     * @param key
-     */
-    void updateProcessDefinitionId(String key);
+   /**
+    * 更新配置
+    *
+    * @param processDefinitionId 流程定义id
+    * @param nodeId              节点id
+    * @param listenerList        侦听器列表
+    */
+   void updateConfig(String processDefinitionId, String nodeId, String listenerList);
 
-    /**
-     * 将临时版本的监听器信息更新到流程模型中
-     * @param modelInstance 流程模型
-     */
-    void updateModel(BpmnModelInstance modelInstance);
+   /**
+    * 更新流程定义id
+    *
+    * @param processDefinitionId     流程定义id
+    * @param tempProcessDefinitionId 临时流程定义id
+    */
+   void updateProcessDefinitionId(String processDefinitionId, String tempProcessDefinitionId);
+
 }
+

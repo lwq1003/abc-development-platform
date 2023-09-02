@@ -54,6 +54,10 @@ import java.util.stream.Collectors;
 public class CodeGenerateServiceImpl implements CodeGenerateService {
 
 
+    /**
+     * 排序号属性编码
+     */
+    public static final String ORDER_NO = "orderNo";
     @Autowired
     private DataSource dataSource;
 
@@ -774,8 +778,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         // 设置视图文件夹名称
         viewFolderName = "0view/" + moduleCode + "/" + StringUtils.uncapitalize(entity.getCode());
-
-
         InjectionConfig.Builder builder = new InjectionConfig.Builder();
 
         // 生成视图对象
@@ -784,7 +786,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 视图处理
         // 设置实体模型是否为自关联变量
         customKeyValue.put("entityModelSelfReferenceFlag", entityModel.getSelfReferenceFlag());
-
 
         // 获取实体模型属性列表
         List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getByEntityModelId(entityModel.getId());
@@ -800,16 +801,14 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             // 设置主属性编码
             if (x.getMainFlag().equals(YesOrNoEnum.YES.name())) {
                 customKeyValue.put("mainPropertyCode", x.getCode());
-
             }
             // 设置上级属性编码
             if (x.getParentPropertyFlag().equals(YesOrNoEnum.YES.name())) {
                 customKeyValue.put("parentPropertyCode", x.getCode());
-
             }
 
             // 属性中有orderNo属性
-            if ("orderNo".equals(x.getCode())) {
+            if (ORDER_NO.equals(x.getCode())) {
                 customKeyValue.put("existOrderNo", YesOrNoEnum.YES.name());
             }
 
@@ -819,7 +818,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 String entityCode = StringUtils.capitalize(x.getEntityCode());
                 String mainReferenceViewCode = entityViewService.getMainReferenceViewCode(entityCode);
                 Object mainReferenceViewMap = customKeyValue.get("mainReferenceViewMap");
-                Map<String, String> mainReferenceView = new HashMap<>();
+                Map<String, String> mainReferenceView = new HashMap<>(5);
                 if (mainReferenceViewMap != null) {
                     mainReferenceView = (HashMap<String, String>) mainReferenceViewMap;
                 }
@@ -829,6 +828,23 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             }
         });
 
+        handleView(entityModel, customKeyValue, builder);
+
+        InjectionConfig injectionConfig = builder
+                // 自定义变量注入
+                .customMap(customKeyValue)
+                .build();
+        codeGenerator.injection(injectionConfig);
+    }
+
+    /**
+     * 处理视图
+     *
+     * @param entityModel    实体模型
+     * @param customKeyValue 自定义键值
+     * @param builder        构建器
+     */
+    private void handleView(EntityModel entityModel, Map<String, Object> customKeyValue, InjectionConfig.Builder builder) {
         // 获取所有视图
         List<EntityView> entityViewList = entityViewService.getByModelId(entityModel.getId());
         // 获取主视图
@@ -890,12 +906,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             }
 
         });
-
-        InjectionConfig injectionConfig = builder
-                // 自定义变量注入
-                .customMap(customKeyValue)
-                .build();
-        codeGenerator.injection(injectionConfig);
     }
 
     private void configTemplate(AutoGenerator codeGenerator) {

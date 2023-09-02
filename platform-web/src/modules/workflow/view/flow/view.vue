@@ -13,7 +13,11 @@
     <el-main style="padding: 0">
       <el-container>
         <el-aside width="70%">
-          <component :is="taskData.processDefinitionKey" ref="flowComponent" />
+          <component
+            v-if="taskData.processDefinitionKey"
+            :is="taskData.processDefinitionKey"
+            ref="flowComponent"
+          />
         </el-aside>
         <el-main width="30%" style="padding: 0">
           <history-step ref="historyStep" />

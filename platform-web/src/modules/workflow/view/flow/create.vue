@@ -16,7 +16,12 @@
     <el-main style="padding: 0">
       <commit ref="commit" :task-id="taskData.taskId" default-comment="发起申请" @success="close" />
       <jump ref="jump" default-comment="跳转" @success="close" />
-      <component :is="taskData.processDefinitionKey" ref="flowComponent" @save="saved" />
+      <component
+        v-if="taskData.processDefinitionKey"
+        :is="taskData.processDefinitionKey"
+        ref="flowComponent"
+        @save="saved"
+      />
     </el-main>
   </el-container>
 </template>

@@ -55,12 +55,12 @@ public class DoneController extends BaseController {
 
     //转换vo
     IPage<ProcessHistoricTaskVO> pageVO = mapperFacade.map(page, IPage.class);
-    List<ProcessHistoricTaskVO>  ProcessHistoricTaskVOList=new ArrayList<>();
+    List<ProcessHistoricTaskVO>  processHistoricTaskVOList=new ArrayList<>();
     for (int i = 0; i < page.getRecords().size(); i++) {
       ProcessHistoricTaskVO vo = convert2VO(page.getRecords().get(i));
-      ProcessHistoricTaskVOList.add(vo);
+      processHistoricTaskVOList.add(vo);
     }
-    pageVO.setRecords(ProcessHistoricTaskVOList);        ;
+    pageVO.setRecords(processHistoricTaskVOList);        ;
     return ResultUtil.success(pageVO);
   }
 

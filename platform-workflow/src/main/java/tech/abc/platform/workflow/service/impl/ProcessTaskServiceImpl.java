@@ -17,6 +17,7 @@ import org.camunda.bpm.engine.impl.juel.SimpleContext;
 import org.camunda.bpm.engine.runtime.ActivityInstance;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,7 +105,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         ProcessTask task = get(taskId);
 
         // 记录处理意见
-        workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), comment, CommitTypeEnum.COMMIT);
+        workflowCommentService.addComment(task.getProcessInstanceId(),task.getTaskDefinitionKey(),task.getNodeName(), comment,
+                CommitTypeEnum.COMMIT);
 
         //判断当前是否被委派任务
         String delegation = task.getDelegation();
@@ -114,10 +116,6 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             return;
         }
 
-        // 设置回退条件变量为false
-        Map<String, Object> instanceVariable = new HashMap<String, Object>(2);
-        instanceVariable.put(WorkFlowConstant.REJECT_FLAG_CODE, false);
-        taskService.setVariables(taskId, instanceVariable);
 
         // 处理任务
         handleTask(task.getProcessInstanceId(), taskId, nextStepId, assigneeList);
@@ -125,6 +123,22 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     }
 
     private void handleTask(String processInstanceId, String taskId, String nextStepId, List<String> assigneeList) {
+
+        Map<String, Object> instanceVariable = generateInstanceVariable(taskId, nextStepId, assigneeList);
+        taskService.setVariables(taskId, instanceVariable);
+        taskService.complete(taskId);
+    }
+
+
+    /**
+     * 生成实例变量
+     *
+     * @param taskId       任务标识
+     * @param nextStepId   下一环节标识
+     * @param assigneeList 处理人列表
+     * @return {@link Map}<{@link String}, {@link Object}>
+     */
+    private  Map<String, Object> generateInstanceVariable(String taskId, String nextStepId, List<String> assigneeList) {
         // 设置下一环节及处理人实例变量
         Map<String, Object> instanceVariable = new HashMap<String, Object>(2);
         instanceVariable.put(WorkFlowConstant.INSTANCE_NEXT_STEP, nextStepId);
@@ -134,11 +148,15 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
                 .getNodeConfig(processTask.getProcessDefinitionId(), nextStepId);
         if (nodeConfig != null) {
             if (nodeConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
+                // 会签环节
                 instanceVariable.put(WorkFlowConstant.INSTANCE_APPROVER_LIST, assigneeList);
             } else {
+                // 普通环节
                 if (nodeConfig.getSetAssigneeFlag().equals(YesOrNoEnum.YES.name())) {
+                    // 指定处理人
                     instanceVariable.put("singleHandler", assigneeList.get(0));
                 } else {
+                    // 不指定处理人
                     instanceVariable.put("singleHandler", null);
                 }
 
@@ -147,8 +165,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             // 用于并行网关后续环节处理，不设置为null流程会将任务派发到空处理人
             instanceVariable.put("singleHandler", null);
         }
-        taskService.setVariables(processTask.getId(), instanceVariable);
-        taskService.complete(taskId);
+        return instanceVariable;
     }
 
     @Override
@@ -172,30 +189,15 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         identityService.setAuthenticatedUserId(UserUtil.getId());
 
         // 获取任务
-        ProcessTask task = get(taskId);
+        ProcessTask processTask = get(taskId);
 
         // 记录处理意见
-        workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), comment, CommitTypeEnum.REJECT);
+        workflowCommentService.addComment(processTask.getProcessInstanceId(), processTask.getProcessDefinitionKey(),processTask.getNodeName(),
+                comment,
+                CommitTypeEnum.REJECT);
 
-        // 跳转任务
-        // 设置下一环节及处理人实例变量
-        Map<String, Object> instanceVariable = new HashMap<String, Object>(2);
-        instanceVariable.put(WorkFlowConstant.INSTANCE_NEXT_STEP, nextStepId);
-        //获取环节设置
-        ProcessTask processTask = get(taskId);
-        WorkflowNodeConfig nodeConfig = workflowNodeConfigService
-                .getNodeConfig(processTask.getProcessDefinitionId(), nextStepId);
-        if (nodeConfig != null) {
-            if (nodeConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
-                //会签模式
-                //设置变量
-                instanceVariable.put(WorkFlowConstant.INSTANCE_APPROVER_LIST, assigneeList);
-
-            } else {
-                instanceVariable.put("singleHandler", assigneeList.get(0));
-            }
-        }
-        taskService.setVariables(processTask.getId(), instanceVariable);
+        // 生成实例变量
+        Map<String, Object> instanceVariable = generateInstanceVariable(taskId, nextStepId, assigneeList);
 
 
         // 跳转到指定环节
@@ -219,8 +221,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         //任务转办
         taskService.setAssignee(taskId, assignee);
         //记录处理意见
-        workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), comment, CommitTypeEnum.TRANSFER);
-
+        workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), comment,
+                CommitTypeEnum.TRANSFER);
 
     }
 
@@ -234,7 +236,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         //任务委派
         taskService.delegateTask(taskId, assignee);
         //记录审批日志
-        workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), comment, CommitTypeEnum.DELEGATE);
+        workflowCommentService.addComment(task.getProcessInstanceId(),  task.getProcessDefinitionKey(),task.getNodeName(), comment,
+                CommitTypeEnum.DELEGATE);
 
     }
 
@@ -248,7 +251,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         // 设置处理人为当前用户
         taskService.setAssignee(taskId, UserUtil.getId());
         //记录处理意见
-        workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), "签收任务",
+        workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), "签收任务",
                 CommitTypeEnum.SIGN_IN);
 
     }
@@ -262,7 +265,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         // 取消签收
         taskService.setAssignee(taskId, null);
         //记录处理意见
-        workflowCommentService.addComment(task.getProcessInstanceId(), task.getNodeName(), "撤销签收",
+        workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), "撤销签收",
                 CommitTypeEnum.CANCEL_SIGN_IN);
 
     }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 处理意见 实体类
  *
  * @author wqliu
- * @date 2023-07-25
+ * @date 2023-08-30
  *
  */
 @Data
@@ -29,6 +29,12 @@ public class WorkflowComment extends BaseEntity {
     */
     @TableField("process_instance_id")
     private String processInstanceId;
+
+    /**
+    * 环节标识
+    */
+    @TableField("node_id")
+    private String nodeId;
 
     /**
     * 环节名称

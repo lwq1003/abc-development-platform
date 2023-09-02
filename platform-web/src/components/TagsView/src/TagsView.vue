@@ -76,7 +76,7 @@ const closeSelectedTag = (view: RouteLocationNormalizedLoaded) => {
 // 关闭全部
 const closeAllTags = () => {
   tagsViewStore.delAllViewsExcludeFixed()
-  toLastView()
+  push({ path: '/desktop/index' })
 }
 
 // 关闭其他

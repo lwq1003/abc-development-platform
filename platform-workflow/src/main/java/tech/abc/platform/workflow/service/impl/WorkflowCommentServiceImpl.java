@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
+import tech.abc.platform.common.base.BaseFlowBill;
 import tech.abc.platform.common.base.BaseServiceImpl;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.workflow.entity.WorkflowComment;
 import tech.abc.platform.workflow.enums.CommitTypeEnum;
@@ -64,13 +67,28 @@ public class WorkflowCommentServiceImpl extends BaseServiceImpl<WorkflowCommentM
     }
 
     @Override
-    public void addComment(String processInstanceId,String stepName, String comment, CommitTypeEnum commitType) {
+    public void addComment(String processInstanceId,String nodeId,String nodeName, String comment, CommitTypeEnum commitType) {
         WorkflowComment entity=init();
         entity.setProcessInstanceId(processInstanceId);
-        entity.setNodeName(stepName);
+        entity.setNodeId(nodeId);
+        entity.setNodeName(nodeName);
         entity.setComment(comment);
         entity.setCommitType(commitType.name());
         add(entity);
+    }
+
+    @Override
+    public WorkflowComment getLastHandleInfo(String processInstanceId, String nodeId) {
+        List<WorkflowComment> list = this.lambdaQuery().eq(WorkflowComment::getProcessInstanceId, processInstanceId)
+                .eq(WorkflowComment::getNodeId,nodeId)
+                .orderByDesc(WorkflowComment::getCommitTime)
+                .list();
+        if(CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }else{
+            throw new CustomException(CommonException.NOT_EXIST);
+        }
+
     }
 
 }

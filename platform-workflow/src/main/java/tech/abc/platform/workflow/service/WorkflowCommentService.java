@@ -26,11 +26,20 @@ public interface WorkflowCommentService extends BaseService<WorkflowComment> {
    /**
     * 新增处理意见
     * @param processInstanceId 流程实例标识
-    * @param stepName 环节名称
+    * @param nodeId 环节名称
+    * @param nodeName 环节名称
     * @param comment 处理意见
     * @param commitType 提交类型
     */
-   void addComment(String processInstanceId,String stepName, String comment, CommitTypeEnum commitType);
+   void addComment(String processInstanceId,String nodeId,String nodeName, String comment, CommitTypeEnum commitType);
 
+   /**
+    * 获取最后一次的处理信息
+    *
+    * @param processInstanceId 流程实例id
+    * @param nodeId            节点id
+    * @return {@link WorkflowComment}
+    */
+   WorkflowComment getLastHandleInfo(String processInstanceId, String nodeId);
 }
 

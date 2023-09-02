@@ -2,60 +2,96 @@ package tech.abc.platform.workflow.vo;
 
 
 import tech.abc.platform.common.base.BaseVO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 流程监听器配置 视图对象
- * @author wqliu
- * @date 2020-10-08
- *
- */
+* 工作流程监听器配置 视图对象类
+*
+* @author wqliu
+* @date 2023-08-30
+*/
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-
-@ApiModel(value="流程监听器配置对象")
-public class WorkflowListenerConfigVO extends BaseVO
-     {
-
-    private static final long serialVersionUID = 1L;
-
-    @ApiModelProperty(value = "流程定义标识")
+public class WorkflowListenerConfigVO extends BaseVO {
+    /**
+    * 流程定义
+    */
+    @NotBlank(message = "【流程定义】不能为空")
     private String processDefinitionId;
 
-    @ApiModelProperty(value = "元素编码")
-    private String definitionKey;
+    /**
+    * 环节标识
+    */
+    @NotBlank(message = "【环节标识】不能为空")
+    private String nodeId;
 
-    @ApiModelProperty(value = "类别")
+    /**
+    * 类别
+    */
+    @NotBlank(message = "【类别】不能为空")
     private String category;
 
-    @ApiModelProperty(value = "事件")
+    /**
+    * 事件
+    */
+    @NotBlank(message = "【事件】不能为空")
     private String event;
 
-    @ApiModelProperty(value = "类型")
-    private String listenerType;
-
-    @ApiModelProperty(value = "监听器名称")
-    private String listenerName;
-
-    @ApiModelProperty(value = "监听器编码")
-    private String listenerCode;
-    /********自定义扩展*****/
-
-    /********字典类*****/
-    @ApiModelProperty(value = "类别")
-    private String categoryName;
-
-    @ApiModelProperty(value = "事件")
+    /**
+    * 事件名称
+    */
+    @NotBlank(message = "【事件名称】不能为空")
     private String eventName;
 
-    @ApiModelProperty(value = "类型")
-    private String listenerTypeName;
+    /**
+    * 类型
+    */
+    @NotBlank(message = "【类型】不能为空")
+    private String type;
+
+    /**
+    * 名称
+    */
+    @NotBlank(message = "【名称】不能为空")
+    private String name;
+
+    /**
+    * 编码
+    */
+    @NotBlank(message = "【编码】不能为空")
+    private String code;
+
+
+    /********非库表存储属性*****/
+
+
+
+    /********字典类*****/
+    /**
+    * 类别
+    */
+    private String categoryName;
+
+    /**
+    * 类型
+    */
+    private String typeName;
+
+
+    /********实体类、用户单选、组织机构单选*****/
+
+    /********范围查询*****/
+
+    /********自定义扩展*****/
+
     /********子对象*****/
+
 
 
 
