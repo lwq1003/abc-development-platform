@@ -23,14 +23,15 @@ public interface WorkflowJumpNodeConfigService extends BaseService<WorkflowJumpN
    */
    Map<String,String> getNameMap(List<String> idList);
 
+
    /**
     * 更新配置
     *
-    * @param processDefinitionId 流程定义标识
-    * @param nodeId              环节标识
-    * @param jumpNodeList        跳转节点列表
+    * @param processDefinitionId 流程定义id
+    * @param nodeId              节点id
+    * @param configString        配置信息
     */
-   void updateConfig(String processDefinitionId, String nodeId, List<WorkflowJumpNodeConfig> jumpNodeList);
+   void updateConfig(String processDefinitionId, String nodeId, String configString);
 
    /**
     * 更新流程定义id

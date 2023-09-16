@@ -166,7 +166,6 @@ export const flowMixin = {
     },
     // 跳转
     jump() {
-      console.log(this.taskData.taskId)
       if (this.taskData.taskId === '') {
         // 流程创建时保存后，无任务标识，通过流程标识获取任务标识
         this.$api.workflow.processInstance

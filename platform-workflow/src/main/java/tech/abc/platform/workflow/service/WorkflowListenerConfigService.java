@@ -2,6 +2,8 @@ package tech.abc.platform.workflow.service;
 
 import tech.abc.platform.workflow.entity.WorkflowListenerConfig;
 import tech.abc.platform.common.base.BaseService;
+import tech.abc.platform.workflow.entity.WorkflowNodePermissionConfig;
+
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +39,22 @@ public interface WorkflowListenerConfigService extends BaseService<WorkflowListe
     * @param tempProcessDefinitionId 临时流程定义id
     */
    void updateProcessDefinitionId(String processDefinitionId, String tempProcessDefinitionId);
+
+   /**
+    * 通过流程定义标识获取配置
+    *
+    * @param processDefinitionId 流程定义id
+    * @return {@link List}<{@link WorkflowListenerConfig}>
+    */
+   List<WorkflowListenerConfig> getByProcessDefinitionId(String processDefinitionId);
+
+
+   /**
+    * 通过流程定义标识清除数据
+    *
+    * @param processDefinitionId 临时流程定义id
+    */
+   void removeByProcessDefinitionId(String processDefinitionId);
 
 }
 

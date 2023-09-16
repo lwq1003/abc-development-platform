@@ -1,9 +1,13 @@
 package tech.abc.platform.workflow.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import tech.abc.platform.workflow.entity.WorkflowBackNodeConfig;
 import tech.abc.platform.workflow.entity.WorkflowBackNodeConfig;
+import tech.abc.platform.workflow.entity.WorkflowJumpNodeConfig;
 import tech.abc.platform.workflow.mapper.WorkflowBackNodeConfigMapper;
 import tech.abc.platform.workflow.service.WorkflowBackNodeConfigService;
 import tech.abc.platform.common.base.BaseServiceImpl;
@@ -73,7 +77,7 @@ public class WorkflowBackNodeConfigServiceImpl extends BaseServiceImpl<WorkflowB
 
 
     @Override
-    public void updateConfig(String processDefinitionId, String nodeId, List<WorkflowBackNodeConfig> jumpNodeList) {
+    public void updateConfig(String processDefinitionId, String nodeId, String configString) {
         // 先清空配置
         QueryWrapper<WorkflowBackNodeConfig> queryWrapper=new QueryWrapper<>();
         queryWrapper.lambda().eq(WorkflowBackNodeConfig::getProcessDefinitionId,processDefinitionId)
@@ -81,12 +85,21 @@ public class WorkflowBackNodeConfigServiceImpl extends BaseServiceImpl<WorkflowB
         remove(queryWrapper);
         // 后生成配置
         int orderNo=0;
-        for(WorkflowBackNodeConfig entity:jumpNodeList){
-            orderNo++;
-            entity.setProcessDefinitionId(processDefinitionId);
-            entity.setNodeId(nodeId);
-            entity.setOrderNo(StringUtils.leftPad(String.valueOf(orderNo),2,"0"));
-            add(entity);
+        // 后生成配置
+        if(StringUtils.isNotBlank(configString)) {
+            JSONArray jsonArray = JSON.parseArray(configString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                orderNo++;
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                WorkflowBackNodeConfig config = new WorkflowBackNodeConfig();
+                config.setTargetNodeId(jsonObject.getString("id"));
+                config.setTargetNodeName(jsonObject.getString("name"));
+                config.setProcessDefinitionId(processDefinitionId);
+                config.setNodeId(nodeId);
+                config.setOrderNo(StringUtils.leftPad(String.valueOf(orderNo),2,"0"));
+                add(config);
+
+            }
         }
 
     }

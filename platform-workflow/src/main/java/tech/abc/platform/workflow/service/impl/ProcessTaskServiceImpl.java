@@ -96,7 +96,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
                        List<String> assigneeList) {
 
 
-        // TODO: 验证当前操作人是否有权限提交
+      
         // 设置当前处理人
         identityService.setAuthenticatedUserId(UserUtil.getId());
 
@@ -172,7 +172,6 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Transactional(rollbackFor = Exception.class)
     public void reject(String taskId, String comment, String nextStepId, List<String> assigneeList) {
 
-        // 设置当前处理人
         jumpTargetStep(taskId, comment, nextStepId, assigneeList);
     }
 
@@ -215,7 +214,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void transfer(String taskId, String assignee, String comment) {
-        // TODO: 验证当前操作人是否有权限提交
+      
         // 获取任务
         ProcessTask task = get(taskId);
         //任务转办
@@ -230,7 +229,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delegate(String taskId, String assignee, String comment) {
-        // TODO: 验证当前操作人是否有权限提交
+      
         // 获取任务
         ProcessTask task = get(taskId);
         //任务委派
@@ -245,7 +244,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void signIn(String taskId) {
-        // TODO: 验证当前操作人是否有权限提交
+      
         // 获取任务
         ProcessTask task = get(taskId);
         // 设置处理人为当前用户

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.workflow.entity.WorkflowBackNodeConfig;
 import tech.abc.platform.workflow.entity.WorkflowListenerConfig;
+import tech.abc.platform.workflow.entity.WorkflowNodePermissionConfig;
 import tech.abc.platform.workflow.mapper.WorkflowListenerConfigMapper;
 import tech.abc.platform.workflow.service.WorkflowListenerConfigService;
 import tech.abc.platform.common.base.BaseServiceImpl;
@@ -96,6 +97,21 @@ public class WorkflowListenerConfigServiceImpl extends BaseServiceImpl<WorkflowL
         updateWrapper.lambda().set(WorkflowListenerConfig::getProcessDefinitionId, processDefinitionId)
                 .eq(WorkflowListenerConfig::getProcessDefinitionId, tempProcessDefinitionId);
         update(updateWrapper);
+    }
+
+    @Override
+    public List<WorkflowListenerConfig> getByProcessDefinitionId(String processDefinitionId) {
+        return this.lambdaQuery().eq(WorkflowListenerConfig::getProcessDefinitionId, processDefinitionId).list();
+    }
+
+
+    @Override
+    public void removeByProcessDefinitionId(String processDefinitionId) {
+        List<WorkflowListenerConfig> list = getByProcessDefinitionId(processDefinitionId);
+        for(WorkflowListenerConfig item:list ){
+            removeById(item.getId());
+        }
+
     }
 
     @Override

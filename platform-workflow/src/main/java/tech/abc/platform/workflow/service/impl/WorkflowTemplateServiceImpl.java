@@ -213,6 +213,9 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         // 删除环节跳转配置
         workflowJumpNodeConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
 
+        // 删除监听器配置
+        workflowListenerConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
+
 
     }
 
@@ -263,11 +266,13 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         // 更新状态
         entity.setTemplateStatus(WorkflowTemplateStatusEnum.RUNNING.name());
         super.updateById(entity);
-
-
-
     }
 
+    /**
+     * 将运行状态的流程模板归档
+     *
+     * @param templateCode 模板代码
+     */
     private void setArchived(String templateCode){
         Optional<WorkflowTemplate> workflowTemplate = this.lambdaQuery().eq(WorkflowTemplate::getTemplateStatus, WorkflowTemplateStatusEnum.RUNNING.name())
                 .eq(WorkflowTemplate::getCode, templateCode).oneOpt();
@@ -436,7 +441,6 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
             case HANDLE:
                element =  handleNodeConvert(process, parentElement, flowNode, tempVersion, expression, generateConfigFlag);
 
-
                 break;
             case INCLUSIVE_GATEWAY:
 
@@ -460,63 +464,62 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
     }
 
-
-    private InclusiveGateway gatewayNodeConvert(Process process,MyFlowNode flowNode,FlowNode parentElement,String tempVersion, String expression, boolean generateConfigFlag){
+    /**
+     * 发起节点转换
+     *
+     * @param process            流程
+     * @param parentElement      父元素
+     * @param flowNode           流程节点
+     * @param tempVersion        临时版本
+     * @param generateConfigFlag 是否生成配置
+     * @return {@link FlowNode}
+     */
+    private FlowNode rootNodeConvert(Process process, FlowNode parentElement, MyFlowNode flowNode, String tempVersion, boolean generateConfigFlag) {
+        // 创建节点
         ModelInstance modelInstance=process.getModelInstance();
+        UserTask firstNode = modelInstance.newInstance(UserTask.class);
+        // 设置基本属性
+        firstNode.setName(flowNode.getName());
+        firstNode.setCamundaAssignee("${firstNodeAssignee}");
+        firstNode.setId(flowNode.getId());
+        process.addChildElement(firstNode);
 
-        InclusiveGateway node = modelInstance.newInstance(InclusiveGateway.class);
-        process.addChildElement(node);
-        // 基本属性设置
-        node.setName(flowNode.getName());
-        node.setId(flowNode.getId());
-        // 构建入边
-        SequenceFlow inflow = createSequenceFlow(process, parentElement, node);
-        // 如表达式不为空，则设置条件边
-        if (StringUtils.isNotBlank(expression)) {
-            ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
-            conditionExpression.setTextContent(expression);
-            inflow.setConditionExpression(conditionExpression);
-            // 使用一次后置空
-            expression = null;
+        // 构建边
+        createSequenceFlow(process, parentElement, firstNode);
+        if(generateConfigFlag) {
+            // 环节配置
+            String rootConfig = flowNode.getConfig();
+            JSONObject nodeConfig = JSON.parseObject(rootConfig);
+
+            // 权限配置
+            List<WorkflowNodePermissionConfig> rootPermissionList = JSON.parseArray(nodeConfig.getString("permissionConfig"),
+                    WorkflowNodePermissionConfig.class);
+            configPermission(tempVersion, firstNode.getId(), rootPermissionList);
+
+            // 跳转环节配置
+            workflowJumpNodeConfigService.updateConfig(tempVersion, firstNode.getId(), nodeConfig.getString("jumpNodeList"));
+
         }
-        // 生成虚拟的汇聚节点
-        InclusiveGateway convergeNode = modelInstance.newInstance(InclusiveGateway.class);
-        process.addChildElement(convergeNode);
-        convergeNode.setName("汇聚节点");
-        convergeNode.setId("convergeNode" + UUID.randomUUID().toString());
-
-
-        // 分支处理
-        List<MyFlowNode> branchList = flowNode.getBranchList();
-        // 转换分支
-        branchList.stream().forEach(item -> {
-            // 分支首节点涉及到在边上设置条件表达式
-            MyConditionNode myConditionNode = JSON.parseObject(item.getConfig(), MyConditionNode.class);
-            String branchExpression = myConditionNode.getExpression();
-
-            if (item.getChild() != null && StringUtils.isNotBlank(item.getChild().getName())) {
-                FlowNode brachEndNode = convertJsonToModel(process, node,
-                        item.getChild(), tempVersion, branchExpression, generateConfigFlag);
-                // 附加汇聚节点
-                createSequenceFlow(process, brachEndNode, convergeNode);
-            } else {
-                // 附加汇聚节点
-                SequenceFlow endFlow = createSequenceFlow(process, node, convergeNode);
-                ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
-                conditionExpression.setTextContent(branchExpression);
-                inflow.setConditionExpression(conditionExpression);
-            }
-
-        });
-        return convergeNode;
+        return firstNode;
     }
 
+    /**
+     * 办理节点转换
+     *
+     * @param process            流程
+     * @param parentElement      父元素
+     * @param flowNode           流程节点
+     * @param tempVersion        临时版本
+     * @param expression         表达式
+     * @param generateConfigFlag 是否生成配置
+     * @return {@link UserTask}
+     */
     private UserTask handleNodeConvert(Process process, FlowNode parentElement, MyFlowNode flowNode, String tempVersion, String expression,
-                                boolean generateConfigFlag) {
-
+                                       boolean generateConfigFlag) {
+        // 生成节点
         ModelInstance modelInstance=process.getModelInstance();
         UserTask userTask = modelInstance.newInstance(UserTask.class);
-        // 基本属性设置
+        // 设置基本属性
         userTask.setName(flowNode.getName());
         userTask.setId(flowNode.getId());
         // 环节配置
@@ -526,20 +529,17 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         WorkflowNodeConfig personConfig = JSON.parseObject(handleNodeConfig.getString("personConfig"), WorkflowNodeConfig.class);
         userTask.setCamundaCandidateGroups(personConfig.getUserGroup());
         if (personConfig.getMode().equals(NodeModeEnum.COUNTERSIGN.name())) {
-            // 会签模式
-            // 设置处理人为变量
+            // 会签模式，设置处理人为变量
             userTask.setCamundaAssignee("${assignee}");
             // 设置多实例
             MultiInstanceLoopCharacteristics loopCharacteristics =
                     modelInstance.newInstance(MultiInstanceLoopCharacteristics.class);
-
             loopCharacteristics.setSequential(false);
             loopCharacteristics.setCamundaCollection("${assigneeList}");
             loopCharacteristics.setCamundaElementVariable("assignee");
             userTask.addChildElement(loopCharacteristics);
         } else {
-            // 普通模式
-            // 设置处理人为变量li
+            // 普通模式，设置处理人为变量
             userTask.setCamundaAssignee("${singleHandler}");
         }
         // 监听器配置
@@ -559,26 +559,44 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
         // 配置后端处理
         if(generateConfigFlag) {
+            // 环节配置
+            personConfig.setProcessDefinitionId(tempVersion);
+            personConfig.setName(userTask.getName());
+            personConfig.setNodeId(userTask.getId());
+            workflowNodeConfigService.add(personConfig);
+
             // 权限配置
             List<WorkflowNodePermissionConfig> permissionList = JSON.parseArray(handleNodeConfig.getString("permissionConfig"),
                     WorkflowNodePermissionConfig.class);
             configPermission(tempVersion, userTask.getId(), permissionList);
 
             // 回退环节配置
-            configBackNodeList(tempVersion, userTask.getId(), handleNodeConfig.getString("backNodeList"));
+            workflowBackNodeConfigService.updateConfig(tempVersion, userTask.getId(), handleNodeConfig.getString("backNodeList"));
+
             // 跳转环节配置
-            configJumpNodeList(tempVersion, userTask.getId(), handleNodeConfig.getString("jumpNodeList"));
+            workflowJumpNodeConfigService.updateConfig(tempVersion, userTask.getId(), handleNodeConfig.getString("jumpNodeList"));
+
             // 监听器配置
             workflowListenerConfigService.updateConfig(tempVersion, userTask.getId(), handleNodeConfig.getString("listenerList"));
 
         }
-
-
         process.addChildElement(userTask);
-
         // 构建边
         SequenceFlow sequenceFlow = createSequenceFlow(process, parentElement, userTask);
-        // 如表达式不为空，则意味着需要设置条件边
+        // 设置条件边
+        setConditionForSequenceFlow(expression, modelInstance, sequenceFlow);
+
+        return userTask;
+    }
+
+    /**
+     * 设置条件
+     *
+     * @param expression    表达式
+     * @param modelInstance 模型实例
+     * @param sequenceFlow  边
+     */
+    private  void setConditionForSequenceFlow(String expression, ModelInstance modelInstance, SequenceFlow sequenceFlow) {
         if (StringUtils.isNotBlank(expression)) {
             ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
             conditionExpression.setTextContent(expression);
@@ -586,81 +604,72 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
             // 使用一次后置空
             expression = null;
         }
-        if(generateConfigFlag) {
-            // 生成环节配置
-            personConfig.setProcessDefinitionId(tempVersion);
-            personConfig.setName(userTask.getName());
-            personConfig.setNodeId(userTask.getId());
-            workflowNodeConfigService.add(personConfig);
-        }
-        return userTask;
-
     }
 
-    @NotNull
-    private FlowNode rootNodeConvert(Process process, FlowNode parentElement, MyFlowNode flowNode, String tempVersion, boolean generateConfigFlag) {
+
+    /**
+     * 网关节点转换
+     *
+     * @param process            过程
+     * @param flowNode           流程节点
+     * @param parentElement      父元素
+     * @param tempVersion        临时版本
+     * @param expression         表达式
+     * @param generateConfigFlag 是否生成配置
+     * @return {@link InclusiveGateway}
+     */
+    private InclusiveGateway gatewayNodeConvert(Process process,MyFlowNode flowNode,FlowNode parentElement,String tempVersion, String expression, boolean generateConfigFlag){
+        // 创建节点
         ModelInstance modelInstance=process.getModelInstance();
-        UserTask firstNode = modelInstance.newInstance(UserTask.class);
-        firstNode.setName(flowNode.getName());
-        firstNode.setCamundaAssignee("${firstNodeAssignee}");
-        firstNode.setId(flowNode.getId());
-        process.addChildElement(firstNode);
-
-        // 构建边
-        createSequenceFlow(process, parentElement, firstNode);
-        if(generateConfigFlag) {
-            // 环节配置
-            String rootConfig = flowNode.getConfig();
-            JSONObject nodeConfig = JSON.parseObject(rootConfig);
-
-            // 权限配置
-            List<WorkflowNodePermissionConfig> rootPermissionList = JSON.parseArray(nodeConfig.getString("permissionConfig"),
-                    WorkflowNodePermissionConfig.class);
-            configPermission(tempVersion, firstNode.getId(), rootPermissionList);
-
-            // 跳转环节配置
-            configJumpNodeList(tempVersion, firstNode.getId(), nodeConfig.getString("jumpNodeList"));
-        }
-        return firstNode;
-    }
+        InclusiveGateway node = modelInstance.newInstance(InclusiveGateway.class);
+        process.addChildElement(node);
+        // 设置基本属性
+        node.setName(flowNode.getName());
+        node.setId(flowNode.getId());
+        // 构建入边
+        SequenceFlow inflow = createSequenceFlow(process, parentElement, node);
+        // 设置条件边
+        setConditionForSequenceFlow(expression, modelInstance, inflow);
+        // 生成虚拟的汇聚节点
+        InclusiveGateway convergeNode = modelInstance.newInstance(InclusiveGateway.class);
+        process.addChildElement(convergeNode);
+        convergeNode.setName("汇聚节点");
+        convergeNode.setId("convergeNode" + UUID.randomUUID().toString());
 
 
-    private void configJumpNodeList(String tempVersion, String id,String configString) {
+        // 分支处理
+        List<MyFlowNode> branchList = flowNode.getBranchList();
+        // 转换分支
+        branchList.stream().forEach(item -> {
+            // 分支首节点涉及到在边上设置条件表达式
+            MyConditionNode myConditionNode = JSON.parseObject(item.getConfig(), MyConditionNode.class);
+            String branchExpression = myConditionNode.getExpression();
 
-        if(StringUtils.isNoneBlank(configString)) {
-
-            List<WorkflowJumpNodeConfig> jumpNodeList = new ArrayList<>();
-            JSONArray jsonArray = JSON.parseArray(configString);
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                WorkflowJumpNodeConfig entity = new WorkflowJumpNodeConfig();
-                entity.setTargetNodeId(jsonObject.getString("id"));
-                entity.setTargetNodeName(jsonObject.getString("name"));
-                jumpNodeList.add(entity);
+            if (item.getChild() != null && StringUtils.isNotBlank(item.getChild().getName())) {
+                // 存在子节点，转换
+                FlowNode brachEndNode = convertJsonToModel(process, node,
+                        item.getChild(), tempVersion, branchExpression, generateConfigFlag);
+                // 分支最后一个节点连接汇聚节点
+                createSequenceFlow(process, brachEndNode, convergeNode);
+            } else {
+                // 不存在子节点，路由直接连接汇聚，并设置条件边
+                SequenceFlow endFlow = createSequenceFlow(process, node, convergeNode);
+                // 设置条件边
+                setConditionForSequenceFlow(expression, modelInstance, endFlow);
 
             }
 
-            workflowJumpNodeConfigService.updateConfig(tempVersion, id, jumpNodeList);
-        }
-
+        });
+        return convergeNode;
     }
 
-    private void configBackNodeList(String tempVersion, String id,String configString) {
-        if(StringUtils.isNoneBlank(configString)) {
 
-            List<WorkflowBackNodeConfig> backNodeList = new ArrayList<>();
-            JSONArray jsonArray = JSON.parseArray(configString);
-            for (int i = 0; i < jsonArray.size(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                WorkflowBackNodeConfig entity = new WorkflowBackNodeConfig();
-                entity.setTargetNodeId(jsonObject.getString("id"));
-                entity.setTargetNodeName(jsonObject.getString("name"));
-                backNodeList.add(entity);
-            }
-            workflowBackNodeConfigService.updateConfig(tempVersion, id, backNodeList);
-        }
 
-    }
+
+
+
+
+
 
     private void configPermission(String tempVersion, String nodeId, List<WorkflowNodePermissionConfig> permissionList) {
         // 基础权限

@@ -1,8 +1,12 @@
 package tech.abc.platform.workflow.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import tech.abc.platform.workflow.entity.WorkflowJumpNodeConfig;
+import tech.abc.platform.workflow.entity.WorkflowListenerConfig;
 import tech.abc.platform.workflow.entity.WorkflowNodePermissionConfig;
 import tech.abc.platform.workflow.mapper.WorkflowJumpNodeConfigMapper;
 import tech.abc.platform.workflow.service.WorkflowJumpNodeConfigService;
@@ -65,8 +69,10 @@ public class WorkflowJumpNodeConfigServiceImpl extends BaseServiceImpl<WorkflowJ
         return result;
     }
 
+
+
     @Override
-    public void updateConfig(String processDefinitionId, String nodeId, List<WorkflowJumpNodeConfig> jumpNodeList) {
+    public void updateConfig(String processDefinitionId, String nodeId, String configString) {
         // 先清空配置
         QueryWrapper<WorkflowJumpNodeConfig> queryWrapper=new QueryWrapper<>();
         queryWrapper.lambda().eq(WorkflowJumpNodeConfig::getProcessDefinitionId,processDefinitionId)
@@ -74,12 +80,21 @@ public class WorkflowJumpNodeConfigServiceImpl extends BaseServiceImpl<WorkflowJ
         remove(queryWrapper);
         // 后生成配置
         int orderNo=0;
-        for(WorkflowJumpNodeConfig entity:jumpNodeList){
-            orderNo++;
-            entity.setProcessDefinitionId(processDefinitionId);
-            entity.setNodeId(nodeId);
-            entity.setOrderNo(StringUtils.leftPad(String.valueOf(orderNo),2,"0"));
-            add(entity);
+        // 后生成配置
+        if(StringUtils.isNotBlank(configString)) {
+            JSONArray jsonArray = JSON.parseArray(configString);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                orderNo++;
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                WorkflowJumpNodeConfig config = new WorkflowJumpNodeConfig();
+                config.setTargetNodeId(jsonObject.getString("id"));
+                config.setTargetNodeName(jsonObject.getString("name"));
+                config.setProcessDefinitionId(processDefinitionId);
+                config.setNodeId(nodeId);
+                config.setOrderNo(StringUtils.leftPad(String.valueOf(orderNo),2,"0"));
+                add(config);
+
+            }
         }
 
     }
