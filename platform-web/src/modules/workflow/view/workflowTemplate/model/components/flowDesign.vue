@@ -42,7 +42,6 @@
             </div>
           </section>
         </div>
-        <errorDialog v-model:visible="tipVisible" :list="tipList" />
 
         <HandleNodeConfig :modelData="nodeData" />
         <ConditionNodeConfig />
@@ -56,7 +55,6 @@
 
 <script>
 import { Dialog } from '@/components/abc/Dialog'
-import errorDialog from './dialog/errorDialog.vue'
 
 import nodeWrap from './nodeWrap.vue'
 import HandleNodeConfig from './drawer/HandleNodeConfig.vue'
@@ -69,7 +67,6 @@ let store = useStore()
 export default {
   components: {
     Dialog,
-    errorDialog,
     nodeWrap,
     HandleNodeConfig,
     ConditionNodeConfig,
@@ -97,10 +94,6 @@ export default {
       scaleValue: 100,
       // 节点数据
       nodeData: {},
-      // 错误提示可见性
-      tipVisible: false,
-      // 错误列表
-      tipList: [],
       // 默认节点数据
       defaultNodeData: {
         name: '填报',

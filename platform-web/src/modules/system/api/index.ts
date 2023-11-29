@@ -218,6 +218,11 @@ export const systemManage = Object.assign(
     // 重建系统缓存
     rebuildSystemCache() {
       return request.put({ url: this.serveUrl + 'rebuildSystemCache' })
+    },
+    // 获取唯一性标识
+    getUniqueId() {
+      // 获取唯一性标识
+      return request.get({ url: this.serveUrl + 'getUniqueId' })
     }
   }
 )

@@ -50,8 +50,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-form-item {
-  margin-bottom: 10px;
-}
-</style>
+<style scoped></style>

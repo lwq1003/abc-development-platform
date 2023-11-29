@@ -26,7 +26,7 @@ public interface WorkflowCommentService extends BaseService<WorkflowComment> {
    /**
     * 新增处理意见
     * @param processInstanceId 流程实例标识
-    * @param nodeId 环节名称
+    * @param nodeId 环节标识
     * @param nodeName 环节名称
     * @param comment 处理意见
     * @param commitType 提交类型

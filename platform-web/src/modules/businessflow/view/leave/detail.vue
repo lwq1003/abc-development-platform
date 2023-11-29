@@ -1,7 +1,7 @@
 <template>
   <div>
     <basic-info :entity-data="entityData" />
-    <el-card v-show="permissionConfigData.applyArea != 'INVISIBLE'">
+    <el-card>
       <template #header>
         <span>申请信息</span>
       </template>
@@ -164,11 +164,7 @@ export default {
         total: [{ required: true, message: '【总计天数】不能为空', trigger: 'blur' }],
         leaveType: [{ required: true, message: '【请假类型】不能为空', trigger: 'blur' }],
         reason: [{ required: true, message: '【原因】不能为空', trigger: 'blur' }]
-      },
-      // 基本信息
-      basicInfo: {},
-      // 审批信息
-      activities: {}
+      }
     }
   },
   methods: {}

@@ -28,4 +28,10 @@ public class OssConfig {
      */
     private String basePath = "";
 
+
+    /**
+     * minio配置
+     */
+    private MinioConfig minioConfig=new MinioConfig();
+
 }

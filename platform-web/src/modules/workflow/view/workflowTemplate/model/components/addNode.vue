@@ -9,12 +9,6 @@
             </div>
             <p>办理节点</p>
           </a>
-          <!-- <a class="add-node-popover-item notifier" @click="addType(2)">
-            <div class="item-wrapper">
-              <span class="iconfont"></span>
-            </div>
-            <p>抄送人</p>
-          </a> -->
           <a class="add-node-popover-item condition" @click="addConditionBranch">
             <div class="item-wrapper">
               <span class="iconfont"></span>
@@ -84,47 +78,6 @@ const addConditionBranch = () => {
     ]
   }
   emits('update:childNodeP', data)
-}
-const addType = (type) => {
-  visible.value = false
-  if (type != 4) {
-    var data
-    if (type == 2) {
-      data = {
-        nodeName: '抄送人',
-        type: 2,
-        ccSelfSelectFlag: 1,
-        childNode: props.childNodeP,
-        nodeUserList: []
-      }
-    }
-    emits('update:childNodeP', data)
-  } else {
-    emits('update:childNodeP', {
-      nodeName: '路由',
-      type: 4,
-      childNode: null,
-      conditionNodes: [
-        {
-          nodeName: '条件1',
-          error: true,
-          type: 3,
-          priorityLevel: 1,
-          conditionList: [],
-          nodeUserList: [],
-          childNode: props.childNodeP
-        },
-        {
-          nodeName: '条件2',
-          type: 3,
-          priorityLevel: 2,
-          conditionList: [],
-          nodeUserList: [],
-          childNode: null
-        }
-      ]
-    })
-  }
 }
 </script>
 <style scoped lang="less">

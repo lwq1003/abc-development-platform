@@ -40,6 +40,7 @@ module.exports = defineConfig({
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'no-unused-vars': 'off',
+    "vue/no-unused-components": "off",
     'space-before-function-paren': 'off',
 
     'vue/attributes-order': 'off',

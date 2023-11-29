@@ -131,8 +131,17 @@ platform-config:
     sendMessageCount: 10
     enableResend: true
   oss:
+    #   本地磁盘存储模式
     storeClass: tech.abc.platform.oss.service.impl.LocalStoreServiceImpl
+    #   集成minio模式
+    #  storeClass: tech.abc.platform.oss.service.impl.MinioStoreServiceImpl
+    # 本地磁盘需要给出路径，如c:/attachment/或/data;minio因使用桶作为逻辑存储，无根路径，需留空
     basePath: c:/attachment/
+    minio:
+      server: http://127.0.0.1:9000
+      accessKey: admin
+      secretKey: 12345678
+      bucketName: abc
   mail:
     senderAddress: sealy321@126.com
 

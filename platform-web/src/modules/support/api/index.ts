@@ -42,13 +42,14 @@ export const notice = Object.assign({}, COMMON_METHOD, {
 // 附件
 export const attachment = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'attachment' + '/',
-  // 上传
-  upload() {
-    return request.post({ url: this.serveUrl + 'upload' })
-  },
+  // 上传操作内置于vue-simple-uploader中
   // 下载
   download(id) {
     return request.download({ url: this.serveUrl + id + '/download' })
+  },
+  // 合并文件块
+  mergeChunks(param) {
+    return request.post({ url: this.serveUrl + 'mergeChunks', data: param })
   },
   // 上传图片
   uploadImage(param) {

@@ -24,11 +24,10 @@ import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
-import tech.abc.platform.common.vo.FileChunkVO;
-import tech.abc.platform.common.vo.PageInfo;
-import tech.abc.platform.common.vo.Result;
-import tech.abc.platform.common.vo.SortInfo;
+import tech.abc.platform.common.vo.*;
+import tech.abc.platform.oss.constant.FileConstant;
 import tech.abc.platform.oss.entity.FileChunk;
+import tech.abc.platform.oss.entity.FileInfo;
 import tech.abc.platform.oss.exception.FileExceptionEnum;
 import tech.abc.platform.support.entity.Attachment;
 import tech.abc.platform.support.service.AttachmentService;
@@ -57,7 +56,7 @@ import java.util.List;
 public class AttachmentController extends BaseController {
 
 
-    public static final String IMAGE_PATH = "image/";
+
     @Autowired
     private AttachmentService attachmentService;
 
@@ -163,11 +162,11 @@ public class AttachmentController extends BaseController {
     // region 扩展操作
 
     /**
-     * 分片上传
+     * 上传文件块
      */
-    @PostMapping("/upload")
+    @PostMapping("/uploadChunk")
     @AllowAuthenticated
-    public ResponseEntity<Result> upload(FileChunkVO fileChunkVO, HttpServletRequest request) {
+    public ResponseEntity<Result> uploadChunk(FileChunkVO fileChunkVO, HttpServletRequest request) {
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (isMultipart) {
             FileChunk fileChunk = new FileChunk();
@@ -178,6 +177,18 @@ public class AttachmentController extends BaseController {
             }
             attachmentService.uploadChunk(fileChunk);
         }
+        return ResultUtil.success();
+    }
+
+    /**
+     * 合并文件块
+     */
+    @PostMapping("/mergeChunks")
+    @AllowAuthenticated
+    public ResponseEntity<Result> mergeChunks(@RequestBody FileInfoVO fileInfoVO) {
+        FileInfo fileInfo = new FileInfo();
+        BeanUtils.copyProperties(fileInfoVO, fileInfo);
+        attachmentService.mergeChunks(fileInfo);
         return ResultUtil.success();
     }
 
@@ -216,13 +227,15 @@ public class AttachmentController extends BaseController {
             Attachment attachment = attachmentService.getById(id);
 
             // 设置响应信息
-            response.setContentType("application/vnd.ms-excel");
+            String mimeType = attachment.getType();
+            if(StringUtils.isBlank(mimeType)){
+                mimeType="application/octet-stream";
+            }
+            response.setContentType(mimeType);
             response.setCharacterEncoding("utf-8");
             // 这里URLEncoder.encode可以防止中文乱码
             String fileName = URLEncoder.encode(attachment.getName(), "UTF-8");
-            response.setHeader("Content-disposition", "attachment;filename=" + fileName);
-
-
+            response.setHeader("Content-disposition", "attachment;filename=" + encodeFileName(fileName));
             // 复制
             IOUtils.copy(is, os);
             os.flush();
@@ -244,10 +257,12 @@ public class AttachmentController extends BaseController {
     public void getImage(@PathVariable("id") String id, HttpServletResponse response) {
         Attachment attachment = attachmentService.getById(id);
         String fileName = attachment.getName();
-        String mimeType = HttpURLConnection.getFileNameMap().getContentTypeFor(fileName);
-        mimeType = StringUtils.isBlank(mimeType) ? "application/octet-stream;" : mimeType;
+        String mimeType = attachment.getType();
+        if(StringUtils.isBlank(mimeType)){
+            mimeType="application/octet-stream";
+        }
         response.setContentType(mimeType);
-        if (!mimeType.startsWith(IMAGE_PATH)) {
+        if (!mimeType.startsWith(FileConstant.IMAGE_PATH)) {
             response.setHeader("Content-Disposition", "attachment;filename=" + encodeFileName(fileName));
         }
         try (OutputStream os = response.getOutputStream();
@@ -259,37 +274,6 @@ public class AttachmentController extends BaseController {
         }
     }
 
-    /**
-     * 前端正常上传文件（不分片）
-     *
-     * @param fileChunkVO
-     * @param request
-     * @return
-     */
-    @PostMapping("/uploadFile")
-    @AllowAuthenticated
-    public ResponseEntity<Result> uploadFile(AttachmentVO vo, HttpServletRequest request) {
-        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-        FileChunk fileChunk = new FileChunk();
-        MultipartFile file = multiRequest.getFile("file");
-        fileChunk.setFile(file);
-        fileChunk.setFilename(file.getOriginalFilename());
-        long size = file.getSize();
-        fileChunk.setChunkSize(size);
-        fileChunk.setTotalSize(size);
-        fileChunk.setCurrentChunkSize(size);
-        fileChunk.setEntityType(multiRequest.getParameter("entityType"));
-        fileChunk.setEntityId(multiRequest.getParameter("entityId"));
-        fileChunk.setModuleCode(multiRequest.getParameter("moduleCode"));
-
-        fileChunk.setChunkNumber(1);
-        fileChunk.setTotalChunks(1);
-        fileChunk.setIdentifier(IdWorker.getIdStr());
-        String id = attachmentService.uploadChunk(fileChunk);
-        return ResultUtil.success(id);
-
-
-    }
 
     private String encodeFileName(String fileName) {
         String encodeName = fileName;

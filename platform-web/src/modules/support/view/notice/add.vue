@@ -40,7 +40,6 @@
         :entity-id="entityData.id"
         module-code="support"
         :show-success-files="false"
-        :server-url="'/support/attachment/upload'"
         @file-complete="fileComplete"
       />
     </el-form-item>

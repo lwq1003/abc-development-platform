@@ -19,6 +19,8 @@
 
 <script>
 export default {
+  name: 'DictionarySelect',
+  label: '字典下拉',
   props: {
     modelValue: {
       type: [String, Array],

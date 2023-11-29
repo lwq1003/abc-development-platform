@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     # 数据库设置
-    url: jdbc:mysql://localhost:3306/abc?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/abc?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
     password: root
     # redis设置

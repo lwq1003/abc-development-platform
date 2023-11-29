@@ -18,7 +18,8 @@
 到目前为止，整个工程项目，后端共计18个模块，架构图和依赖关系如下图所示：
 ![输入图片说明](resource/2.jpg)
 
-这16个模块分成三类，一类是平台内核模块，命名规则是platform+模块功能名称，图中用蓝色标示；一类是能力扩展模块，命名规则是platform-boot-starter+模块功能名称，图中用绿色标示；剩下的一类是接口平台，命名规则是cip+模块功能名称，图中用紫色标示，相对平台独立，但又作为平台的重要组成部分。
+这18个模块分成三类，一类是平台内核模块，命名规则是platform+模块功能名称，图中用蓝色标示；一类是能力扩展模块，命名规则是platform-boot-starter+模块功能名称，图中用绿色标示；剩下的一类是接口平台，命名规则是cip
++模块功能名称，图中用紫色标示，相对平台独立，但又作为平台的重要组成部分。
 
 #### 平台内核模块
 
@@ -79,12 +80,15 @@ platform-cip-manage：平台管理
 
 #### 3 .前端
 
-nodejs >=14.6，执行pnpm install命令，若nodejs版本过低会提示
+nodejs >=14.6
+
+执行npm install pnpm -g，安装pnpm包
+
+执行pnpm install命令，若nodejs版本过低会提示
 
 使用vscode打开platform-web目录，执行pnpm install安装npm module
 
-执行前建议设置国内镜像以加快下载速度
-pnpm config set registry https://registry.npm.taobao.org/
+
 
 执行结束会提示如下错误，不用理会，因为把husky移除导致的，不影响系统正常运行，进行下步dev脚本即可
 husky install
@@ -103,7 +107,8 @@ husky install
 
 cip-client是一个模拟的接口平台客户端，是一个独立的springboot，相当于第三方系统，有自己独立的数据库，数据库脚本参见\cip-client\src\main\resources\init.sql
 
-
+#### 6 .minio启用说明
+平台对于文件存储除了支持本地磁盘模式外，还实现了minio对象存储组件的集成。如需启用，需安装minio服务端，版本2021-04-22T15-44-28Z（最后一个基于apache 2.0开源协议的版本)，并修改平台配置文件。
 
 ### 未来规划
 

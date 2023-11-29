@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 文件块对象模型，匹配前端simple-uploader控件
+ * 文件块对象模型，匹配前端vue-simple-uploader控件
  *
  * @author wqliu
  * @date 2023-03-08

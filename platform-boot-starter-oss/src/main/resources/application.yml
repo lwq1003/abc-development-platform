@@ -1,4 +1,12 @@
 platform-config:
   oss:
-    storeClass: tech.abc.platform.oss.service.impl.LocalStoreServiceImpl
+#   本地磁盘存储模式
+#   storeClass: tech.abc.platform.oss.service.impl.LocalStoreServiceImpl
+#   集成minio模式
+    storeClass: tech.abc.platform.oss.service.impl.MinioStoreServiceImpl
     basePath: c:/attachment/
+    minio:
+      server: http://127.0.0.1:9000
+      accessKey: admin
+      secretKey: 12345678
+      bucketName: abc

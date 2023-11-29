@@ -3,6 +3,7 @@ package tech.abc.platform.support.service;
 import org.springframework.web.multipart.MultipartFile;
 import tech.abc.platform.common.base.BaseService;
 import tech.abc.platform.oss.entity.FileChunk;
+import tech.abc.platform.oss.entity.FileInfo;
 import tech.abc.platform.support.entity.Attachment;
 
 import java.io.InputStream;
@@ -34,6 +35,13 @@ public interface AttachmentService extends BaseService<Attachment> {
     String uploadChunk(FileChunk fileChunk);
 
     /**
+     * 合并文件块
+     * @param fileInfo 文件信息
+     * @return {@link String} 文件标识
+     */
+    String mergeChunks(FileInfo fileInfo);
+
+    /**
      * 上传图片
      *
      * @param image
@@ -49,6 +57,7 @@ public interface AttachmentService extends BaseService<Attachment> {
      * @return 文件流
      */
     InputStream getFile(String id);
+
 
 }
 

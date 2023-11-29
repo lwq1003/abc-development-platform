@@ -94,20 +94,13 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Transactional(rollbackFor = Exception.class)
     public void commit(String taskId, String comment, String nextStepId,
                        List<String> assigneeList) {
-
-
-      
         // 设置当前处理人
         identityService.setAuthenticatedUserId(UserUtil.getId());
-
-
         // 获取任务
         ProcessTask task = get(taskId);
-
         // 记录处理意见
         workflowCommentService.addComment(task.getProcessInstanceId(),task.getTaskDefinitionKey(),task.getNodeName(), comment,
                 CommitTypeEnum.COMMIT);
-
         //判断当前是否被委派任务
         String delegation = task.getDelegation();
         if (StringUtils.isNotBlank(delegation) && delegation.equals(WorkFlowConstant.DELEGATION_PENDING)) {
@@ -115,11 +108,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             taskService.resolveTask(taskId);
             return;
         }
-
-
         // 处理任务
         handleTask(task.getProcessInstanceId(), taskId, nextStepId, assigneeList);
-
     }
 
     private void handleTask(String processInstanceId, String taskId, String nextStepId, List<String> assigneeList) {
@@ -128,7 +118,6 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         taskService.setVariables(taskId, instanceVariable);
         taskService.complete(taskId);
     }
-
 
     /**
      * 生成实例变量
@@ -416,12 +405,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             root.setMode(NodeModeEnum.NORMAL.name());
             root.setName("填报");
             entityList.add(root);
-
         }
-
         return entityList;
-
-
     }
 
 
@@ -497,12 +482,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             root.setMode(NodeModeEnum.NORMAL.name());
             root.setName("填报");
             entityList.add(root);
-
         }
-
         return entityList;
-
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package tech.abc.platform.system.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.system.service.SystemManageService;
@@ -33,6 +34,17 @@ public class SystemManageController {
 
         systemManageService.rebuildSystemCache();
         return ResultUtil.success();
+    }
+
+    /**
+     * 重建缓存
+     */
+
+    @GetMapping("/getUniqueId")
+    public ResponseEntity<Result> getUniqueId() {
+
+        String uniqueId = systemManageService.getUniqueId();
+        return ResultUtil.success(uniqueId);
     }
 
 

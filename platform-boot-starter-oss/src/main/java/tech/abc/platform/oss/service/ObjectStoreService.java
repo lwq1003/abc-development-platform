@@ -2,6 +2,7 @@ package tech.abc.platform.oss.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import tech.abc.platform.oss.entity.FileChunk;
+import tech.abc.platform.oss.entity.FileInfo;
 
 import java.io.InputStream;
 
@@ -21,14 +22,13 @@ public interface ObjectStoreService {
      */
     void uploadChunk(FileChunk fileChunk);
 
-
     /**
-     * 获取文件流
+     * 合并文件块
      *
-     * @param relativePath 文件相对路径
-     * @return 文件流
+     * @param fileInfo 文件信息
      */
-    InputStream getFile(String relativePath);
+    void mergeChunks(FileInfo fileInfo);
+
 
 
     /**
@@ -39,33 +39,13 @@ public interface ObjectStoreService {
      */
     void deleteFile(String relativePath);
 
-
     /**
-     * 合并
+     * 获取文件流
      *
-     * @param fileChunk
+     * @param relativePath 文件相对路径
+     * @return 文件流
      */
-    void mergeChunks(FileChunk fileChunk);
-
-    /**
-     * 判断是否为最后一块
-     *
-     * @param fileChunk
-     * @return true 是 false 否
-     */
-    boolean checkIsLastChunk(FileChunk fileChunk);
-
-
-    /**
-     * 合并文件块
-     *
-     * @param id          文件标识
-     * @param totalChunks 总块数
-     * @param path        路径
-     * @param fileName    文件名
-     */
-    void mergeChunks(String id, Integer totalChunks, String path, String fileName);
-
+    InputStream getFile(String relativePath);
 
     /**
      * 上传图片
@@ -93,16 +73,5 @@ public interface ObjectStoreService {
      * @return 相对路径
      */
     String generateRelativePath(String moduleCode, String entityType);
-
-    /**
-     * 上传文件
-     *
-     * @param file       文件对象
-     * @param moduleCode 模块编码
-     * @param entityType 实体类型
-     * @return 相对路径
-     */
-    String uploadFile(MultipartFile file, String moduleCode, String entityType);
-
 
 }

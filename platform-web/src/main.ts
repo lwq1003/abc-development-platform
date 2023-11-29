@@ -59,8 +59,9 @@ import VueGridLayout from 'vue-grid-layout'
 import "echarts"
 import ECharts from "vue-echarts"
 
-
-
+// 表单构建器
+import FormCreate from '@form-create/element-ui'
+import FcDesigner from '@form-create/designer'
 
 // 创建实例
 const setupAll = async () => {
@@ -78,6 +79,10 @@ const setupAll = async () => {
 
   // 全量注册element-plus组件
   app.use(ElementPlus)
+
+  // 自定义表单
+  app.use(FormCreate)
+  app.use(FcDesigner)
   // 全量注册element-plus图标
   app.config.globalProperties.$icons = []
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

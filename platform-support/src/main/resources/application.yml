@@ -1,4 +1,4 @@
-platform-config:
-  oss:
-    storeClass: tech.popsoft.platform.oss.service.impl.LocalStoreServiceImpl
-    basePath: c:/attachment/
+#platform-config:
+#  oss:
+#    storeClass: tech.popsoft.platform.oss.service.impl.LocalStoreServiceImpl
+#    basePath: c:/attachment/

@@ -1,5 +1,6 @@
 package tech.abc.platform.system.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.common.constant.CacheConstant;
@@ -76,5 +77,10 @@ public class SystemManageServiceImpl implements SystemManageService {
         cacheUtil.setBatch(dictionaryItemCodeMap);
 
 
+    }
+
+    @Override
+    public String getUniqueId() {
+        return IdWorker.getIdStr();
     }
 }

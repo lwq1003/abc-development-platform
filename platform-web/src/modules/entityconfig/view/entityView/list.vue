@@ -66,13 +66,19 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="230">
+        <el-table-column fixed="right" label="操作" width="350">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'configView'"
               type="primary"
               @click="configView(scope.row)"
               >配置</el-button
+            >
+            <el-button
+              type="primary"
+              v-show="scope.row.entityViewType == 'MODIFY'"
+              @click="configUi(scope.row)"
+              >配置界面</el-button
             >
             <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
               >修改</el-button
@@ -181,6 +187,12 @@ export default {
     },
     addWithId() {
       this.$refs.addPage.init({ id: this.$route.query.id })
+    },
+    configUi(row) {
+      this.$router.push({
+        path: '/entityconfig/advanceViewConfig',
+        query: { id: row.id }
+      })
     },
     configView(row) {
       // 过滤无需配置的视图类型

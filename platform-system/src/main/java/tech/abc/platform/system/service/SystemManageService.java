@@ -11,4 +11,11 @@ public interface SystemManageService {
      * 重建系统缓存
      */
     void rebuildSystemCache();
+
+
+    /**
+     * 获取唯一标识
+     * @return {@link String}
+     */
+    String getUniqueId();
 }

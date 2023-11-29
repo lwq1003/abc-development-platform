@@ -31,7 +31,7 @@
 
 <script>
 import { getToken } from '@/utils/auth'
-
+import shortid from 'shortid'
 export default {
   components: {},
   props: {
@@ -75,8 +75,8 @@ export default {
     },
     serverUrl: {
       type: String,
-      default: '',
-      required: true
+      default: '/support/attachment/uploadChunk',
+      required: false
     }
   },
   data() {
@@ -86,7 +86,8 @@ export default {
         target: import.meta.env.VITE_BASE_URL + this.serverUrl,
         testChunks: false,
         maxChunkRetries: 3,
-        chunkSize: 10485760,
+        simultaneousUploads: 3,
+        chunkSize: 10240000,
         query: {
           entityType: this.entityType,
           entityId: this.entityId,
@@ -94,8 +95,9 @@ export default {
         },
         headers: { 'X-Token': token },
         generateUniqueIdentifier: () => {
-          // 业务主键+时间戳最大限度降低并发冲突发生的概率
-          return this.entityId + new Date().getTime()
+          // 获取唯一性标识
+          const uniqueId = shortid.generate()
+          return uniqueId + '-'
         },
         parseTimeRemaining(timeRemaining, parsedTimeRemaining) {
           return parsedTimeRemaining
@@ -134,16 +136,26 @@ export default {
       this.$emit('file-added', file)
     },
     fileSuccess(rootFile, file) {
-      //  文件上传成功后从列表中移除
-      // TODO:以下代码未调试成功
-      // let index = this.$refs.uploader.fileList.findIndex(
-      //   (successFile) => successFile.id === file.id
-      // )
-      // if (index !== -1) {
-      //   console.log(this.$refs.uploader.fileList)
-      //   this.$refs.uploader.fileList.splice(index, 1)
-      //   console.log(this.$refs.uploader.fileList)
-      // }
+      if (file.chunks.length > 1) {
+        //分块上传
+        const param = {
+          identifier: file.uniqueIdentifier,
+          filename: file.name,
+          moduleCode: this.moduleCode,
+          entityType: this.entityType,
+          entityId: this.entityId,
+          type: file.fileType,
+          totalSize: file.size
+        }
+        // 合并文件块
+        this.$api.support.attachment.mergeChunks(param).then(() => {
+          // 移除已上传成功的文件
+          this.$refs.uploader.uploader.removeFile(file)
+        })
+      } else {
+        // 不分块，移除已上传成功的文件
+        this.$refs.uploader.uploader.removeFile(file)
+      }
     }
   }
 }

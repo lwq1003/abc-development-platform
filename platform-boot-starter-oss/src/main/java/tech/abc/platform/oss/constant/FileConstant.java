@@ -13,4 +13,10 @@ public class FileConstant {
      * 临时文件路径
      */
     public static final String TEMP_PATH = "temp/";
+
+
+    /**
+     * 图片路径
+     */
+    public static final String IMAGE_PATH = "image/";
 }
