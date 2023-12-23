@@ -15,6 +15,9 @@
         <el-form-item label="操作人ip">
           <QueryText v-model="queryCondition.operatorIp" type="LK" />
         </el-form-item>
+        <el-form-item label="操作结果">
+          <dictionary-select v-model="queryCondition.responseCode" code="ExecuteResult" multiple />
+        </el-form-item>
         <el-form-item style="float: right">
           <QueryButton :page-code="pageCode" />
         </el-form-item>
@@ -168,7 +171,7 @@ export default {
           sortable: true
         },
         {
-          prop: 'responseCode',
+          prop: 'responseCodeName',
           label: '响应结果',
           show: true,
           showOverflowTooltip: true,

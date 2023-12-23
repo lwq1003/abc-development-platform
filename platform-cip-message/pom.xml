@@ -5,12 +5,12 @@
     <parent>
         <groupId>tech.abc</groupId>
         <artifactId>abc-development-platform</artifactId>
-        <version>2.0.0</version>
+        <version>5.1.0</version>
     </parent>
     <groupId>tech.abc</groupId>
     <artifactId>platform-cip-message</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0</version>
+    <version>5.1.0</version>
     <name>platform-cip</name>
     <description>接口平台-消息服务</description>
     <properties>

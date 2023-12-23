@@ -90,6 +90,12 @@ public class LogVO extends BaseVO {
     */
     private String logTypeName;
 
+    /**
+     * 响应结果
+     */
+    private String responseCodeName;
+
+
     /********实体类*****/
 
     /********范围查询*****/

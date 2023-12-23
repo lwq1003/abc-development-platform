@@ -162,11 +162,12 @@ public class LogController extends BaseController {
     * 将单条实体转换为视图对象
     *
     * @param entity 实体
-    * @return {@link EntityVO} 视图对象
+    * @return {@link LogVO} 视图对象
     */
     private LogVO convert2VO(Log entity){
         LogVO vo=mapperFacade.map(entity,LogVO.class);
         vo.setLogTypeName(dictionaryUtil.getNameByCode("LogType", entity.getLogType()));
+        vo.setResponseCodeName(dictionaryUtil.getNameByCode("ExecuteResult", entity.getResponseCode()));
         return vo;
     }
 
@@ -174,7 +175,7 @@ public class LogController extends BaseController {
     * 将实体列表转换为视图对象列表
     *
     * @param entityList 实体列表
-    * @return {@link List}<{@link EntityVO}> 视图对象列表
+    * @return {@link List}<{@link LogVO}> 视图对象列表
     */
     private List<LogVO> convert2VO(List<Log> entityList) {
         List<LogVO> voList = new ArrayList<>(entityList.size());

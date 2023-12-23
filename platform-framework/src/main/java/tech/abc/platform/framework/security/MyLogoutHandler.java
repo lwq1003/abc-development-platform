@@ -2,6 +2,7 @@ package tech.abc.platform.framework.security;
 
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.constant.CommonConstant;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class MyLogoutHandler implements LogoutHandler {
 
     @Override
-    @SystemLog(value = "注销成功", logType = LogTypeEnum.AUDIT, logRequestParam = false, executeResult = CommonConstant.YES)
+    @SystemLog(value = "注销成功", logType = LogTypeEnum.AUDIT, logRequestParam = false, executeResult = ExecuteResultEnum.SUCCESS)
     public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
 
     }

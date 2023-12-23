@@ -33,7 +33,7 @@ export default {
       ]
     }
   },
-  created() { },
+
   mounted() {
     //插入组件规则
     this.$refs.designer.addComponent(DictionarySelectDesigner)

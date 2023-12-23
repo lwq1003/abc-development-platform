@@ -5,12 +5,12 @@
     <parent>
         <groupId>tech.abc</groupId>
         <artifactId>abc-development-platform</artifactId>
-        <version>2.0.0</version>
+        <version>5.1.0</version>
     </parent>
     <groupId>tech.abc</groupId>
     <artifactId>platform-businessflow</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0</version>
+    <version>5.1.0</version>
     <name>platform-businessflow</name>
     <description>业务流程</description>
     <properties>

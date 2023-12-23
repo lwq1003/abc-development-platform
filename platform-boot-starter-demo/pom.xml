@@ -7,12 +7,12 @@
     <parent>
         <groupId>tech.abc</groupId>
         <artifactId>abc-development-platform</artifactId>
-        <version>2.0.0</version>
+        <version>5.1.0</version>
     </parent>
     <artifactId>platform-boot-starter-demo</artifactId>
     <name>platform-boot-starter-demo</name>
     <packaging>jar</packaging>
-    <version>2.0.0</version>
+    <version>5.1.0</version>
     <description>基于开发平台启动项目实现的业务系统示例</description>
 
     <properties>

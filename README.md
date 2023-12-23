@@ -54,7 +54,7 @@ platform-boot-starter-notification：消息通知，基于netty实现的websocke
 
 #### 接口平台
 
-之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html。
+之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html
 现在，将通用接口平台作为一个模块，整合到新的应用开发平台当中来，由通用接口平台统一对外暴露应用系统的API数据接口，以及推送事件消息。
 之前的的通用接口平台，主要由两个模块组成，一个是platform-cip（cip是common interface platform缩写），即接口平台的主体，另外一个是platform-cip-common，被platform-cip依赖。
 实际上，接口平台的主体，platform-cip，里面包含了三块内容：
@@ -69,6 +69,7 @@ platform-cip-manage：平台管理
 4个模块内关系为manage依赖common，api和manage相互独立，但都依赖于manage。
 
 ### 如何运行
+以下为简要说明，详细的开发环境搭建手册参见https://blog.csdn.net/seawaving/article/details/134895546
 
 #### 1. 准备工作
 
@@ -117,13 +118,13 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 
 后面几块是平台欠缺的，需要补全和完善，每一块都是硬骨头，难度和工作量都不小，做了一些简单初步的了解，具体如下：
 
-输出系统使用手册
+输出系统使用手册（进行中）
 集成图表组件（已完成）
 集成工作流（常用功能已完成，进度80%，已可用）
-实现可视化表单
-移动端实现
-自定义查询
-实现数据权限
+实现可视化表单（进行中）
+移动端实现（整合了一个移动端框架，打通了认证，尚未有具体的功能，暂挂器）
+自定义查询（未开始）
+实现数据权限（未开始）
 
 ### 系统设计资料
 

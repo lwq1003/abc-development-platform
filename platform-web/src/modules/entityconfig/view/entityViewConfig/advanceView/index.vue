@@ -31,11 +31,11 @@ export default {
       value: {}
     }
   },
-  created() {},
+
   mounted() {
     //插入组件规则
     this.$refs.designer.addComponent(DictionarySelectDesigner)
-
+    // this.$refs.designer.addComponent('DictionarySelect', DictionarySelect)
     //读取自定义组件信息，生成左侧组件对象
     const dictionarySelect = {
       icon: DictionarySelectDesigner.icon,
@@ -86,8 +86,39 @@ export default {
           }
           row.children.push(col)
         }
+        // 注册自定义组件
+        this.$formCreate.component(DictionarySelect.name, DictionarySelect)
         let property = {}
-        property = maker.input(item.name, 'entityData.' + item.code, item.defaultValue)
+        if (item.widgetType == 'TEXT') {
+          property = maker
+            .create('input', 'entityData.' + item.code, item.name)
+            .props({ type: 'text' })
+        } else if (item.widgetType == 'DROP_DOWN_LIST') {
+          property = maker
+            .create(DictionarySelect.name, 'entityData.' + item.code, item.name)
+            .props({ code: item.dictionaryType })
+        } else if (item.widgetType == 'DATETIME') {
+          property = maker
+            .datePicker(item.name, 'entityData.' + item.code, item.defaultValue)
+            .props({
+              valueFormat: this.$dateFormatter.getDatetimeFormat(item.formatPattern),
+              type: this.$dateFormatter.getDatetimeType(item.formatPattern)
+            })
+        } else {
+          property = maker.input(item.name, 'entityData.' + item.code, item.defaultValue)
+        }
+        // 设置默认值
+        property = property.value(item.defaultValue)
+        //设置必填
+        if (item.requireFlag == 'YES') {
+          property = property.validate([
+            { required: true, message: '【' + item.name + '】不能为空', trigger: 'blur' }
+          ])
+        }
+        // 设置只读
+        if (item.readonly == 'YES') {
+          property = property.readonly(true)
+        }
         col.children = [property.getRule()]
       })
       this.$refs.designer.setRule(this.rule)
@@ -95,7 +126,6 @@ export default {
   },
   methods: {
     preview() {
-      this.$formCreate.component(DictionarySelect.name, DictionarySelect)
       this.rule = this.$refs.designer.getRule()
       this.options = this.$refs.designer.getOption()
     }

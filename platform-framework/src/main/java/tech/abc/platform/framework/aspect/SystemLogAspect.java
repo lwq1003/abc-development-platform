@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import tech.abc.platform.common.annotation.SystemLog;
-import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.modules.system.api.LogApi;
 import tech.abc.platform.common.modules.system.params.LogDTO;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -104,14 +104,14 @@ public class SystemLogAspect {
 
         // 发生异常时执行结果会被全局异常捕获，result返回null
         // 此处默认设置为失败
-        String executeResult = logAnnotation.executeResult();
+        ExecuteResultEnum executeResult = logAnnotation.executeResult();
         // 返回结果且为2xx才视为成功
         if (result instanceof ResponseEntity) {
             if (((ResponseEntity) result).getStatusCode().is2xxSuccessful()) {
-                executeResult = CommonConstant.YES;
+                executeResult = ExecuteResultEnum.SUCCESS;
             }
         }
-        log.setResponseCode(executeResult);
+        log.setResponseCode(executeResult.name());
 
 
         // 响应数据  发生异常时，result对象为null
