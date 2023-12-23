@@ -12,6 +12,7 @@ import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.constant.TreeDefaultConstant;
 import tech.abc.platform.common.entity.MyUserDetails;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.utils.CacheUtil;
@@ -65,7 +66,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
 
     @Override
-    @SystemLog(value = "登录成功", logType = LogTypeEnum.AUDIT, logRequestParam = false, executeResult = CommonConstant.YES)
+    @SystemLog(value = "登录成功", logType = LogTypeEnum.AUDIT, logRequestParam = false, executeResult = ExecuteResultEnum.SUCCESS)
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication)
             throws IOException {

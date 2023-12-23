@@ -1,7 +1,6 @@
 package tech.abc.platform.framework.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.constant.SystemConstant;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.modules.system.api.LogApi;
@@ -9,6 +8,7 @@ import tech.abc.platform.common.modules.system.params.LogDTO;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.system.entity.User;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +69,7 @@ public class MyAuthenticationFailHandler extends SimpleUrlAuthenticationFailureH
         LogDTO log = new LogDTO();
         log.setContent(account + " 登录失败：" + errMessage);
         log.setLogType(LogTypeEnum.AUDIT.name());
-        log.setResponseCode(CommonConstant.NO);
+        log.setResponseCode(ExecuteResultEnum.FAILURE.name());
         log.setRequestTime(LocalDateTime.now());
         logApi.add(log);
 

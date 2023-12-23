@@ -5,11 +5,11 @@
     <parent>
         <groupId>tech.abc</groupId>
         <artifactId>abc-development-platform</artifactId>
-        <version>2.0.0</version>
+        <version>5.1.0</version>
     </parent>
 
     <artifactId>platform-boot-starter-oss</artifactId>
-    <version>2.0.0</version>
+    <version>5.1.0</version>
     <name>platform-boot-starter-oss</name>
     <description>对象存储模块，已支持本地磁盘模式，可扩展为支持对象存储系统，如阿里oss</description>
 

@@ -10,6 +10,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.constant.CommonConstant;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.support.service.SerialNoService;
 
@@ -31,7 +32,7 @@ public class ResetSerialNo extends QuartzJobBean {
 
     @Override
     @SystemLog(value = "重置流水号", logType = LogTypeEnum.SCHEDULER, logRequestParam = false, executeResult =
-            CommonConstant.NO)
+            ExecuteResultEnum.SUCCESS)
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
         try {

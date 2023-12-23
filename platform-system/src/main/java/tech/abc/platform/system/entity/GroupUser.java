@@ -20,7 +20,6 @@ import lombok.experimental.Accessors;
 @TableName("sys_group_user")
 public class GroupUser extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
 
     /**
      * 组标识

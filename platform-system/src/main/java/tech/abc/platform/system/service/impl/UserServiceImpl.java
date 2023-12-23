@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseServiceImpl;
-import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.enums.YesOrNoEnum;
@@ -22,6 +21,7 @@ import tech.abc.platform.system.entity.GroupUser;
 import tech.abc.platform.system.entity.PermissionItem;
 import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.entity.UserPasswordChangeLog;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.exception.UserExceptionEnum;
@@ -183,7 +183,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     }
 
     @Override
-    @SystemLog(value = "锁定用户", logType = LogTypeEnum.AUDIT, executeResult = CommonConstant.YES)
+    @SystemLog(value = "锁定用户", logType = LogTypeEnum.AUDIT, executeResult = ExecuteResultEnum.SUCCESS)
     public void lock(String id) {
         User entity = getEntity(id);
         // 变更状态
@@ -196,7 +196,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
 
     @Override
-    @SystemLog(value = "解锁用户", logType = LogTypeEnum.AUDIT, executeResult = CommonConstant.YES)
+    @SystemLog(value = "解锁用户", logType = LogTypeEnum.AUDIT, executeResult = ExecuteResultEnum.SUCCESS)
     public void unlock(String id) {
         User entity = getEntity(id);
         // 变更状态

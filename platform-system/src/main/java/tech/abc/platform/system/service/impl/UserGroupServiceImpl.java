@@ -6,9 +6,11 @@ import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.system.entity.GroupPermissionItem;
+import tech.abc.platform.system.entity.GroupUser;
 import tech.abc.platform.system.entity.UserGroup;
 import tech.abc.platform.system.mapper.UserGroupMapper;
 import tech.abc.platform.system.service.GroupPermissionItemService;
+import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.UserGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +34,9 @@ public class UserGroupServiceImpl extends BaseServiceImpl<UserGroupMapper, UserG
 
     @Autowired
     private GroupPermissionItemService groupPermissionItemService;
+
+    @Autowired
+    private GroupUserService groupUserService;
 
 
     @Override
@@ -111,6 +116,11 @@ public class UserGroupServiceImpl extends BaseServiceImpl<UserGroupMapper, UserG
         QueryWrapper<GroupPermissionItem> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(GroupPermissionItem::getGroupId, entity.getId());
         groupPermissionItemService.remove(queryWrapper);
+
+        // 移除用户组对应的用户
+        QueryWrapper<GroupUser> queryWrapperGroupUser = new QueryWrapper<>();
+        queryWrapperGroupUser.lambda().eq(GroupUser::getGroupId, entity.getId());
+        groupUserService.remove(queryWrapperGroupUser);
     }
 
     @Override

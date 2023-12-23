@@ -31,6 +31,8 @@ public abstract class BaseObjectStoreService implements ObjectStoreService{
                 .append(StringUtils.leftPad(String.valueOf(calendar.get(Calendar.MONTH) + 1), 2, "0"))
                 .append("/");
         return sbRelativePath.toString();
+
+
     }
 
     /**

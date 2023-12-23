@@ -75,7 +75,7 @@
               v-permission="pageCode + 'configUser'"
               type="primary"
               @click="configUser(scope.row)"
-              >人员</el-button
+              >用户</el-button
             >
             <el-button
               v-permission="pageCode + 'configPermission'"

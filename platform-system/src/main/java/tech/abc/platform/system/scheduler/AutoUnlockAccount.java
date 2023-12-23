@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import tech.abc.platform.common.annotation.SystemLog;
-import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.system.constant.SystemConstant;
 import tech.abc.platform.system.entity.User;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.service.ParamService;
 import tech.abc.platform.system.service.UserService;
@@ -41,7 +41,7 @@ public class AutoUnlockAccount extends QuartzJobBean {
 
 
     @Override
-    @SystemLog(value = "解锁用户", logType = LogTypeEnum.SCHEDULER, logRequestParam = false, executeResult = CommonConstant.YES)
+    @SystemLog(value = "解锁用户", logType = LogTypeEnum.SCHEDULER, logRequestParam = false, executeResult = ExecuteResultEnum.SUCCESS)
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
 

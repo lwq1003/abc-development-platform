@@ -1,6 +1,7 @@
 package tech.abc.platform.common.annotation;
 
 
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.common.enums.LogTypeEnum;
 
 import java.lang.annotation.ElementType;
@@ -41,5 +42,5 @@ public @interface SystemLog {
     /**
      * 执行是否成功
      */
-    String executeResult() default "NO";
+    ExecuteResultEnum executeResult() default ExecuteResultEnum.FAILURE;
 }
