@@ -3,7 +3,7 @@
 企业级通用开发平台，前后端分离架构，单工程，多模块，部署形态为单体应用。
 前端基于vue3.2.47，element-plus 2.1.0，前端框架vue-element-plus-admin1.9.4深度整合改造。
 后端SSM+MybatisPlus，使用SpringBoot 2.3.0。
-数据库使用MySql 5.7.36.
+数据库使用MySql 8.0.
 
 重度使用MybatisPlus，包括主键策略、逻辑删除、乐观锁、自动填充、数据分页、CURD接口、条件构造器等，
 二次封装和扩展代码生成器，实现entity、dao、service、controller、vo及前端vue页面生成。
@@ -54,7 +54,7 @@ platform-boot-starter-notification：消息通知，基于netty实现的websocke
 
 #### 接口平台
 
-之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html
+之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html。
 现在，将通用接口平台作为一个模块，整合到新的应用开发平台当中来，由通用接口平台统一对外暴露应用系统的API数据接口，以及推送事件消息。
 之前的的通用接口平台，主要由两个模块组成，一个是platform-cip（cip是common interface platform缩写），即接口平台的主体，另外一个是platform-cip-common，被platform-cip依赖。
 实际上，接口平台的主体，platform-cip，里面包含了三块内容：
@@ -69,7 +69,7 @@ platform-cip-manage：平台管理
 4个模块内关系为manage依赖common，api和manage相互独立，但都依赖于manage。
 
 ### 如何运行
-以下为简要说明，详细的开发环境搭建手册参见https://blog.csdn.net/seawaving/article/details/134895546
+以下为简要说明，详细的开发环境搭建手册参见https://blog.csdn.net/seawaving/article/details/134895546。
 
 #### 1. 准备工作
 
@@ -98,6 +98,8 @@ husky install
 
 执行dev脚本，默认打开localhost:4000
 
+默认管理员账号密码：admin/12345678
+
 #### 4 .后端
 
 标准SpringBoot项目，多模块，启动类位于platform-boot-starter-demo下，默认端口8080。
@@ -121,7 +123,7 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 输出系统使用手册（进行中）
 集成图表组件（已完成）
 集成工作流（常用功能已完成，进度80%，已可用）
-实现可视化表单（进行中）
+实现可视化表单（常用功能已完成，进度90%，待打磨）
 移动端实现（整合了一个移动端框架，打通了认证，尚未有具体的功能，暂挂器）
 自定义查询（未开始）
 实现数据权限（未开始）

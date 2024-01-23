@@ -9,7 +9,7 @@ import java.util.Map;
  * 模板 服务接口类
  *
  * @author wqliu
- * @date 2023-06-24
+ * @date 2024-01-23
  */
 public interface TemplateService extends BaseService<Template> {
 

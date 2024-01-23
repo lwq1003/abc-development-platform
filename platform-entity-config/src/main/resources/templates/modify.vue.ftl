@@ -104,11 +104,16 @@
                             :entity-id="entityData.id"
                             module-code="${package.ModuleName}"
                             :show-success-files="false"
-                            :server-url="'/support/attachment/upload'"
                             @file-complete="fileComplete"
                     />
                 <#elseif item.widgetType=="VIEW">
                     <AttachmentViewer :entity-id="entityData.id" />
+                <#elseif item.widgetType=="MANAGE_AND_UPLOAD">
+                    <AttachmentManagerAndUploader
+                            entity-type="${entity}"
+                            :entity-id="entityData.id"
+                            module-code="${package.ModuleName}"
+                    />
                 </#if>
             </el-form-item>
         <#elseif item.dataType=="SERIAL_NO">

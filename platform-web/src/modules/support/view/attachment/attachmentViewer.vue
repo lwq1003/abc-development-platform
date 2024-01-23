@@ -23,6 +23,8 @@
 </template>
 <script>
 export default {
+  name: 'AttachmentViewer',
+  label: '附件查看',
   props: {
     entityId: {
       type: String,

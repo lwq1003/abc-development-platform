@@ -6,7 +6,7 @@
       <el-button icon="delete" @click="clear" style="border-left-width: 0; padding: 10px" />
     </el-button-group>
     <Dialog title="组织机构选择" v-model="visible" width="300px">
-      <el-input v-model="searchValue" placeholder="请输入名称查询" style="margin-bottom: 10px" />
+      <el-input v-model="searchValue" placeholder="请输入关键词" style="margin-bottom: 10px" />
       <el-tag>当前选中：{{ currentName }}</el-tag>
       <el-tree
         ref="tree"
@@ -32,6 +32,8 @@ import { treeReferenceMixin } from '@/mixin/treeReferenceMixin.js'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'organization'
 export default {
+  name: 'OrganizationSingleSelect',
+  label: '组织机构单选',
   mixins: [treeReferenceMixin],
   data() {
     return {

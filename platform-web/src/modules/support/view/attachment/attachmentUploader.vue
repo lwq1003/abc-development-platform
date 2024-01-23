@@ -33,6 +33,8 @@
 import { getToken } from '@/utils/auth'
 import shortid from 'shortid'
 export default {
+  name: 'AttachmentUploader',
+  label: '附件上传',
   components: {},
   props: {
     options: {

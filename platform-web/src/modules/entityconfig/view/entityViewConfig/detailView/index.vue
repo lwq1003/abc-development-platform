@@ -9,9 +9,9 @@
     <el-col :span="3">
       <property-area ref="property" :property-list-data="allPropertyList" />
     </el-col>
-    <el-col :span="18">
+    <!-- <el-col :span="18">
       <fc-designer v-model="entityData" ref="designer" />
-    </el-col>
+    </el-col> -->
   </el-row>
 </template>
 
@@ -27,7 +27,6 @@ export default {
   components: {
     PropertyArea,
     PropertyList
-    // , PageButton
   },
 
   data() {

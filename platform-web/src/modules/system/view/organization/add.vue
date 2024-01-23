@@ -6,14 +6,11 @@
       :rules="rules"
       label-width="120px"
       label-position="right"
-      style="width: 90%; margin: 0 auto"
+      style="width: 90%; margin: 0px auto"
     >
       <!--表单区域 -->
       <el-form-item label="组织机构" prop="organization">
-        <OrganizationReference
-          v-model="entityData.organization"
-          :organization-param="organizationParam"
-        />
+        <OrganizationSingleSelect v-model="entityData.organization" />
       </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="entityData.name" />
@@ -25,7 +22,7 @@
         <dictionary-select v-model="entityData.type" code="OrganizationType" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <dictionary-select v-model="entityData.status" code="Status" />
+        <dictionary-radio-group v-model="entityData.status" code="Status" />
       </el-form-item>
       <el-form-item label="排序" prop="orderNo">
         <el-input v-model="entityData.orderNo" />
@@ -43,14 +40,11 @@
 
 <script>
 import { addMixin } from '@/mixin/addMixin.js'
-import OrganizationReference from '@/modules/system/view/organization/treeReference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'organization'
 export default {
   name: ENTITY_TYPE + '-add',
-  components: {
-    OrganizationReference
-  },
+  components: {},
   mixins: [addMixin],
   data() {
     return {
@@ -60,8 +54,6 @@ export default {
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
       entityData: {},
-      // 组织机构组件参数，用于传递数据
-      organizationParam: {},
       rules: {
         //前端验证规则
         organization: [{ required: true, message: '【上级组织】不能为空', trigger: 'blur' }],

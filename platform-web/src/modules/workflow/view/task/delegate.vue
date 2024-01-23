@@ -11,7 +11,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="委派人" prop="assignee">
-            <user-single-select v-model="formData.assignee" @changeSelect="changeSelect" />
+            <user-single-select v-model="formData.assignee" @change-select="changeSelect" />
           </el-form-item>
         </el-col>
       </el-row>

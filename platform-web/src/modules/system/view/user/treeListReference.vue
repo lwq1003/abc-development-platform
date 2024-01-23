@@ -5,7 +5,7 @@
       <el-button icon="grid" @click="init" style="border-left-width: 0; padding: 10px" />
       <el-button icon="delete" @click="clear" style="border-left-width: 0; padding: 10px" />
     </el-button-group>
-    <Dialog title="用户——选择" v-model="visible" width="80%">
+    <Dialog title="用户——单选" v-model="visible" width="80%">
       <el-container class="layout-container" style="height: 100%">
         <el-aside width="200px">
           <TreeView ref="treeView" @change-selected="changeNode" />
@@ -75,7 +75,8 @@ import TreeView from '@/modules/system/view/organization/tree.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'user'
 export default {
-  name: ENTITY_TYPE,
+  name: 'UserSingleSelect',
+  label: '用户单选',
   components: {
     TreeView
   },

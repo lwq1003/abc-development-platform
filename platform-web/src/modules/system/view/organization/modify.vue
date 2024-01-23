@@ -1,39 +1,6 @@
 <template>
-  <Dialog title="修改" v-model="visible" width="500px">
-    <el-form
-      ref="form"
-      :model="entityData"
-      :rules="rules"
-      label-width="120px"
-      label-position="right"
-      style="width: 90%; margin: 0 auto"
-    >
-      <!--表单区域 -->
-      <el-form-item label="组织机构" prop="organization">
-        <OrganizationReference
-          v-model="entityData.organization"
-          :organization-param="organizationParam"
-        />
-      </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="entityData.name" />
-      </el-form-item>
-      <el-form-item label="编码" prop="code">
-        <el-input v-model="entityData.code" />
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <dictionary-select v-model="entityData.type" code="OrganizationType" />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <dictionary-select v-model="entityData.status" code="Status" />
-      </el-form-item>
-      <el-form-item label="排序" prop="orderNo">
-        <el-input v-model="entityData.orderNo" />
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="entityData.remark" />
-      </el-form-item>
-    </el-form>
+  <Dialog title="修改" v-model="visible" width="800px">
+    <form-create :rule="rule" v-model:api="fApi" :option="options" v-model="formValue" />
     <template #footer>
       <el-button type="primary" @click="save" v-permission="pageCode + 'modify'">保存</el-button>
       <el-button @click="close">关闭</el-button>
@@ -42,15 +9,12 @@
 </template>
 
 <script>
-import { modifyMixin } from '@/mixin/modifyMixin.js'
-import OrganizationReference from '@/modules/system/view/organization/treeReference.vue'
+import { modifyMixin } from '@/mixin/modifyForAdvanceConfigMixin.js'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'organization'
 export default {
   name: ENTITY_TYPE + '-modify',
-  components: {
-    OrganizationReference
-  },
+  components: {},
   mixins: [modifyMixin],
   data() {
     return {
@@ -60,15 +24,188 @@ export default {
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
       entityData: {},
-      // 组织机构组件参数，用于传递数据
-      organizationParam: {},
-      rules: {
-        //前端验证规则
-        organization: [{ required: true, message: '【上级组织】不能为空', trigger: 'blur' }],
-        name: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }],
-        type: [{ required: true, message: '【类型】不能为空', trigger: 'blur' }],
-        status: [{ required: true, message: '【状态】不能为空', trigger: 'blur' }]
-      }
+      //fc组件
+      options: {
+        form: {
+          labelPosition: 'right',
+          size: 'default',
+          labelWidth: '120px',
+          hideRequiredAsterisk: false,
+          showMessage: true,
+          inlineMessage: false
+        },
+        submitBtn: { show: false, innerText: '提交' },
+        resetBtn: { show: false, innerText: '重置' }
+      },
+      rule: [
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'OrganizationSingleSelect',
+                  title: '组织机构',
+                  field: 'organization',
+                  validate: [{ required: true, message: '【组织机构】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'OrganizationSingleSelect'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '名称',
+                  field: 'name',
+                  validate: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '编码',
+                  field: 'code',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { code: 'OrganizationType' },
+                  hidden: false,
+                  display: true,
+                  value: 'DEPARTMENT',
+                  type: 'DictionarySelect',
+                  title: '类型',
+                  field: 'type',
+                  validate: [{ required: true, message: '【类型】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'DictionarySelect'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { code: 'Status' },
+                  hidden: false,
+                  display: true,
+                  value: 'NORMAL',
+                  type: 'DictionaryRadioGroup',
+                  title: '状态',
+                  field: 'status',
+                  validate: [{ required: true, message: '【状态】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'DictionaryRadioGroup'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '排序',
+                  field: 'orderNo',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '备注',
+                  field: 'remark',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {}

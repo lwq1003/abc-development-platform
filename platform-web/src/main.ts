@@ -63,6 +63,31 @@ import ECharts from "vue-echarts"
 import FormCreate from '@form-create/element-ui'
 import FcDesigner from '@form-create/designer'
 
+// 自定义组件
+
+import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
+import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
+import OrganizationSingleSelect from '@/modules/system/view/organization/treeReference.vue'
+import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
+import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
+import IconPicker from '@/components/abc/IconPicker/index.vue'
+import { Editor } from '@/components/abc/Editor'
+import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
+import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
+import AttachmentViewer from '@/modules/support/view/attachment/attachmentViewer.vue'
+import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
+
+FormCreate.component(DictionarySelect)
+FormCreate.component(DictionaryRadioGroup)
+FormCreate.component(OrganizationSingleSelect)
+FormCreate.component(OrganizationMultipleSelect)
+FormCreate.component(UserSingleSelect)
+FormCreate.component(IconPicker)
+FormCreate.component(Editor)
+FormCreate.component(AttachmentUploader)
+FormCreate.component(AttachmentManager)
+FormCreate.component(AttachmentViewer)
+FormCreate.component(AttachmentManagerAndUploader)
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
@@ -83,6 +108,10 @@ const setupAll = async () => {
   // 自定义表单
   app.use(FormCreate)
   app.use(FcDesigner)
+
+
+
+
   // 全量注册element-plus图标
   app.config.globalProperties.$icons = []
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

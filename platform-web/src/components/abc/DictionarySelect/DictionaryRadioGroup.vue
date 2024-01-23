@@ -8,6 +8,8 @@
 
 <script>
 export default {
+  name: 'DictionaryRadioGroup',
+  label: '单选按钮组',
   props: {
     value: {
       type: String,

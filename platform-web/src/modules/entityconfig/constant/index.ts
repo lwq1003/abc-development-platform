@@ -24,6 +24,10 @@ export const DATA_TYPE = {
   DATETIME: 'DATETIME',
   DATA_DICTIONARY: 'DATA_DICTIONARY',
   ENTITY: 'ENTITY',
+  ICON_PICKER: 'ICON',
+  ORGANIZATION_SINGLE: 'ORGANIZATION_SINGLE',
+  ORGANIZATION_MULTIPLE: 'ORGANIZATION_MULTIPLE',
+  USER_SINGLE: 'USER_SINGLE',
   ATTACHMENT: 'ATTACHMENT',
   SERIAL_NO: 'SERIAL_NO'
 }
@@ -35,7 +39,11 @@ export const WIDGET_TYPE = {
   DATETIME: 'DateTimeDisplayComponent',
   DATA_DICTIONARY: 'DataDictionaryDisplayComponent',
   ENTITY: 'EntityDisplayComponent',
-  ATTACHMENT: 'AttachmentComponent'
+  ICON_PICKER: 'IconPickerDisplayComponent',
+  ATTACHMENT: 'AttachmentComponent',
+  ORGANIZATION_SINGLE: 'OrganizationSingleSelectDisplayComponent',
+  ORGANIZATION_MULTIPLE: 'OrganizationMultipleSelectDisplayComponent',
+  USER_SINGLE: 'UserSingleSelectDisplayComponent'
 }
 
 // 视图按钮类型

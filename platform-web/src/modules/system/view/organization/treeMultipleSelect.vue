@@ -30,6 +30,8 @@ import { treeMultipleSelectMixin } from '@/mixin/treeMultipleSelectMixin.js'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'organization'
 export default {
+  name: 'OrganizationMultipleSelect',
+  label: '组织机构多选',
   mixins: [treeMultipleSelectMixin],
   data() {
     return {

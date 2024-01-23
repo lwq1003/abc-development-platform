@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * 模板 Mapper 接口
  *
  * @author wqliu
- * @date 2023-06-24
+ * @date 2024-01-23
  */
 public interface TemplateMapper extends BaseMapper<Template> {
 

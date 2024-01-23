@@ -15,6 +15,7 @@ import IconPicker from '@/components/abc/IconPicker/index.vue'
 import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
 import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
 import AttachmentViewer from '@/modules/support/view/attachment/attachmentViewer.vue'
+import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
 export const addMixin = {
   components: {
     Dialog,
@@ -29,7 +30,8 @@ export const addMixin = {
     IconPicker,
     AttachmentManager,
     AttachmentUploader,
-    AttachmentViewer
+    AttachmentViewer,
+    AttachmentManagerAndUploader
   },
   data() {
     return {

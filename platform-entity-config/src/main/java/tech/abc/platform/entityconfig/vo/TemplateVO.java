@@ -13,23 +13,12 @@ import lombok.experimental.Accessors;
 * 模板 视图对象类
 *
 * @author wqliu
-* @date 2023-06-24
+* @date 2024-01-23
 */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class TemplateVO extends BaseVO {
-    /**
-    * 用户单选
-    */
-    @NotBlank(message = "【用户单选】不能为空")
-    private String userSingle;
-
-    /**
-    * 组织机构单选
-    */
-    private String organizationSingle;
-
     /**
     * 用户
     */
@@ -57,6 +46,17 @@ public class TemplateVO extends BaseVO {
     */
     @NotBlank(message = "【编码】不能为空")
     private String code;
+
+    /**
+    * 用户单选
+    */
+    @NotBlank(message = "【用户单选】不能为空")
+    private String userSingle;
+
+    /**
+    * 组织机构单选
+    */
+    private String organizationSingle;
 
     /**
     * 日期
@@ -90,8 +90,38 @@ public class TemplateVO extends BaseVO {
     */
     private String remark;
 
+    /**
+    * 说明
+    */
+    private String description;
+
 
     /********非库表存储属性*****/
+    /**
+    * 组织机构多选
+    */
+    private String organizationMultiple;
+
+    /**
+    * 附件上传
+    */
+    private String attachmentUpload;
+
+    /**
+    * 附件管理
+    */
+    private String attachmentManage;
+
+    /**
+    * 附件查看
+    */
+    private String attachmentView;
+
+    /**
+    * 附件管理及上传
+    */
+    private String attachmentManagerAndUploader;
+
 
 
 
@@ -109,6 +139,11 @@ public class TemplateVO extends BaseVO {
 
     /********实体类、用户单选、组织机构单选*****/
     /**
+    * 用户
+    */
+    private String entityName;
+
+    /**
     * 用户单选
     */
     private String userSingleName;
@@ -117,11 +152,6 @@ public class TemplateVO extends BaseVO {
     * 组织机构单选
     */
     private String organizationSingleName;
-
-    /**
-    * 用户
-    */
-    private String entityName;
 
 
     /********范围查询*****/

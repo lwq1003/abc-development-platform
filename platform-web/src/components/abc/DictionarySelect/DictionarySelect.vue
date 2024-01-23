@@ -104,6 +104,9 @@ export default {
         this.dictionaryItemList = []
         this.$api.system.dictionaryType.getItem(this.code).then((res) => {
           this.dictionaryItemList = res.data
+          if (this.dictionaryItemList.length == 1) {
+            this.$emit('update:modelValue', this.dictionaryItemList[0].code)
+          }
         })
       }
     }

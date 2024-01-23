@@ -20,6 +20,8 @@
 <script>
 import { Dialog } from '@/components/abc/Dialog'
 export default {
+  name: 'IconPicker',
+  label: '图标',
   components: {
     Dialog
   },

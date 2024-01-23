@@ -493,6 +493,15 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         // 视图对象放入自定义键值map
         customKeyValue.put("addEntityView", entityView);
+        //模板路径
+        String templatePath="";
+        if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
+            //标准配置模式
+            templatePath="/templates/add.vue.ftl";
+        }else{
+            //高级配置模式
+            templatePath="/templates/addForAdvanceConfig.vue.ftl";
+        }
 
         // 获取视图属性配置
         List<ViewProperty> viewPropertyList = viewPropertyService.listByView(entityView.getId());
@@ -502,7 +511,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 自定义新增视图模板
         CustomFile templateFile = new CustomFile.Builder()
                 .fileName("add.vue")
-                .templatePath("/templates/add.vue.ftl")
+                .templatePath(templatePath)
                 .enableFileOverride()
                 .packageName(viewFolderName)
                 .build();
@@ -520,17 +529,22 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     private void generateModifyView(EntityView entityView, Map<String, Object> customKeyValue, InjectionConfig.Builder builder) {
         // 视图对象放入自定义键值map
         customKeyValue.put("modifyEntityView", entityView);
-
-
+        //模板路径
+        String templatePath="";
+        if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
+            //标准配置模式
+            templatePath="/templates/modify.vue.ftl";
+        }else{
+            //高级配置模式
+            templatePath="/templates/modifyForAdvanceConfig.vue.ftl";
+        }
         // 获取视图属性配置
         List<ViewProperty> viewPropertyList = viewPropertyService.listByView(entityView.getId());
         customKeyValue.put("modifyViewPropertyList", viewPropertyList);
-
-
         // 自定义编辑视图模板
         CustomFile templateFile = new CustomFile.Builder()
                 .fileName("modify.vue")
-                .templatePath("/templates/modify.vue.ftl")
+                .templatePath(templatePath)
                 .enableFileOverride()
                 .packageName(viewFolderName)
                 .build();
@@ -550,6 +564,16 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 视图对象放入自定义键值map
         customKeyValue.put("viewEntityView", entityView);
 
+        //模板路径
+        String templatePath="";
+        if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
+            //标准配置模式
+            templatePath="/templates/view.vue.ftl";
+        }else{
+            //高级配置模式
+            templatePath="/templates/viewForAdvanceConfig.vue.ftl";
+        }
+
         // 获取视图属性配置
         List<ViewProperty> viewPropertyList = viewPropertyService.listByView(entityView.getId());
         customKeyValue.put("viewViewPropertyList", viewPropertyList);
@@ -558,7 +582,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 自定义查看视图模板
         CustomFile templateFile = new CustomFile.Builder()
                 .fileName("view.vue")
-                .templatePath("/templates/view.vue.ftl")
+                .templatePath(templatePath)
                 .enableFileOverride()
                 .packageName(viewFolderName)
                 .build();
@@ -790,6 +814,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 获取实体模型属性列表
         List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getByEntityModelId(entityModel.getId());
         customKeyValue.put("entityModelPropertyList", entityModelPropertyList);
+
+        // 获取库存储的实体模型属性列表
+        List<EntityModelProperty> databaseStoreEntityModelPropertyList =
+                entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModel.getId());
+        customKeyValue.put("databaseStoreEntityModelPropertyList", databaseStoreEntityModelPropertyList);
+
 
         // 获取非库存储的实体模型属性列表
         List<EntityModelProperty> noDatabaseStoreEntityModelPropertyList = entityModelPropertyService.getNoDatabaseStoreListByEntityModelId(entityModel.getId());

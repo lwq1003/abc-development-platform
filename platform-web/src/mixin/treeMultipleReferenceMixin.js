@@ -1,5 +1,6 @@
 /**
  * 树多选页面混入
+ * 表单上某个属性触发和回写，值为数组
  */
 import { Dialog } from '@/components/abc/Dialog'
 

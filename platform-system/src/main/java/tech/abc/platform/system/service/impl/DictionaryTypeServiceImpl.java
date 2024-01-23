@@ -115,6 +115,20 @@ public class DictionaryTypeServiceImpl extends BaseServiceImpl<DictionaryTypeMap
         entity.setName(entity.getName() + " 副本");
     }
 
+    @Override
+    protected void afterAddByCopy(DictionaryType source, DictionaryType entity) {
+        String sourceId = source.getId();
+        String targetId = entity.getId();
+
+        QueryWrapper<DictionaryItem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(DictionaryItem::getDictionaryType, sourceId);
+        List<DictionaryItem> list = dictionaryItemService.list(queryWrapper);
+        for (DictionaryItem item : list) {
+            dictionaryItemService.addByCopy(item.getId(), targetId);
+        }
+
+    }
+
 
     @Override
     public void afterRemove(DictionaryType entity) {

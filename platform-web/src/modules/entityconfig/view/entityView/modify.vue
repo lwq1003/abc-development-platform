@@ -90,6 +90,17 @@
       >
         <el-input v-model="entityData.treePath" />
       </el-form-item>
+      <el-form-item
+        label="启用高级配置"
+        prop="enableAdvanceConfig"
+        v-show="
+          entityData.entityViewType === 'ADD' ||
+          entityData.entityViewType === 'MODIFY' ||
+          entityData.entityViewType === 'VIEW'
+        "
+      >
+        <dictionary-radio-group v-model="entityData.enableAdvanceConfig" code="YesOrNo" />
+      </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input v-model="entityData.remark" />
       </el-form-item>

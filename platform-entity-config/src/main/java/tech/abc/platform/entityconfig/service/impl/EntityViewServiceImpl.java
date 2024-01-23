@@ -1,31 +1,34 @@
 package tech.abc.platform.entityconfig.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
-import tech.abc.platform.common.exception.CommonException;
-import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.entityconfig.entity.*;
 import tech.abc.platform.entityconfig.exception.EntityViewException;
 import tech.abc.platform.entityconfig.mapper.EntityViewMapper;
 import tech.abc.platform.entityconfig.service.*;
-
-import java.util.HashMap;
+import tech.abc.platform.common.base.BaseServiceImpl;
+import org.springframework.stereotype.Service;
+import tech.abc.platform.common.exception.CommonException;
+import tech.abc.platform.common.exception.CustomException;
+import java.math.BigDecimal;
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
 import java.util.Optional;
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+
 /**
- * 实体视图 服务实现类
- *
- * @author wqliu
- * @date 2023-04-13
- */
+* 实体视图 服务实现类
+*
+* @author wqliu
+* @date 2023-12-24
+*/
 @Service
 @Slf4j
 public class EntityViewServiceImpl extends BaseServiceImpl<EntityViewMapper, EntityView> implements EntityViewService {
@@ -49,46 +52,59 @@ public class EntityViewServiceImpl extends BaseServiceImpl<EntityViewMapper, Ent
 
     @Override
     public EntityView init() {
-        EntityView entity = new EntityView();
-        // 默认值处理
-        entity.setMainViewFlag(YesOrNoEnum.NO.name());
-        entity.setMainReferenceViewFlag(YesOrNoEnum.NO.name());
+        EntityView entity=new EntityView();
+        // 预先分配标识
+        entity.setId(IdWorker.getIdStr());
+        //默认值处理
+        entity.setEntityViewType("");
+        entity.setMainReferenceViewFlag("NO");
+        entity.setMainViewFlag("NO");
+        entity.setEnableAdvanceConfig("NO");
         return entity;
     }
 
     @Override
     public void beforeAdd(EntityView entity) {
-        // 唯一性验证
-        // 验证 名称 同节点下唯一
-        long countName = this.lambdaQuery().eq(EntityView::getName, entity.getName())
-                .eq(EntityView::getEntityModel, entity.getEntityModel()).count();
-        if (countName > 0) {
-            throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【名称】");
+        //唯一性验证
+        //验证 名称 同节点下唯一
+        if (StringUtils.isNotBlank(entity.getName())) {
+            long countName = this.lambdaQuery().eq(EntityView::getName, entity.getName())
+            .eq(EntityView::getEntityModel, entity.getEntityModel()).count();
+            if (countName > 0) {
+                throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE,"【名称】");
+            }
         }
-        // 验证 编码 同节点下唯一
-        long countCode = this.lambdaQuery().eq(EntityView::getCode, entity.getCode())
-                .eq(EntityView::getEntityModel, entity.getEntityModel()).count();
-        if (countCode > 0) {
-            throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【编码】");
+        //验证 编码 同节点下唯一
+        if (StringUtils.isNotBlank(entity.getCode())) {
+            long countCode = this.lambdaQuery().eq(EntityView::getCode, entity.getCode())
+            .eq(EntityView::getEntityModel, entity.getEntityModel()).count();
+            if (countCode > 0) {
+                throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE,"【编码】");
+            }
         }
+
     }
 
     @Override
     public void beforeModify(EntityView entity) {
-        // 唯一性验证
-        // 验证 名称 同节点下唯一
-        long countName = this.lambdaQuery().eq(EntityView::getName, entity.getName())
+        //唯一性验证
+        //验证 名称 同节点下唯一
+        if (StringUtils.isNotBlank(entity.getName())) {
+            long countName = this.lambdaQuery().eq(EntityView::getName, entity.getName())
                 .eq(EntityView::getEntityModel, entity.getEntityModel())
                 .ne(EntityView::getId, entity.getId()).count();
-        if (countName > 0) {
-            throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【名称】");
+            if (countName > 0) {
+                throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE,"【名称】");
+            }
         }
-        // 验证 编码 同节点下唯一
-        long countCode = this.lambdaQuery().eq(EntityView::getCode, entity.getCode())
+        //验证 编码 同节点下唯一
+        if (StringUtils.isNotBlank(entity.getCode())) {
+            long countCode = this.lambdaQuery().eq(EntityView::getCode, entity.getCode())
                 .eq(EntityView::getEntityModel, entity.getEntityModel())
                 .ne(EntityView::getId, entity.getId()).count();
-        if (countCode > 0) {
-            throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【编码】");
+            if (countCode > 0) {
+                throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE,"【编码】");
+            }
         }
     }
 
@@ -152,6 +168,14 @@ public class EntityViewServiceImpl extends BaseServiceImpl<EntityViewMapper, Ent
         }
 
 
+    }
+
+    @Override
+    public void updateAdvanceConfig(String id, String advanceConfigRule, String advanceConfigOption) {
+        EntityView entity=query(id);
+        entity.setAdvanceConfigRule(advanceConfigRule);
+        entity.setAdvanceConfigOption(advanceConfigOption);
+        modify(entity);
     }
 
 

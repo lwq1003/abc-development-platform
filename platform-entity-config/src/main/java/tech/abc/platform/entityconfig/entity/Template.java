@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 模板 实体类
  *
  * @author wqliu
- * @date 2023-06-24
+ * @date 2024-01-23
  *
  */
 @Data
@@ -23,18 +23,6 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @TableName("cfg_template")
 public class Template extends BaseEntity {
-
-    /**
-    * 用户单选
-    */
-    @TableField("user_single")
-    private String userSingle;
-
-    /**
-    * 组织机构单选
-    */
-    @TableField("organization_single")
-    private String organizationSingle;
 
     /**
     * 用户
@@ -65,6 +53,18 @@ public class Template extends BaseEntity {
     */
     @TableField("code")
     private String code;
+
+    /**
+    * 用户单选
+    */
+    @TableField("user_single")
+    private String userSingle;
+
+    /**
+    * 组织机构单选
+    */
+    @TableField("organization_single")
+    private String organizationSingle;
 
     /**
     * 日期
@@ -102,5 +102,41 @@ public class Template extends BaseEntity {
     @TableField("remark")
     private String remark;
 
+    /**
+    * 说明
+    */
+    @TableField("description")
+    private String description;
+
     /********非库表存储属性*****/
+    /**
+    * 组织机构多选
+    */
+    @TableField(exist = false)
+    private String organizationMultiple;
+
+    /**
+    * 附件上传
+    */
+    @TableField(exist = false)
+    private String attachmentUpload;
+
+    /**
+    * 附件管理
+    */
+    @TableField(exist = false)
+    private String attachmentManage;
+
+    /**
+    * 附件查看
+    */
+    @TableField(exist = false)
+    private String attachmentView;
+
+    /**
+    * 附件管理及上传
+    */
+    @TableField(exist = false)
+    private String attachmentManagerAndUploader;
+
 }

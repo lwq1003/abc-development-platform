@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import {treelistMixin} from '@/mixin/treelistMixin.js'
+    import {treeListMixin} from '@/mixin/treeListMixin.js'
     <#if treeListEntityView.treePath??>
     import TreeView from '@/modules/${treeListEntityView.treePath}'
     <#else>
@@ -23,7 +23,7 @@
         <#if mainViewCode=="treeList">
         name: ENTITY_TYPE,
         </#if>
-        mixins: [treelistMixin],
+        mixins: [treeListMixin],
         components: {
             TreeView,
             ListView

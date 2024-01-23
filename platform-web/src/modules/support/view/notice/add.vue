@@ -31,18 +31,14 @@
         <dictionary-radio-group v-model="entityData.commentFlag" code="YesOrNo" />
       </el-form-item>
     </el-form>
-    <el-form-item label="附件列表">
-      <AttachmentManager ref="attachmentManager" :entity-id="entityData.id" />
-    </el-form-item>
-    <el-form-item label="附件上传">
-      <AttachmentUploader
+    <el-form-item label="附件">
+      <AttachmentManagerAndUploader
         entity-type="Notice"
         :entity-id="entityData.id"
         module-code="support"
-        :show-success-files="false"
-        @file-complete="fileComplete"
       />
     </el-form-item>
+
     <template #footer>
       <el-button type="primary" @click="save" v-permission="pageCode + 'add'">保存</el-button>
       <el-button @click="close">关闭</el-button>
@@ -54,11 +50,12 @@
 import { addMixin } from '@/mixin/addMixin.js'
 import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
 import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
+import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
 const MODULE_CODE = 'support'
 const ENTITY_TYPE = 'notice'
 export default {
   name: ENTITY_TYPE + '-add',
-  components: { AttachmentUploader, AttachmentManager },
+  components: { AttachmentUploader, AttachmentManager, AttachmentManagerAndUploader },
   mixins: [addMixin],
   data() {
     return {

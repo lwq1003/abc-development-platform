@@ -1,75 +1,15 @@
 <template>
-  <Dialog title="查看" v-model="visible" width="500px">
-    <el-form
-      ref="form"
-      :model="entityData"
-      label-width="120px"
-      label-position="right"
-      style="width: 90%; margin: 0px auto"
-    >
-      <!--表单区域 -->
-      <el-form-item label="用户单选" prop="userSingle">
-        <UserSingleSelect v-model="entityData.userSingle" />
-      </el-form-item>
-      <el-form-item label="组织机构单选" prop="organizationSingle">
-        <OrganizationSingleSelect v-model="entityData.organizationSingle" />
-      </el-form-item>
-      <el-form-item label="用户" prop="entity">
-        <UserReference v-model="entityData.entity" :user-param="userParam" />
-      </el-form-item>
-      <el-form-item label="图标" prop="icon">
-        <IconPicker v-model="entityData.icon" />
-      </el-form-item>
-      <el-form-item label="流水号" prop="serialNo">
-        <el-input v-model="entityData.serialNo" :readonly="true" />
-      </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="entityData.name" />
-      </el-form-item>
-      <el-form-item label="编码" prop="code">
-        <el-input v-model="entityData.code" />
-      </el-form-item>
-      <el-form-item label="日期" prop="date">
-        <el-date-picker
-          v-model="entityData.date"
-          :value-format="$dateFormatter.getDatetimeFormat('DAY')"
-          :type="$dateFormatter.getDatetimeType('DAY')"
-          align="right"
-          unlink-panels
-          class="form-item"
-        />
-      </el-form-item>
-      <el-form-item label="时间" prop="time">
-        <el-date-picker
-          v-model="entityData.time"
-          :value-format="$dateFormatter.getDatetimeFormat('SECOND')"
-          :type="$dateFormatter.getDatetimeType('SECOND')"
-          align="right"
-          unlink-panels
-          class="form-item"
-        />
-      </el-form-item>
-      <el-form-item label="是否" prop="yesOrNo">
-        <dictionary-radio-group v-model="entityData.yesOrNo" code="YesOrNo" />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <dictionary-radio-group v-model="entityData.status" code="Status" />
-      </el-form-item>
-      <el-form-item label="排序" prop="orderNo">
-        <el-input v-model="entityData.orderNo" />
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="entityData.remark" type="textarea" rows="4" />
-      </el-form-item>
-    </el-form>
+  <Dialog title="修改" v-model="visible" width="800px">
+    <form-create :rule="rule" v-model:api="fApi" :option="options" v-model="formValue" />
     <template #footer>
+      <el-button type="primary" @click="save" v-permission="pageCode + 'modify'">保存</el-button>
       <el-button @click="close">关闭</el-button>
     </template>
   </Dialog>
 </template>
 
 <script>
-import { viewMixin } from '@/mixin/viewMixin.js'
+import { viewMixin } from '@/mixin/viewForAdvanceConfigMixin.js'
 import UserReference from '@/modules/system/view/user/treeListReference.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'template'
@@ -88,7 +28,471 @@ export default {
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
       // 用户组件参数，用于传递数据
       userParam: {},
-      entityData: {}
+      entityData: {},
+      //fc组件
+      options: {
+        form: {
+          labelPosition: 'right',
+          size: 'default',
+          labelWidth: '120px',
+          hideRequiredAsterisk: false,
+          showMessage: true,
+          inlineMessage: false
+        },
+        submitBtn: { show: false, innerText: '提交' },
+        resetBtn: { show: false, innerText: '重置' }
+      },
+      rule: [
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '用户',
+                  field: 'entity',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'IconPicker',
+                  title: '图标',
+                  field: 'icon',
+                  validate: [{ required: true, message: '【图标】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'IconPicker'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '流水号',
+                  field: 'serialNo',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '名称',
+                  field: 'name',
+                  validate: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '编码',
+                  field: 'code',
+                  validate: [{ required: true, message: '【编码】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'UserSingleSelect',
+                  title: '用户单选',
+                  field: 'userSingle',
+                  validate: [{ required: true, message: '【用户单选】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'UserSingleSelect'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'OrganizationSingleSelect',
+                  title: '组织机构单选',
+                  field: 'organizationSingle',
+                  _fc_drag_tag: 'OrganizationSingleSelect'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'OrganizationMultipleSelect',
+                  title: '组织机构多选',
+                  field: 'organizationMultiple',
+                  _fc_drag_tag: 'OrganizationMultipleSelect'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { valueFormat: 'YYYY-MM-DD 00:00:00', type: 'date' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'datePicker',
+                  title: '日期',
+                  field: 'date',
+                  _fc_drag_tag: 'datePicker'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { valueFormat: 'YYYY-MM-DD HH:mm:ss', type: 'datetime' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'datePicker',
+                  title: '时间',
+                  field: 'time',
+                  _fc_drag_tag: 'datePicker'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { code: 'YesOrNo' },
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'DictionaryRadioGroup',
+                  title: '是否',
+                  field: 'yesOrNo',
+                  validate: [{ required: true, message: '【是否】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'DictionaryRadioGroup'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { code: 'Status' },
+                  hidden: false,
+                  display: true,
+                  value: 'NORMAL',
+                  type: 'DictionarySelect',
+                  title: '状态',
+                  field: 'status',
+                  validate: [{ required: true, message: '【状态】不能为空', trigger: 'blur' }],
+                  _fc_drag_tag: 'DictionarySelect'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'text' },
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'input',
+                  title: '排序',
+                  field: 'orderNo',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { type: 'textarea', rows: '4' },
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'input',
+                  title: '备注',
+                  field: 'remark',
+                  _fc_drag_tag: 'input'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  hidden: false,
+                  display: true,
+                  value: null,
+                  type: 'RichText',
+                  title: '说明',
+                  field: 'description',
+                  _fc_drag_tag: 'RichText'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: {
+                    entityId: '@EntityId@',
+                    entityType: '@EntityType@',
+                    moduleCode: '@ModuleCode@'
+                  },
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'AttachmentUploader',
+                  title: '附件上传',
+                  field: 'attachmentUpload',
+                  _fc_drag_tag: 'AttachmentUploader'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { entityId: '@EntityId@', ref: 'attachmentManager' },
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'AttachmentManager',
+                  title: '附件管理',
+                  field: 'attachmentManage',
+                  _fc_drag_tag: 'AttachmentManager'
+                }
+              ]
+            },
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: { entityId: '@EntityId@' },
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'AttachmentViewer',
+                  title: '附件查看',
+                  field: 'attachmentView',
+                  _fc_drag_tag: 'AttachmentViewer'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'FcRow',
+          _fc_drag_tag: 'row',
+          hidden: false,
+          display: true,
+          children: [
+            {
+              type: 'col',
+              props: { span: 12 },
+              _fc_drag_tag: 'col',
+              hidden: false,
+              display: true,
+              children: [
+                {
+                  props: {
+                    entityId: '@EntityId@',
+                    entityType: '@EntityType@',
+                    moduleCode: '@ModuleCode@'
+                  },
+                  hidden: false,
+                  display: true,
+                  value: '',
+                  type: 'AttachmentManagerAndUploader',
+                  title: '附件管理及上传',
+                  field: 'attachmentManagerAndUploader',
+                  _fc_drag_tag: 'AttachmentManagerAndUploader'
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {}

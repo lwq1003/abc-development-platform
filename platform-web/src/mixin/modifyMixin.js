@@ -15,6 +15,7 @@ import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
 import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
 import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
 import AttachmentViewer from '@/modules/support/view/attachment/attachmentViewer.vue'
+import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
 export const modifyMixin = {
   components: {
     Dialog,
@@ -29,7 +30,8 @@ export const modifyMixin = {
     IconPicker,
     AttachmentManager,
     AttachmentUploader,
-    AttachmentViewer
+    AttachmentViewer,
+    AttachmentManagerAndUploader
   },
   data() {
     return {

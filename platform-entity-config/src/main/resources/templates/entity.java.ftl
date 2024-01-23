@@ -40,7 +40,7 @@ public class ${entity} implements Serializable {
     private static final long serialVersionUID = 1L;
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
-<#list entityModelPropertyList as field>
+<#list databaseStoreEntityModelPropertyList as field>
     <#if field.name!?length gt 0>
     /**
     * ${field.name}

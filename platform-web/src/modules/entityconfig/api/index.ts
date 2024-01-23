@@ -32,7 +32,11 @@ export const entityModelProperty = Object.assign({}, COMMON_METHOD, {
 
 // 实体视图
 export const entityView = Object.assign({}, COMMON_METHOD, {
-  serveUrl: '/' + moduleName + '/' + 'entityView' + '/'
+  serveUrl: '/' + moduleName + '/' + 'entityView' + '/',
+  // 更新高级配置
+  updateAdvanceConfig(params) {
+    return request.put({ url: this.serveUrl + 'updateAdvanceConfig', data: params })
+  }
 })
 
 // 视图按钮模板

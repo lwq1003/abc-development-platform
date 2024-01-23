@@ -5,14 +5,11 @@
       :model="entityData"
       label-width="120px"
       label-position="right"
-      style="width: 90%; margin: 0 auto"
+      style="width: 90%; margin: 0px auto"
     >
       <!--表单区域 -->
       <el-form-item label="组织机构" prop="organization">
-        <OrganizationReference
-          v-model="entityData.organization"
-          :organization-param="organizationParam"
-        />
+        <OrganizationSingleSelect v-model="entityData.organization" />
       </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="entityData.name" />
@@ -41,14 +38,11 @@
 
 <script>
 import { viewMixin } from '@/mixin/viewMixin.js'
-import OrganizationReference from '@/modules/system/view/organization/treeReference.vue'
 const MODULE_CODE = 'system'
 const ENTITY_TYPE = 'organization'
 export default {
   name: ENTITY_TYPE + '-view',
-  components: {
-    OrganizationReference
-  },
+  components: {},
   mixins: [viewMixin],
   data() {
     return {
@@ -57,8 +51,6 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
-      // 组织机构组件参数，用于传递数据
-      organizationParam: {},
       entityData: {}
     }
   },

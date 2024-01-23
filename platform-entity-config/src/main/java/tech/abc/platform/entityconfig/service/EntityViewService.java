@@ -1,8 +1,7 @@
 package tech.abc.platform.entityconfig.service;
 
-import tech.abc.platform.common.base.BaseService;
 import tech.abc.platform.entityconfig.entity.EntityView;
-
+import tech.abc.platform.common.base.BaseService;
 import java.util.List;
 import java.util.Map;
 
@@ -10,17 +9,17 @@ import java.util.Map;
  * 实体视图 服务接口类
  *
  * @author wqliu
- * @date 2023-04-13
+ * @date 2023-12-24
  */
 public interface EntityViewService extends BaseService<EntityView> {
 
-    /**
-     * 获取标识与名称的Map集合
-     *
-     * @param idList 标识列表
-     * @return 集合
-     */
-    Map<String, String> getNameMap(List<String> idList);
+   /**
+   * 获取标识与名称的Map集合
+   *
+   * @param idList 标识列表
+   * @return 集合
+   */
+   Map<String,String> getNameMap(List<String> idList);
 
 
     /**
@@ -48,5 +47,12 @@ public interface EntityViewService extends BaseService<EntityView> {
      */
     String getMainReferenceViewCode(String entityCode);
 
+    /**
+     * 更新高级配置
+     * @param id 标识
+     * @param advanceConfigRule 规则
+     * @param advanceConfigOption 选项
+     */
+    void updateAdvanceConfig(String id, String advanceConfigRule, String advanceConfigOption);
 }
 

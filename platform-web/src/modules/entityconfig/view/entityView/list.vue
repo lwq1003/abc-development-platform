@@ -76,9 +76,14 @@
             >
             <el-button
               type="primary"
-              v-show="scope.row.entityViewType == 'MODIFY'"
-              @click="configUi(scope.row)"
-              >配置界面</el-button
+              v-permission="pageCode + 'advanceConfig'"
+              v-show="
+                scope.row.entityViewType == 'ADD' ||
+                scope.row.entityViewType == 'MODIFY' ||
+                scope.row.entityViewType == 'VIEW'
+              "
+              @click="advanceConfig(scope.row)"
+              >高级配置</el-button
             >
             <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
               >修改</el-button
@@ -161,6 +166,12 @@ export default {
           showOverflowTooltip: true
         },
         {
+          prop: 'enableAdvanceConfigName',
+          label: '启用高级配置',
+          show: true,
+          showOverflowTooltip: true
+        },
+        {
           prop: 'orderNo',
           label: '排序',
           show: true,
@@ -188,7 +199,7 @@ export default {
     addWithId() {
       this.$refs.addPage.init({ id: this.$route.query.id })
     },
-    configUi(row) {
+    advanceConfig(row) {
       this.$router.push({
         path: '/entityconfig/advanceViewConfig',
         query: { id: row.id }

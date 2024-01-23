@@ -30,6 +30,8 @@
 
 <script>
 export default {
+  name: 'AttachmentManager',
+  label: '附件管理',
   components: {},
   props: {
     entityId: {

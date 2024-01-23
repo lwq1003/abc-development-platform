@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'RichText',
+  label: '富文本'
+}
+</script>
 <script setup lang="ts">
 import { onBeforeUnmount, computed, PropType, unref, nextTick, ref, watch, shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'

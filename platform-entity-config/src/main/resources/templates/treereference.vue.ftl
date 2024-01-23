@@ -6,7 +6,7 @@
             <el-button icon="delete" @click="clear" style="border-left-width: 0; padding: 10px" />
         </el-button-group>
         <Dialog title="${table.comment!}选择" v-model="visible" width="300px">
-            <el-input v-model="searchValue" placeholder="请输入过滤值" style="margin-bottom: 10px" />
+            <el-input v-model="searchValue" placeholder="请输入关键词" style="margin-bottom: 10px" />
             <el-tag>当前选中：{{ currentName }}</el-tag>
             <el-tree
                     ref="tree"

@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 <#if entityModelSelfReferenceFlag=="YES">
-import utils.common.platform.tech.abc.TreeUtil;
-import vo.common.platform.tech.abc.TreeVO;
+import tech.abc.platform.common.utils.TreeUtil;
+import tech.abc.platform.common.vo.TreeVO;
 </#if>
 
 /**
@@ -57,11 +57,15 @@ public class ${table.controllerName} {
     private ${item.code?cap_first}Service ${item.code}Service;
         </#if>
     <#elseif item.dataType=='USER_SINGLE'>
+         <#if "user"!= entity?uncap_first >
     @Autowired
     private UserService userService;
+         </#if>
     <#elseif item.dataType=='ORGANIZATION_SINGLE'>
+         <#if "organization"!= entity?uncap_first >
     @Autowired
     private OrganizationService organizationService;
+         </#if>
     </#if>
 </#list>
 </#if>
@@ -238,7 +242,7 @@ public class ${table.controllerName} {
     * @param entity 实体
     * @return {@link EntityVO} 视图对象
     */
-    private ${entity}VO convert2VO(${entity} entity){
+    protected ${entity}VO convert2VO(${entity} entity){
         ${entity}VO vo=mapperFacade.map(entity,${entity}VO.class);
         <#list entityModelPropertyList as item>
             <#if item.dataType=="DATA_DICTIONARY">
@@ -254,7 +258,7 @@ public class ${table.controllerName} {
     * @param entityList 实体列表
     * @return {@link List}<{@link EntityVO}> 视图对象列表
     */
-    private List<${entity}VO> convert2VO(List<${entity}> entityList) {
+    protected List<${entity}VO> convert2VO(List<${entity}> entityList) {
         List<${entity}VO> voList = new ArrayList<>(entityList.size());
 
 <#if entityModelPropertyList?? && (entityModelPropertyList?size > 0)>

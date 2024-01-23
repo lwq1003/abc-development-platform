@@ -2,6 +2,7 @@ package tech.abc.platform.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,10 +100,16 @@ public class DictionaryItemServiceImpl extends BaseServiceImpl<DictionaryItemMap
         return result;
     }
 
+
     @Override
     protected void copyPropertyHandle(DictionaryItem entity, String... value) {
-        // 主属性后附加“副本”用于区分
-        entity.setName(entity.getName() + " 副本");
+        if (ArrayUtils.isNotEmpty(value)) {
+            // 复制父级,设置类型
+            entity.setDictionaryType(value[0]);
+        } else {
+            // 直接复制,主属性后附加“副本”用于区分
+            entity.setName(entity.getName() + " 副本");
+        }
     }
 
 

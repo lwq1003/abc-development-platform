@@ -51,12 +51,7 @@
       <el-form-item
         label="控件类型"
         prop="widgetType"
-        v-show="
-          entityData.dataType != 'USER_SINGLE' &&
-          entityData.dataType != 'ORGANIZATION_SINGLE' &&
-          entityData.dataType != 'ORGANIZATION_MULTIPLE' &&
-          entityData.dataType != 'ICON'
-        "
+        v-show="entityData.dataType != 'ICON' && entityData.dataType != 'SERIAL_NO'"
       >
         <dictionary-select v-model="entityData.widgetType" :code="widgetType" />
       </el-form-item>
@@ -134,6 +129,7 @@
 import { viewMixin } from '@/mixin/viewMixin.js'
 import SerialNoReference from '@/modules/support/view/serialNo/reference.vue'
 import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
+import util from '@/modules/entityconfig/util/util.js'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityModelProperty'
 export default {
@@ -151,47 +147,13 @@ export default {
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
       entityData: {},
+      widgetType: 'TextDisplayComponent',
       // 实体属性列表
       propertyList: [],
       serialNoParam: {}
     }
   },
-  computed: {
-    widgetType() {
-      // 设置控件类型的数据字典编码
-      let code = ''
-      switch (this.entityData.dataType) {
-        case this.$constant.DATA_TYPE.STRING: {
-          code = this.$constant.WIDGET_TYPE.TEXT
-          break
-        }
-        case this.$constant.DATA_TYPE.INTEGER:
-        case this.$constant.DATA_TYPE.LONG:
-        case this.$constant.DATA_TYPE.DOUBLE:
-        case this.$constant.DATA_TYPE.DECIMAL: {
-          code = this.$constant.WIDGET_TYPE.NUMBER
-          break
-        }
-        case this.$constant.DATA_TYPE.DATETIME: {
-          code = this.$constant.WIDGET_TYPE.DATETIME
-          break
-        }
-        case this.$constant.DATA_TYPE.DATA_DICTIONARY: {
-          code = this.$constant.WIDGET_TYPE.DATA_DICTIONARY
-          break
-        }
-        case this.$constant.DATA_TYPE.ENTITY: {
-          code = this.$constant.WIDGET_TYPE.ENTITY
-          break
-        }
-        default: {
-          code = this.$constant.WIDGET_TYPE.TEXT
-          break
-        }
-      }
-      return code
-    }
-  },
+
   methods: {
     afterInit() {
       this.loadPropertyList()
@@ -201,13 +163,28 @@ export default {
         .getFullPropertyList(this.entityData.entityModel)
         .then((res) => {
           this.propertyList = res.data
+          const widgetType = util.getWidgetType(this.entityData.dataType)
+          // 数值类公用控件类型，不相等时再置空
+          if (widgetType != this.widgetType) {
+            this.entityData.widgetType = ''
+            //根据数据类型获取控件类型列表
+            this.widgetType = widgetType
+          }
         })
     },
     dataTypeChange() {
-      // 清空控件类型选中值
-      this.entityData.widgetType = ''
       // 清空字典类型选中值
       this.entityData.dictionaryType = ''
+      // 清空默认值
+      this.entityData.defaultValue = ''
+      // 获取数据类型对应的控件类型
+      const widgetType = util.getWidgetType(this.entityData.dataType)
+      // 数值类公用控件类型，不相等时再置空
+      if (widgetType != this.widgetType) {
+        this.entityData.widgetType = ''
+        //根据数据类型获取控件类型列表
+        this.widgetType = widgetType
+      }
     },
     dictionaryTypeChange() {
       this.entityData.defaultValue = ''

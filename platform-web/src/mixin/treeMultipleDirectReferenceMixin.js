@@ -1,5 +1,6 @@
 /**
  * 树多选页面混入
+ * 通过按钮触发对话框，确认后触发事件返回数据，而不是表单上某个属性触发和回写
  */
 import { Dialog } from '@/components/abc/Dialog'
 
