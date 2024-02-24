@@ -10,7 +10,7 @@ import * as scheduler from '@/modules/scheduler/constant'
 import * as notification from '@/modules/notification/constant'
 import * as workflow from '@/modules/workflow/constant'
 import * as businessflow from '@/modules/businessflow/constant'
-import * as edoc from '@/modules/edoc/constant'
+
 export default {
   ...common,
   ...system,
@@ -20,7 +20,5 @@ export default {
   ...scheduler,
   ...notification,
   ...workflow,
-  ...businessflow,
-  // 文档管理系统
-  ...edoc
+  ...businessflow
 }

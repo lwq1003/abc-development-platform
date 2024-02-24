@@ -116,10 +116,6 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
     @Override
     public void beforeRemove(PermissionItem entity) {
 
-        // 检查权限树节点是否有下级
-        if (super.lambdaQuery().eq(PermissionItem::getPermissionItem, entity.getId()).count() > 0) {
-            throw new CustomException(CommonException.HAS_CHILDREN);
-        }
 
         // 若权限已分配用户组，先删除相应的用户组与权限对应关系数据
         QueryWrapper<GroupPermissionItem> queryWrapper = new QueryWrapper<>();

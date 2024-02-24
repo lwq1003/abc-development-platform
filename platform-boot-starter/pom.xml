@@ -28,19 +28,7 @@
             <artifactId>platform-framework</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>tech.abc</groupId>
-            <artifactId>platform-cip-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>tech.abc</groupId>
-            <artifactId>platform-cip-message</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>tech.abc</groupId>
-            <artifactId>platform-businessflow</artifactId>
-        </dependency>
     </dependencies>
 
 

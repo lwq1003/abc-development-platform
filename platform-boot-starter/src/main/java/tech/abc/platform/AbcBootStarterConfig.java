@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import tech.abc.platform.cip.config.AppConfig;
+
 import tech.abc.platform.common.utils.SpringUtil;
 import tech.abc.platform.framework.config.PlatformConfig;
 
@@ -21,7 +21,7 @@ import tech.abc.platform.framework.config.PlatformConfig;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({PlatformConfig.class, AppConfig.class})
+@EnableConfigurationProperties({PlatformConfig.class})
 @Import(SpringUtil.class)
 @EnableRetry
 @ServletComponentScan

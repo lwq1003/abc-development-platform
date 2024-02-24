@@ -27,12 +27,6 @@
             <artifactId>platform-system</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>tech.abc</groupId>
-            <artifactId>platform-boot-starter-mail</artifactId>
-        </dependency>
-
-
         <!--数据库连接池-->
         <dependency>
             <groupId>com.alibaba</groupId>
