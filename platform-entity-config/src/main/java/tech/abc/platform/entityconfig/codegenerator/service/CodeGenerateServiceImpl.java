@@ -493,6 +493,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         // 视图对象放入自定义键值map
         customKeyValue.put("addEntityView", entityView);
+        // 新增视图存在标识位
+        customKeyValue.put("addViewFlag", YesOrNoEnum.YES.name());
         //模板路径
         String templatePath="";
         if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
@@ -529,6 +531,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     private void generateModifyView(EntityView entityView, Map<String, Object> customKeyValue, InjectionConfig.Builder builder) {
         // 视图对象放入自定义键值map
         customKeyValue.put("modifyEntityView", entityView);
+        // 修改视图存在标识位
+        customKeyValue.put("modifyViewFlag", YesOrNoEnum.YES.name());
         //模板路径
         String templatePath="";
         if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
@@ -563,7 +567,8 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     private void generateViewView(EntityView entityView, Map<String, Object> customKeyValue, InjectionConfig.Builder builder) {
         // 视图对象放入自定义键值map
         customKeyValue.put("viewEntityView", entityView);
-
+        // 查看视图存在标识位
+        customKeyValue.put("viewViewFlag", YesOrNoEnum.YES.name());
         //模板路径
         String templatePath="";
         if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
@@ -891,10 +896,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         entityViewList.stream().forEach(entityView -> {
             EntityViewTypeEnum entityViewTypeEnum = EnumUtils.getEnum(EntityViewTypeEnum.class, entityView.getEntityViewType(), EntityViewTypeEnum.LIST);
             switch (entityViewTypeEnum) {
-                case LIST:
-                    // 列表视图
-                    generateListView(entityView, customKeyValue, builder);
-                    break;
                 case ADD:
                     // 新增视图
                     generateAddView(entityView, customKeyValue, builder);
@@ -906,6 +907,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 case VIEW:
                     // 查看视图
                     generateViewView(entityView, customKeyValue, builder);
+                    break;
+                case LIST:
+                    // 列表视图
+                    generateListView(entityView, customKeyValue, builder);
                     break;
                 case REFERENCE:
                     // 参照视图

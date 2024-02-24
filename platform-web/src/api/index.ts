@@ -6,6 +6,7 @@ import * as scheduler from '@/modules/scheduler/api'
 import * as notification from '@/modules/notification/api'
 import * as workflow from '@/modules/workflow/api'
 import * as businessflow from '@/modules/businessflow/api'
+import * as edoc from '@/modules/edoc/api'
 export default {
   system,
   support,
@@ -14,5 +15,7 @@ export default {
   scheduler,
   notification,
   workflow,
-  businessflow
+  businessflow,
+  // 文档管理系统
+  edoc
 }

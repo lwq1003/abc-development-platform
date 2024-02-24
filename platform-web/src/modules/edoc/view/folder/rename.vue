@@ -1,0 +1,70 @@
+<template>
+  <Dialog title="更名" v-model="visible" width="300px">
+    <el-form
+      ref="form"
+      :model="entityData"
+      :rules="rules"
+      label-width="60px"
+      label-position="right"
+      style="width: 90%; margin: 0px auto"
+    >
+      <!--表单区域 -->
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="entityData.name" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button type="primary" @click="save" v-permission="pageCode + 'rename'">保存</el-button>
+      <el-button @click="close">关闭</el-button>
+    </template>
+  </Dialog>
+</template>
+
+<script>
+import { modifyMixin } from '@/mixin/modifyMixin.js'
+import FolderReference from '@/modules/edoc/view/folder/treeReference.vue'
+const MODULE_CODE = 'edoc'
+const ENTITY_TYPE = 'folder'
+export default {
+  name: ENTITY_TYPE + '-modify',
+  components: {
+    FolderReference
+  },
+  mixins: [modifyMixin],
+  data() {
+    return {
+      entityType: ENTITY_TYPE,
+      moduleCode: MODULE_CODE,
+      // eslint-disable-next-line no-eval
+      api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
+      pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
+      entityData: {},
+      // 上级组件参数，用于传递数据
+      folderParam: {},
+      rules: {
+        //前端验证规则
+        name: [{ required: true, message: '【名称】不能为空', trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {
+    // 重写保存方法
+    saveData() {
+      this.api
+        .rename(this.entityData.id, this.entityData.name)
+        .then((res) => {
+          if (this.afterSave) {
+            this.afterSave()
+          }
+          this.$emit('refresh')
+          this.close()
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    }
+  }
+}
+</script>
+
+<style></style>

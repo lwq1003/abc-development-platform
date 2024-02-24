@@ -144,8 +144,37 @@ platform-config:
       bucketName: abc
   mail:
     senderAddress: sealy321@126.com
-
-
+  edoc:
+    # 文本类型的文件后缀，添加到列表后将按文本读取内容创建全文搜索索引
+    textFileType:
+      - txt
+      - xml
+      - md
+      - vue
+      - htm
+      - html
+      - json
+      - js
+      - css
+      - asp
+      - jsp
+      - aspx
+      - cs
+      - config
+      - vb
+      - properties
+      - yml
+      - gitignore
+      - log
+      - java
+      - py
+      - c
+      - sql
+      - cpp
+      - sh
+      - bat
+      - go
+      - ftl
 #工作流配置
 camunda:
   bpm:

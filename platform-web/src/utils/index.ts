@@ -147,10 +147,12 @@ export function uuid() {
 import { useEmitt } from '@/hooks/web/useEmitt'
 const { emitter } = useEmitt()
 /**
- * @param path 路由path
- * @param name 路由name
  * 关闭tab页，和头部的tab button关闭效果一致
  */
 export function closeCurrentTab() {
   emitter.emit('closeCurrentTab')
+}
+
+export function closeTab(view) {
+  emitter.emit('closeTab', view)
 }

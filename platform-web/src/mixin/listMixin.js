@@ -135,7 +135,9 @@ export const listMixin = {
     },
     // 查看
     view(id) {
-      this.$refs.viewPage.init(id)
+      if (this.$refs.viewPage) {
+        this.$refs.viewPage.init(id)
+      }
     },
     // 单条移除
     remove(row) {

@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /output/
+/file-online-preview/server/src/main/file

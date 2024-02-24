@@ -30,16 +30,11 @@
       <el-form-item label="允许评论" prop="commentFlag">
         <dictionary-radio-group v-model="entityData.commentFlag" code="YesOrNo" />
       </el-form-item>
-      <el-form-item label="附件列表">
-        <attachment-manager ref="attachmentManager" :entity-id="entityData.id" />
-      </el-form-item>
-      <el-form-item label="附件上传">
-        <attachment-uploader
+      <el-form-item label="附件">
+        <AttachmentManagerAndUploader
           entity-type="Notice"
           :entity-id="entityData.id"
           module-code="support"
-          :show-success-files="false"
-          @file-complete="fileComplete"
         />
       </el-form-item>
     </el-form>
@@ -53,13 +48,12 @@
 <script>
 import { modifyMixin } from '@/mixin/modifyMixin.js'
 
-import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
-import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
+import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
 const MODULE_CODE = 'support'
 const ENTITY_TYPE = 'notice'
 export default {
   name: ENTITY_TYPE + '-modify',
-  components: { AttachmentUploader, AttachmentManager },
+  components: { AttachmentManagerAndUploader },
   mixins: [modifyMixin],
   data() {
     return {

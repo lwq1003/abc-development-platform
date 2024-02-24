@@ -52,9 +52,9 @@ public class ${table.controllerName} {
 <#if entityModelPropertyList?? && (entityModelPropertyList?size > 0)>
 <#list entityModelPropertyList as item>
     <#if item.dataType=='ENTITY'>
-        <#if item.code!= entity?uncap_first >
+        <#if item.entityCode!= entity >
     @Autowired
-    private ${item.code?cap_first}Service ${item.code}Service;
+    private ${item.entityCode}Service ${item.entityCode?uncap_first}Service;
         </#if>
     <#elseif item.dataType=='USER_SINGLE'>
          <#if "user"!= entity?uncap_first >

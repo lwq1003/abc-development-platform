@@ -1,8 +1,9 @@
 /**
  * 树页面混入
  */
+import { ContentWrap } from '@/components/abc/ContentWrap'
 export const treeMixin = {
-  components: {},
+  components: { ContentWrap },
   data() {
     return {
       treeData: [],
@@ -14,27 +15,36 @@ export const treeMixin = {
     }
   },
   mounted() {
-    this.initTree()
+    this.init()
   },
   methods: {
     // 初始化树
-    initTree() {
-      this.load()
+    init(id) {
+      this.load(id)
     },
-    load() {
+    load(id) {
       return new Promise((resolve) => {
         this.api.tree().then((res) => {
           this.treeData = res.data
-          // 如没有默认选中节点
-          if (!this.currentId || this.currentId === '') {
-            // 默认设置根节点
-            this.currentId = this.treeData[0].id
-            this.currentName = this.treeData[0].label
-
-            // 设置根节点默认展开
-            this.cacheTreeExpandedKeys.push(this.treeData[0].id)
+          if (id) {
+            this.$refs.tree.setCurrentKey(id)
+            this.parentId = id
+            this.cacheTreeExpandedKeys.push(id)
+            const node = this.$refs.tree.getCurrentNode
             // 手工触发选择节点改变
-            this.$emit('change-selected', this.treeData[0].id, this.treeData[0].label)
+            this.$emit('change-selected', id, node.label)
+          } else {
+            // 如没有默认选中节点
+            if (!this.currentId || this.currentId === '') {
+              // 默认设置根节点
+              this.currentId = this.treeData[0].id
+              this.currentName = this.treeData[0].label
+
+              // 设置根节点默认展开
+              this.cacheTreeExpandedKeys.push(this.treeData[0].id)
+              // 手工触发选择节点改变
+              this.$emit('change-selected', this.treeData[0].id, this.treeData[0].label)
+            }
           }
         })
       })

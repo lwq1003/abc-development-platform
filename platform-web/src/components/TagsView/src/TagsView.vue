@@ -19,6 +19,10 @@ emitter.on('closeCurrentTab', () => {
   closeSelectedTag(unref(selectedTag) as RouteLocationNormalizedLoaded)
 })
 
+emitter.on('closeTab', (view) => {
+  closeSelectedTag(view as RouteLocationNormalizedLoaded)
+})
+
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('tags-view')
@@ -66,7 +70,9 @@ const addTags = () => {
 
 // 关闭选中的tag
 const closeSelectedTag = (view: RouteLocationNormalizedLoaded) => {
-  if (view?.meta?.affix) return
+  if (view?.meta?.affix) {
+    return
+  }
   tagsViewStore.delView(view)
   if (isActive(view)) {
     toLastView()

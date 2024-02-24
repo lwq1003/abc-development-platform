@@ -1,5 +1,6 @@
 package tech.abc.platform.system.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import tech.abc.platform.common.base.BaseEntity;
@@ -96,7 +97,7 @@ public class User extends BaseEntity {
     /**
      * 锁定时间
      */
-    @TableField("lock_time")
+    @TableField(value="lock_time",updateStrategy= FieldStrategy.IGNORED)
     private LocalDateTime lockTime;
 
     /**

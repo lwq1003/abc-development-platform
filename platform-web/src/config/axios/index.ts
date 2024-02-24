@@ -84,7 +84,13 @@ export default {
   // 下载
   download: (option: any) => {
     const link = document.createElement('a')
-    link.href = import.meta.env.VITE_BASE_URL + option.url + '?X-Token=' + getToken()
+    link.href = import.meta.env.VITE_BASE_URL + option.url
+    if (link.href.indexOf('?') != -1) {
+      link.href += '&X-Token=' + getToken()
+    } else {
+      link.href += '?X-Token=' + getToken()
+    }
+
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

@@ -43,6 +43,7 @@
     "echarts-wordcloud": "^2.1.0",
     "element-plus": "2.2.32",
     "intro.js": "^6.0.0",
+    "js-base64": "^3.7.6",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.0",

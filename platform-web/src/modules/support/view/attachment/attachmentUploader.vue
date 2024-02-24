@@ -10,6 +10,7 @@
     @file-complete="fileComplete"
     @file-success="fileSuccess"
     @file-added="fileAdded"
+    @file-error="fileError"
     class="w-full"
   >
     <uploader-drop class="uploader-dragover">
@@ -79,6 +80,18 @@ export default {
       type: String,
       default: '/support/attachment/uploadChunk',
       required: false
+    },
+    mergeChunkApi: {
+      type: String,
+      default: 'this.$api.support.attachment',
+      required: false
+    },
+    appendData: {
+      type: Object,
+      required: false,
+      default() {
+        return {}
+      }
     }
   },
   data() {
@@ -139,7 +152,7 @@ export default {
     },
     fileSuccess(rootFile, file) {
       if (file.chunks.length > 1) {
-        //分块上传
+        //构造文件信息
         const param = {
           identifier: file.uniqueIdentifier,
           filename: file.name,
@@ -147,16 +160,31 @@ export default {
           entityType: this.entityType,
           entityId: this.entityId,
           type: file.fileType,
-          totalSize: file.size
+          totalSize: file.size,
+          ...this.appendData
         }
+
         // 合并文件块
-        this.$api.support.attachment.mergeChunks(param).then(() => {
-          // 移除已上传成功的文件
-          this.$refs.uploader.uploader.removeFile(file)
-        })
+        // eslint-disable-next-line no-eval
+        eval(this.mergeChunkApi)
+          .mergeChunks(param)
+          .then(() => {
+            if (!this.showSuccessFiles) {
+              // 移除已上传成功的文件
+              this.$refs.uploader.uploader.removeFile(file)
+            }
+          })
       } else {
-        // 不分块，移除已上传成功的文件
-        this.$refs.uploader.uploader.removeFile(file)
+        if (!this.showSuccessFiles) {
+          // 不分块，移除已上传成功的文件
+          this.$refs.uploader.uploader.removeFile(file)
+        }
+      }
+    },
+    fileError(rootFile, file, responseData, chunk) {
+      const res = JSON.parse(responseData)
+      if (res && res.message) {
+        this.$message.error(res.message)
       }
     }
   }

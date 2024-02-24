@@ -54,7 +54,7 @@ platform-boot-starter-notification：消息通知，基于netty实现的websocke
 
 #### 接口平台
 
-之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html。
+之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html
 现在，将通用接口平台作为一个模块，整合到新的应用开发平台当中来，由通用接口平台统一对外暴露应用系统的API数据接口，以及推送事件消息。
 之前的的通用接口平台，主要由两个模块组成，一个是platform-cip（cip是common interface platform缩写），即接口平台的主体，另外一个是platform-cip-common，被platform-cip依赖。
 实际上，接口平台的主体，platform-cip，里面包含了三块内容：
@@ -68,8 +68,27 @@ platform-cip-message：消息服务
 platform-cip-manage：平台管理
 4个模块内关系为manage依赖common，api和manage相互独立，但都依赖于manage。
 
+
+#### 文档管理系统
+文档管理系统是基于平台实现的文档库管理应用，可作为企业内部文档库、知识库使用，主要包括以下功能：
+* 文件夹管理：创建、更名、删除、复制、移动、授权；
+* 文档管理：上传、下载、更名、复制、移动、预览、分享；
+* 权限控制：按组织机构和按用户组两种授权模式；
+* 在线预览：无需下载，上百种格式文件在线预览；
+* 收藏夹：支持将文件夹和文档加入收藏、查看和移除；
+* 全文搜索：对文本类、office文档和pdf文档等进行全文搜索；
+
+对应模块是abc-edoc。
+注意该模块相当于原平台启动项目platform-boot-starter-demo，即如需使用文档库相关应用，需启动edoc模块，而不是platform-boot-starter-demo模块。
+同时，文件预览功能通过集成kkfileview3.5版本实现，放在file-online-preview目录下，已与平台做了整合，包括修复部分bug、身份认证控制。
+全文搜索功能需在开发环境中按照elastic search，版本7.6.2。
+
+再次强调，这是一个独立的业务应用。
+
+
+
 ### 如何运行
-以下为简要说明，详细的开发环境搭建手册参见https://blog.csdn.net/seawaving/article/details/134895546。
+以下为简要说明，详细的开发环境搭建手册参见https://blog.csdn.net/seawaving/article/details/134895546
 
 #### 1. 准备工作
 
@@ -113,6 +132,8 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 #### 6 .minio启用说明
 平台对于文件存储除了支持本地磁盘模式外，还实现了minio对象存储组件的集成。如需启用，需安装minio服务端，版本2021-04-22T15-44-28Z（最后一个基于apache 2.0开源协议的版本)，并修改平台配置文件。
 
+
+
 ### 未来规划
 
 客观地说，目前开发平台已经实现了大部分常用常见功能，可以投入使用了。
@@ -124,7 +145,7 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 集成图表组件（已完成）
 集成工作流（常用功能已完成，进度80%，已可用）
 实现可视化表单（常用功能已完成，进度90%，待打磨）
-移动端实现（整合了一个移动端框架，打通了认证，尚未有具体的功能，暂挂器）
+移动端实现（整合了一个移动端框架，打通了认证，尚未有具体的功能，暂挂起）
 自定义查询（未开始）
 实现数据权限（未开始）
 

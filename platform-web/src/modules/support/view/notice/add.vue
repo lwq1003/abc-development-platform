@@ -48,14 +48,12 @@
 
 <script>
 import { addMixin } from '@/mixin/addMixin.js'
-import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
-import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
 import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
 const MODULE_CODE = 'support'
 const ENTITY_TYPE = 'notice'
 export default {
   name: ENTITY_TYPE + '-add',
-  components: { AttachmentUploader, AttachmentManager, AttachmentManagerAndUploader },
+  components: { AttachmentManagerAndUploader },
   mixins: [addMixin],
   data() {
     return {

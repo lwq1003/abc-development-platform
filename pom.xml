@@ -29,6 +29,9 @@
         <module>platform-boot-starter-scheduler</module>
         <module>platform-boot-starter-mail</module>
         <module>platform-boot-starter-notification</module>
+
+        <!--文档管理系统-->
+        <module>abc-edoc</module>
     </modules>
 
     <properties>

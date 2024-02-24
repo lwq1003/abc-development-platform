@@ -258,18 +258,31 @@
                     :page-total="pageTotal"
             />
         </el-card>
+        <#if addViewFlag?? && addViewFlag=="YES">
+         <AddPage ref="addPage" @refresh="refresh" />
+        </#if>
+        <#if modifyViewFlag?? && modifyViewFlag=="YES">
+            <ModifyPage ref="modifyPage" @refresh="refresh" />
+        </#if>
 
-        <AddPage ref="addPage" @refresh="refresh" />
-        <ModifyPage ref="modifyPage" @refresh="refresh" />
-        <ViewPage ref="viewPage" />
+        <#if viewViewFlag?? && viewViewFlag=="YES">
+            <ViewPage ref="viewPage" />
+        </#if>
     </ContentWrap>
 </template>
 
 <script lang="ts">
     import {listMixin} from '@/mixin/listMixin.js'
+    <#if addViewFlag?? && addViewFlag=="YES">
     import AddPage from './add.vue'
+    </#if>
+    <#if modifyViewFlag?? && modifyViewFlag=="YES">
     import ModifyPage from './modify.vue'
+    </#if>
+    <#if viewViewFlag?? && viewViewFlag=="YES">
     import ViewPage from './view.vue'
+    </#if>
+
     <#if existFormatMethod=="YES">
     import { getFormatMethod } from '@/utils/TableColumnFormatter.js'
     </#if>
@@ -286,9 +299,15 @@
     </#if>
         mixins: [listMixin],
         components:{
+            <#if addViewFlag?? && addViewFlag=="YES">
             AddPage,
+            </#if>
+            <#if modifyViewFlag?? && modifyViewFlag=="YES">
             ModifyPage,
+            </#if>
+            <#if viewViewFlag?? && viewViewFlag=="YES">
             ViewPage,
+            </#if>
             <#list queryConditionList as item>
             <#if item.dataType=="ENTITY">
             ${item.entityCode}Reference,

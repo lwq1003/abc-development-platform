@@ -44,5 +44,12 @@ public interface OrganizationService extends BaseService<Organization> {
      */
      String getFullName(String id);
 
+    /**
+     * 获取当前组织机构所有上级（包括自身）
+     * @param organizationId 组织机构标识
+     * @return 组织机构列表
+     */
+    List<String> getParentId(String organizationId);
+
 }
 

@@ -46,5 +46,19 @@ public class FileInfoVO extends BaseVO {
      */
     private String entityId;
 
+    // 附加文档标识、版本号、版本标记，用于文档更新时合并文件块处理
+    /**
+     * 文档标识
+     */
+    private String documentId;
+    /**
+     * 文档版本
+     */
+    private String documentVersion;
+
+    /**
+     * 版本标记
+     */
+    private String versionTag;
 
 }

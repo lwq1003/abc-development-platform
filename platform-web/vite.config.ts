@@ -154,6 +154,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '/businessflow': {
           target: env.VITE_BASE_URL,
           changeOrigin: true
+        },
+        //  文档管理系统
+        '/edoc': {
+          target: env.VITE_BASE_URL,
+          changeOrigin: true
         }
         // ,
         // // 选项写法

@@ -63,6 +63,9 @@ import ECharts from "vue-echarts"
 import FormCreate from '@form-create/element-ui'
 import FcDesigner from '@form-create/designer'
 
+
+import { Base64 } from 'js-base64'
+
 // 自定义组件
 
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
@@ -88,6 +91,8 @@ FormCreate.component(AttachmentUploader)
 FormCreate.component(AttachmentManager)
 FormCreate.component(AttachmentViewer)
 FormCreate.component(AttachmentManagerAndUploader)
+
+
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App)
@@ -109,9 +114,6 @@ const setupAll = async () => {
   app.use(FormCreate)
   app.use(FcDesigner)
 
-
-
-
   // 全量注册element-plus图标
   app.config.globalProperties.$icons = []
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -122,6 +124,7 @@ const setupAll = async () => {
 
   // 挂载全局变量，兼容2.0习惯写法
   app.config.globalProperties.$constant = constant
+
   app.config.globalProperties.$api = api
 
   // 日期函数
@@ -133,6 +136,8 @@ const setupAll = async () => {
   // web socket
   app.config.globalProperties.$webSocket = webSocket
 
+  // base64工具类
+   app.config.globalProperties.$base64Util = Base64
 
   // 文件上传
   app.use(uploader)

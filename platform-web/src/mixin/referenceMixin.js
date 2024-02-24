@@ -153,7 +153,9 @@ export const referenceMixin = {
     },
     // 查看
     view(id) {
-      this.$refs.viewPage.view(id)
+      if (this.$refs.viewPage) {
+        this.$refs.viewPage.init(id)
+      }
     },
     // 刷新
     refresh() {

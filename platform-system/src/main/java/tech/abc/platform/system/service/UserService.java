@@ -115,4 +115,12 @@ public interface UserService extends BaseService<User> {
      * @param permissionCode 权限编码
      */
     void checkPermission(String id, String permissionCode);
+
+
+    /**
+     * 获取姓名
+     * @param id 用户标识
+     * @return {@link String} 姓名
+     */
+    String getNameById(String id);
 }

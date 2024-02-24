@@ -353,6 +353,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         }
     }
 
+    @Override
+    public String getNameById(String id) {
+        User user = query(id);
+        return user.getName();
+    }
+
 
     /**
      * 安全认证校验

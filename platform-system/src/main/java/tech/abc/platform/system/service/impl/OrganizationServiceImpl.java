@@ -21,6 +21,7 @@ import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,6 +168,23 @@ public class OrganizationServiceImpl extends BaseServiceImpl<OrganizationMapper,
         }
         while (!currentOrganizationId.equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID));
         return organizationFullName.toString();
+    }
+
+    @Override
+    public List<String> getParentId(String organizationId) {
+        List<String> list=new ArrayList<>(10);
+
+        Organization entity=null;
+        do {
+            //获取当前实体
+            entity=getEntity(organizationId);
+            //添加到集合
+            list.add(organizationId);
+            //将当前实体父标识设置为实体标识
+            organizationId=entity.getOrganization();
+        }
+        while (!TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID.equals(organizationId));
+        return list;
     }
 
 

@@ -122,6 +122,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     public Map<String, String> getNameMap(List<String> idList) {
         Map<String, String> result = new HashMap<>(5);
+        <#if mainPropertyCode??>
         if (CollectionUtils.isNotEmpty(idList)) {
             List<${entity}> list = this.lambdaQuery().in(${entity}::getId, idList).list();
             if (CollectionUtils.isNotEmpty(list)) {
@@ -130,13 +131,16 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
                 });
             }
         }
+        </#if>
         return result;
     }
 
     @Override
     protected void copyPropertyHandle(${entity} entity, String... value) {
+        <#if mainPropertyCode??>
         // 主属性后附加“副本”用于区分
         entity.set${mainPropertyCode?cap_first} (entity.get${mainPropertyCode?cap_first}() + " 副本");
+        </#if>
     }
 
 }
