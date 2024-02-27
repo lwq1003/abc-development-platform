@@ -29,7 +29,7 @@
         <module>platform-boot-starter-scheduler</module>
         <module>platform-boot-starter-mail</module>
         <module>platform-boot-starter-notification</module>
-
+        <module>platform-boot-starter-elasticsearch</module>
 
     </modules>
 
@@ -169,6 +169,13 @@
             <dependency>
                 <groupId>tech.abc</groupId>
                 <artifactId>platform-boot-starter-notification</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <!-- 全文搜索-->
+            <dependency>
+                <groupId>tech.abc</groupId>
+                <artifactId>platform-boot-starter-elasticsearch</artifactId>
                 <version>${platform.version}</version>
             </dependency>
 
