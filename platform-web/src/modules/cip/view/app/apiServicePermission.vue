@@ -180,7 +180,7 @@ export default {
       if (!this.checkSelected()) {
         return
       }
-      this.$confirm('是否授权?', '确认', {
+      this.$confirm('是否取消授权?', '确认', {
         type: 'warning'
       })
         .then(() => {

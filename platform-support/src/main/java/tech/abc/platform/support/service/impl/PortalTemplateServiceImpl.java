@@ -68,23 +68,6 @@ public class PortalTemplateServiceImpl extends BaseServiceImpl<PortalTemplateMap
     }
 
 
-    /**
-     * 数据不为空检查，检查通过后返回对象
-     *
-     * @param id
-     * @return
-     */
-    public PortalTemplate getEntity(String id) {
-        // 标识非空判断
-        if (id == null) {
-            throw new CustomException(CommonException.ID_EMPTY);
-        }
-        // 对象非空判断
-        PortalTemplate entity = query(id);
-        if (entity == null) {
-            throw new CustomException(CommonException.NOT_EXIST);
-        }
-        return entity;
-    }
+
 
 }

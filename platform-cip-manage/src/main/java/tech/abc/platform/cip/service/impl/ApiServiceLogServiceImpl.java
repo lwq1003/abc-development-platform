@@ -9,10 +9,11 @@ import tech.abc.platform.cip.entity.ApiServiceLog;
 import tech.abc.platform.cip.mapper.ApiServiceLogMapper;
 import tech.abc.platform.cip.service.ApiServiceLogService;
 import tech.abc.platform.common.base.BaseServiceImpl;
-import tech.abc.platform.common.utils.DateUtils;
+import tech.abc.platform.common.constant.DateConstant;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class ApiServiceLogServiceImpl extends BaseServiceImpl<ApiServiceLogMappe
         ApiServiceLog apiServiceLog = new ApiServiceLog();
         apiServiceLog.setAppCode(request.getAppCode());
         apiServiceLog.setServiceCode(request.getServiceCode());
-        apiServiceLog.setRequestTime(DateUtils.toLocalDateTime(request.getRequestTime()));
+        apiServiceLog.setRequestTime(LocalDateTime.parse(request.getRequestTime(), DateTimeFormatter.ofPattern(DateConstant.DATE_FORMAT_FULL)));
         apiServiceLog.setReceiveTime(receiveTime);
         apiServiceLog.setRequestBusinessData(request.getData());
         apiServiceLog.setExecuteResult(response.getExecuteResult());

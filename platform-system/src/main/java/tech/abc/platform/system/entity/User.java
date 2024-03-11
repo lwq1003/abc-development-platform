@@ -106,4 +106,43 @@ public class User extends BaseEntity {
     @TableField("order_no")
     private String orderNo;
 
+
+    // region 扩展常用属性
+    /**
+     * 模块标识
+     */
+    @TableField(exist = false)
+    private String moduleId;
+
+    /**
+     * 部门标识
+     */
+    @TableField(exist = false)
+    private String departmentId;
+
+    /**
+     * 公司标识
+     */
+    @TableField(exist = false)
+    private String companyId;
+    /**
+     * 集团标识
+     */
+    @TableField(exist = false)
+    private String groupId;
+    /**
+     * 组织机构名称
+     */
+    @TableField(exist = false)
+    private String organizationName;
+    /**
+     * 组织机构全称（带路径）
+     */
+    @TableField(exist = false)
+    private String organizationFullName;
+
+    // endregion
+
+
+
 }

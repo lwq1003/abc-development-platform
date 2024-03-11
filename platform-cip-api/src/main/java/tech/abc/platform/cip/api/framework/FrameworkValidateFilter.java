@@ -12,12 +12,12 @@ import tech.abc.platform.cip.entity.App;
 import tech.abc.platform.cip.service.ApiServicePermissionService;
 import tech.abc.platform.cip.service.ApiServiceService;
 import tech.abc.platform.cip.service.AppService;
+import tech.abc.platform.common.constant.DateConstant;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.exception.CustomException;
-import tech.abc.platform.common.utils.DateUtils;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.TreeMap;
 
@@ -137,7 +137,7 @@ public class FrameworkValidateFilter implements ApiFilter {
     private void validateTimeLimitation(String requestTimeString) {
 
         // 转换时间格式
-        LocalDateTime requestTime = DateUtils.toLocalDateTime(requestTimeString);
+        LocalDateTime requestTime = LocalDateTime.parse(requestTimeString, DateTimeFormatter.ofPattern(DateConstant.DATE_FORMAT_FULL));
         // 获取当前时间
         LocalDateTime now = LocalDateTime.now();
         // 获取时间差值

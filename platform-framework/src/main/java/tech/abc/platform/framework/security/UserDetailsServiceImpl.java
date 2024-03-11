@@ -61,74 +61,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 权限置空
         List<MyGrantedAuthority> grantedAuthorities = new ArrayList<>();
         userDetails.setGrantedAuthority(grantedAuthorities);
-        userDetails.setUserId(userId);
+
         // 设置账号是否已停用
         userDetails.setEnabled(!user.getStatus().equals(UserStatusEnum.DEAD.toString()));
         // 设置账号是否已锁定
         userDetails.setAccountNonLocked(!user.getStatus().equals(UserStatusEnum.LOCK.toString()));
 
-        // 填充用户对象常用属性
-        fillMyUserDetails(userDetails, user);
+
         return userDetails;
     }
 
-    /**
-     * 填充用户对象常用属性
-     */
-    private void fillMyUserDetails(MyUserDetails userDetails, User user) {
-        // TODO：基于JWT令牌模式，每次请求都会填充如下信息，进行大量数据库查询操作，性能低，考虑使用redis缓存
 
-
-        userDetails.setUserId(user.getId());
-        userDetails.setName(user.getName());
-        userDetails.setOrganizationId(user.getOrganization());
-        userDetails.setOrganizationName(organizationService.getById(user.getOrganization()).getName());
-        // 逐级查找组织机构类型
-        List<Organization> list = organizationService.list();
-        String currentOrganizationId = user.getOrganization();
-        StringBuilder organizationFullName = new StringBuilder();
-
-        do {
-            // 取当前组织机构
-            Organization currentOrganization = null;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getId().equals(currentOrganizationId)) {
-                    currentOrganization = list.get(i);
-                    break;
-                }
-            }
-            organizationFullName.insert(0, currentOrganization.getName()).insert(0, "/");
-            String organizationType = currentOrganization.getType();
-            if (StringUtils.isNotBlank(organizationType)) {
-                OrganizationTypeEnum organizationTypeEnum = OrganizationTypeEnum.valueOf(organizationType);
-                switch (organizationTypeEnum) {
-                    case MODULE:
-                        userDetails.setModuleId(currentOrganizationId);
-                        break;
-                    case DEPARTMENT:
-                        // 存在多级部门时，只取直接上级部门，忽略高层级部门
-                        if (StringUtils.isBlank(userDetails.getDepartmentId())) {
-                            userDetails.setDepartmentId(currentOrganizationId);
-                        }
-                        break;
-                    case COMPANY:
-                        userDetails.setCompanyId(currentOrganizationId);
-                        break;
-                    case GROUP:
-                        userDetails.setGroupId(currentOrganizationId);
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-            // 指向上级
-            currentOrganizationId = currentOrganization.getOrganization();
-        }
-        while (!currentOrganizationId.equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID));
-
-        userDetails.setOrganizationFullName(organizationFullName.toString());
-    }
 
 
 }

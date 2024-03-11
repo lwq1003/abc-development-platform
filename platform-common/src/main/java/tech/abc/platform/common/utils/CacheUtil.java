@@ -46,7 +46,7 @@ public class CacheUtil {
      * @param timeout  时间
      * @param timeUnit 时间单位
      */
-    public <T> void set(String key, T value, Integer timeout, TimeUnit timeUnit) {
+    public <T> void set(String key, T value, long timeout, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
 

@@ -341,13 +341,18 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             list.addAll(workflowNodeConfigService.list(queryWrapper));
         }
 
+        handleEndEvent(outgoing, endNodeId, containEndEvent, list);
+        return list;
+    }
+
+    private  void handleEndEvent(Collection<SequenceFlow> outgoing, String endNodeId, boolean containEndEvent, List<WorkflowNodeConfig> list) {
         //判断是否包括结束环节
         List<String> endIdList = outgoing.stream().filter(x -> x.getTarget().getElementType().getTypeName()
                 .equals(WorkFlowConstant.END_EVENT_TYPE_NAME))
                 .map(x -> x.getTarget().getId())
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(endIdList)) {
-            endNodeId=endIdList.get(0);
+            endNodeId =endIdList.get(0);
             containEndEvent = true;
         }
         // 如包含，追加结束环节
@@ -358,7 +363,6 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
             endConfig.setName("流程结束");
             list.add(endConfig);
         }
-        return list;
     }
 
     /**

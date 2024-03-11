@@ -15,10 +15,10 @@
 
 ### 后端架构
 
-到目前为止，整个工程项目，后端共计18个模块，架构图和依赖关系如下图所示：
+到目前为止，整个工程项目，后端共计19个模块，架构图和依赖关系如下图所示：
 ![输入图片说明](resource/2.jpg)
 
-这18个模块分成三类，一类是平台内核模块，命名规则是platform+模块功能名称，图中用蓝色标示；一类是能力扩展模块，命名规则是platform-boot-starter+模块功能名称，图中用绿色标示；剩下的一类是接口平台，命名规则是cip
+模块分成三类，一类是平台内核模块，命名规则是platform+模块功能名称，图中用蓝色标示；一类是能力扩展模块，命名规则是platform-boot-starter+模块功能名称，图中用绿色标示；剩下的一类是接口平台，命名规则是cip
 +模块功能名称，图中用紫色标示，相对平台独立，但又作为平台的重要组成部分。
 
 #### 平台内核模块
@@ -38,18 +38,19 @@ platform-workflow集成了工作流组件activiti的分支Camunda，实现了流
 platform-businessflow是业务流程的集中存储模块，实现了流程导航功能和请求申请示例流程。
 
 
-platform-boot-starter：平台启动项目，整合平台基础功能，类似于spring-boot-starter，业务系统引入该包进行依赖。该模块自身没有实体与服务，而是汇总整合，把platform-framework引用进来，同时进行配置。配置分两方面，一方面是做一个配置类，加一些注解（如：@EnableRetry、@ServletComponentScan、@EnableTransactionManagement），使用开发平台实现的业务系统，就不需要在启动类上重复添加这些注解；另一方面，是位于yml配置文件中的配置信息，也分为两部分，一部分是三方组件自身的，如数据源、连接池、redis、quartz、logback，另一方面是自定义的系统参数，如用户默认密码、导出excel数据的批次最大行数量。
+platform-boot-starter是平台启动项目，整合平台基础功能，类似于spring-boot-starter，业务系统引入该包进行依赖。该模块自身没有实体与服务，而是汇总整合，把platform-framework
+引用进来，同时进行配置。配置分两方面，一方面是做一个配置类，加一些注解（如：@EnableRetry、@ServletComponentScan、@EnableTransactionManagement），使用开发平台实现的业务系统，就不需要在启动类上重复添加这些注解；另一方面，是位于yml配置文件中的配置信息，也分为两部分，一部分是三方组件自身的，如数据源、连接池、redis、quartz、logback，另一方面是自定义的系统参数，如用户默认密码、导出excel数据的批次最大行数量。
 
-platform-boot-starter-demo：示例项目，实际是模拟业务系统如何使用开发平台，用于平台自身功能开发与调试。
+platform-boot-starter-demo是示例项目，实际是模拟业务系统如何使用开发平台，用于平台自身功能开发与调试。
 
 #### 能力扩展模块
 
-绿色标示的四个模块，比较好理解，通常是对第三方组件的封装与整合，依赖于公共基础模块platform-common，这些模块可以不断扩展的，业务系统按需引入即可，这样就实现了核心模块必选、扩展模块可选的目的。
-platform-boot-starter-mail：邮件，集成springmail组件，实现邮件的发送功能封装
-platform-boot-starter-oss： 对象存储，用于文件存储封装，底层可基于多种模式，如本地磁盘、对象存储系统等
-platform-boot-starter-scheduler：任务调度，集成quartz组件，实现任务调度可视化配置
-platform-boot-starter-notification：消息通知，基于netty实现的websocket，用于系统内置消息
-
+绿色标示的五个模块，比较好理解，通常是对第三方组件的封装与整合，依赖于公共基础模块platform-common，这些模块可以不断扩展的，业务系统按需引入即可，这样就实现了核心模块必选、扩展模块可选的目的。
+* platform-boot-starter-mail：邮件，集成springmail组件，实现邮件的发送功能封装
+* platform-boot-starter-oss： 对象存储，用于文件存储封装，底层可基于多种模式，如本地磁盘、对象存储系统等
+* platform-boot-starter-scheduler：任务调度，集成quartz组件，实现任务调度可视化配置
+* platform-boot-starter-notification：消息通知，基于netty实现的websocket，用于系统内置消息
+* platform-boot-starter-elasticsearch：全文搜索，集成elasticsearch组件
 对于扩展模块，平台的核心模块实际也可能会用到，例如platform-support中的附件功能，就会用到platform-boot-starter-oss；platform-system中的自动解锁用户功能，就会用到platform-boot-starter-scheduler。
 
 #### 接口平台
@@ -67,10 +68,6 @@ platform-cip-api：API服务
 platform-cip-message：消息服务
 platform-cip-manage：平台管理
 4个模块内关系为manage依赖common，api和manage相互独立，但都依赖于manage。
-
-
-
-
 
 
 ### 如何运行

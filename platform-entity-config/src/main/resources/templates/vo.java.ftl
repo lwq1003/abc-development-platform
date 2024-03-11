@@ -1,7 +1,7 @@
 package ${package.Parent}.vo;
 
 
-import ${superVoClass};
+import tech.abc.platform.common.base.${baseVO};
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 */
 <#if voLombokModel>
 @Data
-<#if superVoClass??>
+<#if baseVO??>
 @EqualsAndHashCode(callSuper = true)
 <#else>
 @EqualsAndHashCode(callSuper = false)
@@ -27,8 +27,8 @@ import lombok.experimental.Accessors;
 <#--启用链式编程-->
 @Accessors(chain = true)
 </#if>
-<#if superVoClass??>
-public class ${entity}VO extends BaseVO {
+<#if baseVO??>
+public class ${entity}VO extends ${baseVO} {
 <#else>
 public class ${entity} implements Serializable {
 </#if>

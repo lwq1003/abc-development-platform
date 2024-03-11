@@ -5,18 +5,18 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 视图对象 基类
+ * 标识模型 视图对象
  *
  * @author wqliu
  * @date 2023-03-06
  */
 @Data
-public class BaseVO extends BaseMapVO {
+public class BaseIdVO {
 
 
     /**
-     * 删除标志
+     * 标识
      */
+    private String id;
 
-    private String deleteFlag;
 }

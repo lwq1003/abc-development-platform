@@ -33,8 +33,10 @@ import tech.abc.platform.entityconfig.constant.EntityConfigConstant;
 import tech.abc.platform.entityconfig.entity.*;
 import tech.abc.platform.entityconfig.enums.EntityModelPropertyTypeEnum;
 import tech.abc.platform.entityconfig.enums.EntityViewTypeEnum;
+import tech.abc.platform.entityconfig.enums.ModelCodeEnum;
 import tech.abc.platform.entityconfig.enums.ViewButtonTypeEnum;
 import tech.abc.platform.entityconfig.exception.EntityException;
+import tech.abc.platform.entityconfig.exception.EntityModelException;
 import tech.abc.platform.entityconfig.service.*;
 import tech.abc.platform.system.entity.Module;
 import tech.abc.platform.system.service.ModuleService;
@@ -112,7 +114,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         for (EntityModel entityModel : entityModelList) {
             // 创建代码生成器对象
             AutoGenerator codeGenerator = getCodegGenerator();
-
 
             // 获取模块配置信息
             Module module = moduleService.query(entity.getModule());
@@ -396,7 +397,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 注入自定义变量
         // vo是否使用lombok模型
         customKeyValue.put("voLombokModel", true);
-        customKeyValue.put("superVoClass", BaseVO.class.getName());
 
 
         // 自定义视图对象模板
@@ -804,6 +804,45 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 公共变量处理
         // 注入应用编码
         customKeyValue.put("appCode", appCode);
+        //设置实体和视图模型基类变量
+        String baseEntity=StringUtils.EMPTY;
+        String baseVO=StringUtils.EMPTY;
+        EntityModel baseModel=entityModelService.getById(entityModel.getParentModel());
+        String baseModelCode=baseModel.getCode();
+        ModelCodeEnum modelCodeEnum = EnumUtils.getEnum(ModelCodeEnum.class, baseModelCode);
+        if(modelCodeEnum==null){
+            throw new CustomException(EntityModelException.PARENT_MODE_NOT_CONFIG, baseModelCode);
+        }
+        switch (modelCodeEnum) {
+            case ID_MODEL:
+                // 标识模型
+                baseEntity="BaseIdEntity";
+                baseVO="BaseIdVO";
+                break;
+            case MAP_MODEL:
+                // 映射模型
+                baseEntity="BaseMapEntity";
+                baseVO="BaseMapVO";
+                break;
+            case BUSINESS_MODEL:
+                // 业务模型
+                baseEntity="BaseEntity";
+                baseVO="BaseVO";
+                break;
+            case FLOW_BILL:
+                // 流程表单
+                baseEntity="BaseFlowBill";
+                baseVO="BaseFlowBillVO";
+                break;
+            default:
+                break;
+
+        }
+        // 注入实体基类
+        customKeyValue.put("baseEntity", baseEntity);
+        // 注入视图对象基类
+        customKeyValue.put("baseVO", baseVO);
+
 
         // 设置视图文件夹名称
         viewFolderName = "0view/" + moduleCode + "/" + StringUtils.uncapitalize(entity.getCode());

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 </#if>
 import java.time.LocalDateTime;
+import tech.abc.platform.common.base.${baseEntity};
 
 /**
  * ${table.comment!} 实体类
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
  */
 <#if entityLombokModel>
 @Data
-    <#if superEntityClass??>
+    <#if baseEntity??>
 @EqualsAndHashCode(callSuper = true)
     <#else>
 @EqualsAndHashCode(callSuper = false)
@@ -30,8 +31,8 @@ import java.time.LocalDateTime;
 <#if table.convert>
 @TableName("${table.name}")
 </#if>
-<#if superEntityClass??>
-public class ${entity} extends ${superEntityClass} {
+<#if baseEntity??>
+public class ${entity} extends ${baseEntity} {
 <#else>
 public class ${entity} implements Serializable {
 </#if>

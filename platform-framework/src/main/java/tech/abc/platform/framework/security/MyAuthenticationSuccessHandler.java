@@ -1,8 +1,10 @@
 package tech.abc.platform.framework.security;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,8 +22,10 @@ import tech.abc.platform.common.utils.JwtUtil;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.framework.config.PlatformConfig;
+import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.entity.PermissionItem;
 import tech.abc.platform.system.entity.User;
+import tech.abc.platform.system.enums.OrganizationTypeEnum;
 import tech.abc.platform.system.enums.PermissionTypeEnum;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
@@ -34,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -115,12 +120,76 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             List<MenuTreeVO> moduleList = getMenu(permissionList);
             userVO.setMenuPermission(moduleList);
         }
+        // 用户常用属性放入redis缓存
+        fillUserProperty(user);
+        cacheUser(user);
+
         // 构建返回
         ResponseEntity<Result> result = ResultUtil.success(userVO, "登录成功");
         ResultUtil.returnJsonToFront(response, result);
 
     }
 
+    /**
+     * 填充用户属性
+     * @param user 用户
+     */
+    private void fillUserProperty(User user) {
+        // 填充属性
+        user.setOrganizationName(organizationService.getById(user.getOrganization()).getName());
+        // 逐级查找组织机构类型
+        List<Organization> list = organizationService.list();
+        String currentOrganizationId = user.getOrganization();
+        StringBuilder organizationFullName = new StringBuilder();
+
+        do {
+            // 取当前组织机构
+            Organization currentOrganization = null;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getId().equals(currentOrganizationId)) {
+                    currentOrganization = list.get(i);
+                    break;
+                }
+            }
+            organizationFullName.insert(0, currentOrganization.getName()).insert(0, "/");
+            String organizationType = currentOrganization.getType();
+            if (StringUtils.isNotBlank(organizationType)) {
+                OrganizationTypeEnum organizationTypeEnum = OrganizationTypeEnum.valueOf(organizationType);
+                switch (organizationTypeEnum) {
+                    case MODULE:
+                        user.setModuleId(currentOrganizationId);
+                        break;
+                    case DEPARTMENT:
+                        // 存在多级部门时，只取直接上级部门，忽略高层级部门
+                        if (StringUtils.isBlank(user.getDepartmentId())) {
+                            user.setDepartmentId(currentOrganizationId);
+                        }
+                        break;
+                    case COMPANY:
+                        user.setCompanyId(currentOrganizationId);
+                        break;
+                    case GROUP:
+                        user.setGroupId(currentOrganizationId);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            // 指向上级
+            currentOrganizationId = currentOrganization.getOrganization();
+        }
+        while (!currentOrganizationId.equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID));
+        user.setOrganizationFullName(organizationFullName.toString());
+    }
+
+    /**
+     * 缓存用户
+     * @param user 用户
+     */
+    private void cacheUser(User user) {
+        cacheUtil.set(user.getAccount(), JSON.toJSONString(user),platformConfig.getSystem().getTokenValidSpan() * 60, TimeUnit.SECONDS);
+    }
 
     /**
      * 获取菜单

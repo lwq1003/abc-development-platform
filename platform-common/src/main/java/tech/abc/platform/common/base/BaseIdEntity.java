@@ -7,18 +7,18 @@ import java.time.LocalDateTime;
 
 
 /**
- * 实体 基类
+ * 标识模型
  *
  * @author wqliu
  * @date 2023-03-06
  */
 @Data
-public class BaseEntity extends BaseMapEntity {
-
+public class BaseIdEntity {
     /**
-     * 逻辑删除
+     * 标识
      */
-    @TableField(value = "delete_flag", fill = FieldFill.INSERT)
-    @TableLogic
-    protected String deleteFlag;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private String id;
+
+
 }

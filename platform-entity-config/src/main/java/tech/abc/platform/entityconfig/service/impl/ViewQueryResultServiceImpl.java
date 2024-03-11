@@ -178,6 +178,7 @@ public class ViewQueryResultServiceImpl extends BaseServiceImpl<ViewQueryResultM
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public void clear(String viewId) {
         QueryWrapper<ViewQueryResult> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(ViewQueryResult::getView, viewId);

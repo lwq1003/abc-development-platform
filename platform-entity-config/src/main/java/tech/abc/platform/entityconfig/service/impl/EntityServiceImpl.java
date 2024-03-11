@@ -131,6 +131,7 @@ public class EntityServiceImpl extends BaseServiceImpl<EntityMapper, Entity> imp
         entity.setName(entity.getName() + " 副本");
     }
 
+    @Override
     protected void afterAddByCopy(Entity source, Entity entity) {
         String sourceId = source.getId();
         String id = entity.getId();

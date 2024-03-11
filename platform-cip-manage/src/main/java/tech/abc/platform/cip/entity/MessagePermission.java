@@ -8,6 +8,8 @@ import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseMapEntity;
+
 import java.time.LocalDateTime;
 
 /**
@@ -21,7 +23,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("cip_message_permission")
-public class MessagePermission extends BaseEntity {
+public class MessagePermission extends BaseMapEntity {
 
     /**
      * 应用

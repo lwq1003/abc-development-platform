@@ -1,6 +1,7 @@
 package tech.abc.platform.cip.vo;
 
 
+import tech.abc.platform.common.base.BaseMapVO;
 import tech.abc.platform.common.base.BaseVO;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
@@ -18,7 +19,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class MessagePermissionVO extends BaseVO {
+public class MessagePermissionVO extends BaseMapVO {
     /**
     * 应用
     */

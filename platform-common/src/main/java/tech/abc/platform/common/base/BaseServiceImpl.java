@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author wqliu
  */
-public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity>
+public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
         extends ServiceImpl<M, T> implements BaseService<T> {
 
     @Autowired
@@ -118,7 +118,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseEntity>
             newEntity.setUpdateId(null);
             newEntity.setUpdateTime(null);
             newEntity.setVersion(1);
-            newEntity.setDeleteFlag(null);
+
             // 拷贝属性处理
             copyPropertyHandle(newEntity, value);
 

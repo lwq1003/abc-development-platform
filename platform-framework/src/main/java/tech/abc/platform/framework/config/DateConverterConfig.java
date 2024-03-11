@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
+import tech.abc.platform.common.constant.DateConstant;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ import java.time.format.DateTimeFormatter;
 public class DateConverterConfig {
 
     private static final DateTimeFormatter DATETIME_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter.ofPattern(DateConstant.DATE_FORMAT_FULL);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 

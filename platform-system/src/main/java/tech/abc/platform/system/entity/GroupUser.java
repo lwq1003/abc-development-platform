@@ -6,6 +6,7 @@ import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseMapEntity;
 
 
 /**
@@ -18,7 +19,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("sys_group_user")
-public class GroupUser extends BaseEntity {
+public class GroupUser extends BaseMapEntity {
 
 
     /**

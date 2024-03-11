@@ -24,21 +24,8 @@ public class MyUserDetails implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
-    // 用户属性
 
-    private String userId;
-    private String organizationId;
-    private String organizationName;
-    private String name;
-    private String moduleId;
-    private String departmentId;
-    private String companyId;
-    private String groupId;
-    private String parkId;
-    /**
-     * 组织机构全称（带路径）
-     */
-    private String organizationFullName;
+
 
 
     @Override

@@ -113,55 +113,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
     server: {
       port: 4000,
-      proxy: {
-        //  系统管理模块
-        '/system': {
+      proxy: {        
+        // 选项写法
+        '/base': {
           target: env.VITE_BASE_URL,
-          changeOrigin: true
-
-        },
-        //  实体配置模块
-        '/entityconfig': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
-        },
-        //  接口平台模块
-        '/cip': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
-        },
-        //  业务支撑模块
-        '/support': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
-        },
-        //  任务调度模块
-        '/scheduler': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
-        },
-        //  系统通知模块
-        '/notification': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
-        },
-        //  工作流模块
-        '/workflow': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
-        },
-        //  业务流程模块
-        '/businessflow': {
-          target: env.VITE_BASE_URL,
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/base/, '')
         }
-        // ,
-        // // 选项写法
-        // '/my-api': {
-        //   target: env.VITE_BASE_URL,
-        //   changeOrigin: true,
-        //   rewrite: path => path.replace(/^\/my-api/, '')
-        // }
       },
       hmr: {
         overlay: false

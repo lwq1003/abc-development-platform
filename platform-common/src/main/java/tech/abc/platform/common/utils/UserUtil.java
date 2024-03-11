@@ -1,5 +1,8 @@
 package tech.abc.platform.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import tech.abc.platform.common.entity.MyGrantedAuthority;
 import tech.abc.platform.common.entity.MyUserDetails;
 import tech.abc.platform.common.exception.SessionExpiredException;
@@ -23,22 +26,32 @@ public final class UserUtil {
     /**
      * 获取当前用户
      */
-    public static MyUserDetails getCurrentUser() {
+    public static JSONObject getCurrentUser() {
+        // 从SpringSecurity中获取当前用户
         MyUserDetails myUserDetails = null;
-
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principal instanceof UserDetails) {
                 myUserDetails = (MyUserDetails) principal;
             } else {
-                // 获取到为匿名用户时，同样抛出异常
+                // 获取到为匿名用户时，抛出异常
                 throw new SessionExpiredException("会话失效");
             }
         } catch (Exception e) {
             // 未获取到凭证,抛出会话超时异常
             throw new SessionExpiredException("会话失效");
         }
-        return myUserDetails;
+        // 获取账号
+        String account=myUserDetails.getUsername();
+        // 从缓存中获取用户
+        CacheUtil cacheUtil=SpringUtil.getBean(CacheUtil.class);
+        String userJson=cacheUtil.get(account);
+        if(StringUtils.isNotEmpty(userJson)){
+            return JSON.parseObject(userJson);
+        }else{
+            // 缓存无记录,抛出会话超时异常
+            throw new SessionExpiredException("会话失效");
+        }
 
     }
 
@@ -46,125 +59,74 @@ public final class UserUtil {
      * 获取用户id
      */
     public static String getId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getUserId();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("id");
     }
 
     /**
      * 获取账号
      */
     public static String getAccount() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getUsername();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("account");
     }
 
     /**
      * 获取用户姓名
      */
     public static String getName() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getName();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("name");
     }
 
     /**
      * 获取用户所在组织机构标识
      */
     public static String getOrganizationId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getOrganizationId();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("organization");
     }
 
     /**
      * 获取用户所在组织机构名称
      */
     public static String getOrganizationName() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getOrganizationName();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("organizationName");
     }
 
 
     /**
-     * 获取用户所在模块/工序ID
+     * 获取用户所在模块标识
      */
     public static String getModuleId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getModuleId();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("moduleId");
     }
 
     /**
-     * 获取用户所在部门ID
+     * 获取用户所在部门标识
      * 如有多级部门，只取直接上级部门
      */
     public static String getDepartmentId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getDepartmentId();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("departmentId");
     }
 
     /**
-     * 获取用户所在公司ID
+     * 获取用户所在公司标识
      */
     public static String getCompanyId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getCompanyId();
-        }
-        return "";
+        JSONObject user = getCurrentUser();
+        return user.getString("companyId");
     }
 
     /**
-     * 获取用户所在集团
+     * 获取用户所在集团标识
      */
     public static String getGroupId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getGroupId();
-        }
-        return "";
-    }
-
-    /**
-     * 获取用户所在园区
-     */
-    public static String getParkId() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            return myUserDetails.getParkId();
-        }
-        return "";
-    }
-
-    /**
-     * 获取用户权限
-     */
-    public static List<MyGrantedAuthority> getGrantedAuthority() {
-        MyUserDetails myUserDetails = getCurrentUser();
-        if (myUserDetails != null) {
-            if (null != myUserDetails.getGrantedAuthority()) {
-                return (List<MyGrantedAuthority>) myUserDetails.getGrantedAuthority();
-            }
-        }
-        return null;
+        JSONObject user = getCurrentUser();
+        return user.getString("groupId");
     }
 
 
