@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
  * 处理web socket握手
  *
  * @author wqliu
- * @date 2021-9-28 16:33
+ * @date 2021-9-28
  **/
 @EqualsAndHashCode(callSuper = true)
 @Slf4j

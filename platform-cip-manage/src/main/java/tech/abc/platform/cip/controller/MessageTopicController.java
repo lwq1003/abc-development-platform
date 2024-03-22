@@ -181,7 +181,7 @@ public class MessageTopicController extends BaseController {
      * 消息服务权限查询
      */
     @GetMapping("/queryMessagePermission")
-    @PreAuthorize("hasPermission(null,'cip:app:queryMessagePermission')")
+    @PreAuthorize("hasPermission(null,'cip:app:grantMessagePermission')")
     public ResponseEntity<Result> queryMessagePermission(MessageTopicVO queryVO, SortInfo sortInfo) {
         // 暂存传入的参数
         String appId = queryVO.getAppId();

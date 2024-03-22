@@ -17,7 +17,7 @@ import tech.abc.platform.common.utils.SpringUtil;
  * 登录响应发送器
  *
  * @author wqliu
- * @date 2022-1-31 8:49
+ * @date 2022-1-31
  **/
 public class LoginResponseSender extends ResponseMessageSender {
     public LoginResponseSender() {
@@ -42,7 +42,7 @@ public class LoginResponseSender extends ResponseMessageSender {
             MessageServerHolder.addChannel(channel, appCode);
 
             // 业务接口测试
-            ConsignmentBillCreateRequestSender sender=new ConsignmentBillCreateRequestSender();
+            ConsignmentBillCreateRequestSender sender = new ConsignmentBillCreateRequestSender();
             sender.sendMessage("委托单创建");
 
         } catch (Exception e) {

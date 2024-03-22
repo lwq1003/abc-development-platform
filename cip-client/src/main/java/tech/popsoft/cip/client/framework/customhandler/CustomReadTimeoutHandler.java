@@ -12,7 +12,7 @@ import tech.popsoft.cip.client.framework.MessageClientGlobalHolder;
  * 自定义的读超时处理器
  *
  * @author wqliu
- * @date 2022-2-10 8:43
+ * @date 2022-2-10
  **/
 @Slf4j
 public class CustomReadTimeoutHandler extends ReadTimeoutHandler {

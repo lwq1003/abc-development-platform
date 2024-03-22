@@ -1,108 +1,141 @@
-package tech.abc.platform.cip.entity;
+package tech.abc.platform.cip.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import tech.abc.platform.common.base.BaseEntity;
+import tech.abc.platform.common.base.BaseMapVO;
 
 import java.time.LocalDateTime;
 
 /**
- * 消息日志 实体类
+ * 活跃消息 视图对象类
  *
  * @author wqliu
- * @date 2023-05-03
+ * @date 2024-03-20
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("cip_message_log")
-public class MessageLog extends BaseEntity {
-
+public class ActiveMessageVO extends BaseMapVO {
     /**
      * 请求标识
      */
-    @TableField("request_id")
     private String requestId;
 
     /**
      * 请求应用编码
      */
-    @TableField("request_app_code")
     private String requestAppCode;
 
     /**
      * 请求主题编码
      */
-    @TableField("request_topic_code")
     private String requestTopicCode;
 
     /**
      * 请求时间
      */
-    @TableField("request_time")
     private LocalDateTime requestTime;
 
     /**
      * 请求数据
      */
-    @TableField("request_data")
     private String requestData;
 
     /**
      * 响应标识
      */
-    @TableField("response_id")
     private String responseId;
 
     /**
      * 响应应用编码
      */
-    @TableField("response_app_code")
     private String responseAppCode;
 
     /**
      * 响应主题编码
      */
-    @TableField("response_topic_code")
     private String responseTopicCode;
 
     /**
      * 响应时间
      */
-    @TableField("response_time")
     private LocalDateTime responseTime;
 
     /**
      * 响应数据
      */
-    @TableField("response_data")
     private String responseData;
 
     /**
      * 响应结果
      */
-    @TableField("response_result")
     private String responseResult;
 
     /**
      * 错误编码
      */
-    @TableField("error_code")
     private String errorCode;
 
     /**
      * 错误信息
      */
-    @TableField("error_message")
     private String errorMessage;
 
     /**
      * 状态
      */
-    @TableField("status")
     private String status;
+
+    /**
+     * 发送次数
+     */
+    private Integer sendCount;
+
+
+    /********非库表存储属性*****/
+
+
+    /********字典类*****/
+    /**
+     * 响应结果
+     */
+    private String responseResultName;
+
+    /**
+     * 状态
+     */
+    private String statusName;
+
+
+    /********实体类、用户单选、组织机构单选*****/
+
+    /********范围查询*****/
+    /**
+     * 响应时间起
+     */
+    private String responseTimeBeginForQuery;
+
+    /**
+     * 响应时间止
+     */
+    private String responseTimeEndForQuery;
+
+    /**
+     * 请求时间起
+     */
+    private String requestTimeBeginForQuery;
+
+    /**
+     * 请求时间止
+     */
+    private String requestTimeEndForQuery;
+
+
+    /********自定义扩展*****/
+
+    /********子对象*****/
+
 
 }

@@ -10,7 +10,7 @@ import tech.popsoft.cip.client.framework.sender.ResponseMessageSender;
  * 请求消息处理器
  *
  * @author wqliu
- * @date 2022-1-8 10:42
+ * @date 2022-1-8
  **/
 @Slf4j
 public class RequestMessageHandler extends MessageHandler {

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * 登录响应处理器
  *
  * @author wqliu
- * @date 2022-1-16 8:53
+ * @date 2022-1-16
  **/
 @Slf4j
 public class LoginResponseHandler extends ResponseMessageHandler {

@@ -7,10 +7,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.ReferenceCountUtil;
 import tech.abc.platform.cip.common.entity.BaseMessage;
+import tech.abc.platform.cip.common.entity.RequestMessage;
 import tech.abc.platform.cip.common.enums.MessageTypeEnum;
 import tech.abc.platform.common.utils.SpringUtil;
 import tech.popsoft.cip.client.framework.sender.MessageSenderFactory;
-import tech.popsoft.cip.client.framework.sender.RequestMessageSender;
+import tech.popsoft.cip.client.framework.sender.ResponseMessageSender;
 import tech.popsoft.cip.client.manage.entity.ApiMessageLog;
 import tech.popsoft.cip.client.manage.service.ApiMessageLogService;
 import tech.popsoft.cip.client.manage.service.ApiMessageTopicService;
@@ -20,7 +21,7 @@ import tech.popsoft.cip.client.manage.service.ApiMessageTopicService;
  * 去重处理器
  *
  * @author wqliu
- * @date 2022-1-19 13:50
+ * @date 2022-1-19
  **/
 public class DistinctMessageHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
@@ -43,9 +44,10 @@ public class DistinctMessageHandler extends SimpleChannelInboundHandler<TextWebS
             if (hasReceived) {
                 // 发送响应，终止流程
                 String responseTopic = apiMessageTopicService.getResponseTopicCodeByCode(topic);
-                RequestMessageSender sender = (RequestMessageSender) MessageSenderFactory.createSender(responseTopic);
+                ResponseMessageSender sender = (ResponseMessageSender) MessageSenderFactory.createSender(responseTopic);
                 ApiMessageLog log = apiMessageLogService.getByRequestMessageId(messageId);
-                sender.sendMessage(log.getResponseData(), log.getResponseId());
+                RequestMessage reqeustMessage = JSON.parseObject(content, RequestMessage.class);
+                sender.sendMessage(ctx.channel(), reqeustMessage);
 
 
             } else {

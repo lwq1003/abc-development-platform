@@ -15,7 +15,7 @@ import tech.popsoft.cip.client.manage.service.ApiMessageLogService;
  * 客户端响应消息业务逻辑处理
  *
  * @author wqliu
- * @date 2021-2-5 16:25
+ * @date 2021-2-5
  **/
 @Slf4j
 public class ResponseMessageBusinessHandler extends SimpleChannelInboundHandler<ResponseMessage> {

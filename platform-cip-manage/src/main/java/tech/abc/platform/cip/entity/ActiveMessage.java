@@ -5,21 +5,21 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import tech.abc.platform.common.base.BaseEntity;
+import tech.abc.platform.common.base.BaseMapEntity;
 
 import java.time.LocalDateTime;
 
 /**
- * 消息日志 实体类
+ * 活跃消息 实体类
  *
  * @author wqliu
- * @date 2023-05-03
+ * @date 2024-03-20
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("cip_message_log")
-public class MessageLog extends BaseEntity {
+@TableName("cip_active_message")
+public class ActiveMessage extends BaseMapEntity {
 
     /**
      * 请求标识
@@ -105,4 +105,11 @@ public class MessageLog extends BaseEntity {
     @TableField("status")
     private String status;
 
+    /**
+     * 发送次数
+     */
+    @TableField("send_count")
+    private Integer sendCount;
+
+    /********非库表存储属性*****/
 }

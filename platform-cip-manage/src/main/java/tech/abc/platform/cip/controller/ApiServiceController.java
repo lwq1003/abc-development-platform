@@ -184,7 +184,7 @@ public class ApiServiceController extends BaseController {
      */
     @GetMapping("/queryApiPermission")
     @SystemLog(value = "接口服务-查询指定应用服务权限")
-    @PreAuthorize("hasPermission(null,'cip:apiApp:grantApiPermission')")
+    @PreAuthorize("hasPermission(null,'cip:app:grantApiPermission')")
     public ResponseEntity<Result> queryApiPermission(ApiServiceVO queryVO, SortInfo sortInfo) {
         // 暂存传入的参数
         String appId = queryVO.getAppId();

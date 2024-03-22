@@ -25,7 +25,7 @@ public class BusinessFilter implements ApiFilter {
 
     @Override
     public void doFilter(ApiRequest request, ApiResponse response, ApiFilterChain chain) {
-        log.info("进入业务处理");
+
         BaseServiceHandler handler = getHandler(request.getServiceCode());
         String responseData = handler.handle(request.getData(), request.getAppCode());
         response.setData(responseData);
@@ -35,7 +35,7 @@ public class BusinessFilter implements ApiFilter {
     /**
      * 根据服务代码进行服务分发
      *
-     * @param apiRequest
+     * @param serviceCode 服务代码
      * @return
      */
     private BaseServiceHandler getHandler(String serviceCode) {

@@ -98,6 +98,7 @@ public class ApiMessageLogServiceImpl extends BaseServiceImpl<ApiMessageLogMappe
         log.setResponseData(message.getContent());
         log.setResponseResult(message.getResult());
         log.setErrorMessage(message.getErrorMessage());
+        log.setErrorCode(message.getErrorCode());
         log.setResponseId(message.getId());
         // 将消息更新为已响应
         log.setStatus(MessageStatusEnum.RESPONSED.name());

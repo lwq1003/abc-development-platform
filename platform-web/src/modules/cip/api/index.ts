@@ -102,3 +102,11 @@ export const messageLog = Object.assign({}, COMMON_METHOD, {
 export const appDataPermission = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'appDataPermission' + '/'
 })
+
+// 活跃消息
+export const activeMessage = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'activeMessage' + '/',
+  resend(id) {
+    return request.put({ url: this.serveUrl + 'resend' + '/' + id })
+  }
+})

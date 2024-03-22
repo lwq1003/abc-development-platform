@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 委托单创建发送器
  *
  * @author wqliu
- * @date 2022-2-1 8:14
+ * @date 2022-2-1
  **/
 public class ConsignmentBillCreateRequestSender extends RequestMessageSender {
     public ConsignmentBillCreateRequestSender() {
@@ -28,7 +28,7 @@ public class ConsignmentBillCreateRequestSender extends RequestMessageSender {
         String carrierCode = "001";
 
         // 查找当前应用拥有的承运商数据角色列表
-        List<AppDataPermission> list = apiDataPermissionService.getPermissionByRoleCode(DataRoleEnum.CARRIER.name(), appCode);
+        List<AppDataPermission> list = appDataPermissionService.getPermissionByRoleCode(DataRoleEnum.CARRIER.name(), appCode);
 
         AtomicBoolean hasPermission = new AtomicBoolean(false);
         list.stream().forEach(x -> {

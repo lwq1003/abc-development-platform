@@ -15,6 +15,7 @@ import tech.abc.platform.cip.service.AppService;
 import tech.abc.platform.common.constant.DateConstant;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.exception.CustomException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +23,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 /**
- * 数据验证过滤器
+ * 框架验证过滤器
  *
  * @author wqliu
  * @date 2022-2-12
@@ -41,14 +42,14 @@ public class FrameworkValidateFilter implements ApiFilter {
     private ApiServicePermissionService apiServicePermissionService;
 
     /**
-     * 有效时间
+     * 有效时间(单位：秒）
      */
-    private static final int VALID_TIME_SPAN = 10;
+    private static final int VALID_TIME_SPAN = 10 * 60;
 
 
     @Override
     public void doFilter(ApiRequest request, ApiResponse response, ApiFilterChain chain) {
-        log.info("进入框架验证过滤器");
+        // 验证数据
         validateData(request);
         // 继续往下传递
         chain.doFilter(request, response);
@@ -57,9 +58,9 @@ public class FrameworkValidateFilter implements ApiFilter {
     // region 数据验证
 
     /**
-     * 数据验证
+     * 验证数据
      *
-     * @param apiRequest
+     * @param apiRequest api请求
      */
     private void validateData(ApiRequest apiRequest) {
 
@@ -142,7 +143,7 @@ public class FrameworkValidateFilter implements ApiFilter {
         LocalDateTime now = LocalDateTime.now();
         // 获取时间差值
         Duration duration = Duration.between(requestTime, now);
-        if (Math.abs(duration.toMinutes()) > VALID_TIME_SPAN) {
+        if (Math.abs(duration.toMillis()) > VALID_TIME_SPAN * 1000) {
             throw new ApiException("S40", "请求时间超出合理范围");
         }
 

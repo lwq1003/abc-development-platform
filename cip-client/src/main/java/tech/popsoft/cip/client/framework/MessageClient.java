@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author wqliu
- * @date 2021-9-28 16:05
+ * @date 2021-9-28
  **/
 @Slf4j
 @Component

@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- 主机:                           127.0.0.1
--- 服务器版本:                        5.7.36 - MySQL Community Server (GPL)
+-- 服务器版本:                        8.0.19 - MySQL Community Server - GPL
 -- 服务器操作系统:                      Win64
--- HeidiSQL 版本:                  12.4.0.6659
+-- HeidiSQL 版本:                  12.5.0.6677
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -16,33 +16,33 @@
 
 
 -- 导出 cip_client 的数据库结构
-CREATE DATABASE IF NOT EXISTS `cip_client` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+CREATE DATABASE IF NOT EXISTS `cip_client` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `cip_client`;
 
 -- 导出  表 cip_client.cip_message_log 结构
 CREATE TABLE IF NOT EXISTS `cip_message_log` (
-  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
-  `request_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求消息标识',
-  `request_app_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求应用编码',
-  `request_topic_code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求消息主题编码',
+  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `request_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求消息标识',
+  `request_app_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求应用编码',
+  `request_topic_code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求消息主题编码',
   `request_time` datetime DEFAULT NULL COMMENT '请求时间',
-  `request_data` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求内容',
-  `response_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应消息标识',
-  `response_app_code` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应应用编码',
-  `response_topic_code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应消息主题编码',
+  `request_data` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求内容',
+  `response_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应消息标识',
+  `response_app_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应应用编码',
+  `response_topic_code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应消息主题编码',
   `response_time` datetime DEFAULT NULL COMMENT '响应时间',
-  `response_data` varchar(2048) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应内容',
-  `response_result` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应结果',
-  `error_code` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误编码',
-  `error_message` varchar(400) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误信息',
-  `status` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '当前状态',
-  `send_count` int(11) DEFAULT NULL COMMENT '发送次数',
-  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人标识',
+  `response_data` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应内容',
+  `response_result` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应结果',
+  `error_code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误编码',
+  `error_message` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '错误信息',
+  `status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '当前状态',
+  `send_count` int DEFAULT NULL COMMENT '发送次数',
+  `create_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人标识',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人标识',
+  `update_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人标识',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `version` int(11) DEFAULT NULL COMMENT '版本',
-  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标志',
+  `version` int DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标志',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='消息日志';
 
@@ -50,22 +50,22 @@ CREATE TABLE IF NOT EXISTS `cip_message_log` (
 
 -- 导出  表 cip_client.cip_message_topic 结构
 CREATE TABLE IF NOT EXISTS `cip_message_topic` (
-  `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
-  `code` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '编码',
-  `name` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '名称',
-  `handler` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '处理器',
-  `sender` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '发送器',
-  `response_topic_code` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应主题编码',
-  `category` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '分类',
-  `status` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态',
-  `remark` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
-  `order_no` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序号',
-  `create_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人标识',
+  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '编码',
+  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '名称',
+  `handler` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '处理器',
+  `sender` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '发送器',
+  `response_topic_code` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '响应主题编码',
+  `category` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '分类',
+  `status` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '状态',
+  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `order_no` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '排序号',
+  `create_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '创建人标识',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人标识',
+  `update_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '更新人标识',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `version` int(11) DEFAULT NULL COMMENT '版本',
-  `delete_flag` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标志',
+  `version` int DEFAULT NULL COMMENT '版本',
+  `delete_flag` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '删除标志',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='消息主题';
 

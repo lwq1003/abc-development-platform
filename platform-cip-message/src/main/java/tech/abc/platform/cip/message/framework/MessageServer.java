@@ -60,6 +60,7 @@ public class MessageServer {
                 }, 30, appConfig.getMessage().getSendMessageSpan(), TimeUnit.SECONDS);
             }
 
+
             // 等待服务器socket关闭
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {

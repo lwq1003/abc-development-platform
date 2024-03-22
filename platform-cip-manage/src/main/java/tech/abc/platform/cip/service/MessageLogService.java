@@ -57,12 +57,6 @@ public interface MessageLogService extends BaseService<MessageLog> {
      */
     void updateStatus(String status, String messageId);
 
-    /**
-     * 递增发送计数
-     *
-     * @param messageId 消息标识
-     */
-    void incrementSendCount(String messageId);
 
     /**
      * 创建日志，填充请求消息部分
@@ -88,43 +82,6 @@ public interface MessageLogService extends BaseService<MessageLog> {
      */
     void updateResponsePart(ResponseMessage message);
 
-
-    /**
-     * 获取需要重发消息的应用列表
-     *
-     * @param maxSendCount 最大发送计数
-     * @return {@link List}<{@link String}>
-     */
-    List<String> getResendAppList(int maxSendCount);
-
-    /**
-     * 获取重发消息
-     *
-     * @param messageCount 消息数量
-     * @param maxSendCount 最大发送次数
-     * @param appCode      应用编码
-     * @return {@link List}<{@link MessageLog}>
-     */
-    List<MessageLog> getResendMessage(int messageCount, int maxSendCount, String appCode);
-
-
-    /**
-     * 查询等待处理的消息
-     *
-     * @param count   消息数量
-     * @param appCode 应用编码
-     * @return {@link List}<{@link MessageLog}>
-     */
-    List<MessageLog> queryWaitHandleMessages(int count, String appCode);
-
-
-    /**
-     * 消息确认
-     *
-     * @param requestMessageId 请求消息标识
-     * @param appCode          应用程序代码
-     */
-    void confirm(String requestMessageId, String appCode);
 
 }
 

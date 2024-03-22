@@ -3,7 +3,7 @@ package tech.abc.platform.cip.api.handler.system;
 import lombok.extern.slf4j.Slf4j;
 import tech.abc.platform.cip.api.exception.ApiException;
 import tech.abc.platform.cip.api.framework.BaseServiceHandler;
-import tech.abc.platform.cip.service.MessageLogService;
+import tech.abc.platform.cip.service.ActiveMessageService;
 import tech.abc.platform.common.utils.SpringUtil;
 
 
@@ -19,7 +19,7 @@ public class MessageConfirmHandler extends BaseServiceHandler<MessageConfirmPara
 
     @Override
     protected String handleBusiness(MessageConfirmParameter parameter, String appCode) {
-        MessageLogService service = SpringUtil.getBean(MessageLogService.class);
+        ActiveMessageService service = SpringUtil.getBean(ActiveMessageService.class);
         try {
             service.confirm(parameter.getMessageId(), appCode);
         } catch (Exception e) {

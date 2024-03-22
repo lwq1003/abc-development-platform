@@ -150,8 +150,8 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
         if (CollectionUtils.isEmpty(list)) {
             throw new CustomException(AppExceptionEnum.APP_CODE_OR_SECRET_ERROR);
         } else {
-            App apiApp = list.get(0);
-            String secret = apiApp.getSecretKey();
+            App app = list.get(0);
+            String secret = app.getSecretKey();
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             if (!encoder.matches(secret, appSecret)) {
                 throw new CustomException(AppExceptionEnum.APP_CODE_OR_SECRET_ERROR);
@@ -261,7 +261,7 @@ public class AppServiceImpl extends BaseServiceImpl<AppMapper, App> implements A
         if (CollectionUtils.isNotEmpty(messageTopicIdList)) {
             // 获取app标识
             String appId = getCurrentAppId();
-            
+
             QueryWrapper<MessageSubscription> queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda().eq(MessageSubscription::getApp, appId)
                     .in(MessageSubscription::getMessageTopic, messageTopicIdList);

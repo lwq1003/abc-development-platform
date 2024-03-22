@@ -5,10 +5,7 @@ import tech.abc.platform.cip.common.entity.BaseMessage;
 import tech.abc.platform.cip.common.entity.MessageException;
 import tech.abc.platform.cip.entity.App;
 import tech.abc.platform.cip.entity.MessageTopic;
-import tech.abc.platform.cip.service.AppService;
-import tech.abc.platform.cip.service.MessageLogService;
-import tech.abc.platform.cip.service.MessagePermissionService;
-import tech.abc.platform.cip.service.MessageTopicService;
+import tech.abc.platform.cip.service.*;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.utils.SpringUtil;
 
@@ -26,12 +23,14 @@ import java.util.Date;
 public class MessageHandler {
 
 
-    protected MessageLogService apiMessageLogService = SpringUtil.getBean(MessageLogService.class);
+    protected MessageLogService messageLogService = SpringUtil.getBean(MessageLogService.class);
+
+    protected ActiveMessageService activeMessageService = SpringUtil.getBean(ActiveMessageService.class);
 
 
-    protected AppService apiAppService = SpringUtil.getBean(AppService.class);
+    protected AppService appService = SpringUtil.getBean(AppService.class);
 
-    protected MessageTopicService apiMessageTopicService = SpringUtil.getBean(MessageTopicService.class);
+    protected MessageTopicService messageTopicService = SpringUtil.getBean(MessageTopicService.class);
 
 
     protected MessagePermissionService apiMessagePermissionService =
@@ -112,7 +111,7 @@ public class MessageHandler {
         }
 
         try {
-            App app = apiAppService.getByCode(publishAppCode);
+            App app = appService.getByCode(publishAppCode);
             if (app.getStatus().equals(StatusEnum.DEAD.name())) {
                 throw new MessageException("S203", "应用被停用");
             }
@@ -129,7 +128,7 @@ public class MessageHandler {
      */
     protected void validateTopic(String topicCode) {
         try {
-            MessageTopic messageTopic = apiMessageTopicService.getByCode(topicCode);
+            MessageTopic messageTopic = messageTopicService.getByCode(topicCode);
             if (messageTopic.getStatus().equals(StatusEnum.DEAD.name())) {
                 throw new MessageException("S102", "消息主题不可用");
             }

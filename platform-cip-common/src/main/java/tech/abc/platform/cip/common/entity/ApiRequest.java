@@ -44,8 +44,7 @@ public class ApiRequest {
 
 
     /**
-     * 签名方法
+     * 签名方法（尚未启用，目前默认使用MD5）
      */
-    @NotBlank(message = "签名方法不能为空")
     private String signMethod;
 }

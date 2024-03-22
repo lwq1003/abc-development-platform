@@ -7,10 +7,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.ReferenceCountUtil;
 import tech.abc.platform.cip.common.entity.BaseMessage;
+import tech.abc.platform.cip.common.entity.RequestMessage;
 import tech.abc.platform.cip.common.enums.MessageTypeEnum;
-import tech.abc.platform.cip.entity.MessageLog;
 import tech.abc.platform.cip.message.framework.sender.MessageSenderFactory;
-import tech.abc.platform.cip.message.framework.sender.RequestMessageSender;
+import tech.abc.platform.cip.message.framework.sender.ResponseMessageSender;
 import tech.abc.platform.cip.service.MessageLogService;
 import tech.abc.platform.cip.service.MessageTopicService;
 import tech.abc.platform.common.utils.SpringUtil;
@@ -43,10 +43,9 @@ public class DistinctMessageHandler extends SimpleChannelInboundHandler<TextWebS
             if (hasReceived) {
                 // 发送响应，终止流程
                 String responseTopic = apiMessageTopicService.getResponseTopicCodeByCode(topic);
-                RequestMessageSender sender = (RequestMessageSender) MessageSenderFactory.createSender(responseTopic);
-                MessageLog log = apiMessageLogService.getByRequestMessageId(messageId);
-                sender.sendMessage(log.getRequestAppCode(), log.getResponseData(), log.getResponseId());
-
+                ResponseMessageSender sender = (ResponseMessageSender) MessageSenderFactory.createSender(responseTopic);
+                RequestMessage reqeustMessage = JSON.parseObject(content, RequestMessage.class);
+                sender.sendMessage(ctx.channel(), reqeustMessage);
 
             } else {
                 // 继续往下传递

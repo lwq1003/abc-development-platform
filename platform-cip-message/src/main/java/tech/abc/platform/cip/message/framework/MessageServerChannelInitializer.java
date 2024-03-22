@@ -33,7 +33,7 @@ import java.security.KeyStore;
  * 初始化通道
  *
  * @author wqliu
- * @date 2021-2-5 15:12
+ * @date 2021-2-5
  */
 @Slf4j
 @Component

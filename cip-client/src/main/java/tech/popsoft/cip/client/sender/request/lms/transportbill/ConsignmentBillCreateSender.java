@@ -6,7 +6,7 @@ import tech.popsoft.cip.client.framework.sender.RequestMessageSender;
  * 委托单创建发送器
  *
  * @author wqliu
- * @date 2022-1-18 11:02
+ * @date 2022-1-18
  **/
 public class ConsignmentBillCreateSender extends RequestMessageSender {
 

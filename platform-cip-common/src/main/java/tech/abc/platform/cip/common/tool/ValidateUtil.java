@@ -24,14 +24,11 @@ public class ValidateUtil {
      * @return
      */
     public static boolean dateIsFormat(String dateString, String format) {
-
-
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         try {
             dateFormat.parse(dateString);
         } catch (Exception e) {
             return false;
-
         }
         return true;
     }

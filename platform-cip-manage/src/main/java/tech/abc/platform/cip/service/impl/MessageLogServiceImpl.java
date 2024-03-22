@@ -1,14 +1,11 @@
 package tech.abc.platform.cip.service.impl;
 
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.abc.platform.cip.common.entity.RequestMessage;
 import tech.abc.platform.cip.common.entity.ResponseMessage;
-import tech.abc.platform.cip.common.enums.ApiMessageStatusEnum;
-import tech.abc.platform.cip.common.enums.MessageResponseResultEnum;
 import tech.abc.platform.cip.common.enums.MessageStatusEnum;
 import tech.abc.platform.cip.config.AppConfig;
 import tech.abc.platform.cip.entity.MessageLog;
@@ -22,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 消息日志 服务实现类
@@ -52,7 +48,6 @@ public class MessageLogServiceImpl extends BaseServiceImpl<MessageLogMapper, Mes
         // 默认值处理
         entity.setErrorMessage("");
         entity.setStatus("");
-        entity.setSendCount(0);
         return entity;
     }
 
@@ -116,12 +111,6 @@ public class MessageLogServiceImpl extends BaseServiceImpl<MessageLogMapper, Mes
         modify(apiMessageLog);
     }
 
-    @Override
-    public void incrementSendCount(String messageId) {
-        MessageLog apiMessageLog = getByRequestMessageId(messageId);
-        apiMessageLog.setSendCount(apiMessageLog.getSendCount() + 1);
-        modify(apiMessageLog);
-    }
 
     @Override
     public MessageLog createRequestPart(RequestMessage message, String responseAppCode) {
@@ -133,11 +122,8 @@ public class MessageLogServiceImpl extends BaseServiceImpl<MessageLogMapper, Mes
         log.setRequestTime(LocalDateTime.now());
         log.setRequestData(message.getContent());
         log.setResponseAppCode(responseAppCode);
-        // 发送次数设置为0
-        log.setSendCount(0);
         add(log);
         return log;
-
     }
 
     @Override
@@ -155,6 +141,7 @@ public class MessageLogServiceImpl extends BaseServiceImpl<MessageLogMapper, Mes
         log.setResponseTime(LocalDateTime.now());
         log.setResponseData(message.getContent());
         log.setResponseResult(message.getResult());
+        log.setErrorCode(message.getErrorCode());
         log.setErrorMessage(message.getErrorMessage());
         log.setResponseId(message.getId());
         // 将消息更新为已响应
@@ -163,115 +150,6 @@ public class MessageLogServiceImpl extends BaseServiceImpl<MessageLogMapper, Mes
         modify(log);
 
     }
-
-    @Override
-    public List<String> getResendAppList(int maxSendCount) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime beforeNow = now.minusSeconds(15);
-        try {
-            LambdaQueryChainWrapper<MessageLog> query = this.lambdaQuery()
-                    // 消息状态为待发送或已发送
-                    .and(x -> x.eq(MessageLog::getStatus, MessageStatusEnum.WAIT_REQUEST.name())
-                            .or(y -> y.eq(MessageLog::getStatus, MessageStatusEnum.REQUESTED.name())))
-                    // 排除掉登录请求
-                    .ne(MessageLog::getRequestTopicCode, "framework.login.request")
-                    // 发送方为消息服务中心
-                    .eq(MessageLog::getRequestAppCode, appConfig.getMessage().getMessageServerAppCode())
-                    // 发送次数小于设置的最大发送次数
-                    .lt(MessageLog::getSendCount, maxSendCount)
-                    // 请求时间小于当前时间15秒，避免刚产生的消息尚未收到服务端响应时就进行重发
-                    .lt(MessageLog::getRequestTime, beforeNow)
-                    // 按照响应应用编码分组
-                    .groupBy(MessageLog::getResponseAppCode)
-                    // 只查询应用编码
-                    .select(MessageLog::getResponseAppCode);
-
-            List<MessageLog> list = query.list();
-            if (CollectionUtils.isNotEmpty(list)) {
-                return list.stream().map(x -> x.getResponseAppCode()).collect(Collectors.toList());
-            } else {
-                return null;
-            }
-
-        } catch (Exception e) {
-            log.error("获取需要重发消息的应用列表出错", e);
-            return null;
-        }
-    }
-
-    @Override
-    public List<MessageLog> getResendMessage(int messageCount, int maxSendCount, String appCode) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime beforeNow = now.minusSeconds(15);
-        try {
-            LambdaQueryChainWrapper<MessageLog> query = this.lambdaQuery()
-                    // 消息状态为待发送或已发送
-                    .and(x -> x.eq(MessageLog::getStatus, MessageStatusEnum.WAIT_REQUEST.name())
-                            .or(y -> y.eq(MessageLog::getStatus, MessageStatusEnum.REQUESTED.name())))
-                    // 排除掉登录请求
-                    .ne(MessageLog::getRequestTopicCode, "framework.login.request")
-                    // 发送方为消息服务中心
-                    .eq(MessageLog::getRequestAppCode, appConfig.getMessage().getMessageServerAppCode())
-                    // 指定响应应用编码
-                    .eq(MessageLog::getResponseAppCode, appCode)
-                    // 发送次数小于设置的最大发送次数
-                    .lt(MessageLog::getSendCount, maxSendCount)
-                    // 请求时间小于当前时间15秒，避免刚产生的消息尚未收到服务端响应时就进行重发
-                    .lt(MessageLog::getRequestTime, beforeNow)
-                    // 按照请求时间升序排列
-                    .orderByAsc(MessageLog::getRequestTime)
-                    // 只取指定数量的消息
-                    .last("limit " + messageCount);
-
-
-            return query.list();
-        } catch (Exception e) {
-            log.error("获取发送信息失败", e);
-            return null;
-        }
-    }
-
-    @Override
-    public List<MessageLog> queryWaitHandleMessages(int count, String appCode) {
-        // 处理消息数量，如为0，默认设置默认数量，如超出最大数量，则置为最大数量
-        if (count == 0) {
-            count = DEFAULT_QUERY_MESSAGE_COUNT;
-        } else if (count > MAX_QUERY_MESSAGE_COUNT) {
-            count = MAX_QUERY_MESSAGE_COUNT;
-        }
-
-        List<MessageLog> list = this.lambdaQuery()
-                .select(MessageLog::getRequestId, MessageLog::getRequestTopicCode, MessageLog::getRequestData, MessageLog::getRequestTime)
-                .eq(MessageLog::getStatus, ApiMessageStatusEnum.WAIT_HANDLE.name())
-                .eq(MessageLog::getResponseAppCode, appCode)
-                .orderByAsc(MessageLog::getRequestTime)
-                // 只取指定数量的消息
-                .last("limit " + count)
-                .list();
-        return list;
-
-
-    }
-
-    @Override
-    public void confirm(String requestMessageId, String appCode) {
-
-        // 获取消息日志对象
-        MessageLog log = getByRequestMessageId(requestMessageId);
-        // 判断是否有权限对本消息确认
-        if (!appCode.equals(log.getResponseAppCode())) {
-            throw new CustomException(ApiMessageLogExceptionEnum.MESSAGE_CONFIRM_PERMISSION_ERROR);
-        }
-
-        // 更新消息日志
-        log.setStatus(ApiMessageStatusEnum.HANDLED.name());
-        log.setResponseResult(MessageResponseResultEnum.SUCCESS.name());
-        log.setResponseTime(LocalDateTime.now());
-        // 更新日志
-        modify(log);
-
-    }
-
 
 }
 

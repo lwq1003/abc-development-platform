@@ -1,6 +1,7 @@
 package tech.abc.platform.cip.message.framework.handler;
 
 
+import lombok.extern.slf4j.Slf4j;
 import tech.abc.platform.cip.common.entity.MessageException;
 import tech.abc.platform.cip.service.MessageTopicService;
 import tech.abc.platform.common.exception.CustomException;
@@ -12,11 +13,8 @@ import tech.abc.platform.common.utils.SpringUtil;
  * @author wqliu
  * @date 2021-10-13
  **/
+@Slf4j
 public class MessageHandlerFactory {
-    private MessageHandlerFactory() {
-    }
-
-    ;
 
     public static MessageHandler createHandler(String topic) {
         // 使用反射技术获取类

@@ -9,7 +9,7 @@ import tech.popsoft.cip.client.framework.handler.RequestMessageHandler;
  * 委托单创建请求消息处理器
  *
  * @author wqliu
- * @date 2022-1-22 10:20
+ * @date 2022-1-22
  **/
 @Slf4j
 public class ConsignmentBillCreateRequestHandler extends RequestMessageHandler {

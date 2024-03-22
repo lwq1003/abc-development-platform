@@ -12,7 +12,7 @@ import tech.popsoft.cip.client.framework.sender.RequestMessageSender;
  * 接收业务系统产生的消息
  *
  * @author wqliu
- * @date 2022-1-18 16:14
+ * @date 2022-1-18
  **/
 @RestController
 @RequestMapping("/message")

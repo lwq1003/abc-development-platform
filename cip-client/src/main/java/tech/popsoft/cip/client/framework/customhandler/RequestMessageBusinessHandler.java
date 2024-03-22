@@ -16,7 +16,7 @@ import tech.popsoft.cip.client.sender.response.system.ErrorResponseSender;
  * 客户端请求消息业务逻辑处理
  *
  * @author wqliu
- * @date 2021-2-5 16:25
+ * @date 2021-2-5
  **/
 @Slf4j
 public class RequestMessageBusinessHandler extends SimpleChannelInboundHandler<RequestMessage> {

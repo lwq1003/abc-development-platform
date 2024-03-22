@@ -8,7 +8,7 @@ import tech.popsoft.cip.client.framework.sender.RequestMessageSender;
  * 登录请求发送器
  *
  * @author wqliu
- * @date 2021-10-6 14:13
+ * @date 2021-10-6
  **/
 public class LoginRequestSender extends RequestMessageSender {
 

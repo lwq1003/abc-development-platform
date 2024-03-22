@@ -13,7 +13,7 @@ import tech.popsoft.cip.client.manage.service.ApiMessageTopicService;
  * 消息处理抽象类
  *
  * @author wqliu
- * @date 2021-10-13 9:07
+ * @date 2021-10-13
  **/
 public class MessageHandler {
 

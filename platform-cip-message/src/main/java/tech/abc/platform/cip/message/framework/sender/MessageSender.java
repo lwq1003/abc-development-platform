@@ -2,6 +2,7 @@ package tech.abc.platform.cip.message.framework.sender;
 
 import lombok.extern.slf4j.Slf4j;
 import tech.abc.platform.cip.config.AppConfig;
+import tech.abc.platform.cip.service.ActiveMessageService;
 import tech.abc.platform.cip.service.MessageLogService;
 import tech.abc.platform.common.utils.SpringUtil;
 
@@ -64,6 +65,12 @@ public class MessageSender {
     /**
      * 消息日志服务
      */
-    protected MessageLogService apiMessageLogService = SpringUtil.getBean(MessageLogService.class);
+    protected MessageLogService messageLogService = SpringUtil.getBean(MessageLogService.class);
+
+
+    /**
+     * 活跃消息服务
+     */
+    protected ActiveMessageService activeMessageService = SpringUtil.getBean(ActiveMessageService.class);
 
 }

@@ -12,7 +12,7 @@ import java.text.MessageFormat;
  * 使用spring单例模式
  *
  * @author wqliu
- * @date 2021-10-5 14:10
+ * @date 2021-10-5
  */
 @Data
 @ConfigurationProperties(prefix = "params")

@@ -90,6 +90,12 @@ public class ApiMessageLog extends BaseEntity {
     private String responseResult;
 
     /**
+     * 错误编码
+     */
+    @TableField("error_code")
+    private String errorCode;
+
+    /**
      * 错误信息
      */
     @TableField("error_message")

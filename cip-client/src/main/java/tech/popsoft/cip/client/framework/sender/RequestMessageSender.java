@@ -15,7 +15,7 @@ import tech.popsoft.cip.client.manage.entity.ApiMessageLog;
  * 请求消息发送器
  *
  * @author wqliu
- * @date 2021-10-5 14:02
+ * @date 2021-10-5
  */
 @Slf4j
 public class RequestMessageSender extends MessageSender {

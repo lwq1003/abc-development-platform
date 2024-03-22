@@ -28,14 +28,14 @@ public class RequestMessageHandler extends MessageHandler {
 
 
         // 记录消息请求日志
-        apiMessageLogService.createRequestPart(requestMessage);
+        messageLogService.createRequestPart(requestMessage);
 
         // 验证框架
         String appCode = MessageServerHolder.getAppCode(channel);
         validateFramework(requestMessage, appCode);
 
         // 将请求消息状态默认设置为无需发送
-        apiMessageLogService.updateStatus(MessageStatusEnum.NOT_TO_REQUEST.name(), requestMessage.getId());
+        messageLogService.updateStatus(MessageStatusEnum.NOT_TO_REQUEST.name(), requestMessage.getId());
 
 
         // 特殊处理
@@ -90,7 +90,7 @@ public class RequestMessageHandler extends MessageHandler {
      */
     protected String getResponseTopicCode(String topic) {
         // 默认从消息主题实体类中获取
-        return apiMessageTopicService.getResponseTopicCodeByCode(topic);
+        return messageTopicService.getResponseTopicCodeByCode(topic);
     }
 
 

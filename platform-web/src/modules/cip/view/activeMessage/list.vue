@@ -94,6 +94,13 @@
     <div class="mb-10px mt-10px">
       <el-button type="primary" icon="refresh" @click="refresh">刷新</el-button>
       <el-button
+        v-permission="pageCode + 'resend'"
+        type="primary"
+        icon="RefreshRight"
+        @click="resend"
+        >重发</el-button
+      >
+      <el-button
         v-permission="pageCode + 'remove'"
         type="primary"
         icon="delete"
@@ -146,7 +153,7 @@ import { listMixin } from '@/mixin/listMixin.js'
 import ViewPage from './view.vue'
 
 const MODULE_CODE = 'cip'
-const ENTITY_TYPE = 'messageLog'
+const ENTITY_TYPE = 'activeMessage'
 export default {
   name: ENTITY_TYPE,
   components: {
@@ -177,7 +184,6 @@ export default {
           prop: 'requestAppCode',
           label: '请求应用编码',
           show: true,
-          width: 140,
           showOverflowTooltip: true,
           sortable: true
         },
@@ -185,7 +191,6 @@ export default {
           prop: 'requestTopicCode',
           label: '请求主题编码',
           show: true,
-          width: 140,
           showOverflowTooltip: true,
           sortable: true
         },
@@ -206,7 +211,6 @@ export default {
         {
           prop: 'responseAppCode',
           label: '响应应用编码',
-          width: 140,
           show: true,
           showOverflowTooltip: true,
           sortable: true
@@ -214,7 +218,6 @@ export default {
         {
           prop: 'responseTopicCode',
           label: '响应主题编码',
-          width: 140,
           show: true,
           showOverflowTooltip: true,
           sortable: true
@@ -251,6 +254,13 @@ export default {
           label: '状态',
           show: true,
           showOverflowTooltip: true
+        },
+        {
+          prop: 'sendCount',
+          label: '发送次数',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
         }
       ],
       queryCondition: {
@@ -262,6 +272,24 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {
+    resend() {
+      if (!this.checkSelected()) {
+        return
+      }
+      this.$confirm('此操作将重发选中的消息, 是否继续?', '确认', {
+        type: 'warning'
+      })
+        .then(() => {
+          const ids = this.getCheckedId()
+          this.api.resend(ids).then(() => {
+            this.refresh()
+          })
+        })
+        .catch(() => {
+          this.$message.info('已取消')
+        })
+    }
+  }
 }
 </script>

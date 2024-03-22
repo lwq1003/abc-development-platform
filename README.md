@@ -37,7 +37,6 @@ platform-workflow集成了工作流组件activiti的分支Camunda，实现了流
 
 platform-businessflow是业务流程的集中存储模块，实现了流程导航功能和请求申请示例流程。
 
-
 platform-boot-starter是平台启动项目，整合平台基础功能，类似于spring-boot-starter，业务系统引入该包进行依赖。该模块自身没有实体与服务，而是汇总整合，把platform-framework
 引用进来，同时进行配置。配置分两方面，一方面是做一个配置类，加一些注解（如：@EnableRetry、@ServletComponentScan、@EnableTransactionManagement），使用开发平台实现的业务系统，就不需要在启动类上重复添加这些注解；另一方面，是位于yml配置文件中的配置信息，也分为两部分，一部分是三方组件自身的，如数据源、连接池、redis、quartz、logback，另一方面是自定义的系统参数，如用户默认密码、导出excel数据的批次最大行数量。
 
@@ -46,31 +45,25 @@ platform-boot-starter-demo是示例项目，实际是模拟业务系统如何使
 #### 能力扩展模块
 
 绿色标示的五个模块，比较好理解，通常是对第三方组件的封装与整合，依赖于公共基础模块platform-common，这些模块可以不断扩展的，业务系统按需引入即可，这样就实现了核心模块必选、扩展模块可选的目的。
+
 * platform-boot-starter-mail：邮件，集成springmail组件，实现邮件的发送功能封装
 * platform-boot-starter-oss： 对象存储，用于文件存储封装，底层可基于多种模式，如本地磁盘、对象存储系统等
 * platform-boot-starter-scheduler：任务调度，集成quartz组件，实现任务调度可视化配置
 * platform-boot-starter-notification：消息通知，基于netty实现的websocket，用于系统内置消息
 * platform-boot-starter-elasticsearch：全文搜索，集成elasticsearch组件
-对于扩展模块，平台的核心模块实际也可能会用到，例如platform-support中的附件功能，就会用到platform-boot-starter-oss；platform-system中的自动解锁用户功能，就会用到platform-boot-starter-scheduler。
+  对于扩展模块，平台的核心模块实际也可能会用到，例如platform-support中的附件功能，就会用到platform-boot-starter-oss；platform-system中的自动解锁用户功能，就会用到platform-boot-starter-scheduler。
 
 #### 接口平台
 
-之前开源了一套通用接口平台，详见专栏https://blog.csdn.net/seawaving/category_11610162.html
-现在，将通用接口平台作为一个模块，整合到新的应用开发平台当中来，由通用接口平台统一对外暴露应用系统的API数据接口，以及推送事件消息。
-之前的的通用接口平台，主要由两个模块组成，一个是platform-cip（cip是common interface platform缩写），即接口平台的主体，另外一个是platform-cip-common，被platform-cip依赖。
-实际上，接口平台的主体，platform-cip，里面包含了三块内容：
-1.对外提供API数据接口，提供API服务
-2.基于netty的web socket服务端提供消息服务
-3.平台自身基础数据的维护，如应用、API服务清单、消息服务清单、订阅等。
-本次整合，不是简单的迁移，而是包括重构优化，将platform-cip进一步拆分为三个模块，一共4个模块：
+将自己之前开源的通用接口平台进行了改造，将其作为一个模块，整合到应用开发平台当中来，由接口平台统一对外暴露应用系统的API数据接口以及推送事件消息。
 platform-cip-common：公共基础
-platform-cip-api：API服务
-platform-cip-message：消息服务
-platform-cip-manage：平台管理
-4个模块内关系为manage依赖common，api和manage相互独立，但都依赖于manage。
-
+platform-cip-api：对外提供API数据接口，提供API服务
+platform-cip-message：基于netty的web socket服务端提供消息服务
+platform-cip-manage：平台自身基础数据的维护，如应用、API服务、消息服务、数据权限管理等。
+4个模块内关系为manage依赖common，api和message相互独立，但都依赖于manage。
 
 ### 如何运行
+
 以下为简要说明，详细的开发环境搭建手册参见https://blog.csdn.net/seawaving/article/details/134895546
 
 #### 1. 准备工作
@@ -90,8 +83,6 @@ nodejs >=14.6
 执行pnpm install命令，若nodejs版本过低会提示
 
 使用vscode打开platform-web目录，执行pnpm install安装npm module
-
-
 
 执行结束会提示如下错误，不用理会，因为把husky移除导致的，不影响系统正常运行，进行下步dev脚本即可
 husky install
@@ -113,9 +104,9 @@ husky install
 cip-client是一个模拟的接口平台客户端，是一个独立的springboot，相当于第三方系统，有自己独立的数据库，数据库脚本参见\cip-client\src\main\resources\init.sql
 
 #### 6 .minio启用说明
-平台对于文件存储除了支持本地磁盘模式外，还实现了minio对象存储组件的集成。如需启用，需安装minio服务端，版本2021-04-22T15-44-28Z（最后一个基于apache 2.0开源协议的版本)，并修改平台配置文件。
 
-
+平台对于文件存储除了支持本地磁盘模式外，还实现了minio对象存储组件的集成。如需启用，需安装minio服务端，版本2021-04-22T15-44-28Z（最后一个基于apache
+2.0开源协议的版本)，并修改平台配置文件。
 
 ### 未来规划
 
@@ -133,8 +124,11 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 实现数据权限（未开始）
 
 ### 基于平台开发的应用
+
 #### 文档管理系统
+
 文档管理系统是基于平台实现的文档库管理应用，可作为企业内部文档库、知识库使用，主要包括以下功能：
+
 * 文件夹管理：创建、更名、删除、复制、移动、授权；
 * 文档管理：上传、下载、更名、复制、移动、预览、分享；
 * 权限控制：按组织机构和按用户组两种授权模式；
@@ -144,7 +138,7 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 
 ### 系统设计资料
 
-参见csdn博客专栏 [http://t.csdn.cn/Zug2R](http://t.csdn.cn/Zug2R)
+参见csdn博客专栏 [https://blog.csdn.net/seawaving/category_12230971.html](https://blog.csdn.net/seawaving/category_12230971.html)
 平台研发过程中的设计思路、遇到的问题和方案的选择等一并分享出来，欢迎交流与讨论。
 
 

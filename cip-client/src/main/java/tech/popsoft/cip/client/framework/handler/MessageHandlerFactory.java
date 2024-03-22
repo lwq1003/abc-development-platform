@@ -11,13 +11,10 @@ import tech.popsoft.cip.client.platform.exception.CustomException;
  * 消息处理器工厂
  *
  * @author wqliu
- * @date 2021-10-13 9:07
+ * @date 2021-10-13
  **/
 public class MessageHandlerFactory {
-    private MessageHandlerFactory() {
-    }
 
-    ;
 
     public static MessageHandler createHandler(String topic) {
         // 使用反射技术获取类

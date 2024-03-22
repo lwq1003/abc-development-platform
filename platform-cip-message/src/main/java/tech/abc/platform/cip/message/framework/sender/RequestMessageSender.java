@@ -7,10 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import tech.abc.platform.cip.common.entity.RequestMessage;
+import tech.abc.platform.cip.common.enums.ApiMessageStatusEnum;
+import tech.abc.platform.cip.common.enums.IntegrationModelEnum;
 import tech.abc.platform.cip.common.enums.MessageStatusEnum;
-import tech.abc.platform.cip.entity.MessageLog;
+import tech.abc.platform.cip.entity.ActiveMessage;
+import tech.abc.platform.cip.entity.App;
 import tech.abc.platform.cip.message.framework.MessageServerHolder;
 import tech.abc.platform.cip.service.AppDataPermissionService;
+import tech.abc.platform.cip.service.AppService;
 import tech.abc.platform.cip.service.MessageSubscriptionService;
 import tech.abc.platform.common.utils.SpringUtil;
 
@@ -27,9 +31,12 @@ import java.util.List;
 public class RequestMessageSender extends MessageSender {
 
 
-    protected MessageSubscriptionService apiMessageSubscriptionService = SpringUtil.getBean(MessageSubscriptionService.class);
+    protected MessageSubscriptionService messageSubscriptionService = SpringUtil.getBean(MessageSubscriptionService.class);
 
-    protected AppDataPermissionService apiDataPermissionService = SpringUtil.getBean(AppDataPermissionService.class);
+    protected AppDataPermissionService appDataPermissionService = SpringUtil.getBean(AppDataPermissionService.class);
+
+
+    protected AppService appService = SpringUtil.getBean(AppService.class);
 
     /**
      * 数据权限通配符
@@ -67,33 +74,49 @@ public class RequestMessageSender extends MessageSender {
         }
         message.setPublishAppCode(appConfig.getMessage().getMessageServerAppCode());
 
-        // 获取发送通道
-        Channel channel = MessageServerHolder.getChannel(appCode);
-        if (channel != null && channel.isActive()) {
-            ChannelFuture channelFuture = channel.writeAndFlush(message);
-            channelFuture.addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
+        App app = appService.getByCode(appCode);
+        if (app.getIntegrationModel().equals(IntegrationModelEnum.CLIENT.name())) {
+            // 客户端对接模式
+            // 获取发送通道
+            Channel channel = MessageServerHolder.getChannel(appCode);
+            if (channel != null && channel.isActive()) {
+                ChannelFuture channelFuture = channel.writeAndFlush(message);
+                channelFuture.addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture future) throws Exception {
 
-                    if (StringUtils.isBlank(id)) {
-                        // 创建日志
-                        MessageLog log = apiMessageLogService.createRequestPart(message, appCode);
-                        // 设置状态为已请求
-                        apiMessageLogService.updateStatus(MessageStatusEnum.REQUESTED.name(), log.getRequestId());
-                        // 发送次数加1
-                        apiMessageLogService.incrementSendCount(log.getRequestId());
+                        if (StringUtils.isBlank(id)) {
+                            // 创建活跃消息
+                            ActiveMessage activeMessage = activeMessageService.createRequestPart(message, appCode);
+                            // 设置状态为已请求
+                            activeMessageService.updateStatus(MessageStatusEnum.REQUESTED.name(), activeMessage.getRequestId());
+                            // 发送次数加1
+                            activeMessageService.incrementSendCount(activeMessage.getRequestId());
 
-                    } else {
-                        // 更新发送次数
-                        apiMessageLogService.incrementSendCount(id);
+                        } else {
+                            // 更新发送次数
+                            activeMessageService.incrementSendCount(id);
+                        }
                     }
-                }
-            });
+                });
+
+            } else {
+                // 创建日志
+                activeMessageService.createRequestPart(message, appCode);
+            }
 
         } else {
-            // 创建日志
-            apiMessageLogService.createRequestPart(message, appCode);
+            // api接口对接模式
+            if (StringUtils.isBlank(id)) {
+                // 创建活跃消息
+                ActiveMessage activeMessage = activeMessageService.createRequestPart(message, appCode);
+                // 设置状态为待处理
+                activeMessageService.updateStatus(ApiMessageStatusEnum.WAIT_HANDLE.name(), activeMessage.getRequestId());
+
+            }
+            
         }
+
 
     }
 
@@ -105,7 +128,7 @@ public class RequestMessageSender extends MessageSender {
      */
     public void sendMessage(String content) {
         // 查找是否有消息订阅者，无则直接终止后续处理
-        List<String> subscriberList = apiMessageSubscriptionService.getSubscriberList(super.getTopic());
+        List<String> subscriberList = messageSubscriptionService.getSubscriberList(super.getTopic());
         if (CollectionUtils.isEmpty(subscriberList)) {
             return;
         }

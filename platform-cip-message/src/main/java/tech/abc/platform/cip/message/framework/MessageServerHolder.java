@@ -75,7 +75,7 @@ public class MessageServerHolder {
     }
 
     /**
-     * 根据应用编码获取相应通道
+     * 根据通道获取相应应用编码
      *
      * @param channel
      */
@@ -84,8 +84,6 @@ public class MessageServerHolder {
         // 从channel属性中读取到用户标识
         AttributeKey<String> appCodeAttribute = AttributeKey.valueOf(APP_CODE_KEY);
         return channel.attr(appCodeAttribute).get();
-
-
     }
 
 

@@ -9,7 +9,7 @@ import tech.abc.platform.cip.message.framework.handler.RequestMessageHandler;
  * 登录请求处理器
  *
  * @author wqliu
- * @date 2021-10-13 19:19
+ * @date 2021-10-13
  **/
 @Slf4j
 public class LoginRequestHandler extends RequestMessageHandler {

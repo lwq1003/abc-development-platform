@@ -57,7 +57,7 @@ public class ResponseMessageSender extends MessageSender {
         channel.writeAndFlush(responseMessage);
 
         // 更新消息日志
-        apiMessageLogService.updateResponsePart(responseMessage);
+        messageLogService.updateResponsePart(responseMessage);
 
     }
 

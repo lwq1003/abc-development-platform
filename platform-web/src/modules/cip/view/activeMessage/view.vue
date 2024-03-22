@@ -64,6 +64,9 @@
       <el-form-item label="状态" prop="status">
         <dictionary-select v-model="entityData.status" code="MessageStatus" />
       </el-form-item>
+      <el-form-item label="发送次数" prop="sendCount">
+        <el-input v-model="entityData.sendCount" />
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="close">关闭</el-button>
@@ -74,7 +77,7 @@
 <script>
 import { viewMixin } from '@/mixin/viewMixin.js'
 const MODULE_CODE = 'cip'
-const ENTITY_TYPE = 'messageLog'
+const ENTITY_TYPE = 'activeMessage'
 export default {
   name: ENTITY_TYPE + '-view',
   components: {},

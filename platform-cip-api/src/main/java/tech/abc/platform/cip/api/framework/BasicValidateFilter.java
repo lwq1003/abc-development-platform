@@ -24,13 +24,20 @@ import java.util.Set;
 public class BasicValidateFilter implements ApiFilter {
     @Override
     public void doFilter(ApiRequest request, ApiResponse response, ApiFilterChain chain) {
-        log.info("进入基本数据验证");
+
+        // 验证请求
         validate(request);
+        // 验证请求时间格式
         validateRequestTimeFormat(request.getRequestTime());
         chain.doFilter(request, response);
     }
 
 
+    /**
+     * 验证请求
+     *
+     * @param apiRequest api请求
+     */
     private void validate(ApiRequest apiRequest) {
         Validator validator = Validation.byProvider(HibernateValidator.class).configure()
                 .failFast(true).buildValidatorFactory().getValidator();

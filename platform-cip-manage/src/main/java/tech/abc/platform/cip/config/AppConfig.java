@@ -12,7 +12,7 @@ import tech.abc.platform.cip.config.properties.message.MessageProperties;
  */
 
 @Data
-@ConfigurationProperties(prefix = "app-config")
+@ConfigurationProperties(prefix = "platform-config")
 public class AppConfig {
     /**
      * 消息配置
