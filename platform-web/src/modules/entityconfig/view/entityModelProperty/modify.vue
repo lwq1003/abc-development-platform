@@ -132,6 +132,7 @@ import { modifyMixin } from '@/mixin/modifyMixin.js'
 import SerialNoReference from '@/modules/support/view/serialNo/reference.vue'
 import EntityReference from '@/modules/entityconfig/view/entity/reference.vue'
 import util from '@/modules/entityconfig/util/util.js'
+
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityModelProperty'
 export default {
@@ -177,14 +178,8 @@ export default {
         .getFullPropertyList(this.entityData.entityModel)
         .then((res) => {
           this.propertyList = res.data
-
-          const widgetType = util.getWidgetType(this.entityData.dataType)
-          // 数值类公用控件类型，不相等时再置空
-          if (widgetType != this.widgetType) {
-            this.entityData.widgetType = ''
-            //根据数据类型获取控件类型列表
-            this.widgetType = widgetType
-          }
+          // 根据数据类型设置控件类型下拉列表的字典类型值
+          this.widgetType = util.getWidgetType(this.entityData.dataType)
         })
     },
     afterSave() {
@@ -256,6 +251,14 @@ export default {
       }
 
       return true
+    },
+    // 重写关闭方法，关闭时销毁窗体，否则控件类型下拉列表会因上一次的残留导致执行结果绑定次序不一定按照时序导致错误
+    close() {
+      if (this.$refs['form'] !== undefined) {
+        this.$refs['form'].resetFields()
+        this.$refs['form'].clearValidate()
+      }
+      this.visible = false
     }
   }
 }

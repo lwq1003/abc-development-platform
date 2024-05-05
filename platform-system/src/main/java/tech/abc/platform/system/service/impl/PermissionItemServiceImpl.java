@@ -102,8 +102,10 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
 
     @Override
     protected void afterModify(PermissionItem entity, PermissionItem orginEntity) {
-        // 若编码或上级发生变化，则级联修改下级权限编码
-        if (entity.getCode().equals(orginEntity.getCode()) == false || entity.getPermissionItem().equals(orginEntity.getPermissionItem()) == false) {
+        // 若编码或上级或权限编码发生变化，则级联修改下级权限编码
+        if (entity.getCode().equals(orginEntity.getCode()) == false
+                || entity.getPermissionItem().equals(orginEntity.getPermissionItem()) == false
+                || entity.getPermissionCode().equals(orginEntity.getPermissionCode()) == false) {
             List<PermissionItem> list = this.lambdaQuery().eq(PermissionItem::getPermissionItem, entity.getId()).list();
             if (CollectionUtils.isNotEmpty(list)) {
                 for (PermissionItem item : list) {
@@ -124,6 +126,12 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
         if (count > 0) {
             groupPermissionItemService.remove(queryWrapper);
         }
+
+        // 删除子项
+        QueryWrapper<PermissionItem> queryWrapperSub = new QueryWrapper<>();
+        queryWrapperSub.lambda().eq(PermissionItem::getPermissionItem, entity.getId());
+        this.remove(queryWrapperSub);
+
     }
 
     @Override
@@ -249,7 +257,7 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
             }
 
         } while (!tempEntity.getPermissionItem().equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_ID));
-    
+
         return MessageFormat.format("{0}/view/{1}/{2}", tempEntity.getCode(), folderCode, entity.getViewCode());
 
     }

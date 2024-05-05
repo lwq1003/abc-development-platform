@@ -86,13 +86,21 @@ public interface BaseService<T> extends IService<T> {
 
 
     /**
-     * 通过复制新增数据
+     * 通过复制批量新增数据
      *
      * @param idListString id字符串列表
      * @param value        需替换的值
      * @return boolean
      */
-    boolean addByCopy(String idListString,String...value);
+    boolean addByCopy(String idListString, String... value);
 
 
+    /**
+     * 通过复制新增单条数据
+     *
+     * @param id    标识
+     * @param value 需替换的值
+     * @return T 新增后的对象
+     */
+    T addSingleByCopy(String id, String... value);
 }

@@ -47,7 +47,11 @@ public class ${entity} implements Serializable {
     * ${field.name}
     */
     </#if>
+    <#if field.dataType=='INTEGER' || field.dataType=='LONG' || field.dataType=='DECIMAL' || field.dataType=='DOUBLE' || field.dataType=='DATETIME'>
+    @TableField(value="${field.code?uncap_first?replace("([A-Z])", "_$1", "r")?lower_case}",updateStrategy= FieldStrategy.IGNORED)
+    <#else>
     @TableField("${field.code?uncap_first?replace("([A-Z])", "_$1", "r")?lower_case}")
+    </#if>
     private ${field.propertyDataType} ${field.code};
 
 </#list>

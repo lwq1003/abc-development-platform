@@ -43,7 +43,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         entity.setId(IdWorker.getIdStr());
         //默认值处理
         <#list entityModelPropertyList as item>
-            <#if item.defaultValue??>
+            <#if item.defaultValue?? && item.defaultValue!="">
                 <#if item.dataType=="STRING" || item.dataType=="DATA_DICTIONARY">
         entity.set${item.code?cap_first}("${item.defaultValue}");
                 <#elseif item.dataType=="INTEGER" || item.dataType=="LONG" || item.dataType=="DOUBLE" >

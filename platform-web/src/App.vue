@@ -97,4 +97,7 @@ body {
 .el-form-item .el-input {
   width: 220px;
 }
+.el-form-item .el-input-number {
+  width: 220px;
+}
 </style>

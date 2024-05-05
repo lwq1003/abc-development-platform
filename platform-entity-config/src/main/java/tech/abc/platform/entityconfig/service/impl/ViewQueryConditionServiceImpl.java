@@ -134,13 +134,14 @@ public class ViewQueryConditionServiceImpl extends BaseServiceImpl<ViewQueryCond
         entity.setWidgetType(entityModelProperty.getWidgetType());
         entity.setFormatPattern(entityModelProperty.getFormatPattern());
         entity.setDictionaryType(entityModelProperty.getDictionaryType());
-        entity.setDefaultValue(entityModelProperty.getDefaultValue());
         entity.setModuleCode(entityModelProperty.getModuleCode());
         entity.setEntityCode(entityModelProperty.getEntityCode());
         // 默认将字符串类型设置匹配模式为模糊
         if (entityModelProperty.getDataType().equals(EntityModelPropertyTypeEnum.STRING.name())) {
             entity.setMatchRule(QueryRuleEnum.LK.name());
         }
+        // 注意，此处特意没有拷贝默认值，因为查询条件设置默认值特别是数据字典类型会影响默认查询结果
+
         this.add(entity);
     }
 

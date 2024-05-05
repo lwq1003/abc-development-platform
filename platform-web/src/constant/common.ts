@@ -55,9 +55,13 @@ export const COMMON_METHOD = {
   list(params) {
     return request.get({ url: this.serveUrl + 'list', params })
   },
-  // 复制新增
+  // 批量复制新增
   addByCopy(ids) {
     return request.post({ url: this.serveUrl + ids })
+  },
+  // 单条复制新增
+  addSingleByCopy(id) {
+    return request.post({ url: this.serveUrl + id + '/addSingleByCopy' })
   }
 }
 

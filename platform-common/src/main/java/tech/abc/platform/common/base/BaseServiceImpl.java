@@ -77,7 +77,11 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
     public boolean remove(String idListString) {
         String[] idArray = StringUtils.split(idListString.toString(), ",");
         for (String item : idArray) {
-            T entity = getEntity(item);
+            T entity = getById(item);
+            if (entity == null) {
+                // 删除环节对象为空时视为操作成功（批量删除时，如存在父子对象，且删除父对象时级联删除子对象，会导致运行到子对象删除环节找不到该对象）
+                continue;
+            }
             beforeRemove(entity);
             super.removeById(item);
             afterRemove(entity);
@@ -108,24 +112,31 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
     public boolean addByCopy(String idListString, String... value) {
         String[] idArray = StringUtils.split(idListString.toString(), ",");
         for (String item : idArray) {
-            T entity = getEntity(item);
-            T newEntity = init();
-            mapperFacade.map(entity, newEntity);
-            // 清空系统属性
-            newEntity.setId(null);
-            newEntity.setCreateId(null);
-            newEntity.setCreateTime(null);
-            newEntity.setUpdateId(null);
-            newEntity.setUpdateTime(null);
-            newEntity.setVersion(1);
+            addSingleByCopy(item, value);
 
-            // 拷贝属性处理
-            copyPropertyHandle(newEntity, value);
-
-            super.save(newEntity);
-            afterAddByCopy(entity, newEntity);
         }
         return true;
+    }
+
+    @Override
+    public T addSingleByCopy(String id, String... value) {
+        T entity = getEntity(id);
+        T newEntity = init();
+        mapperFacade.map(entity, newEntity);
+        // 清空系统属性
+        newEntity.setId(null);
+        newEntity.setCreateId(null);
+        newEntity.setCreateTime(null);
+        newEntity.setUpdateId(null);
+        newEntity.setUpdateTime(null);
+        newEntity.setVersion(1);
+
+        // 拷贝属性处理
+        copyPropertyHandle(newEntity, value);
+
+        super.save(newEntity);
+        afterAddByCopy(entity, newEntity);
+        return newEntity;
     }
 
 

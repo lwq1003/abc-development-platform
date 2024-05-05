@@ -187,7 +187,17 @@ public class ${table.controllerName} {
     }
 
 
-
+    /**
+    * 复制新增单条数据，返回复制后的对象
+    */
+    @PostMapping("/{id}/addSingleByCopy")
+    @SystemLog(value = "${table.comment!}-复制新增")
+    @PreAuthorize("hasPermission(null,'${package.ModuleName}:${entity?uncap_first}:addByCopy')")
+    public ResponseEntity<Result> addSingleByCopy(@PathVariable("id") String id) {
+        ${entity} entity = ${entity?uncap_first}Service.addSingleByCopy(id);
+        ${entity}VO vo = convert2VO(entity);
+        return ResultUtil.success(vo);
+    }
     //endregion
 
     //region 扩展操作
