@@ -3,13 +3,14 @@ import { Form } from '@/components/Form'
 import { reactive, ref, unref } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useForm } from '@/hooks/web/useForm'
-import { ElButton, ElInput, FormRules } from 'element-plus'
+import { ElButton, ElInput, ElMessage, FormRules } from 'element-plus'
 import { useValidator } from '@/hooks/web/useValidator'
 import { FormSchema } from '@/types/form'
+import { registerApi } from '@/api/login'
 
 const emit = defineEmits(['to-login'])
 
-const { register, elFormRef } = useForm()
+const { register, elFormRef, methods } = useForm()
 
 const { t } = useI18n()
 
@@ -23,15 +24,32 @@ const schema = reactive<FormSchema[]>([
     }
   },
   {
-    field: 'username',
-    label: t('login.username'),
+    field: 'account',
+    label: '账号',
     value: '',
     component: 'Input',
     colProps: {
       span: 24
     },
     componentProps: {
+      style: {
+        width: '100%'
+      },
       placeholder: t('login.usernamePlaceholder')
+    }
+  },
+  {
+    field: 'name',
+    label: '昵称',
+    value: '',
+    component: 'Input',
+    colProps: {
+      span: 24
+    },
+    componentProps: {
+      style: {
+        width: '100%'
+      }
     }
   },
   {
@@ -51,7 +69,7 @@ const schema = reactive<FormSchema[]>([
     }
   },
   {
-    field: 'check_password',
+    field: 'checkPassword',
     label: t('login.checkPassword'),
     value: '',
     component: 'InputPassword',
@@ -66,11 +84,19 @@ const schema = reactive<FormSchema[]>([
       placeholder: t('login.passwordPlaceholder')
     }
   },
+
   {
-    field: 'code',
-    label: t('login.code'),
+    field: 'email',
+    label: '邮箱',
+    value: '',
+    component: 'Input',
     colProps: {
       span: 24
+    },
+    componentProps: {
+      style: {
+        width: '100%'
+      }
     }
   },
   {
@@ -82,10 +108,11 @@ const schema = reactive<FormSchema[]>([
 ])
 
 const rules: FormRules = {
-  username: [required()],
+  account: [required()],
   password: [required()],
-  check_password: [required()],
-  code: [required()]
+  checkPassword: [required()],
+  name: [required()],
+  email: [required()]
 }
 
 const toLogin = () => {
@@ -100,6 +127,16 @@ const loginRegister = async () => {
     if (valid) {
       try {
         loading.value = true
+        // 获取表单数据
+        const { getFormData } = methods
+        const formData = await getFormData()
+        // 验证两次输入密码是否一致
+        if (formData.password != formData.checkPassword) {
+          ElMessage.error('两次密码不一致')
+          return
+        }
+        // 注册用户
+        await registerApi(formData)
         toLogin()
       } finally {
         loading.value = false

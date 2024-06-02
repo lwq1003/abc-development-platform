@@ -44,6 +44,16 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     }
   },
   {
+    path: '/selfResetPassword',
+    component: () => import('@/views/Login/components/SelfResetPassword.vue'),
+    name: 'SelfResetPassword',
+    meta: {
+      hidden: true,
+      title: '重设密码',
+      noTagsView: true
+    }
+  },
+  {
     path: '/404',
     component: () => import('@/views/Error/404.vue'),
     name: 'NoFind',

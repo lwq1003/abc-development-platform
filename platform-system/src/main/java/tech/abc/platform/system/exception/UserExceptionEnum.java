@@ -62,6 +62,24 @@ public enum UserExceptionEnum implements ExceptionInterface {
      */
     ORGANIZATION_NAME_AND_CODE_CANOT_NULL("组织机构名称和组织机构编码不能同时为空"),
 
+    /**
+     * 账号与邮箱不匹配
+     */
+    ACCOUNT_EMAIL_NOT_MATCH("账号与邮箱不匹配，请确认"),
+
+    /**
+     * 该邮箱未注册
+     */
+    EMAIl_NOT_REGISTER("该邮箱未注册，请确认"),
+
+    /**
+     * 授权码已失效
+     */
+    AUTHORIZATION_CODE_EXPIRED("授权码已失效，请重新获取"),
+    /**
+     * 账号不存在
+     */
+    ACCOUNT_NOT_EXIST("账号不存在"),
     ;
     private String message;
 

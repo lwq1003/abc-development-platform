@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, unref, watch } from 'vue'
+import { reactive, ref, unref, watch, computed } from 'vue'
 import { Form } from '@/components/Form'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElButton } from 'element-plus'
@@ -9,17 +9,18 @@ import { loginApi } from '@/api/login'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
 import { usePermissionStore } from '@/store/modules/permission'
-import { useRouter } from 'vue-router'
 import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { UserType } from '@/api/login/types'
 import { useValidator } from '@/hooks/web/useValidator'
 import { FormSchema } from '@/types/form'
 import useGetGlobalProperties from '@/hooks/useGlobal'
+
 const globalProperties = useGetGlobalProperties()
 
 const { required } = useValidator()
 
-const appStore = useAppStore()
+const emit = defineEmits(['to-register'])
 
 const userStore = useUserStore()
 
@@ -34,6 +35,9 @@ const rules = {
   password: [required()]
 }
 
+//读取 是否启用注册 配置
+const appStore = useAppStore()
+const enableRegister = computed(() => appStore.getEnableRegister)
 const schema = reactive<FormSchema[]>([
   {
     field: 'title',
@@ -50,6 +54,9 @@ const schema = reactive<FormSchema[]>([
       span: 24
     },
     componentProps: {
+      style: {
+        width: '100%'
+      },
       placeholder: t('login.usernamePlaceholder')
     }
   },
@@ -73,12 +80,24 @@ const schema = reactive<FormSchema[]>([
     colProps: {
       span: 24
     }
+  },
+  {
+    field: 'tool',
+    colProps: {
+      span: 24
+    }
   }
 ])
+
+const iconSize = 30
+
+// const remember = ref(false)
 
 const { register, elFormRef, methods } = useForm()
 
 const loading = ref(false)
+
+const iconColor = '#999'
 
 const redirect = ref<string>('')
 
@@ -108,6 +127,7 @@ const signIn = async () => {
 
       try {
         const res = await loginApi(formData)
+
         if (res) {
           // 保存用户信息
           userStore.setUserAction(res.data)
@@ -131,6 +151,18 @@ const signIn = async () => {
     }
   })
 }
+
+// 去注册页面
+const toRegister = () => {
+  emit('to-register')
+}
+
+// 打开找回密码对话框
+import RetrievePasswordForm from './RetrievePassword.vue'
+const retrievePasswordForm = ref(null)
+const retrievePassword = () => {
+  retrievePasswordForm.value.init()
+}
 </script>
 
 <template>
@@ -142,10 +174,18 @@ const signIn = async () => {
     size="large"
     class="dark:(border-1 border-[var(--el-border-color)] border-solid)"
     @register="register"
-    @keyup="keyUp"
   >
     <template #title>
       <h2 class="text-2xl font-bold text-center w-[100%]">{{ t('login.login') }}</h2>
+    </template>
+
+    <template #tool>
+      <div class="flex justify-end items-center w-[100%]" v-show="enableRegister">
+        <!-- <ElCheckbox v-model="remember" :label="t('login.remember')" size="small" /> -->
+        <ElLink type="primary" :underline="false" @click="retrievePassword">{{
+          t('login.forgetPassword')
+        }}</ElLink>
+      </div>
     </template>
 
     <template #login>
@@ -154,8 +194,43 @@ const signIn = async () => {
           {{ t('login.login') }}
         </ElButton>
       </div>
+      <div class="w-[100%] mt-15px" v-show="enableRegister">
+        <ElButton class="w-[100%]" @click="toRegister">
+          {{ t('login.register') }}
+        </ElButton>
+      </div>
+    </template>
+
+    <template #otherIcon>
+      <div class="flex justify-between w-[100%]">
+        <Icon
+          icon="ant-design:github-filled"
+          :size="iconSize"
+          class="cursor-pointer anticon"
+          :color="iconColor"
+        />
+        <Icon
+          icon="ant-design:wechat-filled"
+          :size="iconSize"
+          class="cursor-pointer anticon"
+          :color="iconColor"
+        />
+        <Icon
+          icon="ant-design:alipay-circle-filled"
+          :size="iconSize"
+          :color="iconColor"
+          class="cursor-pointer anticon"
+        />
+        <Icon
+          icon="ant-design:weibo-circle-filled"
+          :size="iconSize"
+          :color="iconColor"
+          class="cursor-pointer anticon"
+        />
+      </div>
     </template>
   </Form>
+  <RetrievePasswordForm ref="retrievePasswordForm" />
 </template>
 
 <style lang="less" scoped>
@@ -163,9 +238,5 @@ const signIn = async () => {
   &:hover {
     color: var(--el-color-primary) !important;
   }
-}
-
-:deep(.el-input) {
-  width: 100%;
 }
 </style>

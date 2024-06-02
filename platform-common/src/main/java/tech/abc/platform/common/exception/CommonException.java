@@ -108,7 +108,10 @@ public enum CommonException implements ExceptionInterface {
      */
     ENUM_TYPE_NOT_FOUNT("未找到对应的枚举类型：【{0}】"),
 
-    ;
+    /**
+     * 无效的枚举值
+     */
+    INVALID_ENUM("无效的枚举值:{0}");
 
     private String message;
 

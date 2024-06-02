@@ -31,5 +31,4 @@ public class SystemProperties {
      */
     private String tokenSecret = "wqliu";
 
-
 }

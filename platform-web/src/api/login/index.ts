@@ -4,10 +4,17 @@ import type { UserType } from './types'
 interface RoleParams {
   roleName: string
 }
-
+// 登录
 export const loginApi = (data: UserType) => {
   return request.post({
     url: '/system/user/login?username=' + data.username + '&password=' + data.password,
+    data
+  })
+}
+// 注册
+export const registerApi = (data) => {
+  return request.post({
+    url: '/system/user/register',
     data
   })
 }

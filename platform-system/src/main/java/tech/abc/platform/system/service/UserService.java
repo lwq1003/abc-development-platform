@@ -22,7 +22,7 @@ public interface UserService extends BaseService<User> {
      * @return 集合
      */
     Map<String, String> getNameMap(List<String> idList);
-   
+
     /**
      * 启用
      *
@@ -61,11 +61,11 @@ public interface UserService extends BaseService<User> {
     /**
      * 用户修改密码
      *
-     * @param account     账号
+     * @param id          用户标识
      * @param oldPassword 旧密码
      * @param newPassword 新密码
      */
-    void changePassword(String account, String oldPassword, String newPassword);
+    void changeUserPassword(String id, String oldPassword, String newPassword);
 
     /**
      * 更新登录失败次数
@@ -119,8 +119,47 @@ public interface UserService extends BaseService<User> {
 
     /**
      * 获取姓名
+     *
      * @param id 用户标识
      * @return {@link String} 姓名
      */
     String getNameById(String id);
+
+    /**
+     * 注册用户
+     *
+     * @param entity
+     */
+    void register(User entity);
+
+    /**
+     * 找回密码
+     *
+     * @param email 邮箱
+     */
+    void retrievePassword(String email);
+
+    /**
+     * 根据授权码获取账号
+     *
+     * @param code 授权码
+     * @return {@link String}  账号
+     */
+    String getAccoutByCode(String code);
+
+    /**
+     * 自助重设密码
+     *
+     * @param code     授权码
+     * @param password 新密码
+     */
+    void selfResetPassword(String code, String password);
+
+    /**
+     * 根据账号获取用户标识
+     *
+     * @param account 账号
+     * @return {@link String} 用户标识
+     */
+    String getIdByAccount(String account);
 }

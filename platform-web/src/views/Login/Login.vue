@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LoginForm } from './components'
+import { LoginForm, RegisterForm } from './components'
 import { ThemeSwitch } from '@/components/ThemeSwitch'
 
 import { useI18n } from '@/hooks/web/useI18n'
@@ -17,6 +17,14 @@ const appStore = useAppStore()
 const { t } = useI18n()
 
 const isLogin = ref(true)
+
+const toRegister = () => {
+  isLogin.value = false
+}
+
+const toLogin = () => {
+  isLogin.value = true
+}
 </script>
 
 <template>
@@ -64,6 +72,12 @@ const isLogin = ref(true)
             <LoginForm
               v-if="isLogin"
               class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)"
+              @to-register="toRegister"
+            />
+            <RegisterForm
+              v-else
+              class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)"
+              @to-login="toLogin"
             />
           </div>
         </Transition>

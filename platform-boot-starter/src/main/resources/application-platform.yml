@@ -120,6 +120,7 @@ platform-config:
     userInitPassword: 12345678
     tokenSecret: wqliu
     exportDataPageSize: 2
+    systemUrl: http://localhost:4000
   notification:
     serverPort: 9997
   message:
@@ -179,10 +180,10 @@ platform-config:
 #工作流配置
 camunda:
   bpm:
-#    admin-user:
-#      id: admin
-#      password: admin
-#      firstName: Kermit
+    #    admin-user:
+    #      id: admin
+    #      password: admin
+    #      firstName: Kermit
     database:
       type: mysql
       schema-update: true

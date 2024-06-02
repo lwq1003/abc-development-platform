@@ -18,6 +18,12 @@ const { emitter } = useEmitt()
 emitter.on('closeCurrentTab', () => {
   closeSelectedTag(unref(selectedTag) as RouteLocationNormalizedLoaded)
 })
+emitter.on('refreshCurrentTab', () => {
+  refreshSelectedTag(unref(selectedTag) as RouteLocationNormalizedLoaded)
+})
+emitter.on('refreshSelectedTagWithQuery', (query) => {
+  refreshSelectedTagWithQuery(unref(selectedTag) as RouteLocationNormalizedLoaded, query)
+})
 
 emitter.on('closeTab', (view) => {
   closeSelectedTag(view as RouteLocationNormalizedLoaded)
@@ -95,6 +101,18 @@ const refreshSelectedTag = async (view?: RouteLocationNormalizedLoaded) => {
   if (!view) return
   tagsViewStore.delCachedView()
   const { path, query } = view
+  await nextTick()
+  replace({
+    path: '/redirect' + path,
+    query: query
+  })
+}
+
+// 重新加载
+const refreshSelectedTagWithQuery = async (view?: RouteLocationNormalizedLoaded, query) => {
+  if (!view) return
+  tagsViewStore.delCachedView()
+  const { path } = view
   await nextTick()
   replace({
     path: '/redirect' + path,

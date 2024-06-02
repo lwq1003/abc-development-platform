@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tech.abc.platform.common.annotation.AllowAll;
 import tech.abc.platform.common.annotation.AllowAuthenticated;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
@@ -26,6 +27,7 @@ import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
+import tech.abc.platform.system.vo.RegisterUserVO;
 import tech.abc.platform.system.vo.UserChangePasswordVO;
 import tech.abc.platform.system.vo.UserVO;
 
@@ -230,7 +232,7 @@ public class UserController extends BaseController {
     @AllowAuthenticated
     public ResponseEntity<Result> changePassword(@RequestBody UserChangePasswordVO vo) {
 
-        userService.changePassword(vo.getUserId(), vo.getOldPassword(), vo.getNewPassword());
+        userService.changeUserPassword(vo.getUserId(), vo.getOldPassword(), vo.getNewPassword());
         return ResultUtil.success();
     }
 
@@ -349,6 +351,55 @@ public class UserController extends BaseController {
         return ResultUtil.success(new ArrayList<UserVO>());
     }
 
+    /**
+     * 注册
+     */
+    @PostMapping("/register")
+    @SystemLog(value = "用户-注册")
+    @AllowAll
+    public ResponseEntity<Result> register(@Validated @RequestBody RegisterUserVO vo) {
+        User entity = new User();
+        mapperFacade.map(vo, entity);
+        userService.register(entity);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 注册
+     */
+    @PostMapping("/retrievePassword")
+    @SystemLog(value = "用户-找回密码")
+    @AllowAll
+    public ResponseEntity<Result> retrievePassword(String email) {
+        userService.retrievePassword(email);
+        return ResultUtil.success();
+    }
+
+
+    /**
+     * 根据授权码获取账号
+     */
+    @GetMapping("/getAccoutByCode")
+    @SystemLog(value = "用户-根据授权码获取账号")
+    @AllowAll
+    public ResponseEntity<Result> getAccoutByCode(String code) {
+        String account = userService.getAccoutByCode(code);
+        return ResultUtil.success(account);
+    }
+
+    /**
+     * 用户自助重设密码
+     */
+    @PutMapping("/selfResetPassword")
+    @SystemLog(value = "用户自助重设密码", logType = LogTypeEnum.AUDIT)
+    @AllowAll
+    public ResponseEntity<Result> selfResetPassword(String code, String password) {
+        userService.selfResetPassword(code, password);
+        return ResultUtil.success();
+    }
+
+    // endregion
+    // region 辅助操作
 
     private UserVO convert2VO(User entity) {
         UserVO vo = mapperFacade.map(entity, UserVO.class);

@@ -59,8 +59,13 @@ export const user = Object.assign({}, COMMON_METHOD, {
   disable(id) {
     return request.put({ url: this.serveUrl + id + '/disable' })
   },
+  // 管理员重置密码
   resetPassword(id) {
     return request.put({ url: this.serveUrl + id + '/resetPassword' })
+  },
+  // 自助重置密码，用于忘记密码
+  selfResetPassword(code, password) {
+    return request.put({ url: this.serveUrl + 'selfResetPassword', params: { code, password } })
   },
   unlock(id) {
     return request.put({ url: this.serveUrl + id + '/unlock' })
@@ -111,6 +116,14 @@ export const user = Object.assign({}, COMMON_METHOD, {
   // 导出
   export(params) {
     return request.download({ url: this.serveUrl + 'exportExcel', params })
+  },
+  // 找回密码
+  retrievePassword(email) {
+    return request.post({ url: this.serveUrl + 'retrievePassword', params: { email } })
+  },
+  //根据授权码获取账号
+  getAccoutByCode(code) {
+    return request.get({ url: this.serveUrl + 'getAccoutByCode', params: { code } })
   }
   // // 高级查询初始化
   // initAdvanceQuery() {

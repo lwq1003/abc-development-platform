@@ -153,6 +153,16 @@ export function closeCurrentTab() {
   emitter.emit('closeCurrentTab')
 }
 
+/**
+ * 刷新当前tab页
+ */
+export function refreshCurrentTab() {
+  emitter.emit('refreshCurrentTab')
+}
+export function refreshSelectedTagWithQuery(query) {
+  emitter.emit('refreshCurrentTab', query)
+}
+
 export function closeTab(view) {
   emitter.emit('closeTab', view)
 }

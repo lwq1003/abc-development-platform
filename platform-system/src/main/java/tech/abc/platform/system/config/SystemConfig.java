@@ -23,5 +23,10 @@ public class SystemConfig {
      */
     private String userInitPassword = "654321";
 
+    /**
+     * 系统地址
+     */
+    private String systemUrl = "http://localhost:4000";
+
 
 }

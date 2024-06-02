@@ -9,19 +9,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseServiceImpl;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.utils.CacheUtil;
 import tech.abc.platform.common.utils.EncryptUtil;
+import tech.abc.platform.mail.service.MailService;
 import tech.abc.platform.system.config.SystemConfig;
 import tech.abc.platform.system.constant.SystemConstant;
 import tech.abc.platform.system.entity.GroupUser;
 import tech.abc.platform.system.entity.PermissionItem;
 import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.entity.UserPasswordChangeLog;
-import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.exception.UserExceptionEnum;
@@ -31,9 +32,8 @@ import tech.abc.platform.system.utils.PasswordUtil;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户 服务实现类
@@ -65,6 +65,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Autowired
     private PermissionItemService permissionItemService;
+
+    @Autowired
+    private MailService mailService;
 
     @Override
     public User init() {
@@ -212,36 +215,42 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void changePassword(String id, String oldPassword, String newPassword) {
-        // 检验账号以及旧密码，验证新密码强度
-        User user = checkAccountPassword(id, oldPassword, newPassword);
+    public void changeUserPassword(String id, String oldPassword, String newPassword) {
+        // 检验旧密码是否正确，以及新旧密码是否相同
+        checkAccountPassword(id, oldPassword, newPassword);
         // 校验密码安全规则
-        checkSafePolicy(user, newPassword);
+        checkSafePolicy(id, newPassword);
+        // 修改密码
+        changePassword(id, newPassword);
+    }
+
+    private void changePassword(String id, String password) {
+        User user = query(id);
+        // 缓存原始密码
+        String originPassword = user.getPassword();
         // 修改密码
         // 设置密码加密
-        String encrtyPassword = EncryptUtil.bCryptPasswordEncode(newPassword);
+        String encrtyPassword = EncryptUtil.bCryptPasswordEncode(password);
         user.setPassword(encrtyPassword);
         // 将强制修改密码标识位设置为否
         user.setForceChangePasswordFlag(YesOrNoEnum.NO.name());
         // 修改
         modify(user);
-
         // 记录日志
         UserPasswordChangeLog log = new UserPasswordChangeLog();
         log.setAccount(user.getAccount());
         log.setUserId(user.getId());
         log.setChangeTime(LocalDateTime.now());
-        log.setOriginPassword(EncryptUtil.bCryptPasswordEncode(oldPassword));
+        log.setOriginPassword(originPassword);
         userPasswordChangeLogService.add(log);
     }
 
     /**
      * 校验账号账号以及旧密码校验
      */
-    public User checkAccountPassword(String id, String oldPassword, String newPassword) {
+    public void checkAccountPassword(String id, String oldPassword, String newPassword) {
         // 获取用户
         User entity = getEntity(id);
-
         // 验证旧密码
         if (!EncryptUtil.bCryptPasswordMatches(oldPassword, entity.getPassword())) {
             //  更新累计错误次数
@@ -254,15 +263,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         if (oldPassword.equals(newPassword)) {
             throw new CustomException(UserExceptionEnum.PWD_OLD_NEW_SAME);
         }
-        // 新密码复杂度验证：包括大写字母、小写字母、数字、特殊符号这4种类型中的3种
-        if (!PasswordUtil.isComplexPassword(newPassword)) {
-            throw new CustomException(UserExceptionEnum.PWD_CHANGE_NOT_STRONG);
-        }
-        // 验证新密码不能包含账号、电话号码或出生日期三者中任何一项
-        if (!checkPasswordSimple(newPassword, entity)) {
-            throw new CustomException(UserExceptionEnum.PWD_CHANGE_EASY);
-        }
-        return entity;
+
     }
 
     /**
@@ -359,6 +360,125 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         return user.getName();
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void register(User entity) {
+        // 验证账号全局唯一
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getAccount, entity.getAccount());
+        long count = count(queryWrapper);
+        if (count > 0) {
+            throw new CustomException(UserExceptionEnum.ACCOUNT_EXIST);
+        }
+
+        //  验证密码基本要求
+        checkPasswordBasicRequire(entity.getPassword());
+
+        // 设置密码
+        entity.setPassword(EncryptUtil.bCryptPasswordEncode(entity.getPassword()));
+        // 强制修改密码状态位置为否
+        entity.setForceChangePasswordFlag(YesOrNoEnum.NO.toString());
+        // 状态初始化为正常
+        entity.setStatus(UserStatusEnum.NORMAL.toString());
+        // 设置性别
+        entity.setGender("MALE");
+
+        // 设置默认部门为 遇见 应用
+        entity.setOrganization("999");
+
+
+        // 调用父类保存
+        super.save(entity);
+
+        // 设置通用角色
+        List<String> userIdList = new ArrayList<>();
+        userIdList.add(entity.getId());
+        groupUserService.addUser("999", userIdList);
+
+
+    }
+
+    @Override
+    public void retrievePassword(String email) {
+        // 验证邮箱是否注册
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getEmail, email);
+        List<User> list = list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            throw new CustomException(UserExceptionEnum.EMAIl_NOT_REGISTER);
+        }
+        User user = list.get(0);
+        // 发送重设邮件
+        String account = user.getAccount();
+        sendResetPasswordEmail(email, account);
+
+    }
+
+    private void sendResetPasswordEmail(String email, String account) {
+        // 生成唯一性编码
+        String code = UUID.randomUUID().toString();
+        // 存入redis，24小时后失效
+        cacheUtil.set(code, account, 24, TimeUnit.HOURS);
+
+
+        // 生成内容
+        String systemUrl = systemConfig.getSystemUrl();
+        String content = "重设【遇见】应用密码：" + systemUrl + "/#/selfResetPassword?code=" + code;
+
+
+        // 使用线程异步发送邮件
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mailService.sendHtmlMail(email, "重设【遇见】应用密码", content);
+            }
+        };
+        // noinspection AlibabaAvoidManuallyCreateThread
+        Thread thread = new Thread(runnable);
+        // 启动
+        thread.start();
+
+    }
+
+    @Override
+    public String getAccoutByCode(String code) {
+        Object object = cacheUtil.get(code);
+        if (object != null) {
+            return object.toString();
+        } else {
+            throw new CustomException(UserExceptionEnum.AUTHORIZATION_CODE_EXPIRED);
+        }
+
+    }
+
+    @Override
+    public void selfResetPassword(String code, String password) {
+        // 获取账号
+        String account = getAccoutByCode(code);
+        String id = getIdByAccount(account);
+        User user = query(id);
+        // 验证密码
+        checkSafePolicy(id, password);
+        // 修改密码
+        changePassword(id, password);
+        // 删除缓存授权码
+        cacheUtil.remove(code);
+
+    }
+
+    @Override
+    public String getIdByAccount(String account) {
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getAccount, account);
+        List<User> list = list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            throw new CustomException(UserExceptionEnum.ACCOUNT_NOT_EXIST);
+        }
+        User user = list.get(0);
+        return user.getId();
+    }
+
 
     /**
      * 安全认证校验
@@ -367,23 +487,22 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
      * @param password
      * @return
      */
-    public void checkSafePolicy(User user, String password) {
-        // 密码长度
-        // 系统配置密码最小长度
-        Integer passwordLength = Integer.parseInt(paramService.getParamValue(SystemConstant.PASSWORD_LENGTH));
-        // 比较密码长度
-        if (password.length() < passwordLength) {
-            throw new CustomException(UserExceptionEnum.PWD_CHANGE_NEED_LENGTH);
-        }
-        // n次以内不得设置相同的密码
-        // 系统配置密码最小长度
-        Integer passwordCount = Integer.parseInt(paramService.getParamValue(SystemConstant.PASSWORD_UPDATE_SAME_TIMES));
+    public void checkSafePolicy(String id, String password) {
+        // 验证密码基本要求（长度及复杂度）
+        checkPasswordBasicRequire(password);
 
+        // 验证新密码不能包含账号、电话号码或出生日期三者中任何一项
+        if (!checkPasswordSimple(password, id)) {
+            throw new CustomException(UserExceptionEnum.PWD_CHANGE_EASY);
+        }
+        // 验证n次以内不得设置相同的密码
+        Integer passwordCount = Integer.parseInt(paramService.getParamValue(SystemConstant.PASSWORD_UPDATE_SAME_TIMES));
         // 从密码修改日志中获取最后N次修改的密码
         QueryWrapper<UserPasswordChangeLog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(UserPasswordChangeLog::getId, user.getId())
+        queryWrapper.lambda().eq(UserPasswordChangeLog::getUserId, id)
                 .orderByDesc(UserPasswordChangeLog::getChangeTime);
         queryWrapper.last("limit 0," + passwordCount);
+
         List<UserPasswordChangeLog> logList = userPasswordChangeLogService.list(queryWrapper);
         for (UserPasswordChangeLog log : logList) {
             if (EncryptUtil.bCryptPasswordMatches(password, log.getOriginPassword())) {
@@ -393,16 +512,34 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     }
 
+    /**
+     * 验证密码基本要求（长度及复杂度）
+     *
+     * @param password 密码
+     */
+    private void checkPasswordBasicRequire(String password) {
+        // 验证密码长度
+        Integer passwordLength = Integer.parseInt(paramService.getParamValue(SystemConstant.PASSWORD_LENGTH));
+        if (password.length() < passwordLength) {
+            throw new CustomException(UserExceptionEnum.PWD_CHANGE_NEED_LENGTH);
+        }
+
+        // 验证密码复杂度：包括大写字母、小写字母、数字、特殊符号这4种类型中的3种
+        if (!PasswordUtil.isComplexPassword(password)) {
+            throw new CustomException(UserExceptionEnum.PWD_CHANGE_NOT_STRONG);
+        }
+    }
+
 
     /**
-     * 验证新密码不能包含账号、电话号码或出生日期三者中任何一项
+     * 验证密码不能包含账号、电话号码或出生日期三者中任何一项
      *
-     * @param password
-     * @param user
+     * @param password 密码
+     * @param id       用户标识
      * @return
      */
-    private boolean checkPasswordSimple(String password, User user) {
-
+    private boolean checkPasswordSimple(String password, String id) {
+        User user = query(id);
         if (password.contains(user.getAccount())) {
             return false;
         }
