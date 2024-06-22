@@ -3,6 +3,9 @@
     <CollapseTab>
       <el-form :inline="true" :model="queryCondition" label-width="120px" @keyup.enter="query">
         <!--查询条件区 -->
+        <el-form-item label="标题">
+          <QueryText v-model="queryCondition.title" type="LK" />
+        </el-form-item>
         <el-form-item label="发布时间">
           <el-date-picker
             v-model="queryCondition.publishTimeBeginForQuery"
@@ -24,18 +27,6 @@
           />
         </el-form-item>
 
-        <el-form-item label="标题">
-          <QueryText v-model="queryCondition.title" type="LK" />
-        </el-form-item>
-        <el-form-item label="状态" v-show="false">
-          <dictionary-select v-model="queryCondition.status" code="Status" multiple />
-        </el-form-item>
-        <el-form-item label="是否重要">
-          <dictionary-select v-model="queryCondition.importantFlag" code="YesOrNo" multiple />
-        </el-form-item>
-        <el-form-item label="是否置顶">
-          <dictionary-select v-model="queryCondition.topFlag" code="YesOrNo" multiple />
-        </el-form-item>
         <el-form-item style="float: right">
           <QueryButton :page-code="pageCode" />
         </el-form-item>
@@ -112,30 +103,20 @@ export default {
           sortable: true
         },
         {
-          prop: 'importantFlagName',
-          label: '是否重要',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
-          prop: 'topFlagName',
-          label: '是否置顶',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
           prop: 'readCount',
           label: '阅读次数',
           show: true,
           showOverflowTooltip: true,
-          sortable: true
+          sortable: true,
+          width: 120
         },
         {
           prop: 'publisher',
           label: '发布人',
           show: true,
           showOverflowTooltip: true,
-          sortable: true
+          sortable: true,
+          width: 120
         },
         {
           prop: 'publishTime',
@@ -143,7 +124,8 @@ export default {
           show: true,
           showOverflowTooltip: true,
           formatFunction: getFormatMethod('FORMAT_TIME'),
-          sortable: true
+          sortable: true,
+          width: 240
         }
       ],
       queryCondition: {

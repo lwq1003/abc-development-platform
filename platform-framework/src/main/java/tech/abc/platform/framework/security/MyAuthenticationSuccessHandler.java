@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import tech.abc.platform.common.annotation.SystemLog;
-import tech.abc.platform.common.constant.CommonConstant;
 import tech.abc.platform.common.constant.TreeDefaultConstant;
 import tech.abc.platform.common.entity.MyUserDetails;
 import tech.abc.platform.common.enums.ExecuteResultEnum;
@@ -132,6 +131,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     /**
      * 填充用户属性
+     *
      * @param user 用户
      */
     private void fillUserProperty(User user) {
@@ -181,14 +181,16 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         }
         while (!currentOrganizationId.equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID));
         user.setOrganizationFullName(organizationFullName.toString());
+
     }
 
     /**
      * 缓存用户
+     *
      * @param user 用户
      */
     private void cacheUser(User user) {
-        cacheUtil.set(user.getAccount(), JSON.toJSONString(user),platformConfig.getSystem().getTokenValidSpan() * 60, TimeUnit.SECONDS);
+        cacheUtil.set(user.getAccount(), JSON.toJSONString(user), platformConfig.getSystem().getTokenValidSpan() * 60, TimeUnit.SECONDS);
     }
 
     /**
@@ -206,7 +208,12 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         for (MenuTreeVO module : moduleList) {
             // 生成菜单
             List<MenuTreeVO> menus = generateMenu(permissionList, module.getId());
+            // 若菜单为空，设置模块隐藏
+            if (menus.size() == 0) {
+                module.getMeta().setHidden(true);
+            }
             module.setChildren(menus);
+
         }
         return moduleList;
     }
@@ -275,7 +282,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
                     menus.addAll(children);
                 }
 
-            }else if (permission.getType().equals(PermissionTypeEnum.GROUP.toString())) {
+            } else if (permission.getType().equals(PermissionTypeEnum.GROUP.toString())) {
                 // 实际存在模块-分组-页面的情况，该分支将此部分的页面也纳入路由
                 List<MenuTreeVO> children = generateMenu(list, permission.getId());
                 if (children != null && children.size() > 0) {

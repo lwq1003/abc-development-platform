@@ -80,6 +80,13 @@ public enum UserExceptionEnum implements ExceptionInterface {
      * 账号不存在
      */
     ACCOUNT_NOT_EXIST("账号不存在"),
+
+
+    /**
+     * 邮箱已存在
+     */
+    EMAIL_EXIST("邮箱已存在"),
+
     ;
     private String message;
 

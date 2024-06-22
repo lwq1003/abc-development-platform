@@ -32,6 +32,9 @@ public class PlatformBootApplication implements CommandLineRunner {
 
 
     public static void main(String[] args) {
+        log.info("当前时间: {}", System.currentTimeMillis());
+        // 添加此句，避免druid连接池报警告 discard long time none received connection
+        System.setProperty("druid.mysql.usePingMethod", "false");
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

@@ -22,7 +22,7 @@ spring:
 #平台配置
 platform-config:
   system:
-    enablePermission: true
+    enablePermission: false
     userInitPassword: 12345678
     tokenSecret: wqliu
     exportDataPageSize: 2

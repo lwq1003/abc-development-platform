@@ -1,6 +1,7 @@
 package tech.abc.platform.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,10 +20,7 @@ import tech.abc.platform.common.utils.EncryptUtil;
 import tech.abc.platform.mail.service.MailService;
 import tech.abc.platform.system.config.SystemConfig;
 import tech.abc.platform.system.constant.SystemConstant;
-import tech.abc.platform.system.entity.GroupUser;
-import tech.abc.platform.system.entity.PermissionItem;
-import tech.abc.platform.system.entity.User;
-import tech.abc.platform.system.entity.UserPasswordChangeLog;
+import tech.abc.platform.system.entity.*;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.exception.UserExceptionEnum;
@@ -30,6 +28,7 @@ import tech.abc.platform.system.mapper.UserMapper;
 import tech.abc.platform.system.service.*;
 import tech.abc.platform.system.utils.PasswordUtil;
 
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -68,6 +67,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     @Override
     public User init() {
@@ -371,6 +373,14 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             throw new CustomException(UserExceptionEnum.ACCOUNT_EXIST);
         }
 
+        // 验证邮箱是否已使用
+        queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getEmail, entity.getEmail());
+        count = count(queryWrapper);
+        if (count > 0) {
+            throw new CustomException(UserExceptionEnum.EMAIL_EXIST);
+        }
+
         //  验证密码基本要求
         checkPasswordBasicRequire(entity.getPassword());
 
@@ -385,7 +395,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
         // 设置默认部门为 遇见 应用
         entity.setOrganization("999");
-
+        // 设置租户
+        entity.setTenantId(IdWorker.getId());
 
         // 调用父类保存
         super.save(entity);
@@ -394,6 +405,16 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         List<String> userIdList = new ArrayList<>();
         userIdList.add(entity.getId());
         groupUserService.addUser("999", userIdList);
+
+        // 设置桌面配置
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUser(entity.getId());
+        userProfile.setLanguage("zh_CN");
+        userProfile.setTimeZone("BEIJING");
+        String dektopConfig = "[{\"x\":0,\"y\":0,\"w\":8,\"h\":8,\"i\":\"4938_ae83_cad4_ce4b\",\"config\":{\"name\":\"通知公告\",\"code\":\"notice\"," +
+                "\"paramList\":[{\"name\":\"显示数量\",\"code\":\"count\",\"value\":\"5\"}]},\"moved\":false},{\"x\":8,\"y\":0,\"w\":4,\"h\":8,\"i\":\"2828_65a3_4acd_06c3\",\"config\":{\"name\":\"收藏夹\",\"code\":\"favorite\",\"paramList\":[{\"name\":\"收藏项\",\"code\":\"item\",\"value\":\"[]\"}]},\"moved\":false}]";
+        userProfile.setDesktopConfig(dektopConfig);
+        userProfileService.add(userProfile);
 
 
     }
@@ -423,7 +444,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
         // 生成内容
         String systemUrl = systemConfig.getSystemUrl();
-        String content = "重设【遇见】应用密码：" + systemUrl + "/#/selfResetPassword?code=" + code;
+        String resetUrl = systemUrl + "/#/selfResetPassword?code=" + code;
+        String content = MessageFormat.format("重设【遇见】应用密码,请点击链接或将其复制到浏览器地址栏：<a href=\"{0}\">{0}</a>", resetUrl);
 
 
         // 使用线程异步发送邮件
