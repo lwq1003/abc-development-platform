@@ -35,6 +35,15 @@ public interface DesktopTemplateService extends BaseService<DesktopTemplate> {
      * @param id 标识
      */
     void disable(String id);
+
+
+    /**
+     * 按编码获取桌面模板
+     *
+     * @param code 编码
+     * @return 桌面模板实体类
+     */
+    DesktopTemplate getByCode(String code);
 }
 
 

@@ -1,8 +1,8 @@
 package tech.abc.platform.framework.config;
 
-import tech.abc.platform.framework.config.properties.system.SystemProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import tech.abc.platform.framework.config.properties.system.SystemProperties;
 
 /**
  * 应用配置

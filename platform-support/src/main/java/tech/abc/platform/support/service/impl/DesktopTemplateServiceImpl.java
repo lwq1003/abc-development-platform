@@ -108,6 +108,15 @@ public class DesktopTemplateServiceImpl extends BaseServiceImpl<DesktopTemplateM
         modify(entity);
     }
 
+    @Override
+    public DesktopTemplate getByCode(String code) {
+        DesktopTemplate entity = this.lambdaQuery().eq(DesktopTemplate::getCode, code).one();
+        if (entity == null) {
+            throw new CustomException(CommonException.NOT_EXIST);
+        }
+        return entity;
+    }
+
 
 }
 

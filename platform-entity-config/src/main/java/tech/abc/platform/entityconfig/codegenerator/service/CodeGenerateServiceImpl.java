@@ -23,7 +23,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.abc.platform.common.base.*;
+import tech.abc.platform.common.base.BaseController;
+import tech.abc.platform.common.base.BaseEntity;
+import tech.abc.platform.common.base.BaseService;
+import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.entityconfig.codegenerator.constant.FieldConstant;
@@ -163,26 +166,27 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         entityModelList.stream().forEach((entityModel) -> {
 
             // 获取自身标识
-            String entityModelId=entityModel.getId();
+            String entityModelId = entityModel.getId();
             // 获取库表名称
             String tableName = generateTableName(entityModel.getCode(), module.getAbbreviation());
             // 获取库表备注
             String tableComment = entityModel.getName();
             // 获取父级模型属性列表
-            List<EntityModelProperty> parentModelPropertyList=new ArrayList<>();
+            List<EntityModelProperty> parentModelPropertyList = new ArrayList<>();
             // 循环向上查找父级模型
-            while(true){
-                entityModel=entityModelService.query(entityModel.getParentModel());
+            while (true) {
+                entityModel = entityModelService.query(entityModel.getParentModel());
                 // 获取父级模型属性列表
                 List<EntityModelProperty> currentPropertyList = entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModel.getId());
                 CollectionUtils.addAll(parentModelPropertyList, currentPropertyList.iterator());
 
                 // 找到顶层节点标识模型停止
-                if(entityModel.getId().equals(EntityConfigConstant.ID_MODEL_ID)){
+                if (entityModel.getId().equals(EntityConfigConstant.ID_MODEL_ID)) {
                     break;
                 }
 
-            };
+            }
+            ;
 
             // 获取实体模型属性列表,非库表存储字段忽略
             List<EntityModelProperty> entityModelPropertyList = entityModelPropertyService.getDatabaseStoreListByEntityModelId(entityModelId);
@@ -495,14 +499,14 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         customKeyValue.put("addEntityView", entityView);
         // 新增视图存在标识位
         customKeyValue.put("addViewFlag", YesOrNoEnum.YES.name());
-        //模板路径
-        String templatePath="";
-        if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
-            //标准配置模式
-            templatePath="/templates/add.vue.ftl";
-        }else{
-            //高级配置模式
-            templatePath="/templates/addForAdvanceConfig.vue.ftl";
+        // 模板路径
+        String templatePath = "";
+        if (entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())) {
+            // 标准配置模式
+            templatePath = "/templates/add.vue.ftl";
+        } else {
+            // 高级配置模式
+            templatePath = "/templates/addForAdvanceConfig.vue.ftl";
         }
 
         // 获取视图属性配置
@@ -533,14 +537,14 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         customKeyValue.put("modifyEntityView", entityView);
         // 修改视图存在标识位
         customKeyValue.put("modifyViewFlag", YesOrNoEnum.YES.name());
-        //模板路径
-        String templatePath="";
-        if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
-            //标准配置模式
-            templatePath="/templates/modify.vue.ftl";
-        }else{
-            //高级配置模式
-            templatePath="/templates/modifyForAdvanceConfig.vue.ftl";
+        // 模板路径
+        String templatePath = "";
+        if (entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())) {
+            // 标准配置模式
+            templatePath = "/templates/modify.vue.ftl";
+        } else {
+            // 高级配置模式
+            templatePath = "/templates/modifyForAdvanceConfig.vue.ftl";
         }
         // 获取视图属性配置
         List<ViewProperty> viewPropertyList = viewPropertyService.listByView(entityView.getId());
@@ -569,14 +573,14 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         customKeyValue.put("viewEntityView", entityView);
         // 查看视图存在标识位
         customKeyValue.put("viewViewFlag", YesOrNoEnum.YES.name());
-        //模板路径
-        String templatePath="";
-        if(entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())){
-            //标准配置模式
-            templatePath="/templates/view.vue.ftl";
-        }else{
-            //高级配置模式
-            templatePath="/templates/viewForAdvanceConfig.vue.ftl";
+        // 模板路径
+        String templatePath = "";
+        if (entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())) {
+            // 标准配置模式
+            templatePath = "/templates/view.vue.ftl";
+        } else {
+            // 高级配置模式
+            templatePath = "/templates/viewForAdvanceConfig.vue.ftl";
         }
 
         // 获取视图属性配置
@@ -804,35 +808,40 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 公共变量处理
         // 注入应用编码
         customKeyValue.put("appCode", appCode);
-        //设置实体和视图模型基类变量
-        String baseEntity=StringUtils.EMPTY;
-        String baseVO=StringUtils.EMPTY;
-        EntityModel baseModel=entityModelService.getById(entityModel.getParentModel());
-        String baseModelCode=baseModel.getCode();
+        // 设置实体和视图模型基类变量
+        String baseEntity = StringUtils.EMPTY;
+        String baseVO = StringUtils.EMPTY;
+        EntityModel baseModel = entityModelService.getById(entityModel.getParentModel());
+        String baseModelCode = baseModel.getCode();
         ModelCodeEnum modelCodeEnum = EnumUtils.getEnum(ModelCodeEnum.class, baseModelCode);
-        if(modelCodeEnum==null){
+        if (modelCodeEnum == null) {
             throw new CustomException(EntityModelException.PARENT_MODE_NOT_CONFIG, baseModelCode);
         }
         switch (modelCodeEnum) {
             case ID_MODEL:
                 // 标识模型
-                baseEntity="BaseIdEntity";
-                baseVO="BaseIdVO";
+                baseEntity = "BaseIdEntity";
+                baseVO = "BaseIdVO";
                 break;
             case MAP_MODEL:
                 // 映射模型
-                baseEntity="BaseMapEntity";
-                baseVO="BaseMapVO";
+                baseEntity = "BaseMapEntity";
+                baseVO = "BaseMapVO";
                 break;
             case BUSINESS_MODEL:
                 // 业务模型
-                baseEntity="BaseEntity";
-                baseVO="BaseVO";
+                baseEntity = "BaseEntity";
+                baseVO = "BaseVO";
+                break;
+            case BUSINESS_TENANT_MODEL:
+                // 业务租户模型
+                baseEntity = "BaseTenantEntity";
+                baseVO = "BaseTenantVO";
                 break;
             case FLOW_BILL:
                 // 流程表单
-                baseEntity="BaseFlowBill";
-                baseVO="BaseFlowBillVO";
+                baseEntity = "BaseFlowBill";
+                baseVO = "BaseFlowBillVO";
                 break;
             default:
                 break;

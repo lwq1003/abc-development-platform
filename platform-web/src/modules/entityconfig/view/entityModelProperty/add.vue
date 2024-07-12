@@ -241,10 +241,19 @@ export default {
       if (
         (this.entityData.dataType === this.$constant.DATA_TYPE.STRING ||
           this.entityData.dataType === this.$constant.DATA_TYPE.DATA_DICTIONARY ||
-          this.entityData.dataType === this.$constant.DATA_TYPE.ENTITY) &&
+          this.entityData.dataType === this.$constant.DATA_TYPE.ENTITY ||
+          this.entityData.dataType === this.$constant.DATA_TYPE.DECIMAL) &&
         !this.entityData.maxLength
       ) {
         this.$message.warning('请输入最大长度')
+        return false
+      }
+
+      if (
+        this.entityData.dataType === this.$constant.DATA_TYPE.DECIMAL &&
+        !this.entityData.decimalLength
+      ) {
+        this.$message.warning('请输入小数位数')
         return false
       }
 

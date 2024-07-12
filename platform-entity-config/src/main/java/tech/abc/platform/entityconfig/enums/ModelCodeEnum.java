@@ -25,6 +25,11 @@ public enum ModelCodeEnum {
      * 业务模型
      */
     BUSINESS_MODEL,
+
+    /**
+     * 业务模型带租户
+     */
+    BUSINESS_TENANT_MODEL,
     /**
      * 流程表单
      */

@@ -20,7 +20,10 @@ import tech.abc.platform.common.utils.EncryptUtil;
 import tech.abc.platform.mail.service.MailService;
 import tech.abc.platform.system.config.SystemConfig;
 import tech.abc.platform.system.constant.SystemConstant;
-import tech.abc.platform.system.entity.*;
+import tech.abc.platform.system.entity.GroupUser;
+import tech.abc.platform.system.entity.PermissionItem;
+import tech.abc.platform.system.entity.User;
+import tech.abc.platform.system.entity.UserPasswordChangeLog;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.exception.UserExceptionEnum;
@@ -31,7 +34,10 @@ import tech.abc.platform.system.utils.PasswordUtil;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,8 +74,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     @Autowired
     private MailService mailService;
 
+
     @Autowired
-    private UserProfileService userProfileService;
+    private AppUserService appUserService;
 
     @Override
     public User init() {
@@ -401,20 +408,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         // 调用父类保存
         super.save(entity);
 
-        // 设置通用角色
-        List<String> userIdList = new ArrayList<>();
-        userIdList.add(entity.getId());
-        groupUserService.addUser("999", userIdList);
-
-        // 设置桌面配置
-        UserProfile userProfile = new UserProfile();
-        userProfile.setUser(entity.getId());
-        userProfile.setLanguage("zh_CN");
-        userProfile.setTimeZone("BEIJING");
-        String dektopConfig = "[{\"x\":0,\"y\":0,\"w\":8,\"h\":8,\"i\":\"4938_ae83_cad4_ce4b\",\"config\":{\"name\":\"通知公告\",\"code\":\"notice\"," +
-                "\"paramList\":[{\"name\":\"显示数量\",\"code\":\"count\",\"value\":\"5\"}]},\"moved\":false},{\"x\":8,\"y\":0,\"w\":4,\"h\":8,\"i\":\"2828_65a3_4acd_06c3\",\"config\":{\"name\":\"收藏夹\",\"code\":\"favorite\",\"paramList\":[{\"name\":\"收藏项\",\"code\":\"item\",\"value\":\"[]\"}]},\"moved\":false}]";
-        userProfile.setDesktopConfig(dektopConfig);
-        userProfileService.add(userProfile);
+        appUserService.init(entity);
 
 
     }

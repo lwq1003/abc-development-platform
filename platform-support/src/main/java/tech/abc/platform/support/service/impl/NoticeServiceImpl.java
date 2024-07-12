@@ -189,8 +189,8 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
     @Override
     public void updateReadCount(String id) {
         Notice entity = getEntity(id);
-        entity.setReadCount(entity.getReadCount() + 1);
-        modify(entity);
+        lambdaUpdate().eq(Notice::getId, id).set(Notice::getReadCount, entity.getReadCount() + 1).update();
+
     }
 
     @Override

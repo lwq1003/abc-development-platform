@@ -1,0 +1,20 @@
+package tech.abc.platform.system.service;
+
+import tech.abc.platform.system.entity.User;
+
+/**
+ * 应用用户服务接口
+ *
+ * @author wqliu
+ * @date 2024-06-25
+ */
+public interface AppUserService {
+
+
+    /**
+     * 初始化
+     *
+     * @param user 用户
+     */
+    void init(User user);
+}

@@ -32,12 +32,13 @@ spring:
       # 连接池中的minIdle数量以内的连接，空闲时间超过minEvictableIdleTimeMillis，则会执行keepAlive操作。实际项目中建议配置成true
       keepAlive: true
       # 配置监控统计拦截的filters
-      filters: mergeStat,wall
+      filters: mergeStat
       # 配置web监控
       web-stat-filter:
         enabled: true
         url-pattern: "/*"
         exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+
       # 配置监控页面
       stat-view-servlet:
         enabled: true
@@ -169,6 +170,10 @@ platform-config:
       bucketName: abc
   mail:
     senderAddress: sealy321@126.com
+  # 租户配置
+  tenant:
+    # 需要进行租户隔离的表，数组集合
+    table-name:
   file:
     # 文本类型的文件后缀，添加到列表后将按文本读取内容创建全文搜索索引
     textFileType:

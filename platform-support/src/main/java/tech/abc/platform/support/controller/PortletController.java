@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tech.abc.platform.common.annotation.AllowAuthenticated;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.enums.StatusEnum;
@@ -185,7 +186,7 @@ public class PortletController extends BaseController {
      */
     @GetMapping("/getPortletList")
     @SystemLog(value = "组件-获取列表")
-    @PreAuthorize("hasPermission(null,'support:portlet:query')")
+    @AllowAuthenticated
     public ResponseEntity<Result> getPortletList() {
         // 构造查询条件
         QueryWrapper<Portlet> queryWrapper = new QueryWrapper<>();

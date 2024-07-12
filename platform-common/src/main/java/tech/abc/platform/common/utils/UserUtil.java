@@ -2,16 +2,13 @@ package tech.abc.platform.common.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
-import tech.abc.platform.common.entity.MyGrantedAuthority;
-import tech.abc.platform.common.entity.MyUserDetails;
-import tech.abc.platform.common.exception.SessionExpiredException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.List;
+import tech.abc.platform.common.entity.MyUserDetails;
+import tech.abc.platform.common.exception.SessionExpiredException;
 
 /**
  * 用户工具类
@@ -42,13 +39,13 @@ public final class UserUtil {
             throw new SessionExpiredException("会话失效");
         }
         // 获取账号
-        String account=myUserDetails.getUsername();
+        String account = myUserDetails.getUsername();
         // 从缓存中获取用户
-        CacheUtil cacheUtil=SpringUtil.getBean(CacheUtil.class);
-        String userJson=cacheUtil.get(account);
-        if(StringUtils.isNotEmpty(userJson)){
+        CacheUtil cacheUtil = SpringUtil.getBean(CacheUtil.class);
+        String userJson = cacheUtil.get(account);
+        if (StringUtils.isNotEmpty(userJson)) {
             return JSON.parseObject(userJson);
-        }else{
+        } else {
             // 缓存无记录,抛出会话超时异常
             throw new SessionExpiredException("会话失效");
         }
@@ -127,6 +124,15 @@ public final class UserUtil {
     public static String getGroupId() {
         JSONObject user = getCurrentUser();
         return user.getString("groupId");
+    }
+
+
+    /**
+     * 获取租户id
+     */
+    public static Long getTenantId() {
+        JSONObject user = getCurrentUser();
+        return user.getLong("tenantId");
     }
 
 

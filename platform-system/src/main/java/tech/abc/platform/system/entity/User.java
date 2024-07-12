@@ -3,10 +3,10 @@ package tech.abc.platform.system.entity;
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
 
 import java.time.LocalDateTime;
 
@@ -97,7 +97,7 @@ public class User extends BaseEntity {
     /**
      * 锁定时间
      */
-    @TableField(value="lock_time",updateStrategy= FieldStrategy.IGNORED)
+    @TableField(value = "lock_time", updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime lockTime;
 
     /**
@@ -105,6 +105,13 @@ public class User extends BaseEntity {
      */
     @TableField("order_no")
     private String orderNo;
+
+
+    /**
+     * 租户标识
+     */
+    @TableField("tenant_id")
+    private Long tenantId;
 
 
     // region 扩展常用属性
@@ -142,7 +149,6 @@ public class User extends BaseEntity {
     private String organizationFullName;
 
     // endregion
-
 
 
 }

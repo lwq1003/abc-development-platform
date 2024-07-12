@@ -49,16 +49,36 @@ export const addMixin = {
       if (this.beforeSave) {
         this.beforeSave()
       }
-      this.fApi.validate((valid, fail) => {
-        if (valid === true) {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
           if (this.validateData) {
             // 数据验证通过后才执行保存操作
             if (this.validateData()) {
-              this.saveData()
+              if (this.beforeSaveData) {
+                this.beforeSaveData()
+                  .then(() => {
+                    this.saveData()
+                  })
+                  .catch(() => {
+                    this.$message.info('已取消')
+                  })
+              } else {
+                this.saveData()
+              }
             }
           } else {
             // 无需数据验证，直接执行
-            this.saveData()
+            if (this.beforeSaveData) {
+              this.beforeSaveData()
+                .then(() => {
+                  this.saveData()
+                })
+                .catch(() => {
+                  this.$message.info('已取消')
+                })
+            }else {
+                this.saveData()
+            }
           }
         }
       })
