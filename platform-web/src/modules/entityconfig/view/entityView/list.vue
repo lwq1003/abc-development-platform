@@ -225,6 +225,7 @@ export default {
           viewType = 'list'
           break
         }
+        case 'DETAIL':
         case 'ADD':
         case 'MODIFY':
         case 'VIEW': {

@@ -73,3 +73,6 @@ export const NO = 'NO'
 
 // 日期时间格式
 export const DATETIME_FORMAT = 'DatetimeFormat'
+
+// 时间格式
+export const TIME_FORMAT = 'TimeFormat'

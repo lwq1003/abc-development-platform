@@ -76,8 +76,8 @@ export const addMixin = {
                 .catch(() => {
                   this.$message.info('已取消')
                 })
-            }else {
-                this.saveData()
+            } else {
+              this.saveData()
             }
           }
         }

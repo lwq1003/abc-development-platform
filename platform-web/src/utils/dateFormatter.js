@@ -42,6 +42,22 @@ const dateFormatter = {
         break
     }
     return type
+  },
+  // 获取时间格式
+  getTimeFormat: function (formatCode) {
+    let formatString = ''
+    switch (formatCode) {
+      case 'HOUR':
+        formatString = 'HH'
+        break
+      case 'MINITE':
+        formatString = 'HH:mm'
+        break
+      case 'SECOND':
+        formatString = 'HH:mm:ss'
+        break
+    }
+    return formatString
   }
 }
 

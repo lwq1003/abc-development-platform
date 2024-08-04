@@ -57,11 +57,18 @@
         <dictionary-select v-model="entityData.widgetType" :code="widgetType" />
       </el-form-item>
       <el-form-item
-        v-show="entityData.dataType == $constant.DATA_TYPE.DATETIME"
+        v-if="entityData.dataType == $constant.DATA_TYPE.DATETIME"
         label="显示格式"
         prop="formatPattern"
       >
         <dictionary-select v-model="entityData.formatPattern" :code="$constant.DATETIME_FORMAT" />
+      </el-form-item>
+      <el-form-item
+        v-if="entityData.dataType == $constant.DATA_TYPE.TIME"
+        label="显示格式"
+        prop="formatPattern"
+      >
+        <dictionary-select v-model="entityData.formatPattern" :code="$constant.TIME_FORMAT" />
       </el-form-item>
       <el-form-item label="最大长度" prop="maxLength">
         <el-input v-model="entityData.maxLength" />

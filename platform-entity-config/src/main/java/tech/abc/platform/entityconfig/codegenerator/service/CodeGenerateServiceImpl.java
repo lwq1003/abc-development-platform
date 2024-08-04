@@ -259,6 +259,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             case DECIMAL:
                 result = "DECIMAL(" + maxLength + "," + decimalLength + ")";
                 break;
+            case TEXT:
+                result = "TEXT";
+                break;
+            case TIME:
+                result = "VARCHAR(10)";
+                break;
             default:
                 result = "VARCHAR(" + maxLength + ")";
         }
@@ -484,6 +490,45 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .build();
 
         builder.customFile(templateFile);
+    }
+
+    /**
+     * 生成详情视图
+     *
+     * @param entityView     实体视图
+     * @param customKeyValue 自定义键值
+     * @param builder        构建器
+     */
+    private void generateDetailView(EntityView entityView, Map<String, Object> customKeyValue, InjectionConfig.Builder builder) {
+
+        // 视图对象放入自定义键值map
+        customKeyValue.put("detailEntityView", entityView);
+        // 详情视图存在标识位
+        customKeyValue.put("detailViewFlag", YesOrNoEnum.YES.name());
+        // 模板路径
+        String templatePath = "";
+        if (entityView.getEnableAdvanceConfig().equals(YesOrNoEnum.NO.name())) {
+            // 标准配置模式
+            templatePath = "/templates/detail.vue.ftl";
+        } else {
+            // TODO 详情视图支持高级配置模式
+
+        }
+
+        // 获取视图属性配置
+        List<ViewProperty> viewPropertyList = viewPropertyService.listByView(entityView.getId());
+        customKeyValue.put("detailViewPropertyList", viewPropertyList);
+
+
+        // 自定义新增视图模板
+        CustomFile templateFile = new CustomFile.Builder()
+                .fileName("detail.vue")
+                .templatePath(templatePath)
+                .enableFileOverride()
+                .packageName(viewFolderName)
+                .build();
+        builder.customFile(templateFile);
+
     }
 
     /**
@@ -944,6 +989,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         entityViewList.stream().forEach(entityView -> {
             EntityViewTypeEnum entityViewTypeEnum = EnumUtils.getEnum(EntityViewTypeEnum.class, entityView.getEntityViewType(), EntityViewTypeEnum.LIST);
             switch (entityViewTypeEnum) {
+                case DETAIL:
+                    // 详情视图
+                    generateDetailView(entityView, customKeyValue, builder);
+                    break;
                 case ADD:
                     // 新增视图
                     generateAddView(entityView, customKeyValue, builder);

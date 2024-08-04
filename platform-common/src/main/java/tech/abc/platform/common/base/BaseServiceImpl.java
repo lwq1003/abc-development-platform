@@ -133,7 +133,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
 
         // 拷贝属性处理
         copyPropertyHandle(newEntity, value);
-
+        beforeAddByCopy(entity, newEntity);
         super.save(newEntity);
         afterAddByCopy(entity, newEntity);
         return newEntity;
@@ -286,6 +286,19 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
         // 子类根据需要覆写
 
     }
+
+
+    /**
+     * 复制新增前处理
+     *
+     * @param sourceEntity 源实体
+     * @param entity       实体
+     */
+    protected void beforeAddByCopy(T sourceEntity, T entity) {
+        // 子类根据需要覆写
+
+    }
+
 
     /**
      * 获取实体

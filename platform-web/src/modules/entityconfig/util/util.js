@@ -4,7 +4,8 @@ const util = {
   getWidgetType: function (dataType) {
     let code = ''
     switch (dataType) {
-      case constant.DATA_TYPE.STRING: {
+      case constant.DATA_TYPE.STRING:
+      case constant.DATA_TYPE.TEXT: {
         code = constant.WIDGET_TYPE.TEXT
         break
       }
@@ -45,6 +46,10 @@ const util = {
       }
       case constant.DATA_TYPE.USER_SINGLE: {
         code = constant.WIDGET_TYPE.USER_SINGLE
+        break
+      }
+      case constant.DATA_TYPE.TIME: {
+        code = constant.WIDGET_TYPE.TIME
         break
       }
       default: {

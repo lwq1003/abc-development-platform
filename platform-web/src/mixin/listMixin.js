@@ -127,15 +127,25 @@ export const listMixin = {
     },
     // 新增
     add() {
-      this.$refs.addPage.init()
+      if (this.$refs.detailPage) {
+        this.$refs.detailPage.init('add')
+      } else {
+        this.$refs.addPage.init()
+      }
     },
     // 修改
     modify(row) {
-      this.$refs.modifyPage.init(row.id)
+      if (this.$refs.detailPage) {
+        this.$refs.detailPage.init('modify', row.id)
+      } else {
+        this.$refs.modifyPage.init(row.id)
+      }
     },
     // 查看
     view(id) {
-      if (this.$refs.viewPage) {
+      if (this.$refs.detailPage) {
+        this.$refs.detailPage.init('view', id)
+      } else if (this.$refs.viewPage) {
         this.$refs.viewPage.init(id)
       }
     },

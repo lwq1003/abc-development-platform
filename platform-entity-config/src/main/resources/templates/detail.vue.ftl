@@ -1,5 +1,5 @@
 <template>
-    <Dialog title="修改" v-model="visible" width="500px">
+    <Dialog :title="title" v-model="visible" width="500px">
         <el-form
                 ref="form"
                 :model="entityData"
@@ -9,7 +9,7 @@
                 style="width: 90%; margin: 0px auto"
         >
             <!--表单区域 -->
-    <#list modifyViewPropertyList as item>
+    <#list detailViewPropertyList as item>
         <#if item.dataType=="STRING" || item.dataType=="TEXT"  >
             <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
             .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
@@ -144,15 +144,15 @@
     </#list>
         </el-form>
         <template #footer>
-            <el-button type="primary" @click="save" v-permission="pageCode + 'modify'">保存</el-button>
+            <el-button type="primary" @click="save" v-permission="pageCode + mode" v-show="mode != 'view'">保存</el-button>
             <el-button @click="close">关闭</el-button>
         </template>
     </Dialog>
 </template>
 
 <script>
-import {modifyMixin} from '@/mixin/modifyMixin.js'
-<#list modifyViewPropertyList as item>
+import { detailMixin } from '@/mixin/detailMixin.js'
+<#list detailViewPropertyList as item>
 <#if item.dataType=="ENTITY">
 import ${item.entityCode}Reference from '@/modules/${item.moduleCode}/view/${item.entityCode?uncap_first}/${mainReferenceViewMap[item.entityCode]}.vue'
 </#if>
@@ -160,10 +160,10 @@ import ${item.entityCode}Reference from '@/modules/${item.moduleCode}/view/${ite
 const MODULE_CODE = '${package.ModuleName}'
 const ENTITY_TYPE = '${entity?uncap_first}'
 export default {
-    name: ENTITY_TYPE + '-modify',
-    mixins: [modifyMixin],
+    name: ENTITY_TYPE + '-detail',
+    mixins: [detailMixin],
     components:{
-    <#list modifyViewPropertyList as item>
+    <#list detailViewPropertyList as item>
     <#if item.dataType=="ENTITY">
         ${item.entityCode}Reference,
     </#if>
@@ -177,7 +177,7 @@ export default {
             api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
             pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
             entityData: {},
-            <#list modifyViewPropertyList as item>
+            <#list detailViewPropertyList as item>
             <#if item.dataType=="ENTITY">
             // ${item.name}组件参数，用于传递数据
             ${item.entityCode?uncap_first}Param: {},
@@ -194,29 +194,29 @@ export default {
         }
     },
     methods: {
-        <#if modifyEntityView.beforeInit?? && modifyEntityView.beforeInit!="">
+        <#if detailEntityView.beforeInit?? && detailEntityView.beforeInit!="">
         beforeInit(param){
-            ${modifyEntityView.beforeInit}
+            ${detailEntityView.beforeInit}
         },
         </#if>
-        <#if modifyEntityView.afterInit?? && modifyEntityView.afterInit!="">
+        <#if detailEntityView.afterInit?? && detailEntityView.afterInit!="">
         afterInit(param){
-            ${modifyEntityView.afterInit}
+            ${detailEntityView.afterInit}
         },
         </#if>
-        <#if modifyEntityView.validateData?? && modifyEntityView.validateData!="">
+        <#if detailEntityView.validateData?? && detailEntityView.validateData!="">
         validateData(){
-            ${modifyEntityView.validateData}
+            ${detailEntityView.validateData}
         },
         </#if>
-        <#if modifyEntityView.beforeSave?? && modifyEntityView.beforeSave!="">
+        <#if detailEntityView.beforeSave?? && detailEntityView.beforeSave!="">
         beforeSave(){
-            ${modifyEntityView.beforeSave}
+            ${detailEntityView.beforeSave}
         },
         </#if>
-        <#if modifyEntityView.afterSave?? && modifyEntityView.afterSave!="">
+        <#if detailEntityView.afterSave?? && detailEntityView.afterSave!="">
         afterSave(){
-            ${modifyEntityView.afterSave}
+            ${detailEntityView.afterSave}
         },
         </#if>
     }

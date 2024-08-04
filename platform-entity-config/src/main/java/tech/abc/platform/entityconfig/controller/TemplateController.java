@@ -14,7 +14,6 @@ import tech.abc.platform.common.vo.PageInfo;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.entityconfig.entity.Template;
-import tech.abc.platform.entityconfig.service.EntityService;
 import tech.abc.platform.entityconfig.service.TemplateService;
 import tech.abc.platform.entityconfig.vo.TemplateVO;
 import lombok.extern.slf4j.Slf4j;
@@ -23,19 +22,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import tech.abc.platform.system.service.OrganizationService;
-import tech.abc.platform.system.service.UserService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
 * 模板 前端控制器类
 *
 * @author wqliu
-* @date 2024-01-23
+* @date 2024-07-23
 */
 @RestController
 @RequestMapping("/entityconfig/template")
@@ -44,12 +39,6 @@ public class TemplateController extends BaseController {
     @Autowired
     private TemplateService templateService;
 
-    @Autowired
-    private EntityService entityService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private OrganizationService organizationService;
 
     //region 基本操作
     /**
@@ -162,7 +151,17 @@ public class TemplateController extends BaseController {
     }
 
 
-
+    /**
+    * 复制新增单条数据，返回复制后的对象
+    */
+    @PostMapping("/{id}/addSingleByCopy")
+    @SystemLog(value = "模板-复制新增")
+    @PreAuthorize("hasPermission(null,'entityconfig:template:addByCopy')")
+    public ResponseEntity<Result> addSingleByCopy(@PathVariable("id") String id) {
+        Template entity = templateService.addSingleByCopy(id);
+        TemplateVO vo = convert2VO(entity);
+        return ResultUtil.success(vo);
+    }
     //endregion
 
     //region 扩展操作
@@ -179,8 +178,6 @@ public class TemplateController extends BaseController {
     */
     protected TemplateVO convert2VO(Template entity){
         TemplateVO vo=mapperFacade.map(entity,TemplateVO.class);
-        vo.setYesOrNoName(dictionaryUtil.getNameByCode("YesOrNo", entity.getYesOrNo()));
-        vo.setStatusName(dictionaryUtil.getNameByCode("Status", entity.getStatus()));
         return vo;
     }
 
@@ -193,27 +190,8 @@ public class TemplateController extends BaseController {
     protected List<TemplateVO> convert2VO(List<Template> entityList) {
         List<TemplateVO> voList = new ArrayList<>(entityList.size());
 
-        // 获取 用户 集合
-        List<String> userList = entityList.stream().map(x -> x.getEntity()).collect(Collectors.toList());
-        Map<String,String> userNameMap = userService.getNameMap(userList);
-
-        // 获取 用户单选 集合
-        List<String> userSingleList = entityList.stream().map(x -> x.getUserSingle()).collect(Collectors.toList());
-        Map<String,String> userSingleNameMap = userService.getNameMap(userSingleList);
-
-
-        // 获取 组织机构单选 集合
-        List<String> organizationSingleList = entityList.stream().map(x -> x.getOrganizationSingle()).collect(Collectors.toList());
-        Map<String,String> organizationSingleNameMap = organizationService.getNameMap(organizationSingleList);
-
         entityList.stream().forEach(x -> {
             TemplateVO vo = convert2VO(x);
-            // 设置 用户
-            vo.setEntityName(userNameMap.get(x.getEntity()));
-            // 设置 用户单选
-            vo.setUserSingleName(userSingleNameMap.get(x.getUserSingle()));
-            // 设置 组织机构单选
-            vo.setOrganizationSingleName(organizationSingleNameMap.get(x.getOrganizationSingle()));
             voList.add(vo);
         });
         return voList;

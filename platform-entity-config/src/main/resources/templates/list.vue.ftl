@@ -258,29 +258,39 @@
                     :page-total="pageTotal"
             />
         </el-card>
-        <#if addViewFlag?? && addViewFlag=="YES">
-         <AddPage ref="addPage" @refresh="refresh" />
-        </#if>
-        <#if modifyViewFlag?? && modifyViewFlag=="YES">
-            <ModifyPage ref="modifyPage" @refresh="refresh" />
-        </#if>
+        <#--优先判断是否有详情视图，若有，则显示详情视图，若无，再判断是否有新增、修改、查看视图-->
+        <#if detailViewFlag?? && detailViewFlag=="YES">
+            <DetailPage ref="detailPage" @refresh="refresh" />
+        <#else>
+            <#if addViewFlag?? && addViewFlag=="YES">
+                <AddPage ref="addPage" @refresh="refresh" />
+            </#if>
+            <#if modifyViewFlag?? && modifyViewFlag=="YES">
+                <ModifyPage ref="modifyPage" @refresh="refresh" />
+            </#if>
 
-        <#if viewViewFlag?? && viewViewFlag=="YES">
-            <ViewPage ref="viewPage" />
+            <#if viewViewFlag?? && viewViewFlag=="YES">
+                <ViewPage ref="viewPage" />
+            </#if>
         </#if>
     </ContentWrap>
 </template>
 
 <script lang="ts">
     import {listMixin} from '@/mixin/listMixin.js'
-    <#if addViewFlag?? && addViewFlag=="YES">
-    import AddPage from './add.vue'
-    </#if>
-    <#if modifyViewFlag?? && modifyViewFlag=="YES">
-    import ModifyPage from './modify.vue'
-    </#if>
-    <#if viewViewFlag?? && viewViewFlag=="YES">
-    import ViewPage from './view.vue'
+
+    <#if detailViewFlag?? && detailViewFlag=="YES">
+    import DetailPage from './detail.vue'
+    <#else>
+        <#if addViewFlag?? && addViewFlag=="YES">
+        import AddPage from './add.vue'
+        </#if>
+        <#if modifyViewFlag?? && modifyViewFlag=="YES">
+        import ModifyPage from './modify.vue'
+        </#if>
+        <#if viewViewFlag?? && viewViewFlag=="YES">
+        import ViewPage from './view.vue'
+        </#if>
     </#if>
 
     <#if existFormatMethod=="YES">
@@ -299,19 +309,23 @@
     </#if>
         mixins: [listMixin],
         components:{
-            <#if addViewFlag?? && addViewFlag=="YES">
-            AddPage,
-            </#if>
-            <#if modifyViewFlag?? && modifyViewFlag=="YES">
-            ModifyPage,
-            </#if>
-            <#if viewViewFlag?? && viewViewFlag=="YES">
-            ViewPage,
+            <#if detailViewFlag?? && detailViewFlag=="YES">
+            DetailPage,
+            <#else>
+                <#if addViewFlag?? && addViewFlag=="YES">
+                AddPage,
+                </#if>
+                <#if modifyViewFlag?? && modifyViewFlag=="YES">
+                ModifyPage,
+                </#if>
+                <#if viewViewFlag?? && viewViewFlag=="YES">
+                ViewPage,
+                </#if>
             </#if>
             <#list queryConditionList as item>
-            <#if item.dataType=="ENTITY">
-            ${item.entityCode}Reference,
-            </#if>
+                <#if item.dataType=="ENTITY">
+                ${item.entityCode}Reference,
+                </#if>
             </#list>
         },
         data() {

@@ -18,6 +18,10 @@ public enum EntityViewTypeEnum {
      */
     LIST,
     /**
+     * 详情
+     */
+    DETAIL,
+    /**
      * 新增
      */
     ADD,

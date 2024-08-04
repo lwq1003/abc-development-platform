@@ -3,14 +3,8 @@
     <CollapseTab>
       <el-form :inline="true" :model="queryCondition" label-width="120px" @keyup.enter="query">
         <!--查询条件区 -->
-        <el-form-item label="用户">
-          <UserReference v-model="queryCondition.entity" :user-param="userParam" />
-        </el-form-item>
         <el-form-item label="名称">
-          <QueryText v-model="queryCondition.name" type="LK" />
-        </el-form-item>
-        <el-form-item label="编码">
-          <QueryText v-model="queryCondition.code" type="LK" />
+          <QueryText v-model="queryCondition.name" type="LK"> </QueryText>
         </el-form-item>
         <el-form-item style="float: right">
           <QueryButton :page-code="pageCode" />
@@ -83,27 +77,20 @@
         :page-total="pageTotal"
       />
     </el-card>
-
-    <AddPage ref="addPage" @refresh="refresh" />
-    <ModifyPage ref="modifyPage" @refresh="refresh" />
-    <ViewPage ref="viewPage" />
+    <DetailPage ref="detailPage" @refresh="refresh" />
   </ContentWrap>
 </template>
 
 <script lang="ts">
 import { listMixin } from '@/mixin/listMixin.js'
-import AddPage from './add.vue'
-import ModifyPage from './modify.vue'
-import ViewPage from './view.vue'
-import UserReference from '@/modules/system/view/user/treeListReference.vue'
+
+import DetailPage from './detail.vue'
+
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'template'
 export default {
   components: {
-    AddPage,
-    ModifyPage,
-    ViewPage,
-    UserReference
+    DetailPage
   },
   mixins: [listMixin],
   data() {
@@ -113,41 +100,12 @@ export default {
       // eslint-disable-next-line no-eval
       api: eval('this.$api.' + MODULE_CODE + '.' + ENTITY_TYPE),
       pageCode: MODULE_CODE + ':' + ENTITY_TYPE + ':',
-      // 用户组件参数，用于传递数据
-      userParam: {},
+      // 排序信息
+      sortInfo: {
+        sort_field: 'id',
+        sort_sortType: 'descending'
+      },
       columnList: [
-        {
-          prop: 'entityName',
-          label: '用户',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
-          prop: 'userSingleName',
-          label: '用户单选',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
-          prop: 'organizationSingleName',
-          label: '组织机构单选',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
-          prop: 'icon',
-          label: '图标',
-          show: true,
-          showOverflowTooltip: true,
-          sortable: true
-        },
-        {
-          prop: 'serialNo',
-          label: '流水号',
-          show: true,
-          showOverflowTooltip: true,
-          sortable: true
-        },
         {
           prop: 'name',
           label: '名称',
@@ -156,48 +114,43 @@ export default {
           sortable: true
         },
         {
-          prop: 'code',
-          label: '编码',
+          prop: 'time1',
+          label: '时分秒',
           show: true,
           showOverflowTooltip: true,
           sortable: true
         },
         {
-          prop: 'date',
-          label: '日期',
+          prop: 'time2',
+          label: '时分',
           show: true,
           showOverflowTooltip: true,
           sortable: true
         },
         {
-          prop: 'time',
-          label: '时间',
+          prop: 'time3',
+          label: '时',
           show: true,
           showOverflowTooltip: true,
           sortable: true
         },
         {
-          prop: 'yesOrNoName',
-          label: '是否',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
-          prop: 'statusName',
-          label: '状态',
-          show: true,
-          showOverflowTooltip: true
-        },
-        {
-          prop: 'orderNo',
-          label: '排序',
+          prop: 'date1',
+          label: '年月日',
           show: true,
           showOverflowTooltip: true,
           sortable: true
         },
         {
-          prop: 'remark',
-          label: '备注',
+          prop: 'day2',
+          label: '年月日时分',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
+        },
+        {
+          prop: 'day3',
+          label: '年月日时分秒',
           show: true,
           showOverflowTooltip: true,
           sortable: true

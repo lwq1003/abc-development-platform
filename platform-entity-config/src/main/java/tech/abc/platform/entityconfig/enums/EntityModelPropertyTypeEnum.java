@@ -18,6 +18,10 @@ public enum EntityModelPropertyTypeEnum {
      */
     STRING,
     /**
+     * 长文本
+     */
+    TEXT,
+    /**
      * 整数
      */
     INTEGER,
@@ -68,7 +72,11 @@ public enum EntityModelPropertyTypeEnum {
     /**
      * 流水号
      */
-    SERIAL_NO
+    SERIAL_NO,
+    /**
+     * 时间
+     */
+    TIME
 
 
 }

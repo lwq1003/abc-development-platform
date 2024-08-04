@@ -13,146 +13,60 @@ import lombok.experimental.Accessors;
 * 模板 视图对象类
 *
 * @author wqliu
-* @date 2024-01-23
+* @date 2024-07-23
 */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class TemplateVO extends BaseVO {
     /**
-    * 用户
+    * 时分秒
     */
-    private String entity;
+    private String time1;
 
     /**
-    * 图标
+    * 时分
     */
-    @NotBlank(message = "【图标】不能为空")
-    private String icon;
+    private String time2;
 
     /**
-    * 流水号
+    * 时
     */
-    private String serialNo;
+    private String time3;
+
+    /**
+    * 年月日
+    */
+    private LocalDateTime date1;
+
+    /**
+    * 年月日时分
+    */
+    private LocalDateTime day2;
+
+    /**
+    * 年月日时分秒
+    */
+    private LocalDateTime day3;
 
     /**
     * 名称
     */
-    @NotBlank(message = "【名称】不能为空")
     private String name;
 
     /**
-    * 编码
+    * 长文本
     */
-    @NotBlank(message = "【编码】不能为空")
-    private String code;
-
-    /**
-    * 用户单选
-    */
-    @NotBlank(message = "【用户单选】不能为空")
-    private String userSingle;
-
-    /**
-    * 组织机构单选
-    */
-    private String organizationSingle;
-
-    /**
-    * 日期
-    */
-    private LocalDateTime date;
-
-    /**
-    * 时间
-    */
-    private LocalDateTime time;
-
-    /**
-    * 是否
-    */
-    @NotBlank(message = "【是否】不能为空")
-    private String yesOrNo;
-
-    /**
-    * 状态
-    */
-    @NotBlank(message = "【状态】不能为空")
-    private String status;
-
-    /**
-    * 排序
-    */
-    private String orderNo;
-
-    /**
-    * 备注
-    */
-    private String remark;
-
-    /**
-    * 说明
-    */
-    private String description;
+    private String content;
 
 
     /********非库表存储属性*****/
-    /**
-    * 组织机构多选
-    */
-    private String organizationMultiple;
-
-    /**
-    * 附件上传
-    */
-    private String attachmentUpload;
-
-    /**
-    * 附件管理
-    */
-    private String attachmentManage;
-
-    /**
-    * 附件查看
-    */
-    private String attachmentView;
-
-    /**
-    * 附件管理及上传
-    */
-    private String attachmentManagerAndUploader;
-
 
 
 
     /********字典类*****/
-    /**
-    * 是否
-    */
-    private String yesOrNoName;
-
-    /**
-    * 状态
-    */
-    private String statusName;
-
 
     /********实体类、用户单选、组织机构单选*****/
-    /**
-    * 用户
-    */
-    private String entityName;
-
-    /**
-    * 用户单选
-    */
-    private String userSingleName;
-
-    /**
-    * 组织机构单选
-    */
-    private String organizationSingleName;
-
 
     /********范围查询*****/
 

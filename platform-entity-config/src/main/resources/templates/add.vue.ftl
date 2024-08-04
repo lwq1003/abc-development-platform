@@ -10,7 +10,7 @@
         >
             <!--表单区域 -->
      <#list addViewPropertyList as item>
-                <#if item.dataType=="STRING">
+                <#if item.dataType=="STRING" || item.dataType=="TEXT"  >
                     <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
                     .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
                          <#if item.widgetType!="RICH_TEXT">
@@ -29,6 +29,18 @@
                                 :type="$dateFormatter.getDatetimeType('${item.formatPattern}')"
                                 align="right"
                                 unlink-panels
+                                class="form-item"
+                                <#if item.readonlyFlag=="YES">:readonly='true' </#if>
+                        />
+                    </el-form-item>
+                <#elseif item.dataType=="TIME"  >
+                    <el-form-item label="${item.name}" prop="${item.code}"  <#if item.showFlag=="NO">v-show='false' <#elseif item
+                    .showFlag=="CUSTOM">v-show="${item.showExpression}" </#if>>
+                        <el-time-picker
+                                v-model="entityData.${item.code}"
+                                :value-format="$dateFormatter.getTimeFormat('${item.formatPattern}')"
+                                :format="$dateFormatter.getTimeFormat('${item.formatPattern}')"
+                                align="right"
                                 class="form-item"
                                 <#if item.readonlyFlag=="YES">:readonly='true' </#if>
                         />

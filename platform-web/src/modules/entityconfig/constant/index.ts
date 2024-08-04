@@ -29,7 +29,9 @@ export const DATA_TYPE = {
   ORGANIZATION_MULTIPLE: 'ORGANIZATION_MULTIPLE',
   USER_SINGLE: 'USER_SINGLE',
   ATTACHMENT: 'ATTACHMENT',
-  SERIAL_NO: 'SERIAL_NO'
+  SERIAL_NO: 'SERIAL_NO',
+  TEXT: 'TEXT',
+  TIME: 'TIME'
 }
 
 // 显示控件类型
@@ -43,7 +45,8 @@ export const WIDGET_TYPE = {
   ATTACHMENT: 'AttachmentComponent',
   ORGANIZATION_SINGLE: 'OrganizationSingleSelectDisplayComponent',
   ORGANIZATION_MULTIPLE: 'OrganizationMultipleSelectDisplayComponent',
-  USER_SINGLE: 'UserSingleSelectDisplayComponent'
+  USER_SINGLE: 'UserSingleSelectDisplayComponent',
+  TIME: 'TimeDisplayComponent'
 }
 
 // 视图按钮类型

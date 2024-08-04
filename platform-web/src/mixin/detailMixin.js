@@ -1,22 +1,24 @@
 /**
- * 修改页面混入
+ * 详情页面混入,包括新增、修改和查看功能
  */
 
 import { Dialog } from '@/components/abc/Dialog'
 import DictionaryRadioGroup from '@/components/abc/DictionarySelect/DictionaryRadioGroup.vue'
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
 import DataDictionarySelect from '@/modules/system/view/dictionaryType/treeReferenceUseCode.vue'
-import IconPicker from '@/components/abc/IconPicker/index.vue'
 import { Editor } from '@/components/abc/Editor'
 import CronExpression from '@/components/abc/CronExpression/index.vue'
 import OrganizationSingleSelect from '@/modules/system/view/organization/treeReference.vue'
 import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
 import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
+import IconPicker from '@/components/abc/IconPicker/index.vue'
 import AttachmentManager from '@/modules/support/view/attachment/attachmentManager.vue'
 import AttachmentUploader from '@/modules/support/view/attachment/attachmentUploader.vue'
 import AttachmentViewer from '@/modules/support/view/attachment/attachmentViewer.vue'
 import AttachmentManagerAndUploader from '@/modules/support/view/attachment/attachmentManagerAndUploader.vue'
-export const modifyMixin = {
+// import { checkButtonPermission } from '@/utils/auth'
+
+export const detailMixin = {
   components: {
     Dialog,
     DictionaryRadioGroup,
@@ -38,22 +40,70 @@ export const modifyMixin = {
       // 可见性
       visible: false,
       // 加载中
-      loading: false
+      loading: false,
+      // 模式
+      mode: '',
+      // 只读
+      readonly: false
     }
   },
-  methods: {
-    // 初始化
-    init(id) {
-      if (this.beforeInit) {
-        this.beforeInit()
+  computed: {
+    title() {
+      let text = ''
+      if (this.mode === 'add') {
+        text = '新增'
+      } else if (this.mode === 'modify') {
+        text = '修改'
+      } else if (this.mode === 'view') {
+        text = '查看'
       }
-      this.api.get(id).then((res) => {
-        this.entityData = res.data
-        if (this.afterInit) {
-          this.afterInit(id)
-        }
-        this.visible = true
-      })
+      return text
+    }
+    // saveButtonVisible() {
+    //   // 如果是只读模式，直接返回false
+    //   if (this.mode === 'view') {
+    //     return false
+    //   }
+    //   return checkButtonPermission(this.pageCode + this.mode)
+    // }
+  },
+  methods: {
+    // 带参初始化,参数可为空
+    init(mode, param) {
+      // 获取到模式
+      this.mode = mode
+      // 初始化前操作
+      if (this.beforeInit) {
+        this.beforeInit(param)
+      }
+      if (this.mode === 'add') {
+        // 新增
+        this.api.init().then((res) => {
+          this.loadData(res.data)
+        })
+      } else if (this.mode === 'modify') {
+        // 修改
+        this.api.get(param).then((res) => {
+          this.loadData(res.data)
+        })
+      } else if (this.mode === 'view') {
+        // 查看
+        this.api.get(param).then((res) => {
+          this.loadData(res.data)
+        })
+      }
+    },
+    // 加载数据
+    loadData(data) {
+      this.entityData = data
+      if (this.afterInit) {
+        this.afterInit(data)
+      }
+      this.visible = true
+    },
+    // 关闭
+    close() {
+      this.visible = false
     },
     // 保存
     save() {
@@ -94,29 +144,39 @@ export const modifyMixin = {
         }
       })
     },
-    // 关闭
-    close() {
-      this.visible = false
-    },
     // 保存
     saveData() {
-      this.api
-        .modify(this.entityData)
-        .then((res) => {
-          this.entityData = res.data
-          if (this.afterSave) {
-            this.afterSave()
-          }
-          this.$emit('refresh', this.entityData)
-          this.close()
-        })
-        .finally(() => {
-          this.loading = false
-        })
-    },
-    // 附件上传完成，刷新管理组件
-    fileComplete() {
-      this.$refs.attachmentManager.list()
+      if (this.mode === 'add') {
+        // 新增
+        this.api
+          .add(this.entityData)
+          .then((res) => {
+            this.entityData = res.data
+            if (this.afterSave) {
+              this.afterSave()
+            }
+            this.$emit('refresh', this.entityData)
+            this.close()
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      } else if (this.mode === 'modify') {
+        // 修改
+        this.api
+          .modify(this.entityData)
+          .then((res) => {
+            this.entityData = res.data
+            if (this.afterSave) {
+              this.afterSave()
+            }
+            this.$emit('refresh', this.entityData)
+            this.close()
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }
     }
   }
 }

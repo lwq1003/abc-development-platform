@@ -1,22 +1,20 @@
 package tech.abc.platform.entityconfig.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
-import tech.abc.platform.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import tech.abc.platform.common.base.BaseEntity;
+
 import java.time.LocalDateTime;
 
 /**
  * 模板 实体类
  *
  * @author wqliu
- * @date 2024-01-23
- *
+ * @date 2024-07-23
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -25,118 +23,52 @@ import java.time.LocalDateTime;
 public class Template extends BaseEntity {
 
     /**
-    * 用户
-    */
-    @TableField("entity")
-    private String entity;
+     * 时分秒
+     */
+    @TableField("time1")
+    private String time1;
 
     /**
-    * 图标
-    */
-    @TableField("icon")
-    private String icon;
+     * 时分
+     */
+    @TableField("time2")
+    private String time2;
 
     /**
-    * 流水号
-    */
-    @TableField("serial_no")
-    private String serialNo;
+     * 时
+     */
+    @TableField("time3")
+    private String time3;
 
     /**
-    * 名称
-    */
+     * 年月日
+     */
+    @TableField(value = "date1", updateStrategy = FieldStrategy.IGNORED)
+    private LocalDateTime date1;
+
+    /**
+     * 年月日时分
+     */
+    @TableField(value = "day2", updateStrategy = FieldStrategy.IGNORED)
+    private LocalDateTime day2;
+
+    /**
+     * 年月日时分秒
+     */
+    @TableField(value = "day3", updateStrategy = FieldStrategy.IGNORED)
+    private LocalDateTime day3;
+
+    /**
+     * 名称
+     */
     @TableField("name")
     private String name;
 
     /**
-    * 编码
-    */
-    @TableField("code")
-    private String code;
-
-    /**
-    * 用户单选
-    */
-    @TableField("user_single")
-    private String userSingle;
-
-    /**
-    * 组织机构单选
-    */
-    @TableField("organization_single")
-    private String organizationSingle;
-
-    /**
-    * 日期
-    */
-    @TableField("date")
-    private LocalDateTime date;
-
-    /**
-    * 时间
-    */
-    @TableField("time")
-    private LocalDateTime time;
-
-    /**
-    * 是否
-    */
-    @TableField("yes_or_no")
-    private String yesOrNo;
-
-    /**
-    * 状态
-    */
-    @TableField("status")
-    private String status;
-
-    /**
-    * 排序
-    */
-    @TableField("order_no")
-    private String orderNo;
-
-    /**
-    * 备注
-    */
-    @TableField("remark")
-    private String remark;
-
-    /**
-    * 说明
-    */
-    @TableField("description")
-    private String description;
+     * 长文本
+     */
+    @TableField("content")
+    private String content;
 
     /********非库表存储属性*****/
-    /**
-    * 组织机构多选
-    */
-    @TableField(exist = false)
-    private String organizationMultiple;
-
-    /**
-    * 附件上传
-    */
-    @TableField(exist = false)
-    private String attachmentUpload;
-
-    /**
-    * 附件管理
-    */
-    @TableField(exist = false)
-    private String attachmentManage;
-
-    /**
-    * 附件查看
-    */
-    @TableField(exist = false)
-    private String attachmentView;
-
-    /**
-    * 附件管理及上传
-    */
-    @TableField(exist = false)
-    private String attachmentManagerAndUploader;
-
 }
