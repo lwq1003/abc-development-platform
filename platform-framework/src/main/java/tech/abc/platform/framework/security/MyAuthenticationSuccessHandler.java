@@ -26,12 +26,14 @@ import tech.abc.platform.system.entity.PermissionItem;
 import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.enums.OrganizationTypeEnum;
 import tech.abc.platform.system.enums.PermissionTypeEnum;
+import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.system.vo.MenuTreeVO;
 import tech.abc.platform.system.vo.MetaVO;
 import tech.abc.platform.system.vo.UserVO;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -67,6 +69,9 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Resource
+    private GroupUserService groupUserService;
 
 
     @Override
@@ -182,6 +187,9 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         while (!currentOrganizationId.equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID));
         user.setOrganizationFullName(organizationFullName.toString());
 
+        //  填充用户组
+        List<String> userGroupList = groupUserService.getUserGroupList(user.getId());
+        user.setUserGroupList(userGroupList);
     }
 
     /**

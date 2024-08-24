@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>tech.abc</groupId>
-            <artifactId>platform-system</artifactId>
+            <artifactId>platform-entity-config</artifactId>
         </dependency>
 
         <!--数据库连接池-->

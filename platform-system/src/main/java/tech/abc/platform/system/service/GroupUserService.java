@@ -31,4 +31,13 @@ public interface GroupUserService extends BaseService<GroupUser> {
      */
     void addUser(String groupId, List<String> userIdList);
 
+
+    /**
+     * 获取用户组列表
+     *
+     * @param userId 用户id
+     * @return list<string>
+     */
+    List<String> getUserGroupList(String userId);
+
 }

@@ -10,6 +10,7 @@ import tech.abc.platform.system.mapper.GroupUserMapper;
 import tech.abc.platform.system.service.GroupUserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户组与用户对应表 服务实现类
@@ -62,5 +63,14 @@ public class GroupUserServiceImpl extends BaseServiceImpl<GroupUserMapper, Group
                 add(groupUser);
             }
         }
+    }
+
+    @Override
+    public List<String> getUserGroupList(String userId) {
+        QueryWrapper<GroupUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(GroupUser::getUserId, userId);
+        List<GroupUser> list = this.list(queryWrapper);
+        return list.stream().map(x -> x.getGroupId()).collect(Collectors.toList());
+
     }
 }

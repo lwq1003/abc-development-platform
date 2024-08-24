@@ -1,14 +1,12 @@
 package tech.abc.platform.workflow.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
@@ -20,8 +18,6 @@ import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.*;
 import org.camunda.bpm.model.bpmn.instance.camunda.CamundaTaskListener;
 import org.camunda.bpm.model.xml.ModelInstance;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -157,13 +153,13 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         entity.setTemplateStatus(WorkflowTemplateStatusEnum.UNPUBLISHED.name());
         entity.setProcessDefinitionId(this.generateTemporaryVersion(entity.getCode()));
         // 版本升级时，模板版本号小段自动加1
-        if(StringUtils.isNotBlank(value[0]) && value[0].equals(YesOrNoEnum.YES.name())) {
+        if (StringUtils.isNotBlank(value[0]) && value[0].equals(YesOrNoEnum.YES.name())) {
             String templateVersion = entity.getTemplateVersion();
             String[] versionArray = templateVersion.split("\\.");
             int minVersion = Integer.parseInt(versionArray[1]);
-            String newVersion = versionArray[0] +"." +(minVersion + 1);
+            String newVersion = versionArray[0] + "." + (minVersion + 1);
             entity.setTemplateVersion(newVersion);
-        }else{
+        } else {
             // 复制新增时，模板版本号默认
             entity.setTemplateVersion(DEFAULT_TEMPLATE_VERSION);
         }
@@ -187,13 +183,13 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     @Override
     protected void afterAdd(WorkflowTemplate entity) {
 
-        convertJsonToModel(entity,false);
+        convertJsonToModel(entity, false);
     }
 
     @Override
     protected void afterModify(WorkflowTemplate entity, WorkflowTemplate orginEntity) {
 
-        convertJsonToModel(entity,false);
+        convertJsonToModel(entity, false);
     }
 
     @Override
@@ -205,7 +201,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         workflowNodeConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
 
         // 删除流程权限
-         workflowNodePermissionConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
+        workflowNodePermissionConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
 
         // 删除环节回退配置
         workflowBackNodeConfigService.removeByProcessDefinitionId(tempProcessDefinitionId);
@@ -273,10 +269,10 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
      *
      * @param templateCode 模板代码
      */
-    private void setArchived(String templateCode){
+    private void setArchived(String templateCode) {
         Optional<WorkflowTemplate> workflowTemplate = this.lambdaQuery().eq(WorkflowTemplate::getTemplateStatus, WorkflowTemplateStatusEnum.RUNNING.name())
                 .eq(WorkflowTemplate::getCode, templateCode).oneOpt();
-        if(workflowTemplate.isPresent()){
+        if (workflowTemplate.isPresent()) {
             WorkflowTemplate entity = workflowTemplate.get();
             entity.setTemplateStatus(WorkflowTemplateStatusEnum.ARCHIVED.name());
             // 此处直接调用底层更新，避免修改前检查名称是否相同（同一流程多版本，名称通常是一样的）
@@ -284,8 +280,6 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         }
 
     }
-
-
 
 
     @Override
@@ -302,7 +296,6 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         addByCopy(id, YesOrNoEnum.YES.name());
 
     }
-
 
 
     @Override
@@ -337,19 +330,19 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
         String model = getModelByProcessDefinitionId(processDefinitionId);
         MyFlowNode flowNode = JSON.parseObject(model, MyFlowNode.class);
-        List<FlowStep> result=new ArrayList<>();
+        List<FlowStep> result = new ArrayList<>();
         // 添加发起环节
-        FlowStep rootStep=new FlowStep();
+        FlowStep rootStep = new FlowStep();
         BeanUtils.copyProperties(flowNode, rootStep);
         result.add(rootStep);
         // 遍历后续环节，跳过路由分支
-        MyFlowNode child=flowNode.getChild();
-        while(true){
-            if(child==null || StringUtils.isBlank(child.getName())){
+        MyFlowNode child = flowNode.getChild();
+        while (true) {
+            if (child == null || StringUtils.isBlank(child.getName())) {
                 break;
             }
-            if(child.getType().equals(FlowCodeTypeEnum.HANDLE.name())){
-                FlowStep handleStep=new FlowStep();
+            if (child.getType().equals(FlowCodeTypeEnum.HANDLE.name())) {
+                FlowStep handleStep = new FlowStep();
                 BeanUtils.copyProperties(child, handleStep);
                 result.add(handleStep);
             }
@@ -413,7 +406,6 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     }
 
 
-
     /**
      * 将json转换为模型
      * 流程节点转换
@@ -439,12 +431,12 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
                 break;
             case HANDLE:
-               element =  handleNodeConvert(process, parentElement, flowNode, tempVersion, expression, generateConfigFlag);
+                element = handleNodeConvert(process, parentElement, flowNode, tempVersion, expression, generateConfigFlag);
 
                 break;
             case INCLUSIVE_GATEWAY:
 
-                element = gatewayNodeConvert(process,flowNode,parentElement,tempVersion,expression,generateConfigFlag);
+                element = gatewayNodeConvert(process, flowNode, parentElement, tempVersion, expression, generateConfigFlag);
                 break;
             case SERVICE_TASK:
                 // TODO
@@ -476,7 +468,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
      */
     private FlowNode rootNodeConvert(Process process, FlowNode parentElement, MyFlowNode flowNode, String tempVersion, boolean generateConfigFlag) {
         // 创建节点
-        ModelInstance modelInstance=process.getModelInstance();
+        ModelInstance modelInstance = process.getModelInstance();
         UserTask firstNode = modelInstance.newInstance(UserTask.class);
         // 设置基本属性
         firstNode.setName(flowNode.getName());
@@ -486,7 +478,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
         // 构建边
         createSequenceFlow(process, parentElement, firstNode);
-        if(generateConfigFlag) {
+        if (generateConfigFlag) {
             // 环节配置
             String rootConfig = flowNode.getConfig();
             JSONObject nodeConfig = JSON.parseObject(rootConfig);
@@ -517,7 +509,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
     private UserTask handleNodeConvert(Process process, FlowNode parentElement, MyFlowNode flowNode, String tempVersion, String expression,
                                        boolean generateConfigFlag) {
         // 生成节点
-        ModelInstance modelInstance=process.getModelInstance();
+        ModelInstance modelInstance = process.getModelInstance();
         UserTask userTask = modelInstance.newInstance(UserTask.class);
         // 设置基本属性
         userTask.setName(flowNode.getName());
@@ -545,10 +537,10 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         // 监听器配置
         List<WorkflowListenerConfig> listenerConfigList = JSON.parseArray(handleNodeConfig.getString("listenerList")
                 , WorkflowListenerConfig.class);
-        if(CollectionUtils.isNotEmpty(listenerConfigList)) {
+        if (CollectionUtils.isNotEmpty(listenerConfigList)) {
             ExtensionElements extensionElements = modelInstance.newInstance(ExtensionElements.class);
 
-            for(WorkflowListenerConfig listenerConfig:listenerConfigList) {
+            for (WorkflowListenerConfig listenerConfig : listenerConfigList) {
                 CamundaTaskListener listener = modelInstance.newInstance(CamundaTaskListener.class);
                 listener.setCamundaEvent(listenerConfig.getEvent().toLowerCase());
                 listener.setCamundaClass(listenerConfig.getCode());
@@ -558,7 +550,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         }
 
         // 配置后端处理
-        if(generateConfigFlag) {
+        if (generateConfigFlag) {
             // 环节配置
             personConfig.setProcessDefinitionId(tempVersion);
             personConfig.setName(userTask.getName());
@@ -596,7 +588,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
      * @param modelInstance 模型实例
      * @param sequenceFlow  边
      */
-    private  void setConditionForSequenceFlow(String expression, ModelInstance modelInstance, SequenceFlow sequenceFlow) {
+    private void setConditionForSequenceFlow(String expression, ModelInstance modelInstance, SequenceFlow sequenceFlow) {
         if (StringUtils.isNotBlank(expression)) {
             ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
             conditionExpression.setTextContent(expression);
@@ -618,9 +610,9 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
      * @param generateConfigFlag 是否生成配置
      * @return {@link InclusiveGateway}
      */
-    private InclusiveGateway gatewayNodeConvert(Process process,MyFlowNode flowNode,FlowNode parentElement,String tempVersion, String expression, boolean generateConfigFlag){
+    private InclusiveGateway gatewayNodeConvert(Process process, MyFlowNode flowNode, FlowNode parentElement, String tempVersion, String expression, boolean generateConfigFlag) {
         // 创建节点
-        ModelInstance modelInstance=process.getModelInstance();
+        ModelInstance modelInstance = process.getModelInstance();
         InclusiveGateway node = modelInstance.newInstance(InclusiveGateway.class);
         process.addChildElement(node);
         // 设置基本属性
@@ -662,13 +654,6 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         });
         return convergeNode;
     }
-
-
-
-
-
-
-
 
 
     private void configPermission(String tempVersion, String nodeId, List<WorkflowNodePermissionConfig> permissionList) {
@@ -756,7 +741,7 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
         if (processDefinition != null) {
-            latestVersion = processDefinition.getVersion()+1;
+            latestVersion = processDefinition.getVersion() + 1;
         }
 
         // 获取临时版本标识
@@ -765,7 +750,6 @@ public class WorkflowTemplateServiceImpl extends BaseServiceImpl<WorkflowTemplat
 
 
     }
-
 
 
     /**

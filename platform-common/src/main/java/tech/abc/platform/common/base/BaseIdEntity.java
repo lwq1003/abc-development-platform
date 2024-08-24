@@ -1,9 +1,9 @@
 package tech.abc.platform.common.base;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 
 /**
@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  * @date 2023-03-06
  */
 @Data
+@TableName("cfg_base_entity")
 public class BaseIdEntity {
     /**
      * 标识

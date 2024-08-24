@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,13 +14,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
+import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.PageInfo;
 import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.entityconfig.entity.EntityModelProperty;
+import tech.abc.platform.entityconfig.enums.EntityModelPropertyTypeEnum;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
+import tech.abc.platform.entityconfig.vo.EntityModelPropertyForFilterVO;
 import tech.abc.platform.entityconfig.vo.EntityModelPropertyVO;
 
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ public class EntityModelPropertyController extends BaseController {
     @Autowired
     private EntityModelPropertyService entityModelPropertyService;
 
- 
+
     // region 基本操作
 
     /**
@@ -170,6 +175,104 @@ public class EntityModelPropertyController extends BaseController {
         for (int i = 0; i < list.size(); i++) {
             EntityModelPropertyVO vo = convert2VO(list.get(i));
             entityModelPropertyVOList.add(vo);
+        }
+        return ResultUtil.success(entityModelPropertyVOList);
+    }
+
+
+    /**
+     * 获取完整属性列表，转换为过滤器需要的格式
+     * 只取数据库存储的属性
+     *
+     * @param entityModelId 实体模型id
+     * @return {@link ResponseEntity}<{@link Result}>
+     */
+    @GetMapping("/{entityModelId}/getFullPropertyListForFilter")
+    @SystemLog(value = "实体模型属性-完整列表，转换为过滤器格式")
+    @PreAuthorize("hasPermission(null,'entityconfig:entityModelProperty:query')")
+    public ResponseEntity<Result> getFullPropertyListForFilter(@PathVariable String entityModelId) {
+        // 构造查询条件
+
+        List<EntityModelProperty> list = entityModelPropertyService.getFullPropertyByEntityModelId(entityModelId);
+        // 转换vo
+        List<EntityModelPropertyForFilterVO> entityModelPropertyVOList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            // 获取属性定义
+            EntityModelProperty entityModelProperty = list.get(i);
+            // 非库表存储属性直接跳过
+            if (entityModelProperty.getDatabaseStoreFlag().equals(YesOrNoEnum.NO.name())) {
+                continue;
+            }
+
+            // 获取平台展现属性的控件类型
+            String dataType = entityModelProperty.getDataType();
+            String widgetType = entityModelProperty.getWidgetType();
+            String[] numberDataType = {"INTEGER", "LONG", "DOUBLE", "DECIMAL"};
+            String renderType = "TEXT";
+            String operatorKey = "Text";
+            String collectionType = "";
+            Boolean multiple = false;
+            switch (widgetType) {
+                case "TEXT":
+                    if (ArrayUtils.contains(numberDataType, dataType)) {
+                        renderType = "NUMBER";
+                        operatorKey = "Number";
+                    } else {
+                        renderType = "TEXT";
+                        operatorKey = "Text";
+                    }
+                    break;
+                case "TEXTAREA":
+                case "RICH_TEXT":
+                    renderType = "TEXT";
+                    break;
+                case "DROP_DOWN_LIST":
+                case "RADIO_BUTTON_GROUP":
+                    renderType = "SELECT";
+                    operatorKey = "DataDictionary";
+                    break;
+
+                // 组织机构
+                case "ORGANIZATION_SINGLE_SELECT":
+                    renderType = "CASCADER";
+                    operatorKey = "Collection";
+                    collectionType = "Organization";
+                    multiple = true;
+                    break;
+                // 用户
+                case "USER_SINGLE_SELECT":
+                    renderType = "SELECT";
+                    operatorKey = "User";
+                    collectionType = "User";
+                    break;
+
+                default:
+                    renderType = "";
+            }
+            if (StringUtils.isNotBlank(renderType)) {
+                EntityModelPropertyForFilterVO vo = new EntityModelPropertyForFilterVO();
+                vo.setLabel(entityModelProperty.getName());
+                vo.setValue(entityModelProperty.getCode());
+                vo.setRenderType(renderType);
+                vo.setOperatorKey(operatorKey);
+                // 数据字典，需指定字典类型
+                if (entityModelProperty.getDataType().equals(EntityModelPropertyTypeEnum.DATA_DICTIONARY.name())) {
+                    vo.setDictionaryType(entityModelProperty.getDictionaryType());
+                }
+                // 组织机构，需指定集合类型和是否多选
+                if (entityModelProperty.getDataType().equals(EntityModelPropertyTypeEnum.ORGANIZATION_SINGLE.name())) {
+                    vo.setCollectionType(collectionType);
+                    vo.setMultiple(multiple);
+                }
+
+                // 用户
+                if (entityModelProperty.getDataType().equals(EntityModelPropertyTypeEnum.USER_SINGLE.name())) {
+                    vo.setCollectionType(collectionType);
+
+                }
+                entityModelPropertyVOList.add(vo);
+            }
+
         }
         return ResultUtil.success(entityModelPropertyVOList);
     }

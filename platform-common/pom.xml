@@ -39,8 +39,9 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
         </dependency>
+
 
         <!-- apache commons工具包 -->
         <dependency>

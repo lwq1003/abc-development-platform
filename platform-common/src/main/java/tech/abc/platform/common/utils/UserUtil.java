@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import tech.abc.platform.common.entity.MyUserDetails;
 import tech.abc.platform.common.exception.SessionExpiredException;
 
+import java.util.List;
+
 /**
  * 用户工具类
  *
@@ -133,6 +135,16 @@ public final class UserUtil {
     public static Long getTenantId() {
         JSONObject user = getCurrentUser();
         return user.getLong("tenantId");
+    }
+
+
+    /**
+     * 获取用户拥有的用户组列表
+     */
+    public static List<String> getUserGroupList() {
+        JSONObject user = getCurrentUser();
+        List<String> userGroupList = user.getJSONArray("userGroupList").toJavaList(String.class);
+        return userGroupList;
     }
 
 

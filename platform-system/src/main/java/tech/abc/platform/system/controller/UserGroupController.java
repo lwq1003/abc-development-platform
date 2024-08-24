@@ -20,10 +20,7 @@ import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.utils.TreeUtil;
-import tech.abc.platform.common.vo.PageInfo;
-import tech.abc.platform.common.vo.Result;
-import tech.abc.platform.common.vo.SortInfo;
-import tech.abc.platform.common.vo.TreeVO;
+import tech.abc.platform.common.vo.*;
 import tech.abc.platform.system.entity.GroupPermissionItem;
 import tech.abc.platform.system.entity.GroupUser;
 import tech.abc.platform.system.entity.UserGroup;
@@ -223,6 +220,64 @@ public class UserGroupController extends BaseController {
         }
         return ResultUtil.success(new ArrayList<UserVO>());
     }
+
+
+    /**
+     * 获取级联框数据
+     *
+     * @return
+     */
+    @GetMapping("/cascader")
+    @PreAuthorize("hasPermission(null,'system:userGroup:query')")
+    public ResponseEntity<Result> cascader() {
+        QueryWrapper<UserGroup> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(UserGroup::getStatus, StatusEnum.NORMAL.toString());
+        // 附加按照排序号排序
+        queryWrapper.orderByAsc(TableFieldConstant.DEFAULT_SORT_FILED);
+        List<UserGroup> list = userGroupService.list(queryWrapper);
+        UserGroup rootUserGroup = list.stream().filter(x -> x.getUserGroup().equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID))
+                .findFirst().get();
+
+        CascaderItemVO root = convert2CascadeVO(rootUserGroup);
+        root.setChildren(convertToCascaderData(rootUserGroup.getId(), list));
+        return ResultUtil.success(root);
+    }
+
+    /**
+     * 转换为级联数据
+     *
+     * @param parentId      父级标识
+     * @param userGroupList 组织机构列表
+     * @return 列表<cascader项目vo>
+     */
+    private List<CascaderItemVO> convertToCascaderData(String parentId, List<UserGroup> userGroupList) {
+        List<CascaderItemVO> cascaderData = new ArrayList<>();
+        List<UserGroup> subUserGroupList = userGroupList.stream().filter(x -> x.getUserGroup().equals(parentId))
+                .collect(Collectors.toList());
+        for (UserGroup userGroup : subUserGroupList) {
+            CascaderItemVO cascaderItem = convert2CascadeVO(userGroup);
+            List<CascaderItemVO> children = convertToCascaderData(userGroup.getId(), userGroupList);
+            cascaderItem.setChildren(children);
+            cascaderData.add(cascaderItem);
+        }
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(cascaderData)) {
+            return cascaderData;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 转换为级联框视图对象
+     */
+    private CascaderItemVO convert2CascadeVO(UserGroup entity) {
+        CascaderItemVO vo = new CascaderItemVO();
+        vo.setValue(entity.getId());
+        vo.setLabel(entity.getName());
+        return vo;
+    }
+
+
     // endregion
 
     // region 用户相关操作

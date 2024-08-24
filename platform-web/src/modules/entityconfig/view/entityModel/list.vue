@@ -66,13 +66,19 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="270">
+        <el-table-column fixed="right" label="操作" width="360">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'configModelProperty'"
               type="primary"
               @click="configModelProperty(scope.row)"
               >配置属性
+            </el-button>
+            <el-button
+              v-permission="pageCode + 'configModelDataPermission'"
+              type="primary"
+              @click="configModelDataPermission(scope.row)"
+              >数据权限
             </el-button>
             <el-button type="primary" @click="modify(scope.row)">修改</el-button>
             <el-button type="primary" @click="remove(scope.row)">删除</el-button>
@@ -89,6 +95,7 @@
     <AddPage ref="addPage" @refresh="refresh" />
     <ModifyPage ref="modifyPage" @refresh="refresh" />
     <ViewPage ref="viewPage" />
+    <ConfigDataPermission ref="configDataPermission" />
   </ContentWrap>
 </template>
 
@@ -97,7 +104,7 @@ import { listMixin } from '@/mixin/listMixin.js'
 import AddPage from './add.vue'
 import ModifyPage from './modify.vue'
 import ViewPage from './view.vue'
-
+import ConfigDataPermission from '../entityModelDataPermission/detail.vue'
 const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'entityModel'
 export default {
@@ -105,7 +112,8 @@ export default {
   components: {
     AddPage,
     ModifyPage,
-    ViewPage
+    ViewPage,
+    ConfigDataPermission
   },
   mixins: [listMixin],
   data() {
@@ -172,6 +180,9 @@ export default {
     },
     configModelProperty(row) {
       this.$router.push({ path: '/entityconfig/entityModelProperty', query: { id: row.id } })
+    },
+    configModelDataPermission(row) {
+      this.$refs.configDataPermission.getOrInit(row.id)
     }
   }
 }

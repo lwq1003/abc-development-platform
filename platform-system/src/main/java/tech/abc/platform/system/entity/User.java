@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import tech.abc.platform.common.base.BaseEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 用户 实体类
@@ -147,6 +148,13 @@ public class User extends BaseEntity {
      */
     @TableField(exist = false)
     private String organizationFullName;
+
+
+    /**
+     * 当前用户拥有的用户组集合
+     */
+    @TableField(exist = false)
+    private List<String> userGroupList;
 
     // endregion
 

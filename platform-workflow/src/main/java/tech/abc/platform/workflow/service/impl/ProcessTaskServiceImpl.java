@@ -17,7 +17,6 @@ import org.camunda.bpm.engine.impl.juel.SimpleContext;
 import org.camunda.bpm.engine.runtime.ActivityInstance;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.exception.CommonException;
 import tech.abc.platform.common.exception.CustomException;
-import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.system.service.UserService;
 import tech.abc.platform.workflow.constant.WorkFlowConstant;
@@ -89,7 +87,6 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     private WorkflowBackNodeConfigService workflowBackNodeConfigService;
 
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void commit(String taskId, String comment, String nextStepId,
@@ -99,12 +96,12 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         // 获取任务
         ProcessTask task = get(taskId);
         // 记录处理意见
-        workflowCommentService.addComment(task.getProcessInstanceId(),task.getTaskDefinitionKey(),task.getNodeName(), comment,
+        workflowCommentService.addComment(task.getProcessInstanceId(), task.getTaskDefinitionKey(), task.getNodeName(), comment,
                 CommitTypeEnum.COMMIT);
-        //判断当前是否被委派任务
+        // 判断当前是否被委派任务
         String delegation = task.getDelegation();
         if (StringUtils.isNotBlank(delegation) && delegation.equals(WorkFlowConstant.DELEGATION_PENDING)) {
-            //委派状态为等待时，调用resolveTask方法提交
+            // 委派状态为等待时，调用resolveTask方法提交
             taskService.resolveTask(taskId);
             return;
         }
@@ -127,11 +124,11 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
      * @param assigneeList 处理人列表
      * @return {@link Map}<{@link String}, {@link Object}>
      */
-    private  Map<String, Object> generateInstanceVariable(String taskId, String nextStepId, List<String> assigneeList) {
+    private Map<String, Object> generateInstanceVariable(String taskId, String nextStepId, List<String> assigneeList) {
         // 设置下一环节及处理人实例变量
         Map<String, Object> instanceVariable = new HashMap<String, Object>(2);
         instanceVariable.put(WorkFlowConstant.INSTANCE_NEXT_STEP, nextStepId);
-        //获取环节设置
+        // 获取环节设置
         ProcessTask processTask = get(taskId);
         WorkflowNodeConfig nodeConfig = workflowNodeConfigService
                 .getNodeConfig(processTask.getProcessDefinitionId(), nextStepId);
@@ -180,7 +177,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         ProcessTask processTask = get(taskId);
 
         // 记录处理意见
-        workflowCommentService.addComment(processTask.getProcessInstanceId(), processTask.getProcessDefinitionKey(),processTask.getNodeName(),
+        workflowCommentService.addComment(processTask.getProcessInstanceId(), processTask.getProcessDefinitionKey(), processTask.getNodeName(),
                 comment,
                 CommitTypeEnum.REJECT);
 
@@ -203,12 +200,12 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void transfer(String taskId, String assignee, String comment) {
-      
+
         // 获取任务
         ProcessTask task = get(taskId);
-        //任务转办
+        // 任务转办
         taskService.setAssignee(taskId, assignee);
-        //记录处理意见
+        // 记录处理意见
         workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), comment,
                 CommitTypeEnum.TRANSFER);
 
@@ -218,13 +215,13 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delegate(String taskId, String assignee, String comment) {
-      
+
         // 获取任务
         ProcessTask task = get(taskId);
-        //任务委派
+        // 任务委派
         taskService.delegateTask(taskId, assignee);
-        //记录审批日志
-        workflowCommentService.addComment(task.getProcessInstanceId(),  task.getProcessDefinitionKey(),task.getNodeName(), comment,
+        // 记录审批日志
+        workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), comment,
                 CommitTypeEnum.DELEGATE);
 
     }
@@ -233,12 +230,12 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void signIn(String taskId) {
-      
+
         // 获取任务
         ProcessTask task = get(taskId);
         // 设置处理人为当前用户
         taskService.setAssignee(taskId, UserUtil.getId());
-        //记录处理意见
+        // 记录处理意见
         workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), "签收任务",
                 CommitTypeEnum.SIGN_IN);
 
@@ -252,7 +249,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         ProcessTask task = get(taskId);
         // 取消签收
         taskService.setAssignee(taskId, null);
-        //记录处理意见
+        // 记录处理意见
         workflowCommentService.addComment(task.getProcessInstanceId(), task.getProcessDefinitionKey(), task.getNodeName(), "撤销签收",
                 CommitTypeEnum.CANCEL_SIGN_IN);
 
@@ -263,11 +260,11 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     public List<WorkflowNodeConfig> getForwardNodeList(String taskId) {
 
         // 结束环节标识
-        String endNodeId="";
+        String endNodeId = "";
 
-        //后续环节列表
+        // 后续环节列表
         List<WorkflowNodeConfig> list = new ArrayList<>();
-        //是否包含结束环节
+        // 是否包含结束环节
         boolean containEndEvent = false;
         // 获取任务
         ProcessTask task = get(taskId);
@@ -287,8 +284,8 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
                 .map(x -> x.getTarget().getId())
                 .collect(Collectors.toList());
 
-        //判断是否包括网关环节
-        //TODO：此处未考虑连续使用网关的复杂场景
+        // 判断是否包括网关环节
+        // TODO：此处未考虑连续使用网关的复杂场景
         List<FlowNode> gatewayList = outgoing.stream().filter(x -> x.getTarget() instanceof Gateway)
                 .map(x -> x.getTarget())
                 .collect(Collectors.toList());
@@ -299,7 +296,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
                 // 获取输出流条件边
                 Collection<SequenceFlow> sequenceFlowList = gatewayNode.getOutgoing();
                 for (SequenceFlow item : sequenceFlowList) {
-                    //计算el表达式，如符合，则获取后续环节
+                    // 计算el表达式，如符合，则获取后续环节
                     boolean conditionResult = checkCondition(item.getConditionExpression().getTextContent(),
                             runtimeService.getVariables(task.getExecutionId()));
                     if (conditionResult) {
@@ -308,21 +305,21 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
                     }
                 }
             } else {
-                //并行网关或包容网关
+                // 并行网关或包容网关
                 Collection<SequenceFlow> outSequenceFlowList = gatewayNode.getOutgoing();
                 if (outSequenceFlowList.size() == 1) {
-                    //流出边只有1条，认为是汇聚节点，继续往下找
+                    // 流出边只有1条，认为是汇聚节点，继续往下找
                     FlowNode nextNode = outSequenceFlowList.stream().iterator().next().getTarget();
                     if (nextNode instanceof UserTask) {
                         // 用户任务加入后续环节列表中
                         nodeIdList.add(nextNode.getId());
                     } else if (nextNode instanceof EndEvent) {
                         // 结束环节做标记
-                        endNodeId=nextNode.getId();
+                        endNodeId = nextNode.getId();
                         containEndEvent = true;
                     }
                 } else if (outSequenceFlowList.size() > 1) {
-                    //流出边多条，认为是分支节点
+                    // 流出边多条，认为是分支节点
                     WorkflowNodeConfig gatewayConfig = new WorkflowNodeConfig();
                     gatewayConfig.setSetAssigneeFlag(YesOrNoEnum.NO.name());
                     gatewayConfig.setNodeId(gatewayNode.getId());
@@ -345,14 +342,14 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         return list;
     }
 
-    private  void handleEndEvent(Collection<SequenceFlow> outgoing, String endNodeId, boolean containEndEvent, List<WorkflowNodeConfig> list) {
-        //判断是否包括结束环节
+    private void handleEndEvent(Collection<SequenceFlow> outgoing, String endNodeId, boolean containEndEvent, List<WorkflowNodeConfig> list) {
+        // 判断是否包括结束环节
         List<String> endIdList = outgoing.stream().filter(x -> x.getTarget().getElementType().getTypeName()
-                .equals(WorkFlowConstant.END_EVENT_TYPE_NAME))
+                        .equals(WorkFlowConstant.END_EVENT_TYPE_NAME))
                 .map(x -> x.getTarget().getId())
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(endIdList)) {
-            endNodeId =endIdList.get(0);
+            endNodeId = endIdList.get(0);
             containEndEvent = true;
         }
         // 如包含，追加结束环节
@@ -389,21 +386,21 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         ProcessTask task = get(taskId);
 
         // 从任务信息中获取对应的流程定义标识和环节标识
-        String processDefinitionId=task.getProcessDefinitionId();
-        String nodeId=task.getTaskDefinitionKey();
+        String processDefinitionId = task.getProcessDefinitionId();
+        String nodeId = task.getTaskDefinitionKey();
 
         // 从环节跳转配置中获取可跳转的目标节点列表
-        List<String> targetNodeIdList=workflowBackNodeConfigService.getTargetNodeIdList(processDefinitionId,nodeId);
+        List<String> targetNodeIdList = workflowBackNodeConfigService.getTargetNodeIdList(processDefinitionId, nodeId);
 
         // 根据目标节点列表获取环节配置信息
-        List<WorkflowNodeConfig> entityList=new ArrayList<>();
-        if(CollectionUtils.isNotEmpty(targetNodeIdList)){
+        List<WorkflowNodeConfig> entityList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(targetNodeIdList)) {
             entityList = workflowNodeConfigService.getByIdList(processDefinitionId, targetNodeIdList);
         }
 
         // 发起环节处理
-        if(targetNodeIdList.contains(ROOT_CODE)){
-            WorkflowNodeConfig root=new WorkflowNodeConfig();
+        if (targetNodeIdList.contains(ROOT_CODE)) {
+            WorkflowNodeConfig root = new WorkflowNodeConfig();
             root.setSetAssigneeFlag(YesOrNoEnum.YES.name());
             root.setNodeId(ROOT_CODE);
             root.setMode(NodeModeEnum.NORMAL.name());
@@ -422,7 +419,7 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
      */
     @Override
     public IPage<ProcessTask> getTodo(IPage<ProcessTask> page, QueryWrapper<ProcessTask> queryWrapper) {
-        //获取当前用户标识
+        // 获取当前用户标识
         String userId = UserUtil.getId();
         // 三种情况，一是直接设置处理人；二是未设置处理人，但设置了角色，当前拥有该角色，签收和未签收两种情况下会引发assignee是否有值
         // 第三种是首环节，只设置了处理人，未设置处理角色
@@ -466,21 +463,21 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
         ProcessTask task = get(taskId);
 
         // 从任务信息中获取对应的流程定义标识和环节标识
-        String processDefinitionId=task.getProcessDefinitionId();
-        String nodeId=task.getTaskDefinitionKey();
+        String processDefinitionId = task.getProcessDefinitionId();
+        String nodeId = task.getTaskDefinitionKey();
 
         // 从环节跳转配置中获取可跳转的目标节点列表
-        List<String> targetNodeIdList=workflowJumpNodeConfigService.getTargetNodeIdList(processDefinitionId,nodeId);
+        List<String> targetNodeIdList = workflowJumpNodeConfigService.getTargetNodeIdList(processDefinitionId, nodeId);
 
         // 根据目标节点列表获取环节配置信息
-        List<WorkflowNodeConfig> entityList=new ArrayList<>();
-        if(CollectionUtils.isNotEmpty(targetNodeIdList)){
+        List<WorkflowNodeConfig> entityList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(targetNodeIdList)) {
             entityList = workflowNodeConfigService.getByIdList(processDefinitionId, targetNodeIdList);
         }
 
         // 发起环节处理
-        if(targetNodeIdList.contains(ROOT_CODE)){
-            WorkflowNodeConfig root=new WorkflowNodeConfig();
+        if (targetNodeIdList.contains(ROOT_CODE)) {
+            WorkflowNodeConfig root = new WorkflowNodeConfig();
             root.setSetAssigneeFlag(YesOrNoEnum.YES.name());
             root.setNodeId(ROOT_CODE);
             root.setMode(NodeModeEnum.NORMAL.name());
@@ -494,9 +491,9 @@ public class ProcessTaskServiceImpl extends BaseServiceImpl<ProcessTaskMapper, P
     public List<ProcessTask> getTodoPortletData(Integer count) {
         // 复用分页查询逻辑，构造参数
 
-        //构造分页对象
+        // 构造分页对象
         IPage<ProcessTask> page = new Page<ProcessTask>(1, count);
-        //构造查询条件
+        // 构造查询条件
         QueryWrapper<ProcessTask> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().orderByDesc(ProcessTask::getCreateTime);
 

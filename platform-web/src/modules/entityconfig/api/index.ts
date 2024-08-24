@@ -21,12 +21,29 @@ export const entityModel = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'entityModel' + '/'
 })
 
+// 实体模型数据权限
+export const entityModelDataPermission = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'entityModelDataPermission' + '/',
+  // 获取实体模型完整属性列表
+  getOrInit(modelId) {
+    return request.get({ url: this.serveUrl + 'getOrInit', params: { modelId } })
+  },
+  // 生成sql片段
+  generateSqlPart(entityModelId, rule) {
+    return request.post({ url: this.serveUrl + entityModelId + '/generateSqlPart', data: rule })
+  }
+})
+
 // 实体模型属性
 export const entityModelProperty = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'entityModelProperty' + '/',
   // 获取实体模型完整属性列表
   getFullPropertyList(entityModelId) {
     return request.get({ url: this.serveUrl + entityModelId + '/list' })
+  },
+  // 获取实体模型完整属性列表,转换为过滤器使用的数据模型
+  getFullPropertyListForFilter(entityModelId) {
+    return request.get({ url: this.serveUrl + entityModelId + '/getFullPropertyListForFilter' })
   }
 })
 

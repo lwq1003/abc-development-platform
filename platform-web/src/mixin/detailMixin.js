@@ -59,13 +59,7 @@ export const detailMixin = {
       }
       return text
     }
-    // saveButtonVisible() {
-    //   // 如果是只读模式，直接返回false
-    //   if (this.mode === 'view') {
-    //     return false
-    //   }
-    //   return checkButtonPermission(this.pageCode + this.mode)
-    // }
+   
   },
   methods: {
     // 带参初始化,参数可为空

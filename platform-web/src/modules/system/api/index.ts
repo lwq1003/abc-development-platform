@@ -26,6 +26,9 @@ export const organization = Object.assign({}, COMMON_METHOD, {
   tree() {
     return request.get({ url: this.serveUrl + 'tree' })
   },
+  cascader() {
+    return request.get({ url: this.serveUrl + 'cascader' })
+  },
   enable(id) {
     return request.put({ url: this.serveUrl + id + '/enable' })
   },
@@ -154,6 +157,9 @@ export const userGroup = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'userGroup' + '/',
   tree() {
     return request.get({ url: this.serveUrl + 'tree' })
+  },
+  cascader() {
+    return request.get({ url: this.serveUrl + 'cascader' })
   },
   enable(id) {
     return request.put({ url: this.serveUrl + id + '/enable' })

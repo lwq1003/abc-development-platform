@@ -60,6 +60,10 @@ public enum QueryRuleEnum {
      */
     NN,
     /**
+     * 包含
+     */
+    CT,
+    /**
      * 自定义SQL片段
      */
     SQL_RULES;

@@ -8,11 +8,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.enums.ExecuteResultEnum;
 import tech.abc.platform.common.modules.system.api.LogApi;
 import tech.abc.platform.common.modules.system.params.LogDTO;
-import tech.abc.platform.common.enums.ExecuteResultEnum;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
  * @date 2023-03-08
  */
 @Aspect
-@Component
+//@Component
 @Slf4j
 public class SystemLogAspect {
 

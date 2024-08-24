@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
-* 实体模型 前端控制器类
-*
-* @author wqliu
-* @date 2023-04-19
-*/
+ * 实体模型 前端控制器类
+ *
+ * @author wqliu
+ * @date 2023-04-19
+ */
 @RestController
 @RequestMapping("/entityconfig/entityModel")
 @Slf4j
@@ -43,46 +43,47 @@ public class EntityModelController extends BaseController {
     @Autowired
     private EntityService entityService;
 
-    //region 基本操作
+    // region 基本操作
+
     /**
-    * 初始化
-    */
+     * 初始化
+     */
     @GetMapping("/init")
     public ResponseEntity<Result> init() {
-        EntityModel entity=entityModelService.init();
+        EntityModel entity = entityModelService.init();
         EntityModelVO vo = convert2VO(entity);
         return ResultUtil.success(vo);
     }
 
     /**
-    * 新增
-    */
+     * 新增
+     */
     @PostMapping("/")
     @SystemLog(value = "实体模型-新增")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:add')")
     public ResponseEntity<Result> add(@Validated @RequestBody EntityModelVO vo) {
-        EntityModel entity=convert2Entity(vo);
+        EntityModel entity = convert2Entity(vo);
         entityModelService.add(entity);
         EntityModelVO newVO = convert2VO(entity);
         return ResultUtil.success(newVO);
     }
 
     /**
-    * 修改
-    */
+     * 修改
+     */
     @PutMapping("/")
     @SystemLog(value = "实体模型-修改")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:modify')")
     public ResponseEntity<Result> modify(@Validated @RequestBody EntityModelVO vo) {
-        EntityModel entity=convert2Entity(vo);
+        EntityModel entity = convert2Entity(vo);
         entityModelService.modify(entity);
         EntityModelVO newVO = convert2VO(entity);
         return ResultUtil.success(newVO);
     }
 
     /**
-    * 删除数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
-    */
+     * 删除数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+     */
     @DeleteMapping("/{id}")
     @SystemLog(value = "实体模型-删除")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:remove')")
@@ -92,45 +93,45 @@ public class EntityModelController extends BaseController {
     }
 
     /**
-    * 分页
-    */
+     * 分页
+     */
     @GetMapping("/page")
     @SystemLog(value = "实体模型-分页")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:query')")
     public ResponseEntity<Result> page(EntityModelVO queryVO, PageInfo pageInfo, SortInfo sortInfo) {
-        //构造分页对象
+        // 构造分页对象
         IPage<EntityModel> page = new Page<EntityModel>(pageInfo.getPageNum(), pageInfo.getPageSize());
-        //构造查询条件
-        QueryWrapper<EntityModel> queryWrapper = QueryGenerator.generateQueryWrapper(EntityModel.class,queryVO,sortInfo);
+        // 构造查询条件
+        QueryWrapper<EntityModel> queryWrapper = QueryGenerator.generateQueryWrapper(EntityModel.class, queryVO, sortInfo);
 
-        //查询数据
+        // 查询数据
         entityModelService.page(page, queryWrapper);
-        //转换vo
+        // 转换vo
         IPage<EntityModelVO> pageVO = mapperFacade.map(page, IPage.class);
-        List<EntityModelVO>  entityModelVOList=convert2VO(page.getRecords());
+        List<EntityModelVO> entityModelVOList = convert2VO(page.getRecords());
         pageVO.setRecords(entityModelVOList);
         return ResultUtil.success(pageVO);
     }
 
 
     /**
-    * 列表
-    */
+     * 列表
+     */
     @GetMapping("/list")
     @SystemLog(value = "实体模型-列表")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:query')")
     public ResponseEntity<Result> list(EntityModelVO queryVO, SortInfo sortInfo) {
-        //构造查询条件
-        QueryWrapper<EntityModel> queryWrapper = QueryGenerator.generateQueryWrapper(EntityModel.class, queryVO,sortInfo);
-        List<EntityModel> list= entityModelService.list(queryWrapper);
-        //转换vo
-        List<EntityModelVO>  entityModelVOList=convert2VO(list);
+        // 构造查询条件
+        QueryWrapper<EntityModel> queryWrapper = QueryGenerator.generateQueryWrapper(EntityModel.class, queryVO, sortInfo);
+        List<EntityModel> list = entityModelService.list(queryWrapper);
+        // 转换vo
+        List<EntityModelVO> entityModelVOList = convert2VO(list);
         return ResultUtil.success(entityModelVOList);
     }
 
     /**
-    * 获取单条数据
-    */
+     * 获取单条数据
+     */
     @GetMapping("/{id}")
     @SystemLog(value = "实体模型-详情")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:view')")
@@ -141,8 +142,8 @@ public class EntityModelController extends BaseController {
     }
 
     /**
-    * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
-    */
+     * 复制新增数据，单条数据标识，或多条数据标识用逗号间隔拼成的字符串
+     */
     @PostMapping("/{id}")
     @SystemLog(value = "实体模型-复制新增")
     @PreAuthorize("hasPermission(null,'entityconfig:entityModel:addByCopy')")
@@ -152,34 +153,34 @@ public class EntityModelController extends BaseController {
     }
 
 
+    // endregion
 
-    //endregion
+    // region 扩展操作
 
-    //region 扩展操作
 
-    //endregion
+    // endregion
 
-    //region 辅助操作
+    // region 辅助操作
 
     /**
-    * 将单条实体转换为视图对象
-    *
-    * @param entity 实体
-    * @return {@link EntityVO} 视图对象
-    */
-    private EntityModelVO convert2VO(EntityModel entity){
-        EntityModelVO vo=mapperFacade.map(entity,EntityModelVO.class);
+     * 将单条实体转换为视图对象
+     *
+     * @param entity 实体
+     * @return {@link EntityVO} 视图对象
+     */
+    private EntityModelVO convert2VO(EntityModel entity) {
+        EntityModelVO vo = mapperFacade.map(entity, EntityModelVO.class);
         vo.setMainModelFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getMainModelFlag()));
         vo.setSelfReferenceFlagName(dictionaryUtil.getNameByCode("YesOrNo", entity.getSelfReferenceFlag()));
         return vo;
     }
 
     /**
-    * 将实体列表转换为视图对象列表
-    *
-    * @param entityList 实体列表
-    * @return {@link List}<{@link EntityVO}> 视图对象列表
-    */
+     * 将实体列表转换为视图对象列表
+     *
+     * @param entityList 实体列表
+     * @return {@link List}<{@link EntityVO}> 视图对象列表
+     */
     private List<EntityModelVO> convert2VO(List<EntityModel> entityList) {
         List<EntityModelVO> voList = new ArrayList<>(entityList.size());
 
@@ -203,10 +204,10 @@ public class EntityModelController extends BaseController {
     }
 
 
-    private EntityModel convert2Entity(EntityModelVO vo){
-        EntityModel entity=mapperFacade.map(vo,EntityModel.class);
+    private EntityModel convert2Entity(EntityModelVO vo) {
+        EntityModel entity = mapperFacade.map(vo, EntityModel.class);
         return entity;
     }
 
-    //endregion
- }
+    // endregion
+}

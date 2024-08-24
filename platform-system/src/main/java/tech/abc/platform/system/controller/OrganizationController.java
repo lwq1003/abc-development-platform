@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +19,7 @@ import tech.abc.platform.common.enums.StatusEnum;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.utils.TreeUtil;
-import tech.abc.platform.common.vo.PageInfo;
-import tech.abc.platform.common.vo.Result;
-import tech.abc.platform.common.vo.SortInfo;
-import tech.abc.platform.common.vo.TreeVO;
+import tech.abc.platform.common.vo.*;
 import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.vo.OrganizationVO;
@@ -187,6 +185,62 @@ public class OrganizationController extends BaseController {
 
         organizationService.disable(id);
         return ResultUtil.success();
+    }
+
+
+    /**
+     * 获取级联框数据
+     *
+     * @return
+     */
+    @GetMapping("/cascader")
+    @PreAuthorize("hasPermission(null,'system:organization:query')")
+    public ResponseEntity<Result> cascader() {
+        QueryWrapper<Organization> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Organization::getStatus, StatusEnum.NORMAL.toString());
+        // 附加按照排序号排序
+        queryWrapper.orderByAsc(TableFieldConstant.DEFAULT_SORT_FILED);
+        List<Organization> list = organizationService.list(queryWrapper);
+        Organization rootOrganization = list.stream().filter(x -> x.getOrganization().equals(TreeDefaultConstant.DEFAULT_TREE_ROOT_PARENT_ID))
+                .findFirst().get();
+
+        CascaderItemVO root = convert2CascadeVO(rootOrganization);
+        root.setChildren(convertToCascaderData(rootOrganization.getId(), list));
+        return ResultUtil.success(root);
+    }
+
+    /**
+     * 转换为级联数据
+     *
+     * @param parentId         父级标识
+     * @param organizationList 组织机构列表
+     * @return 列表<cascader项目vo>
+     */
+    private List<CascaderItemVO> convertToCascaderData(String parentId, List<Organization> organizationList) {
+        List<CascaderItemVO> cascaderData = new ArrayList<>();
+        List<Organization> subOrganizationList = organizationList.stream().filter(x -> x.getOrganization().equals(parentId))
+                .collect(Collectors.toList());
+        for (Organization organization : subOrganizationList) {
+            CascaderItemVO cascaderItem = convert2CascadeVO(organization);
+            List<CascaderItemVO> children = convertToCascaderData(organization.getId(), organizationList);
+            cascaderItem.setChildren(children);
+            cascaderData.add(cascaderItem);
+        }
+        if (CollectionUtils.isNotEmpty(cascaderData)) {
+            return cascaderData;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 转换为级联框视图对象
+     */
+    private CascaderItemVO convert2CascadeVO(Organization entity) {
+        CascaderItemVO vo = new CascaderItemVO();
+        vo.setValue(entity.getId());
+        vo.setLabel(entity.getName());
+        return vo;
     }
 
     // endregion
