@@ -1,17 +1,17 @@
-package tech.abc.platform.entityconfig.service;
+package tech.abc.platform.system.service;
 
-import tech.abc.platform.entityconfig.entity.Template;
+import tech.abc.platform.system.entity.QueryPlan;
 import tech.abc.platform.common.base.BaseService;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 模板 服务接口类
+ * 查询方案 服务接口类
  *
  * @author wqliu
- * @date 2024-09-10
+ * @date 2024-09-04
  */
-public interface TemplateService extends BaseService<Template> {
+public interface QueryPlanService extends BaseService<QueryPlan> {
 
    /**
    * 获取标识与名称的Map集合

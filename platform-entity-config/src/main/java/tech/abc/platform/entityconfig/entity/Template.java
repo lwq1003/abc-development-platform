@@ -14,13 +14,31 @@ import java.time.LocalDateTime;
  * 模板 实体类
  *
  * @author wqliu
- * @date 2024-07-23
+ * @date 2024-09-10
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("cfg_template")
 public class Template extends BaseEntity {
+
+    /**
+     * 名称
+     */
+    @TableField("name")
+    private String name;
+
+    /**
+     * 描述
+     */
+    @TableField("content")
+    private String content;
+
+    /**
+     * 组织机构
+     */
+    @TableField("organizaiton")
+    private String organizaiton;
 
     /**
      * 时分秒
@@ -57,18 +75,6 @@ public class Template extends BaseEntity {
      */
     @TableField(value = "day3", updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime day3;
-
-    /**
-     * 名称
-     */
-    @TableField("name")
-    private String name;
-
-    /**
-     * 长文本
-     */
-    @TableField("content")
-    private String content;
 
     /********非库表存储属性*****/
 }

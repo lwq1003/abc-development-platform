@@ -44,6 +44,12 @@ export const entityModelProperty = Object.assign({}, COMMON_METHOD, {
   // 获取实体模型完整属性列表,转换为过滤器使用的数据模型
   getFullPropertyListForFilter(entityModelId) {
     return request.get({ url: this.serveUrl + entityModelId + '/getFullPropertyListForFilter' })
+  },
+  // 获取实体模型完整属性列表,转换为过滤器使用的数据模型
+  getFullPropertyListForFilterByEntityModelCode(entityModelCode) {
+    return request.get({
+      url: this.serveUrl + 'getFullPropertyListForFilterByEntityModelCode' + '/' + entityModelCode
+    })
   }
 })
 

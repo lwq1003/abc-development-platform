@@ -17,6 +17,7 @@
         </el-form-item>
         <el-form-item style="float: right">
           <QueryButton :page-code="pageCode" />
+          <el-button type="primary" icon="Search" @click="customQuery">自定义查询</el-button>
         </el-form-item>
         <div class="clearfix"></div>
       </el-form>
@@ -161,6 +162,7 @@
     <ModifyPage ref="modifyPage" @refresh="refresh" />
     <ViewPage ref="viewPage" />
     <UserGroup ref="userGroup" @confirm="saveUserGroup" />
+    <CustomQuery ref="customQuery" @confirm="queryWithCustom" />
   </ContentWrap>
 </template>
 

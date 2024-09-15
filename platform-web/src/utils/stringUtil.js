@@ -4,6 +4,11 @@ const StringUtil = {
     return str.toLowerCase().replace(/[-_]+([a-zA-Z])/g, function (match, letter) {
       return letter.toUpperCase()
     })
+  },
+
+  // 首字母大写
+  capitalizeFirstLetter: function (str) {
+    return str.replace(/^./, (match) => match.toUpperCase())
   }
 }
 

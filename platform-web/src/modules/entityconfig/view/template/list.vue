@@ -4,10 +4,11 @@
       <el-form :inline="true" :model="queryCondition" label-width="120px" @keyup.enter="query">
         <!--查询条件区 -->
         <el-form-item label="名称">
-          <QueryText v-model="queryCondition.name" type="LK"> </QueryText>
+          <QueryText v-model="queryCondition.name" type="LK"></QueryText>
         </el-form-item>
         <el-form-item style="float: right">
           <QueryButton :page-code="pageCode" />
+          <el-button type="primary" icon="Search" @click="customQuery">自定义查询</el-button>
         </el-form-item>
         <div class="clearfix"></div>
       </el-form>
@@ -15,22 +16,22 @@
     <div class="mb-10px mt-10px">
       <el-button type="primary" icon="refresh" @click="refresh">刷新</el-button>
       <el-button v-permission="pageCode + 'add'" type="primary" icon="plus" @click="add"
-        >新增</el-button
-      >
+        >新增
+      </el-button>
       <el-button
         v-permission="pageCode + 'remove'"
         type="primary"
         icon="delete"
         @click="batchRemove"
-        >删除</el-button
-      >
+        >删除
+      </el-button>
       <el-button
         v-permission="pageCode + 'addByCopy'"
         type="primary"
         icon="CopyDocument"
         @click="addByCopy"
-        >复制新增</el-button
-      >
+        >复制新增
+      </el-button>
     </div>
 
     <el-card style="width: 100%">
@@ -63,11 +64,11 @@
         <el-table-column fixed="right" label="操作" width="250">
           <template #default="scope">
             <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
-              >修改</el-button
-            >
+              >修改
+            </el-button>
             <el-button v-permission="pageCode + 'remove'" type="primary" @click="remove(scope.row)"
-              >删除</el-button
-            >
+              >删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,12 +79,12 @@
       />
     </el-card>
     <DetailPage ref="detailPage" @refresh="refresh" />
+    <CustomQuery ref="customQuery" @confirm="queryWithCustom" />
   </ContentWrap>
 </template>
 
 <script lang="ts">
 import { listMixin } from '@/mixin/listMixin.js'
-
 import DetailPage from './detail.vue'
 
 const MODULE_CODE = 'entityconfig'
@@ -112,6 +113,19 @@ export default {
           show: true,
           showOverflowTooltip: true,
           sortable: true
+        },
+        {
+          prop: 'content',
+          label: '描述',
+          show: true,
+          showOverflowTooltip: true,
+          sortable: true
+        },
+        {
+          prop: 'organizaitonName',
+          label: '组织机构',
+          show: true,
+          showOverflowTooltip: true
         },
         {
           prop: 'time1',

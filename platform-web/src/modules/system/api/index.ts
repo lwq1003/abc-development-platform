@@ -250,3 +250,8 @@ export const systemManage = Object.assign(
 export const module = Object.assign({}, COMMON_METHOD, {
   serveUrl: '/' + moduleName + '/' + 'module' + '/'
 })
+
+// 查询方案
+export const queryPlan = Object.assign({}, COMMON_METHOD, {
+  serveUrl: '/' + moduleName + '/' + 'queryPlan' + '/'
+})

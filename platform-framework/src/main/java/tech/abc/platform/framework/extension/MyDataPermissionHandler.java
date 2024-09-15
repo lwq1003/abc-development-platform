@@ -40,7 +40,7 @@ public class MyDataPermissionHandler implements MultiDataPermissionHandler {
         // 获取数据权限 SQL 片段
         EntityModelDataPermissionService entityModelDataPermissionService = SpringUtil.getBean(EntityModelDataPermissionService.class);
         String sqlSegment = entityModelDataPermissionService.getDataPermissionSqlPart(tableName);
-        if (sqlSegment != null) {
+        if (StringUtils.isNotBlank(sqlSegment)) {
 
             String userId = "";
             String departmentId = "";

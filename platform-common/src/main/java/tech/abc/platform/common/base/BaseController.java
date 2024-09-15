@@ -1,12 +1,12 @@
 package tech.abc.platform.common.base;
 
-import tech.abc.platform.common.query.QueryGenerator;
-import tech.abc.platform.common.utils.CacheUtil;
-import tech.abc.platform.common.utils.DictionaryUtil;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import tech.abc.platform.common.query.QueryGenerator;
+import tech.abc.platform.common.utils.CacheUtil;
+import tech.abc.platform.common.utils.DictionaryUtil;
 
 /**
  * 控制器基类

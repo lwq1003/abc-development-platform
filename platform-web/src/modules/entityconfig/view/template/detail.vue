@@ -9,6 +9,15 @@
       style="width: 90%; margin: 0px auto"
     >
       <!--表单区域 -->
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="entityData.name" />
+      </el-form-item>
+      <el-form-item label="描述" prop="content">
+        <el-input v-model="entityData.content" type="textarea" rows="4" />
+      </el-form-item>
+      <el-form-item label="组织机构" prop="organizaiton">
+        <OrganizationSingleSelect v-model="entityData.organizaiton" />
+      </el-form-item>
       <el-form-item label="时分秒" prop="time1">
         <el-time-picker
           v-model="entityData.time1"
@@ -65,12 +74,6 @@
           unlink-panels
           class="form-item"
         />
-      </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="entityData.name" />
-      </el-form-item>
-      <el-form-item label="长文本" prop="content">
-        <el-input v-model="entityData.content" type="textarea" rows="4" />
       </el-form-item>
     </el-form>
     <template #footer>

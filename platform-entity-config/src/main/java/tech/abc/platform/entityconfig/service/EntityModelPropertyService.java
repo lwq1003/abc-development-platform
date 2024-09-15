@@ -58,6 +58,15 @@ public interface EntityModelPropertyService extends BaseService<EntityModelPrope
 
 
     /**
+     * 通过实体模型编码获取包含父类在内的所有实体模型属性列表
+     *
+     * @param entityModelCode 实体模型编码
+     * @return {@link List}<{@link EntityModelProperty}>
+     */
+    List<EntityModelProperty> getFullPropertyByEntityModelCode(String entityModelCode);
+
+
+    /**
      * 通过实体模型代码获取实体模型属性列表
      *
      * @param entityModelCode 实体模型代码

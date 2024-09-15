@@ -143,6 +143,7 @@
                 </#if>
                 <el-form-item style="float: right">
                     <QueryButton :page-code="pageCode" />
+                    <el-button type="primary" icon="Search" @click="customQuery">自定义查询</el-button>
                 </el-form-item>
                 <div class="clearfix"></div>
             </el-form>
@@ -273,6 +274,7 @@
                 <ViewPage ref="viewPage" />
             </#if>
         </#if>
+        <CustomQuery ref="customQuery" @confirm="queryWithCustom" />
     </ContentWrap>
 </template>
 

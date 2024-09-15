@@ -13,6 +13,7 @@ import OrganizationSingleSelect from '@/modules/system/view/organization/treeRef
 import OrganizationMultipleSelect from '@/modules/system/view/organization/treeMultipleSelect.vue'
 import UserSingleSelect from '@/modules/system/view/user/treeListReference.vue'
 import IconPicker from '@/components/abc/IconPicker/index.vue'
+import CustomQuery from '@/components/abc/CustomQuery/index.vue'
 
 export const listMixin = {
   components: {
@@ -27,7 +28,8 @@ export const listMixin = {
     OrganizationSingleSelect,
     OrganizationMultipleSelect,
     UserSingleSelect,
-    IconPicker
+    IconPicker,
+    CustomQuery
   },
 
   data() {
@@ -350,6 +352,24 @@ export const listMixin = {
     exportData() {
       const params = Object.assign({}, this.queryCondition)
       this.api.export(params)
+    },
+    // 打开自定义查询对话框
+    customQuery() {
+      this.$refs.customQuery.init(this.$StringUtil.capitalizeFirstLetter(this.entityType))
+    },
+    //发起自定义查询
+    queryWithCustom(customQueryString) {
+      const params = Object.assign(this.pageInfo, this.sortInfo)
+      this.api
+        .customQuery(customQueryString, params)
+        .then((res) => {
+          this.tableData = res.data.records
+          this.pageTotal = res.data.total
+        })
+        .finally(() => {
+          this.loading = false
+          this.currentId = this.$constant.NO_ITEM_SELECTED
+        })
     }
   },
   provide() {

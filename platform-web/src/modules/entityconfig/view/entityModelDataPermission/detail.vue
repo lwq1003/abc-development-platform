@@ -18,7 +18,6 @@
       <el-form-item label="配置">
         <EverrightFilter
           lang="zh-cn"
-          @listener="handleListener"
           type="matrix"
           :getOptions="getOptions"
           :getConditions="getConditions"
@@ -80,11 +79,6 @@ export default {
       this.api.getOrInit(id).then((res) => {
         this.loadData(res.data)
       })
-    },
-    handleListener({ type, data }) {
-      // if (type == 'triggerChange') {
-      //   this.generateRule()
-      // }
     },
     // 生成规则
     generateRule() {
@@ -178,7 +172,7 @@ export default {
         return acc
       }, {})
 
-      if (this.entityData.rule && this.entityData.rule !== '') {
+      if (this.entityData.rule && this.entityData.rule !== '{}') {
         this.$refs.everrightFilter.setData(JSON.parse(this.entityData.rule))
       }
 

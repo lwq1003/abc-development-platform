@@ -181,8 +181,8 @@ public class EntityModelPropertyController extends BaseController {
 
 
     /**
-     * 获取完整属性列表，转换为过滤器需要的格式
-     * 只取数据库存储的属性
+     * 获取完整属性列表，转换为数据筛选器需要的格式，用于数据权限配置
+     * 只读取数据库存储的属性
      *
      * @param entityModelId 实体模型id
      * @return {@link ResponseEntity}<{@link Result}>
@@ -270,6 +270,100 @@ public class EntityModelPropertyController extends BaseController {
                     vo.setCollectionType(collectionType);
 
                 }
+                entityModelPropertyVOList.add(vo);
+            }
+
+        }
+        return ResultUtil.success(entityModelPropertyVOList);
+    }
+
+
+    /**
+     * 获取完整属性列表，转换为自定义查询需要的格式
+     * 只读取数据库存储的属性
+     *
+     * @param entityModelId 实体模型id
+     * @return {@link ResponseEntity}<{@link Result}>
+     */
+    @GetMapping("/getFullPropertyListForFilterByEntityModelCode/{entityModelCode}")
+    @SystemLog(value = "实体模型属性-完整列表，转换为筛选器格式")
+    @PreAuthorize("hasPermission(null,'entityconfig:entityModelProperty:query')")
+    public ResponseEntity<Result> getFullPropertyListForFilterByEntityModelCode(@PathVariable String entityModelCode) {
+        // 构造查询条件
+
+        List<EntityModelProperty> list = entityModelPropertyService.getFullPropertyByEntityModelCode(entityModelCode);
+        // 转换vo
+        List<EntityModelPropertyForFilterVO> entityModelPropertyVOList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            // 获取属性定义
+            EntityModelProperty entityModelProperty = list.get(i);
+            // 非库表存储属性直接跳过
+            if (entityModelProperty.getDatabaseStoreFlag().equals(YesOrNoEnum.NO.name())) {
+                continue;
+            }
+
+            // 获取平台展现属性的控件类型
+            String dataType = entityModelProperty.getDataType();
+            String widgetType = entityModelProperty.getWidgetType();
+            String[] numberDataType = {"INTEGER", "LONG", "DOUBLE", "DECIMAL"};
+            String renderType = "TEXT";
+            String operatorKey = "Text";
+            String collectionType = "";
+            Boolean multiple = false;
+            switch (widgetType) {
+                case "TEXT":
+                    if (ArrayUtils.contains(numberDataType, dataType)) {
+                        renderType = "NUMBER";
+                        operatorKey = "Number";
+                    } else {
+                        renderType = "TEXT";
+                        operatorKey = "Text";
+                    }
+                    break;
+                case "TEXTAREA":
+                case "RICH_TEXT":
+                    renderType = "TEXT";
+                    break;
+                case "DROP_DOWN_LIST":
+                case "RADIO_BUTTON_GROUP":
+                    renderType = "SELECT";
+                    operatorKey = "DataDictionary";
+                    break;
+                case "DATETIME":
+                    renderType = "DATE";
+                    operatorKey = "DateTime";
+                    break;
+                // 组织机构
+                case "ORGANIZATION_SINGLE_SELECT":
+                    renderType = "CASCADER";
+                    operatorKey = "Collection";
+                    collectionType = "Organization";
+                    multiple = true;
+                    break;
+
+                default:
+                    renderType = "";
+            }
+
+
+            if (StringUtils.isNotBlank(renderType)) {
+                EntityModelPropertyForFilterVO vo = new EntityModelPropertyForFilterVO();
+                vo.setLabel(entityModelProperty.getName());
+                vo.setValue(entityModelProperty.getCode());
+                vo.setRenderType(renderType);
+                vo.setOperatorKey(operatorKey);
+
+
+                // 数据字典，需指定字典类型
+                if (entityModelProperty.getDataType().equals(EntityModelPropertyTypeEnum.DATA_DICTIONARY.name())) {
+                    vo.setDictionaryType(entityModelProperty.getDictionaryType());
+                }
+                // 组织机构，需指定集合类型和是否多选
+                if (entityModelProperty.getDataType().equals(EntityModelPropertyTypeEnum.ORGANIZATION_SINGLE.name())) {
+                    vo.setCollectionType(collectionType);
+                    vo.setMultiple(multiple);
+                }
+
                 entityModelPropertyVOList.add(vo);
             }
 

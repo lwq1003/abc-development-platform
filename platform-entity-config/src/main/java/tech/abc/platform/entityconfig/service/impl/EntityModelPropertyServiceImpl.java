@@ -145,26 +145,32 @@ public class EntityModelPropertyServiceImpl extends BaseServiceImpl<EntityModelP
     @Override
     public List<EntityModelProperty> getFullPropertyByEntityModelId(String entityModelId) {
         EntityModel entityModel = entityModelService.query(entityModelId);
-        List<EntityModelProperty> parentModelPropertyList=new ArrayList<>();
+        List<EntityModelProperty> parentModelPropertyList = new ArrayList<>();
         // 循环向上查找父级模型
-        while(true){
-            entityModel=entityModelService.query(entityModel.getParentModel());
+        while (true) {
+            entityModel = entityModelService.query(entityModel.getParentModel());
             // 获取父级模型属性列表
             List<EntityModelProperty> currentPropertyList = getByEntityModelId(entityModel.getId());
             CollectionUtils.addAll(parentModelPropertyList, currentPropertyList.iterator());
 
             // 找到顶层节点标识模型停止
-            if(entityModel.getId().equals(EntityConfigConstant.ID_MODEL_ID)){
+            if (entityModel.getId().equals(EntityConfigConstant.ID_MODEL_ID)) {
                 break;
             }
 
-        };
+        }
+        ;
 
         // 获取实体模型自身属性列表
         List<EntityModelProperty> entityModelPropertyList = getByEntityModelId(entityModelId);
 
         CollectionUtils.addAll(entityModelPropertyList, parentModelPropertyList.iterator());
         return entityModelPropertyList;
+    }
+
+    @Override
+    public List<EntityModelProperty> getFullPropertyByEntityModelCode(String entityModelCode) {
+        return getFullPropertyByEntityModelId(entityModelService.getIdByCode(entityModelCode));
     }
 
     @Override

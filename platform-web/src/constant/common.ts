@@ -62,6 +62,14 @@ export const COMMON_METHOD = {
   // 单条复制新增
   addSingleByCopy(id) {
     return request.post({ url: this.serveUrl + id + '/addSingleByCopy' })
+  },
+  // 自定义查询
+  customQuery(customQueryString, queryParams) {
+    return request.post({
+      url: this.serveUrl + 'customQuery',
+      params: queryParams,
+      data: customQueryString
+    })
   }
 }
 

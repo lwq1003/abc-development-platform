@@ -13,12 +13,27 @@ import lombok.experimental.Accessors;
 * 模板 视图对象类
 *
 * @author wqliu
-* @date 2024-07-23
+* @date 2024-09-10
 */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class TemplateVO extends BaseVO {
+    /**
+    * 名称
+    */
+    private String name;
+
+    /**
+    * 描述
+    */
+    private String content;
+
+    /**
+    * 组织机构
+    */
+    private String organizaiton;
+
     /**
     * 时分秒
     */
@@ -49,16 +64,6 @@ public class TemplateVO extends BaseVO {
     */
     private LocalDateTime day3;
 
-    /**
-    * 名称
-    */
-    private String name;
-
-    /**
-    * 长文本
-    */
-    private String content;
-
 
     /********非库表存储属性*****/
 
@@ -67,6 +72,11 @@ public class TemplateVO extends BaseVO {
     /********字典类*****/
 
     /********实体类、用户单选、组织机构单选*****/
+    /**
+    * 组织机构
+    */
+    private String organizaitonName;
+
 
     /********范围查询*****/
 

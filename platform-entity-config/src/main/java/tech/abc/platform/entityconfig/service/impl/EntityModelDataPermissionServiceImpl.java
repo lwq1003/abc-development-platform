@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.query.QueryRuleEnum;
 import tech.abc.platform.common.utils.CommonUtil;
+import tech.abc.platform.common.vo.DataFilterConditionVO;
+import tech.abc.platform.common.vo.DataFilterGroupVO;
+import tech.abc.platform.common.vo.DataFilterRuleVO;
 import tech.abc.platform.entityconfig.entity.Entity;
 import tech.abc.platform.entityconfig.entity.EntityModel;
 import tech.abc.platform.entityconfig.entity.EntityModelDataPermission;
@@ -24,9 +27,6 @@ import tech.abc.platform.entityconfig.service.EntityModelDataPermissionService;
 import tech.abc.platform.entityconfig.service.EntityModelPropertyService;
 import tech.abc.platform.entityconfig.service.EntityModelService;
 import tech.abc.platform.entityconfig.service.EntityService;
-import tech.abc.platform.entityconfig.vo.DataFilterConditionVO;
-import tech.abc.platform.entityconfig.vo.DataFilterGroupVO;
-import tech.abc.platform.entityconfig.vo.DataFilterRuleVO;
 import tech.abc.platform.system.entity.Module;
 import tech.abc.platform.system.service.ModuleService;
 
@@ -127,12 +127,14 @@ public class EntityModelDataPermissionServiceImpl extends BaseServiceImpl<Entity
     @Override
     public String generateSqlPart(String id, String rule) {
         String result = "";
-
         List<EntityModelProperty> modelPropertyList = entityModelPropertyService.getFullPropertyByEntityModelId(id);
         String[] numberDataType = {"INTEGER", "LONG", "DOUBLE", "DECIMAL"};
-
         // 转换数据
         DataFilterRuleVO dataFilterRule = JSON.parseObject(rule, DataFilterRuleVO.class);
+        // 规则为空时，直接返回转换的sql片段设置为空，终止后续执行
+        if (dataFilterRule.getFilters() == null) {
+            return "";
+        }
         // 获取组集合
         List<DataFilterGroupVO> dataFilterGroupList = dataFilterRule.getFilters();
         // 存放各组对应的条件sql片段
@@ -250,8 +252,15 @@ public class EntityModelDataPermissionServiceImpl extends BaseServiceImpl<Entity
      */
     private void addEasyQuery(QueryWrapper<?> queryWrapper, String origName, QueryRuleEnum rule, Object value) {
 
-        if (value == null || rule == null || ObjectUtils.isEmpty(value)) {
+        // 规则为空，直接退出
+        if (rule == null) {
             return;
+        }
+        // 值为空，且操作符不为“为空”和“不为空”，直接退出
+        if (ObjectUtils.isEmpty(value)) {
+            if (rule != QueryRuleEnum.NL && rule != QueryRuleEnum.NN) {
+                return;
+            }
         }
         String name = CommonUtil.camelToUnderline(origName);
         switch (rule) {
@@ -297,6 +306,12 @@ public class EntityModelDataPermissionServiceImpl extends BaseServiceImpl<Entity
                 List<String> list = new ArrayList<>();
                 list.add(origName);
                 queryWrapper.in("'" + value.toString() + "'", list);
+                break;
+            case NN:
+                queryWrapper.isNotNull(name);
+                break;
+            case NL:
+                queryWrapper.isNull(name);
                 break;
             default:
                 log.info("--查询规则未匹配到---");

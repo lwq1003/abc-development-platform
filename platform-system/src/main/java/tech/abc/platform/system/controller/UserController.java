@@ -17,6 +17,7 @@ import tech.abc.platform.common.annotation.SystemLog;
 import tech.abc.platform.common.base.BaseController;
 import tech.abc.platform.common.enums.LogTypeEnum;
 import tech.abc.platform.common.exception.SessionExpiredException;
+import tech.abc.platform.common.query.CustomQueryGenerator;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.PageInfo;
@@ -175,6 +176,28 @@ public class UserController extends BaseController {
     // endregion
 
     // region 扩展操作
+
+    /**
+     * 自定义查询
+     */
+    @PostMapping("/customQuery")
+    @SystemLog(value = "用户-自定义查询")
+    @PreAuthorize("hasPermission(null,'system:user:query')")
+    public ResponseEntity<Result> customQuery(@RequestBody String customQueryString, PageInfo pageInfo, SortInfo sortInfo) {
+        // 构造分页对象
+        IPage<User> page = new Page<User>(pageInfo.getPageNum(), pageInfo.getPageSize());
+        // 构造查询条件
+        QueryWrapper<User> queryWrapper = CustomQueryGenerator.generateQueryWrapper(User.class, customQueryString, sortInfo);
+
+
+        // 查询数据
+        userService.page(page, queryWrapper);
+        // 转换vo
+        IPage<UserVO> pageVO = mapperFacade.map(page, IPage.class);
+        List<UserVO> userVOList = convert2VO(page.getRecords());
+        pageVO.setRecords(userVOList);
+        return ResultUtil.success(pageVO);
+    }
 
     /**
      * 启用

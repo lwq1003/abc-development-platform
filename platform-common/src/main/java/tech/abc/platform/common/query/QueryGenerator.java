@@ -48,6 +48,7 @@ public class QueryGenerator {
         return queryWrapper;
     }
 
+
     /**
      * 构造查询条件构造器QueryWrapper实例
      */

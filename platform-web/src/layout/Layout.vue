@@ -59,7 +59,8 @@ export default defineComponent({
 
         <Backtop></Backtop>
 
-        <Setting></Setting>
+        {/* 隐藏前端全局配置入口图标 */}
+        {/* <Setting></Setting> */}
       </section>
     )
   }

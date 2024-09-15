@@ -176,20 +176,20 @@ const getConditions = async (params) => {
       resolve({
         data: [
           // {
-            // label: '一二三集团',
-            // value: '1',
-            // children: [
-            //   {
-            //     label: '北京分公司',
-            //     value: 'bj',
-            //     children: null
-            //   },
-            //   {
-            //     label: '上海分公司',
-            //     value: 'sh',
-            //     children: null
-            //   }
-            // ]
+          // label: '一二三集团',
+          // value: '1',
+          // children: [
+          //   {
+          //     label: '北京分公司',
+          //     value: 'bj',
+          //     children: null
+          //   },
+          //   {
+          //     label: '上海分公司',
+          //     value: 'sh',
+          //     children: null
+          //   }
+          // ]
           // }
         ]
       })

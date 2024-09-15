@@ -38,8 +38,8 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
     @Override
     public boolean add(T entity) {
 
-        beforeAdd(entity);
         beforeAddOrModifyOp(entity);
+        beforeAdd(entity);
         boolean result = super.save(entity);
         afterAddOrModifyOp(entity);
         afterAdd(entity);
@@ -51,9 +51,8 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
     public boolean modify(T entity) {
         // 将修改前数据查出来缓存下来，传入到修改后方法中，用于一些特殊逻辑处理，如某个值变化才进行
         T oldEntity = query(entity.getId());
-
-        beforeModify(entity);
         beforeAddOrModifyOp(entity);
+        beforeModify(entity);
         if (entity instanceof BaseEntity) {
             BaseEntity baseEntity = (BaseEntity) entity;
             baseEntity.setUpdateId(null);
