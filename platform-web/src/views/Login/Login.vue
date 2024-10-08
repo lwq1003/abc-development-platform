@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { LoginForm, RegisterForm } from './components'
 import { ThemeSwitch } from '@/components/ThemeSwitch'
-
+import { getToken } from '@/utils/auth'
 import { useI18n } from '@/hooks/web/useI18n'
 import { underlineToHump } from '@/utils'
 import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
-import { ref } from 'vue'
-
+import { ref, onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+const { push } = useRouter()
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('login')
@@ -25,6 +26,14 @@ const toRegister = () => {
 const toLogin = () => {
   isLogin.value = true
 }
+
+onBeforeMount(() => {
+  const token = getToken()
+  if (token && token != '') {
+    // 跳转首页
+    push({ path: '/desktop/index' })
+  }
+})
 </script>
 
 <template>

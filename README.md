@@ -137,6 +137,15 @@ cip-client是一个模拟的接口平台客户端，是一个独立的springboot
 
 参见[https://blog.csdn.net/seawaving/category_12695928.html](https://blog.csdn.net/seawaving/category_12695928.html)
 
+### 常见问题
+
+**系统启动或运行时报错，某些库表不存在**
+
+出现该情况主要是MySQL数据库是在Linux上部署，而Linux下MySQL数据库的默认配置是对库表名称大小写敏感。
+报错的几张库表是通常是以act_和qrtz_起始，是工作流组件Camunda和任务调度Quartz使用的库表，本平台的数据库初始化脚本库表名都是小写，但Camunda和Quartz的代码中有些SQL语句使用大写表名去检索或处理数据，从而引发了问题。
+建议：在Linux下配置MySQL数据库，将变量lower_case_table_names设置为1，这样MySQL数据库就不再区分大小写了，从而避免该问题。
+请注意，该操作需要在MySql安装后首次运行前进行，否则需要重新安装MySQL数据库。
+
 ### 未来规划
 
 客观地说，目前开发平台已经实现了大部分常用常见功能，可以投入使用了。

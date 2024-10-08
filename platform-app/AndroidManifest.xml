@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+	package="uni.UNI43C0AD3">
+	<!--按下面方式配置需要移除的permissions-->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
+	<uses-permission android:name="android.permission.CAMERA" tools:node="remove" />
+	<uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+	<uses-permission android:name="android.permission.CALL_PHONE" tools:node="remove" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:node="remove" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" tools:node="remove" />
+	<uses-permission android:name="android.permission.WRITE_SETTINGS" tools:node="remove" />
+
+
+<!-- 	<uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" tools:node="remove" />
+	<uses-permission android:name="android.permission.INSTALL_PACKAGES" tools:node="remove" />
+	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove" />
+	<uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" tools:node="remove" />
+	<uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" tools:node="remove" />
+	<uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" tools:node="remove" /> -->
+
+	<application>
+		<!--meta-data-->
+	</application>
+</manifest>
+
+
