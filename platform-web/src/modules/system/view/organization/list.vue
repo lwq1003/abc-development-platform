@@ -101,17 +101,25 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="250">
+        <el-table-column fixed="right" label="操作" align="center" width="270">
           <template #default="scope">
-            <el-button v-permission="pageCode + 'modify'" @click="modify(scope.row)" type="primary"
+            <el-button
+              v-permission="pageCode + 'modify'"
+              @click="modify(scope.row)"
+              type="primary"
+              text
               >修改</el-button
             >
-            <el-button v-permission="pageCode + 'remove'" @click="remove(scope.row)" type="primary"
+            <el-button
+              v-permission="pageCode + 'remove'"
+              @click="remove(scope.row)"
+              type="primary"
+              text
               >删除</el-button
             >
 
             <el-dropdown class="ml-10px">
-              <el-button type="primary">
+              <el-button type="primary" text>
                 更多
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>

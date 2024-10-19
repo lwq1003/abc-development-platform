@@ -5,10 +5,11 @@
     <el-table-column prop="size" label="大小" width="80" />
 
     <el-table-column prop="createTime" label="时间" width="100" />
-    <el-table-column fixed="right" label="操作" width="170">
+    <el-table-column fixed="right" label="操作" align="center" width="170">
       <template #default="scope">
         <el-button
           type="primary"
+          text
           icon="Download"
           class="header-search_button"
           size="small"
@@ -17,6 +18,7 @@
         >
         <el-button
           type="primary"
+          text
           icon="Delete"
           class="header-search_button"
           size="small"

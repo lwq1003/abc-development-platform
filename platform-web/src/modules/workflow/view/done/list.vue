@@ -75,9 +75,9 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作" align="center" width="100">
           <template #default="scope">
-            <el-button type="primary" @click="view(scope.row)">查看</el-button>
+            <el-button type="primary" text @click="view(scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>

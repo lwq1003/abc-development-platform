@@ -66,17 +66,19 @@
             :formatter="item.formatFunc"
             :sortable="item.sortable"
           />
-          <el-table-column fixed="right" label="操作" width="320">
+          <el-table-column fixed="right" label="操作" align="center" width="180">
             <template #default="scope">
               <el-button
                 v-permission="'system:userGroup:configUser'"
                 type="primary"
+                text
                 @click="remove(scope.row)"
                 >移除</el-button
               >
               <el-button
                 v-permission="'system:userGroup:configUser'"
                 type="primary"
+                text
                 @click="add(scope.row)"
                 >添加</el-button
               >
@@ -135,7 +137,7 @@ export default {
           label: '姓名',
           show: true,
           showOverflowTooltip: true,
-          width: '120',
+
           sortable: true
         },
         {
@@ -143,7 +145,7 @@ export default {
           label: '账号',
           show: true,
           showOverflowTooltip: true,
-          width: '120',
+
           sortable: true
         },
         {
@@ -151,7 +153,7 @@ export default {
           label: '组织机构',
           show: true,
           showOverflowTooltip: true,
-          width: '120',
+
           sortable: true
         }
       ],

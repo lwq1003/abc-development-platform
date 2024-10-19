@@ -1,5 +1,6 @@
 spring:
   profiles:
-    include: platform,dev
+    include: platform
+    active: dev
 
 

@@ -29,4 +29,10 @@ public class SystemConfig {
     private String systemUrl = "http://localhost:4000";
 
 
+    /**
+     * 是否启用密码复杂度验证
+     */
+    private Boolean enablePasswordComplexityCheck = true;
+
+
 }

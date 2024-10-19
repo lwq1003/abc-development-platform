@@ -17,13 +17,13 @@ const config: {
     base: 'base',
 
     // 打包开发环境接口前缀
-    dev: '',
+    dev: 'dev',
 
     // 打包生产环境接口前缀
-    pro: '',
+    pro: 'pro',
 
     // 打包测试环境接口前缀
-    test: ''
+    test: 'tst'
   },
 
   /**

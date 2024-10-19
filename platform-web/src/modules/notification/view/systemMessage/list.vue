@@ -60,9 +60,13 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="90">
+        <el-table-column fixed="right" label="操作" align="center" width="90">
           <template #default="scope">
-            <el-button v-permission="pageCode + 'remove'" type="primary" @click="remove(scope.row)"
+            <el-button
+              v-permission="pageCode + 'remove'"
+              type="primary"
+              text
+              @click="remove(scope.row)"
               >删除</el-button
             >
           </template>

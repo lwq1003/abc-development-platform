@@ -34,9 +34,9 @@
           <el-table-column label="环节名称">
             <template #default="scope">{{ scope.row.name }}</template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="90">
+          <el-table-column fixed="right" label="操作" align="center" width="90">
             <template #default="scope">
-              <el-button type="primary" @click="removeJump(scope.row)">移除</el-button>
+              <el-button type="primary" text @click="removeJump(scope.row)">移除</el-button>
             </template>
           </el-table-column>
         </el-table>

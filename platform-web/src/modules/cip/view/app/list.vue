@@ -66,22 +66,24 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="320">
+        <el-table-column fixed="right" label="操作" align="center" width="320">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'configApiPermission'"
               type="primary"
+              text
               @click="configApiPermission(scope.row)"
               >API权限</el-button
             >
             <el-button
               v-permission="pageCode + 'configMessagePermission'"
               type="primary"
+              text
               @click="configMessagePermission(scope.row)"
               >消息权限</el-button
             >
             <el-dropdown class="ml-10px">
-              <el-button type="primary">
+              <el-button type="primary" text>
                 更多
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>

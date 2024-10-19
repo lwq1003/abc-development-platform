@@ -80,11 +80,12 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="250">
+        <el-table-column fixed="right" label="操作" align="center" width="250">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'modify'"
               type="primary"
+              text
               v-show="scope.row.templateStatus == 'UNPUBLISHED'"
               @click="modify(scope.row)"
               >修改</el-button
@@ -92,6 +93,7 @@
             <el-button
               v-show="scope.row.templateStatus == 'RUNNING'"
               type="primary"
+              text
               v-permission="pageCode + 'upgrade'"
               @click="upgrade(scope.row)"
               >升级</el-button
@@ -99,6 +101,7 @@
             <el-button
               v-show="scope.row.templateStatus == 'UNPUBLISHED'"
               type="primary"
+              text
               v-permission="pageCode + 'publish'"
               @click="publish(scope.row)"
               >发布</el-button
@@ -107,12 +110,13 @@
             <el-button
               v-show="scope.row.templateStatus == 'ARCHIVED'"
               type="primary"
+              text
               v-permission="pageCode + 'valid'"
               @click="valid(scope.row)"
               >启用版本</el-button
             >
             <el-dropdown class="ml-10px">
-              <el-button type="primary">
+              <el-button type="primary" text>
                 更多
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>

@@ -21,3 +21,10 @@ VITE_OUT_DIR=dist-pro
 
 # 标题
 VITE_APP_TITLE=一二三应用开发平台
+
+
+# 请求路径
+VITE_BASE_URL='http://localhost:18080'
+
+# 通知服务路径
+VITE_NOTIFICATION_SERVER_URL='ws://localhost:19997/webSocket'

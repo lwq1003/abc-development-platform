@@ -77,19 +77,24 @@
           :formatter="item.formatFunc"
           :sortable="item.sortable"
         />
-        <el-table-column fixed="right" label="操作" width="320">
+        <el-table-column fixed="right" label="操作" align="center" width="320">
           <template #default="scope">
             <el-button
               v-permission="pageCode + 'configParam'"
               type="primary"
+              text
               @click="configParam(scope.row)"
               >参数</el-button
             >
-            <el-button v-permission="pageCode + 'modify'" type="primary" @click="modify(scope.row)"
+            <el-button
+              v-permission="pageCode + 'modify'"
+              type="primary"
+              text
+              @click="modify(scope.row)"
               >修改</el-button
             >
             <el-dropdown class="ml-10px">
-              <el-button type="primary">
+              <el-button type="primary" text>
                 更多
                 <el-icon class="el-icon--right"><arrow-down /></el-icon>
               </el-button>

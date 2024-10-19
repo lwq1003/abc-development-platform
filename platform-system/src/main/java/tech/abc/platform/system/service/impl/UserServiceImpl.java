@@ -540,9 +540,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             throw new CustomException(UserExceptionEnum.PWD_CHANGE_NEED_LENGTH);
         }
 
-        // 验证密码复杂度：包括大写字母、小写字母、数字、特殊符号这4种类型中的3种
-        if (!PasswordUtil.isComplexPassword(password)) {
-            throw new CustomException(UserExceptionEnum.PWD_CHANGE_NOT_STRONG);
+        if (systemConfig.getEnablePasswordComplexityCheck()) {
+            // 验证密码复杂度：包括大写字母、小写字母、数字、特殊符号这4种类型中的3种
+            if (!PasswordUtil.isComplexPassword(password)) {
+                throw new CustomException(UserExceptionEnum.PWD_CHANGE_NOT_STRONG);
+            }
         }
     }
 

@@ -216,7 +216,7 @@
                         :sortable="item.sortable"
                 />
                 <#if rowButtonList?? && (rowButtonList?size > 0)>
-                <el-table-column fixed="right" label="操作" width="250">
+                <el-table-column fixed="right" label="操作" width="270" align="center">
                     <template #default="scope">
                         <#list rowButtonList as rowButton>
                             <el-button
@@ -224,12 +224,13 @@
                                         v-permission="pageCode+'${rowButton.permissionCode}'"
                                     </#if>
                                     type="primary"
+                                    text
                                     @click="${rowButton.code}(scope.row)"
                             >${rowButton.name}</el-button>
                         </#list>
                         <#if rowMoreButtonList?? && (rowMoreButtonList?size > 0)>
                             <el-dropdown class="ml-10px">
-                                <el-button type="primary">
+                                <el-button type="primary" text>
                                     更多
                                     <el-icon class="el-icon--right"><arrow-down /></el-icon>
                                 </el-button>

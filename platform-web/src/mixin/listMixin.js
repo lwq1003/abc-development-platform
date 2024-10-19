@@ -60,7 +60,9 @@ export const listMixin = {
         // 默认值处理
       },
       // 名称键值
-      nameKey: 'name'
+      nameKey: 'name',
+      // 当前焦点所在行标识
+      currentHoverRowId: ''
     }
   },
   props: {
@@ -370,6 +372,14 @@ export const listMixin = {
           this.loading = false
           this.currentId = this.$constant.NO_ITEM_SELECTED
         })
+    },
+    // 鼠标移入行
+    hoverRow(row) {
+      this.currentHoverRowId = row.id
+    },
+    // 鼠标移出行
+    leaveRow() {
+      this.currentHoverRowId = ''
     }
   },
   provide() {
