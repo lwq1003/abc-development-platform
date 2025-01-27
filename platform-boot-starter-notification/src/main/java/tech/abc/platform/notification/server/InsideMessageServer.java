@@ -14,7 +14,7 @@ import tech.abc.platform.notification.config.NotificationConfig;
  * netty实现的服务端
  *
  * @author wqliu
- * @date 2021-2-5 10:31
+ * @date 2021-2-5
  **/
 @Component
 @Slf4j

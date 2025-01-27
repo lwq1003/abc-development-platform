@@ -20,10 +20,7 @@ import tech.abc.platform.common.utils.EncryptUtil;
 import tech.abc.platform.mail.service.MailService;
 import tech.abc.platform.system.config.SystemConfig;
 import tech.abc.platform.system.constant.SystemConstant;
-import tech.abc.platform.system.entity.GroupUser;
-import tech.abc.platform.system.entity.PermissionItem;
-import tech.abc.platform.system.entity.User;
-import tech.abc.platform.system.entity.UserPasswordChangeLog;
+import tech.abc.platform.system.entity.*;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.exception.UserExceptionEnum;
@@ -78,6 +75,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
     @Autowired
     private AppUserService appUserService;
 
+
+    @Autowired
+    private UserProfileService userProfileService;
+
+
     @Override
     public User init() {
         User entity = new User();
@@ -127,6 +129,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void beforeRemove(User entity) {
         // 判断用户是否被授权用户组。
         QueryWrapper<GroupUser> queryWrapper = new QueryWrapper<>();
@@ -136,6 +139,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             // 若被授予用户组，则先清空
             groupUserService.remove(queryWrapper);
         }
+        // 移除用户设置
+        QueryWrapper<UserProfile> userProfileQueryWrapper = new QueryWrapper<>();
+        userProfileQueryWrapper.lambda().eq(UserProfile::getUser, entity.getId());
+        userProfileService.remove(userProfileQueryWrapper);
+
     }
 
     @Override
@@ -233,7 +241,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         changePassword(id, newPassword);
     }
 
-    private void changePassword(String id, String password) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changePassword(String id, String password) {
         User user = query(id);
         // 缓存原始密码
         String originPassword = user.getPassword();

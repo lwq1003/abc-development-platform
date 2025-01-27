@@ -17,7 +17,7 @@ import tech.abc.platform.notification.server.global.ClientHolder;
  * 业务处理
  *
  * @author wqliu
- * @date 2021-2-5 16:25
+ * @date 2021-2-5
  **/
 @Slf4j
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {

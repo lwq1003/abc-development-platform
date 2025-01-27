@@ -17,4 +17,10 @@ public interface AppUserService {
      * @param user 用户
      */
     void init(User user);
+
+
+    /**
+     * 注销账号
+     */
+    void deleteAccount();
 }

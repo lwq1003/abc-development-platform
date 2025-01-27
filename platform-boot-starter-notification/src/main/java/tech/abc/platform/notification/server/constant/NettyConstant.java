@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
  * netty常量
  *
  * @author wqliu
- * @date 2021-2-6 15:40
+ * @date 2021-2-6
  **/
 @UtilityClass
 public class NettyConstant {

@@ -3,7 +3,6 @@ package tech.abc.platform.support.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import tech.abc.platform.common.annotation.AllowAll;
 import tech.abc.platform.common.annotation.AllowAuthenticated;
 import tech.abc.platform.common.annotation.SystemLog;
@@ -39,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,6 @@ import java.util.List;
 @RequestMapping("/support/attachment")
 @Slf4j
 public class AttachmentController extends BaseController {
-
 
 
     @Autowired
@@ -228,8 +224,8 @@ public class AttachmentController extends BaseController {
 
             // 设置响应信息
             String mimeType = attachment.getType();
-            if(StringUtils.isBlank(mimeType)){
-                mimeType="application/octet-stream";
+            if (StringUtils.isBlank(mimeType)) {
+                mimeType = "application/octet-stream";
             }
             response.setContentType(mimeType);
             response.setCharacterEncoding("utf-8");
@@ -242,6 +238,19 @@ public class AttachmentController extends BaseController {
         } catch (Exception e) {
             throw new CustomException(FileExceptionEnum.FILE_DOWNLOAD_FAILURE);
         }
+    }
+
+    /**
+     * 获取文件流
+     *
+     * @param id
+     * @param response
+     */
+    @GetMapping("/{id}/getStream")
+    @AllowAll
+    public InputStream getStream(@PathVariable String id, HttpServletResponse response) {
+        return attachmentService.getFile(id);
+
     }
 
 
@@ -258,8 +267,8 @@ public class AttachmentController extends BaseController {
         Attachment attachment = attachmentService.getById(id);
         String fileName = attachment.getName();
         String mimeType = attachment.getType();
-        if(StringUtils.isBlank(mimeType)){
-            mimeType="application/octet-stream";
+        if (StringUtils.isBlank(mimeType)) {
+            mimeType = "application/octet-stream";
         }
         response.setContentType(mimeType);
         if (!mimeType.startsWith(FileConstant.IMAGE_PATH)) {

@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebListener;
  * NettyServer监听器，用于启动消息服务
  *
  * @author wqliu
- * @date 2021-2-5 16:35
+ * @date 2021-2-5
  **/
 @WebListener
 public class InsideMessageServerListener implements ServletContextListener {
