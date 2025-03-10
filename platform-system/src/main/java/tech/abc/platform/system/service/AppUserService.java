@@ -23,4 +23,10 @@ public interface AppUserService {
      * 注销账号
      */
     void deleteAccount();
+
+
+    /**
+     * 找回密码
+     */
+    void retrievePassword(String email);
 }

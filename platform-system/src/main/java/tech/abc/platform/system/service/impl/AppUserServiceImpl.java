@@ -38,8 +38,14 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void deleteAccount() {
         //  默认为空处理
-        log.info("执行平台级注销操作");
+        log.info("执行平台级注销用户操作");
         // 移除用户
         userService.remove(UserUtil.getId());
+    }
+
+    @Override
+    public void retrievePassword(String email) {
+        //  默认为空处理
+        log.info("执行平台级找回密码操作");
     }
 }

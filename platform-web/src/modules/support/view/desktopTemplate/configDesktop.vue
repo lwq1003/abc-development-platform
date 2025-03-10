@@ -170,9 +170,7 @@ export default {
         } catch {}
 
         let el = this.$refs.gridItem[index]
-        // el.dragging = { top: mouseXY.y - parentRect.top, left: mouseXY.x - parentRect.left }
         let new_pos = el.calcXY(mouseXY.y - parentRect.top, mouseXY.x - parentRect.left)
-
         if (mouseInGrid === true) {
           this.$refs.gridlayout.dragEvent('dragstart', portletCode, new_pos.x, new_pos.y, h, w)
           DragPos.i = String(index)

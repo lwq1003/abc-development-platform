@@ -1,5 +1,5 @@
 <template>
-  <Dialog title="修改" v-model="visible" width="500px">
+  <Dialog title="修改" v-model="visible" width="800px">
     <el-form
       ref="form"
       :model="entityData"
