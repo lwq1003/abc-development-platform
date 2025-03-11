@@ -67,6 +67,15 @@ public interface UserService extends BaseService<User> {
      */
     void changeUserPassword(String id, String oldPassword, String newPassword);
 
+
+    /**
+     * 不验证旧密码直接设置新密码
+     *
+     * @param id          用户标识
+     * @param newPassword 新密码
+     */
+    void changePassword(String id, String password);
+
     /**
      * 更新登录失败次数
      *
@@ -162,4 +171,12 @@ public interface UserService extends BaseService<User> {
      * @return {@link String} 用户标识
      */
     String getIdByAccount(String account);
+
+    /**
+     * 根据账号获取用户
+     *
+     * @param account 账号
+     * @return 用户
+     */
+    User getByAccount(String account);
 }

@@ -468,6 +468,18 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         return user.getId();
     }
 
+    @Override
+    public User getByAccount(String account) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getAccount, account);
+        List<User> list = list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            throw new CustomException(UserExceptionEnum.ACCOUNT_NOT_EXIST);
+        }
+        return list.get(0);
+
+    }
+
 
     /**
      * 安全认证校验

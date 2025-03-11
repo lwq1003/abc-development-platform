@@ -1,19 +1,15 @@
 package tech.abc.platform.framework.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import tech.abc.platform.common.constant.TreeDefaultConstant;
 import tech.abc.platform.common.entity.MyGrantedAuthority;
 import tech.abc.platform.common.entity.MyUserDetails;
 import tech.abc.platform.common.utils.CacheUtil;
-import tech.abc.platform.system.entity.Organization;
 import tech.abc.platform.system.entity.User;
-import tech.abc.platform.system.enums.OrganizationTypeEnum;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
@@ -40,7 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private CacheUtil cacheUtil;
 
 
-
     @Override
     public UserDetails loadUserByUsername(String account) {
 
@@ -48,7 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 登录系统时，对用户名大小写不敏感
         account = account.toLowerCase();
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        User user = userService.getOne(userQueryWrapper.lambda().eq(User::getAccount, account));
+        User user = userService.getByAccount(account);
         if (user == null) {
             throw new UsernameNotFoundException("账号不存在");
         }
@@ -70,8 +65,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return userDetails;
     }
-
-
 
 
 }
