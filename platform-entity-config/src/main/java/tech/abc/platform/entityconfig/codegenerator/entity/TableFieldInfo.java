@@ -4,17 +4,18 @@ import lombok.Data;
 
 /**
  * 表字段信息
+ *
  * @author wqliu
  * @date 2022-11-8
  */
 @Data
 public class TableFieldInfo {
     /**
-     * 代码
+     * 编码
      */
     private String code;
     /**
-     * 名字
+     * 名称
      */
     private String name;
     /**

@@ -109,6 +109,10 @@ public enum CommonException implements ExceptionInterface {
     ENUM_TYPE_NOT_FOUNT("未找到对应的枚举类型：【{0}】"),
 
     /**
+     * 未找到对应的枚举类型
+     */
+    REPEAT_SUBMIT("请勿重复提交"),
+    /**
      * 无效的枚举值
      */
     INVALID_ENUM("无效的枚举值:{0}");

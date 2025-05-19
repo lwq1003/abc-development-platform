@@ -1,9 +1,5 @@
 package tech.abc.platform.framework.security;
 
-import tech.abc.platform.common.utils.JwtUtil;
-import tech.abc.platform.common.utils.ResultUtil;
-import tech.abc.platform.common.vo.Result;
-import tech.abc.platform.framework.config.PlatformConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +11,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import tech.abc.platform.common.utils.JwtUtil;
+import tech.abc.platform.common.utils.ResultUtil;
+import tech.abc.platform.common.vo.Result;
+import tech.abc.platform.framework.config.PlatformConfig;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -51,26 +50,7 @@ public class JwtFilter extends GenericFilterBean {
 
         HttpServletRequest req = (HttpServletRequest) servletRequest;
 
-
-        // 优先从http头中获取令牌
-        String token = req.getHeader("X-Token");
-        // 其次从cookie中获取
-        if (StringUtils.isBlank(token)) {
-            Cookie[] cookies = ((HttpServletRequest) servletRequest).getCookies();
-            if (cookies != null) {
-                for (int i = 0; i < cookies.length; i++) {
-                    if ("token".equals(cookies[i].getName())) {
-                        token = cookies[i].getValue();
-                        break;
-                    }
-                }
-            }
-        }
-        // 再次，从url地址中获取
-        if (StringUtils.isBlank(token)) {
-            token = req.getParameter("X-Token");
-        }
-
+        String token = jwtUtil.getToken(req);
 
         if (StringUtils.isNotBlank(token)) {
             // 验证令牌

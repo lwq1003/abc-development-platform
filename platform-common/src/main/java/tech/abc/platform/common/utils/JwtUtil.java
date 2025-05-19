@@ -4,10 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import tech.abc.platform.common.exception.SessionExpiredException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import tech.abc.platform.common.exception.SessionExpiredException;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -106,6 +109,36 @@ public class JwtUtil {
      */
     public String getSubject(String token) {
         return decode(token).getSubject();
+    }
+
+
+    /**
+     * 获取主题
+     *
+     * @param token 令牌
+     * @return 主题
+     */
+    public String getToken(HttpServletRequest reqeust) {
+        // 优先从http头中获取令牌
+        String token = reqeust.getHeader("X-Token");
+        // 其次从cookie中获取
+        if (StringUtils.isBlank(token)) {
+            Cookie[] cookies = reqeust.getCookies();
+            if (cookies != null) {
+                for (int i = 0; i < cookies.length; i++) {
+                    if ("token".equals(cookies[i].getName())) {
+                        token = cookies[i].getValue();
+                        break;
+                    }
+                }
+            }
+        }
+        // 再次，从url地址中获取
+        if (StringUtils.isBlank(token)) {
+            token = reqeust.getParameter("X-Token");
+        }
+
+        return token;
     }
 
 }

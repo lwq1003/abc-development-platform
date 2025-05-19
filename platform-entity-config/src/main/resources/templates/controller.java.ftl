@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import tech.abc.platform.common.annotation.SystemLog;
+import tech.abc.platform.common.annotation.NoRepeatSubmit;
 import tech.abc.platform.common.query.QueryGenerator;
 import tech.abc.platform.common.utils.ResultUtil;
 import tech.abc.platform.common.vo.PageInfo;
@@ -87,6 +88,7 @@ public class ${table.controllerName} {
     @PostMapping("/")
     @SystemLog(value = "${table.comment!}-新增")
     @PreAuthorize("hasPermission(null,'${package.ModuleName}:${entity?uncap_first}:add')")
+    @NoRepeatSubmit
     public ResponseEntity<Result> add(@Validated @RequestBody ${entity}VO vo) {
         ${entity} entity=convert2Entity(vo);
         ${entity?uncap_first}Service.add(entity);
