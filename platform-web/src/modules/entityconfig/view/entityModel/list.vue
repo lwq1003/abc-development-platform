@@ -71,12 +71,14 @@
             <el-button
               v-permission="pageCode + 'configModelProperty'"
               type="primary"
+              text
               @click="configModelProperty(scope.row)"
               >配置属性
             </el-button>
             <el-button
               v-permission="pageCode + 'configModelDataPermission'"
               type="primary"
+              text
               @click="configModelDataPermission(scope.row)"
               >数据权限
             </el-button>

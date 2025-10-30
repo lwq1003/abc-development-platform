@@ -30,6 +30,11 @@ public class SystemConfig {
 
 
     /**
+     * 系统后端地址
+     */
+    private String systemBackUrl = "http://localhost:4000/base";
+
+    /**
      * 是否启用密码复杂度验证
      */
     private Boolean enablePasswordComplexityCheck = true;

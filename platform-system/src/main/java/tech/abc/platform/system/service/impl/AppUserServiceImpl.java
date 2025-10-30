@@ -2,8 +2,12 @@ package tech.abc.platform.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import tech.abc.platform.common.utils.UserUtil;
 import tech.abc.platform.system.entity.User;
 import tech.abc.platform.system.service.AppUserService;
+import tech.abc.platform.system.service.UserService;
+
+import javax.annotation.Resource;
 
 /**
  * 应用用户服务
@@ -14,6 +18,9 @@ import tech.abc.platform.system.service.AppUserService;
 @Service
 @Slf4j
 public class AppUserServiceImpl implements AppUserService {
+
+    @Resource
+    private UserService userService;
 
 
     /**
@@ -26,5 +33,19 @@ public class AppUserServiceImpl implements AppUserService {
         //  默认为空处理
         log.info("执行平台级初始化");
 
+    }
+
+    @Override
+    public void deleteAccount() {
+        //  默认为空处理
+        log.info("执行平台级注销用户操作");
+        // 移除用户
+        userService.remove(UserUtil.getId());
+    }
+
+    @Override
+    public void retrievePassword(String email) {
+        //  默认为空处理
+        log.info("执行平台级找回密码操作");
     }
 }

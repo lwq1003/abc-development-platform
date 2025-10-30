@@ -103,10 +103,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     @Override
     public void generateCode(String entityCode) {
 
-
         // 获取实体配置信息
         Entity entity = entityService.getByCode(entityCode);
-
+        // 获取模块配置信息
+        Module module = moduleService.query(entity.getModule());
         // 获取模型列表
         List<EntityModel> entityModelList = entityModelService.getByEntityId(entity.getId());
         // 未找到模型，抛出异常
@@ -116,11 +116,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         for (EntityModel entityModel : entityModelList) {
             // 创建代码生成器对象
-            AutoGenerator codeGenerator = getCodegGenerator();
-
-            // 获取模块配置信息
-            Module module = moduleService.query(entity.getModule());
-
+            AutoGenerator codeGenerator = getCodeGenerator();
 
             // 配置全局信息
             configGlobal(codeGenerator, entity.getAuthor());
@@ -130,7 +126,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
             // 配置模板
             configTemplate(codeGenerator);
-
 
             // 配置注入
             configInjection(codeGenerator, entity, module.getApp().toLowerCase(), module.getCode(), entityModel);
@@ -201,21 +196,30 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     }
 
+    /**
+     * 将实体模型属性列表转换为库表字段信息列表
+     *
+     * @param entityModelPropertyList 实体模型属性列表
+     * @return 库表字段信息列表
+     */
     private List<TableFieldInfo> convertModelPropertyData(List<EntityModelProperty> entityModelPropertyList) {
         List<TableFieldInfo> tableFieldInfoList = new ArrayList<>();
         entityModelPropertyList.stream().forEach(modelProperty -> {
 
             TableFieldInfo tableFieldInfo = new TableFieldInfo();
+            // 将驼峰字符串转换为下划线格式
             String fieldCode = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, modelProperty.getCode());
             tableFieldInfo.setCode(fieldCode);
+            tableFieldInfo.setName(modelProperty.getName());
             tableFieldInfo.setDataType(generateDatabaseDataType(modelProperty));
 
+            // 是否可为空处理，实际不再使用
             String nullFlag = "";
             if (modelProperty.getNullFlag().equals(YesOrNoEnum.NO.name())) {
                 nullFlag = "not null";
             }
             tableFieldInfo.setNullFlag(nullFlag);
-            tableFieldInfo.setName(modelProperty.getName());
+
 
             // 库表默认值设定，实际不再使用
             String defaultValue = "";
@@ -273,15 +277,23 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     }
 
+    /**
+     * 配置策略
+     *
+     * @param codeGenerator      代码生成器
+     * @param entityCode         实体编码
+     * @param moduleAbbreviation 模块缩写
+     * @param entityModel        实体模型
+     */
     private void configStrategy(AutoGenerator codeGenerator, String entityCode, String moduleAbbreviation, EntityModel entityModel) {
 
+        // 设置表前缀，规则为模块编码缩写+下划线
         String tablePrefix = moduleAbbreviation + "_";
 
-
+        // 生成表名
         String tableName = generateTableName(entityModel.getCode(), moduleAbbreviation);
 
         StrategyConfig.Builder builder = new StrategyConfig.Builder()
-                .enableCapitalMode()
                 .enableSkipView()
                 .disableSqlFilter()
                 .addInclude(tableName)
@@ -293,19 +305,23 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 配置Mapper策略
         configMapperStrategy(builder);
 
-
         // 配置服务策略
         configServiceStrategy(builder);
 
-
         // 配置控制器策略
         configControllerStrategy(builder);
-
 
         StrategyConfig strategyConfig = builder.build();
         codeGenerator.strategy(strategyConfig);
     }
 
+    /**
+     * 生成表名
+     *
+     * @param entityCode         实体编码
+     * @param moduleAbbreviation 模块缩写
+     * @return 表名
+     */
     @NotNull
     private static String generateTableName(String entityCode, String moduleAbbreviation) {
 
@@ -313,46 +329,78 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
 
+    /**
+     * 配置实体策略
+     *
+     * @param strategyConfigBuilder 策略配置生成器
+     */
     private void configEntityStrategy(StrategyConfig.Builder strategyConfigBuilder) {
         com.baomidou.mybatisplus.generator.config.builder.Entity.Builder builder = strategyConfigBuilder.entityBuilder();
+        // 设置实体父类
         builder.superClass(BaseEntity.class)
+                // 覆盖已有文件
                 .enableFileOverride()
+                // 禁用生成serialVersionUID
                 .disableSerialVersionUID()
+                // 开启lombok模型
                 .enableLombok()
+                // 开启生成实体时生成字段注解
                 .enableTableFieldAnnotation()
+                // 数据库表映射到实体的命名策略——下划线转驼峰
                 .naming(NamingStrategy.underline_to_camel)
+                // 数据库表字段映射到实体的命名策略——下划线转驼峰
                 .columnNaming(NamingStrategy.underline_to_camel)
+                // 设置自动填充的字段
                 .addTableFills(getAutoFillField())
+                // 添加父类公共字段
                 .addSuperEntityColumns("id,create_id,update_id,create_time,update_time,version,delete_flag")
+                // 指定生成的主键的ID类型——雪花算法
                 .idType(IdType.ASSIGN_ID)
                 .build();
 
     }
 
+    /**
+     * 配置映射器策略
+     *
+     * @param strategyConfigBuilder 策略配置生成器
+     */
     private void configMapperStrategy(StrategyConfig.Builder strategyConfigBuilder) {
         Mapper.Builder builder = strategyConfigBuilder.mapperBuilder();
         builder.enableFileOverride()
+                // 启用ResultMap输出
                 // .enableBaseResultMap()
+                // 启用列输出
                 // .enableBaseColumnList()
                 .build();
 
     }
 
+    /**
+     * 配置服务策略
+     *
+     * @param strategyConfigBuilder 策略配置生成器
+     */
     private void configServiceStrategy(StrategyConfig.Builder strategyConfigBuilder) {
         com.baomidou.mybatisplus.generator.config.builder.Service.Builder builder = strategyConfigBuilder.serviceBuilder();
         builder.superServiceClass(BaseService.class)
                 .superServiceImplClass(BaseServiceImpl.class)
                 .enableFileOverride()
                 .formatServiceFileName("%sService")
-
                 .build();
 
     }
 
+    /**
+     * 配置控制器策略
+     *
+     * @param strategyConfigBuilder 策略配置生成器
+     */
     private void configControllerStrategy(StrategyConfig.Builder strategyConfigBuilder) {
         Controller.Builder builder = strategyConfigBuilder.controllerBuilder();
         builder.superClass(BaseController.class)
                 .enableFileOverride()
+                // 设置Rest风格的控制器
                 .enableRestStyle()
                 .build();
 
@@ -383,11 +431,11 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         IFill updaterField = new Column(FieldConstant.UPDATE_ID, FieldFill.INSERT_UPDATE);
         tableFillList.add(updaterField);
 
-        // 版本号，插入时设置默认值
+        // 版本号
         IFill versionField = new Column(FieldConstant.VERSION, FieldFill.INSERT);
         tableFillList.add(versionField);
 
-        // 删除标志位，插入时设置默认值
+        // 删除标志位
         IFill deleteFlagField = new Column(FieldConstant.DELETE_FLAG, FieldFill.INSERT);
         tableFillList.add(deleteFlagField);
 
@@ -845,8 +893,16 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     //#endregion
 
 
+    /**
+     * 配置注入
+     *
+     * @param codeGenerator 代码生成器
+     * @param entity        实体
+     * @param appCode       应用编码
+     * @param moduleCode    模块编码
+     * @param entityModel   实体模型
+     */
     private void configInjection(AutoGenerator codeGenerator, Entity entity, String appCode, String moduleCode, EntityModel entityModel) {
-
 
         // 设置自定义变量
         Map<String, Object> customKeyValue = new HashMap<>(5);
@@ -956,6 +1012,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             }
         });
 
+        // 处理视图
         handleView(entityModel, customKeyValue, builder);
 
         InjectionConfig injectionConfig = builder
@@ -1040,6 +1097,11 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         });
     }
 
+    /**
+     * 配置模板
+     *
+     * @param codeGenerator 代码生成器
+     */
     private void configTemplate(AutoGenerator codeGenerator) {
         TemplateConfig templateConfig = new TemplateConfig.Builder()
                 .entity("/templates/entity.java")
@@ -1051,6 +1113,13 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         codeGenerator.template(templateConfig);
     }
 
+    /**
+     * 配置包
+     *
+     * @param codeGenerator 代码生成器
+     * @param parentPackage 父包
+     * @param moduleCode    模块编码
+     */
     private void configPackage(AutoGenerator codeGenerator, String parentPackage, String moduleCode) {
         PackageConfig packageConfig = new PackageConfig.Builder()
                 .parent(parentPackage)
@@ -1075,11 +1144,11 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      * 配置全局信息
      *
      * @param codeGenerator 代码生成器
+     * @param author        作者
      */
     private void configGlobal(AutoGenerator codeGenerator, String author) {
         // 定义输出路径
         String outputDir = System.getProperty("user.dir") + "/output";
-        log.info("代码输出路径：{}", outputDir);
         // 全局配置
         GlobalConfig globalConfig = new GlobalConfig.Builder()
                 // 指定输出路径
@@ -1088,27 +1157,29 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .disableOpenDir()
                 // 设置代码编写人
                 .author(author)
-                // 启用Swagger
-                .enableSwagger()
                 // 定义日期类型为java8的LocalDateTime
                 .dateType(DateType.TIME_PACK)
                 // 设置注释日期格式
                 .commentDate("yyyy-MM-dd")
                 .build();
-
         codeGenerator.global(globalConfig);
     }
 
+    /**
+     * 获取代码生成器
+     *
+     * @return 代码生成器
+     */
     @NotNull
-    private AutoGenerator getCodegGenerator() {
+    private AutoGenerator getCodeGenerator() {
 
+        // 数据源配置
         DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(dataSource)
                 .databaseQueryClass(SQLQuery.class)
                 .typeConvert(new MySqlTypeConvert())
                 .keyWordsHandler(new MySqlKeyWordsHandler())
                 .build();
         // 实例化代码生成器
-        AutoGenerator codeGenerator = new AutoGenerator(dataSourceConfig);
-        return codeGenerator;
+        return new AutoGenerator(dataSourceConfig);
     }
 }

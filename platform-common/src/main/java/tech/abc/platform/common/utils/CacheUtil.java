@@ -64,6 +64,18 @@ public class CacheUtil {
 
 
     /**
+     * 是否存在键
+     *
+     * @param key 缓存键
+     * @return 是否存在
+     */
+    public boolean hasKey(String key) {
+
+        return redisTemplate.hasKey(key);
+    }
+
+
+    /**
      * 删除缓存对象
      *
      * @param key 缓存的键

@@ -51,7 +51,7 @@ export const modifyMixin = {
       if (this.beforeSave) {
         this.beforeSave()
       }
-      this.$refs.form.validate((valid) => {
+      this.fApi.validate((valid, fail) => {
         if (valid) {
           if (this.validateData) {
             // 数据验证通过后才执行保存操作

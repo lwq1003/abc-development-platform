@@ -25,6 +25,7 @@ import tech.abc.platform.common.vo.Result;
 import tech.abc.platform.common.vo.SortInfo;
 import tech.abc.platform.system.entity.GroupUser;
 import tech.abc.platform.system.entity.User;
+import tech.abc.platform.system.service.AppUserService;
 import tech.abc.platform.system.service.GroupUserService;
 import tech.abc.platform.system.service.OrganizationService;
 import tech.abc.platform.system.service.UserService;
@@ -49,6 +50,8 @@ import java.util.stream.Collectors;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private AppUserService appUserService;
 
 
     @Autowired
@@ -388,7 +391,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 注册
+     * 找回密码
      */
     @PostMapping("/retrievePassword")
     @SystemLog(value = "用户-找回密码")
@@ -420,6 +423,19 @@ public class UserController extends BaseController {
         userService.selfResetPassword(code, password);
         return ResultUtil.success();
     }
+
+
+    /**
+     * 注销账号
+     */
+    @PostMapping("/deleteAccount")
+    @SystemLog(value = "用户-注销账号")
+    @AllowAll
+    public ResponseEntity<Result> deleteAccount() {
+        appUserService.deleteAccount();
+        return ResultUtil.success();
+    }
+
 
     // endregion
     // region 辅助操作

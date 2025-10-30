@@ -20,10 +20,7 @@ import tech.abc.platform.common.utils.EncryptUtil;
 import tech.abc.platform.mail.service.MailService;
 import tech.abc.platform.system.config.SystemConfig;
 import tech.abc.platform.system.constant.SystemConstant;
-import tech.abc.platform.system.entity.GroupUser;
-import tech.abc.platform.system.entity.PermissionItem;
-import tech.abc.platform.system.entity.User;
-import tech.abc.platform.system.entity.UserPasswordChangeLog;
+import tech.abc.platform.system.entity.*;
 import tech.abc.platform.system.enums.UserStatusEnum;
 import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.exception.UserExceptionEnum;
@@ -31,14 +28,11 @@ import tech.abc.platform.system.mapper.UserMapper;
 import tech.abc.platform.system.service.*;
 import tech.abc.platform.system.utils.PasswordUtil;
 
-import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用户 服务实现类
@@ -77,6 +71,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Autowired
     private AppUserService appUserService;
+
+
+    @Autowired
+    private UserProfileService userProfileService;
+
 
     @Override
     public User init() {
@@ -127,6 +126,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void beforeRemove(User entity) {
         // 判断用户是否被授权用户组。
         QueryWrapper<GroupUser> queryWrapper = new QueryWrapper<>();
@@ -136,6 +136,11 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
             // 若被授予用户组，则先清空
             groupUserService.remove(queryWrapper);
         }
+        // 移除用户设置
+        QueryWrapper<UserProfile> userProfileQueryWrapper = new QueryWrapper<>();
+        userProfileQueryWrapper.lambda().eq(UserProfile::getUser, entity.getId());
+        userProfileService.remove(userProfileQueryWrapper);
+
     }
 
     @Override
@@ -233,7 +238,9 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         changePassword(id, newPassword);
     }
 
-    private void changePassword(String id, String password) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void changePassword(String id, String password) {
         User user = query(id);
         // 缓存原始密码
         String originPassword = user.getPassword();
@@ -415,46 +422,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     @Override
     public void retrievePassword(String email) {
-        // 验证邮箱是否注册
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(User::getEmail, email);
-        List<User> list = list(queryWrapper);
-        if (CollectionUtils.isEmpty(list)) {
-            throw new CustomException(UserExceptionEnum.EMAIl_NOT_REGISTER);
-        }
-        User user = list.get(0);
-        // 发送重设邮件
-        String account = user.getAccount();
-        sendResetPasswordEmail(email, account);
+
+        appUserService.retrievePassword(email);
+
 
     }
 
-    private void sendResetPasswordEmail(String email, String account) {
-        // 生成唯一性编码
-        String code = UUID.randomUUID().toString();
-        // 存入redis，24小时后失效
-        cacheUtil.set(code, account, 24, TimeUnit.HOURS);
-
-
-        // 生成内容
-        String systemUrl = systemConfig.getSystemUrl();
-        String resetUrl = systemUrl + "/#/selfResetPassword?code=" + code;
-        String content = MessageFormat.format("重设【遇见】应用密码,请点击链接或将其复制到浏览器地址栏：<a href=\"{0}\">{0}</a>", resetUrl);
-
-
-        // 使用线程异步发送邮件
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                mailService.sendHtmlMail(email, "重设【遇见】应用密码", content);
-            }
-        };
-        // noinspection AlibabaAvoidManuallyCreateThread
-        Thread thread = new Thread(runnable);
-        // 启动
-        thread.start();
-
-    }
 
     @Override
     public String getAccoutByCode(String code) {
@@ -493,6 +466,18 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
         }
         User user = list.get(0);
         return user.getId();
+    }
+
+    @Override
+    public User getByAccount(String account) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getAccount, account);
+        List<User> list = list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            throw new CustomException(UserExceptionEnum.ACCOUNT_NOT_EXIST);
+        }
+        return list.get(0);
+
     }
 
 

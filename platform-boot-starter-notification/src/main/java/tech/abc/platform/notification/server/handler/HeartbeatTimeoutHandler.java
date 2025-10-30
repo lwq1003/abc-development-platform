@@ -10,7 +10,7 @@ import tech.abc.platform.notification.server.global.ClientHolder;
  * 心跳超时处理器
  *
  * @author wqliu
- * @date 2021-2-6 15:39
+ * @date 2021-2-6
  **/
 @Slf4j
 public class HeartbeatTimeoutHandler extends ChannelInboundHandlerAdapter {
