@@ -7,8 +7,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import tech.abc.platform.common.utils.SpringUtil;
 import tech.abc.platform.framework.config.PlatformConfig;
 
@@ -26,6 +26,7 @@ import tech.abc.platform.framework.config.PlatformConfig;
 @EnableRetry
 @ServletComponentScan
 @EnableTransactionManagement
+@EnableScheduling
 public class AbcBootStarterConfig {
 
 

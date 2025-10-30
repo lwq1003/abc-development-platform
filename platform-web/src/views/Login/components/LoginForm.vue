@@ -131,8 +131,12 @@ const signIn = async () => {
         if (res) {
           // 保存用户信息
           userStore.setUserAction(res.data)
-          // 登录成功，启动websocket连接
-          globalProperties.$webSocket.init()
+          // 登录成功，启动通知连接
+          if (import.meta.env.VITE_NOTIFICATION_TYPE === 'WebSocket') {
+            globalProperties.$webSocket.init()
+          } else {
+            globalProperties.$sse.connect()
+          }
           // 使用动态路由
           const routers = res.data.menuPermission || []
           await permissionStore.generateRoutes(routers).catch(() => {})

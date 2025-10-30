@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 import tech.abc.platform.common.base.BaseServiceImpl;
 import tech.abc.platform.common.enums.YesOrNoEnum;
 import tech.abc.platform.common.utils.UserUtil;
+import tech.abc.platform.notification.config.NotificationConfig;
 import tech.abc.platform.notification.entity.SystemMessage;
 import tech.abc.platform.notification.mapper.SystemMessageMapper;
 import tech.abc.platform.notification.server.global.ClientHolder;
+import tech.abc.platform.notification.server.global.SseEmitterManager;
 import tech.abc.platform.notification.service.SystemMessageService;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,16 @@ import java.util.Map;
 @Service
 @Slf4j
 public class SystemMessageServiceImpl extends BaseServiceImpl<SystemMessageMapper, SystemMessage> implements SystemMessageService {
+
+    /**
+     * 通知类型常量，网络套接字
+     */
+    public static final String WEB_SOCKET = "WebSocket";
+
+    @Resource
+    private NotificationConfig notificationConfig;
+
+
     @Override
     public SystemMessage init() {
         SystemMessage entity = new SystemMessage();
@@ -73,7 +86,13 @@ public class SystemMessageServiceImpl extends BaseServiceImpl<SystemMessageMappe
         entity.setTitle(title);
         entity.setContent(content);
         add(entity);
-        ClientHolder.sendMessage(entity);
+
+        if (notificationConfig.getNotificationType().equals(WEB_SOCKET)) {
+            ClientHolder.sendMessage(entity);
+        } else {
+            SseEmitterManager.sendMessage(entity);
+        }
+
 
     }
 

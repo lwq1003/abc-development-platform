@@ -23,5 +23,10 @@ public class NotificationConfig {
      */
     private Integer serverPort = 9997;
 
-
+    /**
+     * 通知类型
+     * SSE: Server-Sent Events
+     * WebSocket: WebSocket
+     */
+    private String notificationType = "SSE";
 }

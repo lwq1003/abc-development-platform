@@ -4,21 +4,21 @@
     <select id="getPortletData" resultType="tech.abc.platform.support.entity.Notice">
         SELECT n.id, n.title, n.publish_time, n.top_flag, n.important_flag
         FROM spt_notice n
-                 LEFT JOIN spt_notice_receiver r ON n.id = r.notice
+        LEFT JOIN spt_notice_receiver r ON n.id = r.notice
         WHERE r.organization = #{organizationId}
-          and n.delete_flag = 'NO'
-          and r.delete_flag = 'NO'
+        and n.delete_flag = 'NO'
+        and r.delete_flag = 'NO'
         ORDER BY n.top_flag DESC, n.publish_time DESC LIMIT #{count}
     </select>
 
     <select id="getNoticeViewList" resultType="tech.abc.platform.support.entity.Notice">
         select *
-        from (SELECT n.id, n.title, n.publish_time, n.pullisher, n.read_count
-              FROM spt_notice n
-                       LEFT JOIN spt_notice_receiver r ON n.id = r.notice
-              WHERE r.organization = #{organizationId}
-                and n.delete_flag = 'NO'
-                and r.delete_flag = 'NO') t
-            ${ew.customSqlSegment}
+        from (SELECT n.id, n.title, n.publish_time, n.publisher, n.read_count,n.status
+        FROM spt_notice n
+        LEFT JOIN spt_notice_receiver r ON n.id = r.notice
+        WHERE r.organization = #{organizationId}
+        and n.delete_flag = 'NO'
+        and r.delete_flag = 'NO') t
+        ${ew.customSqlSegment}
     </select>
 </mapper>

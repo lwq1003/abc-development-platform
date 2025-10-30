@@ -13,8 +13,6 @@ import { setupStore } from '@/store'
 // 全局组件
 import { setupGlobCom } from '@/components'
 
-
-
 // 引入全局样式
 import '@/styles/index.less'
 
@@ -51,18 +49,19 @@ import 'vue-simple-uploader/dist/style.css'
 // web socket
 import webSocket from '@/modules/notification/view/systemMessage/webSocket.js'
 
+// SSE
+import sseInstance from '@/modules/notification/view/systemMessage/sse.js'
 
 // 可自配置的网格布局
 import VueGridLayout from 'vue-grid-layout'
 
 // echart图表
-import "echarts"
-import ECharts from "vue-echarts"
+import 'echarts'
+import ECharts from 'vue-echarts'
 
 // 表单构建器
 import FormCreate from '@form-create/element-ui'
 import FcDesigner from '@form-create/designer'
-
 
 import { Base64 } from 'js-base64'
 
@@ -91,7 +90,6 @@ FormCreate.component(AttachmentUploader)
 FormCreate.component(AttachmentManager)
 FormCreate.component(AttachmentViewer)
 FormCreate.component(AttachmentManagerAndUploader)
-
 
 // 创建实例
 const setupAll = async () => {
@@ -136,8 +134,11 @@ const setupAll = async () => {
   // web socket
   app.config.globalProperties.$webSocket = webSocket
 
+  // sse
+  app.config.globalProperties.$sse = sseInstance.getInstance()
+
   // base64工具类
-   app.config.globalProperties.$base64Util = Base64
+  app.config.globalProperties.$base64Util = Base64
 
   // 文件上传
   app.use(uploader)
@@ -158,15 +159,14 @@ const setupAll = async () => {
 
   app.directive('enterNumber', {
     mounted(el, { value = 100 }, vnode) {
-      el = el.nodeName == "INPUT" ? el : el.children[0]
+      el = el.nodeName == 'INPUT' ? el : el.children[0]
       var RegStr = value == 0 ? `^[\\+\\-]?\\d+\\d{0,0}` : `^[\\+\\-]?\\d+\\.?\\d{0,${value}}`
       el.addEventListener('input', function () {
-        el.value = el.value.match(new RegExp(RegStr, 'g'));
+        el.value = el.value.match(new RegExp(RegStr, 'g'))
         el.dispatchEvent(new Event('input'))
       })
     }
   })
-  
 }
 
 setupAll()

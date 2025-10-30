@@ -73,8 +73,12 @@ const loginOut = () => {
         tagsViewStore.delAllViews()
         // 重置静态路由表
         resetRouter()
-        // 关闭websocket连接
-        globalProperties.$webSocket.close()
+        // 关闭通知连接
+        if (import.meta.env.VITE_NOTIFICATION_TYPE === 'WebSocket') {
+          globalProperties.$webSocket.close()
+        } else {
+          globalProperties.$sse.close()
+        }
         // 调整登录页
         replace('/login')
       }

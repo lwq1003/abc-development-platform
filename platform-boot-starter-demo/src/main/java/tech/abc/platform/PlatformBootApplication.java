@@ -27,6 +27,7 @@ import tech.abc.platform.framework.config.PlatformConfig;
 @EnableRetry
 public class PlatformBootApplication implements CommandLineRunner {
 
+
     @Autowired
     private MessageServer messageServer;
 

@@ -32,7 +32,11 @@ const setDefaultTheme = () => {
 setDefaultTheme()
 
 onMounted(() => {
-  globalProperties.$webSocket.init()
+  if (import.meta.env.VITE_NOTIFICATION_TYPE === 'WebSocket') {
+    globalProperties.$webSocket.init()
+  } else {
+    globalProperties.$sse.connect()
+  }
 })
 </script>
 
