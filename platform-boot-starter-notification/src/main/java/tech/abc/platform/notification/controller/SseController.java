@@ -56,18 +56,6 @@ public class SseController {
         SseEmitterManager.addEmitter(account, emitter);
         log.info("用户{}连接SSE成功", account);
 
-
-        // 启动心跳任务（每10秒发送一次空数据，检测连接是否有效）
-        // ScheduledFuture<?> heartbeat = taskScheduler.scheduleAtFixedRate(() -> {
-        //     try {
-        //         // 发送心跳（空数据或特定标识，客户端可忽略）
-        //         emitter.send(SseEmitter.event().data("ping"));
-        //     } catch (IOException e) {
-        //         // 发送失败 → 连接已关闭，取消心跳任务
-        //         log.info("用户{}心跳超时", account);
-        //     }
-        // }, 10000L);
-
         return emitter;
     }
 

@@ -127,6 +127,8 @@ export const treeReferenceMixin = {
           this.displayName = res.data[this.nameKey]
           this.currentName = this.displayName
         })
+      } else {
+        this.displayName = ''
       }
     }
   },

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tech.abc.platform.common.exception.CommonException;
@@ -26,6 +27,9 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
 
     @Autowired
     protected MapperFacade mapperFacade;
+
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
 
     @Override
     public T init() {
@@ -50,6 +54,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T extends BaseMapEntity>
     @Override
     public boolean modify(T entity) {
         // 将修改前数据查出来缓存下来，传入到修改后方法中，用于一些特殊逻辑处理，如某个值变化才进行
+        sqlSessionTemplate.clearCache();
         T oldEntity = query(entity.getId());
         beforeAddOrModifyOp(entity);
         beforeModify(entity);

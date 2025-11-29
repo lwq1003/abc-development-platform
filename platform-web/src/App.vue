@@ -78,14 +78,12 @@ body {
   border: 1px solid #ddd;
   border-radius: 0;
   transition: 0.3s;
-  transition: 0.3s;
 
   .el-card__header {
     padding: 9px 10px;
     font-size: 14px;
     color: #006eff;
     border-bottom: 1px solid #ddd;
-    box-sizing: border-box;
     box-sizing: border-box;
   }
 }

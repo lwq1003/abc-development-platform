@@ -66,7 +66,7 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
 
     @Override
     public void beforeAdd(Notice entity) {
-        entity.setPublishTime(LocalDateTime.now());
+        
     }
 
     @Override
@@ -123,6 +123,7 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, Notice> imp
         }
         // 更新发布人
         entity.setPublisher(UserUtil.getName());
+        entity.setPublishTime(LocalDateTime.now());
     }
 
     private void clearOrganizationData(Notice entity) {

@@ -28,7 +28,7 @@
             {{ entityData.readCount }}</div
           >
           <div style="width: 99%; border: 1px solid #ebeef5; margin: 0px 0px 20px 0px">
-            <div style="padding: 10px 10px 10px 10px" v-html="entityData.content"></div>
+            <v-md-preview :text="entityData.content"></v-md-preview>
           </div>
           <div>
             <AttachmentViewer

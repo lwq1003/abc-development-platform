@@ -164,6 +164,8 @@ export const treeListReferenceMixin = {
         this.api.get(this.modelValue).then((res) => {
           this.displayName = res.data[this.nameKey]
         })
+      } else {
+        this.displayName = ''
       }
     },
     // 处理查询

@@ -1,5 +1,5 @@
 <template>
-  <Dialog title="修改" v-model="visible" fullscreen>
+  <Dialog title="修改" v-model="visible" fullscreen destroy-on-close>
     <el-form
       ref="form"
       :model="entityData"

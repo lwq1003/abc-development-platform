@@ -65,6 +65,12 @@ import FcDesigner from '@form-create/designer'
 
 import { Base64 } from 'js-base64'
 
+// markdown 预览组件
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import '@kangc/v-md-editor/lib/style/preview.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+
 // 自定义组件
 
 import DictionarySelect from '@/components/abc/DictionarySelect/DictionarySelect.vue'
@@ -90,6 +96,8 @@ FormCreate.component(AttachmentUploader)
 FormCreate.component(AttachmentManager)
 FormCreate.component(AttachmentViewer)
 FormCreate.component(AttachmentManagerAndUploader)
+
+VMdPreview.use(githubTheme, {})
 
 // 创建实例
 const setupAll = async () => {
@@ -145,6 +153,9 @@ const setupAll = async () => {
 
   // 可自配置的网格布局
   app.use(VueGridLayout)
+
+  // markdown浏览器
+  app.use(VMdPreview)
 
   // echart图表
   app.component('v-chart', ECharts)
