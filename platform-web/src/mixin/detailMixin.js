@@ -59,7 +59,6 @@ export const detailMixin = {
       }
       return text
     }
-   
   },
   methods: {
     // 带参初始化,参数可为空

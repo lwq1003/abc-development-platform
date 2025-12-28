@@ -54,6 +54,11 @@ public class PermissionItemVO extends BaseVO {
     private String viewCode;
 
     /**
+     * 视图类型
+     */
+    private String viewType;
+
+    /**
      * 组件
      */
     private String component;
@@ -72,6 +77,16 @@ public class PermissionItemVO extends BaseVO {
      * 排序
      */
     private String orderNo;
+
+    /**
+     * 外部链接
+     */
+    private String externalLink;
+
+    /**
+     * 是否内部打开
+     */
+    private String internalOpenFlag;
 
 
     /********字典类*****/

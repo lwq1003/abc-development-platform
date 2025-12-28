@@ -18,6 +18,9 @@ public class MenuTreeVO {
     private String path;
     private String name;
     private String component;
+    private String externalLink;
+    private String internalOpenFlag;
+    private String viewType;
 
     private MetaVO meta;
     private List<MenuTreeVO> children;

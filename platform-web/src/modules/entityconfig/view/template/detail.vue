@@ -91,8 +91,8 @@ const MODULE_CODE = 'entityconfig'
 const ENTITY_TYPE = 'template'
 export default {
   name: ENTITY_TYPE + '-detail',
-  mixins: [detailMixin],
   components: {},
+  mixins: [detailMixin],
   data() {
     return {
       entityType: ENTITY_TYPE,

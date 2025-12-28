@@ -10,7 +10,7 @@ import * as scheduler from '@/modules/scheduler/constant'
 import * as notification from '@/modules/notification/constant'
 import * as workflow from '@/modules/workflow/constant'
 import * as businessflow from '@/modules/businessflow/constant'
-
+import * as monitor from '@/modules/monitor/constant'
 export default {
   ...common,
   ...system,
@@ -20,5 +20,6 @@ export default {
   ...scheduler,
   ...notification,
   ...workflow,
-  ...businessflow
+  ...businessflow,
+  ...monitor
 }

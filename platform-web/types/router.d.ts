@@ -45,6 +45,10 @@ declare module 'vue-router' {
     noTagsView?: boolean
     followAuth?: string
     canTo?: boolean
+    // 外部链接相关字段
+    externalLink?: string
+    internalOpenFlag?: 'YES' | 'NO'
+    viewType?: MenuViewTypeEnum
   }
 }
 
@@ -70,5 +74,12 @@ declare global {
     path: string
     redirect: string
     children?: AppCustomRouteRecordRaw[]
+    // 外部链接相关字段
+    externalLink?: string
+    internalOpenFlag?: 'YES' | 'NO'
+    viewType?: MenuViewTypeEnum
   }
 }
+
+// 菜单视图类型枚举
+declare type MenuViewTypeEnum = 'INTERNAL' | 'EXTERNAL'

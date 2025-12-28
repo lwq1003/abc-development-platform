@@ -3,11 +3,13 @@ import { computed, defineComponent, unref, PropType } from 'vue'
 import { ElMenu, ElScrollbar } from 'element-plus'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
+import { useTagsViewStore } from '@/store/modules/tagsView'
 import { useRenderMenuItem } from './components/useRenderMenuItem'
 import { useRouter } from 'vue-router'
 import { isUrl } from '@/utils/is'
 import { useDesign } from '@/hooks/web/useDesign'
 import { LayoutType } from '@/types/layout'
+import { usePageLoading } from '@/hooks/web/usePageLoading'
 
 const { getPrefixCls } = useDesign()
 
@@ -62,11 +64,71 @@ export default defineComponent({
       if (props.menuSelect) {
         props.menuSelect(index)
       }
-      // 自定义事件
-      if (isUrl(index)) {
-        window.open(index)
+
+      // 查找当前路由
+      const findRoute = (
+        routers: AppRouteRecordRaw[],
+        targetPath: string
+      ): AppRouteRecordRaw | null => {
+        for (const router of routers) {
+          // 情况1：直接匹配当前路由路径
+          if (router.path === targetPath) {
+            return router
+          }
+
+          // 情况2：如果targetPath是完整路径（包含斜杠），提取最后一部分进行匹配
+          const targetPathParts = targetPath.split('/')
+          const lastPathPart = targetPathParts[targetPathParts.length - 1]
+          if (router.path === lastPathPart) {
+            return router
+          }
+
+          // 递归查找子路由
+          if (router.children && router.children.length > 0) {
+            const found = findRoute(router.children!, targetPath)
+            if (found) return found
+          }
+        }
+        return null
+      }
+
+      // 查找当前点击的路由
+      const finalRoute = findRoute(unref(routers), index)
+
+      if (finalRoute && finalRoute.meta && finalRoute.meta.externalLink) {
+        // 检查是否需要内部打开（默认内部打开）
+        const openFlag = finalRoute.meta.internalOpenFlag?.toUpperCase() || 'YES'
+        const isInternal = openFlag === 'YES'
+
+        if (isInternal) {
+          // 调用tagsView的添加外部链接标签页方法
+          const tagsViewStore = useTagsViewStore()
+          tagsViewStore.addExtTab({
+            path: index,
+            name: finalRoute.name,
+            meta: {
+              ...finalRoute.meta,
+              title: finalRoute.meta.title || finalRoute.name
+            }
+          })
+          // 导航到该路由，以便显示iframe内容
+          push(index)
+        } else {
+          // 新开浏览器标签页打开
+          window.open(finalRoute.meta.externalLink, '_blank')
+          // 直接调用loadDone()重置页面加载状态，因为不会执行路由跳转
+          const { loadDone } = usePageLoading()
+          loadDone()
+        }
       } else {
-        push(index)
+        // 直接检查index是否为外部链接
+        if (isUrl(index)) {
+          // 传统方式打开外部链接
+          window.open(index, '_blank')
+        } else {
+          // 正常路由跳转
+          push(index)
+        }
       }
     }
 

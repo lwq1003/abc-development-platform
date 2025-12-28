@@ -1,278 +1,231 @@
-<template>
-  <div class="custom-editor-container">
-    <!-- 编辑器主体 -->
-    <vue-markdown-editor
-      ref="editorRef"
-      class="custom-md-editor"
-      v-model="editorContent"
-      mode="editable"
-      :height="height"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :left-toolbar="leftToolbar"
-      :disabled-menus="[]"
-      @upload-image="handleUploadImage"
-      @change="handleContentChange"
-      @save="handleSave"
-    >
-      <template #before v-if="$slots.before">
-        <slot name="before"></slot>
-      </template>
-      <template #after v-if="$slots.after">
-        <slot name="after"></slot>
-      </template>
-    </vue-markdown-editor>
-
-    <!-- 错误提示 -->
-    <div class="editor-error" v-if="errorMessage">{{ errorMessage }}</div>
-  </div>
-</template>
-
+<script lang="ts">
+export default {
+  name: 'RichText',
+  label: '富文本'
+}
+</script>
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
-import VueMarkdownEditor from '@kangc/v-md-editor'
-import '@kangc/v-md-editor/lib/style/base-editor.css'
-import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
-import '@kangc/v-md-editor/lib/theme/style/vuepress.css'
-import Prism from 'prismjs'
+import { onBeforeUnmount, computed, PropType, unref, nextTick, ref, watch, shallowRef } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { IDomEditor, IEditorConfig, i18nChangeLanguage } from '@wangeditor/editor'
+import { propTypes } from '@/utils/propTypes'
+import { isNumber } from '@/utils/is'
+import { ElMessage } from 'element-plus'
+import { useLocaleStore } from '@/store/modules/locale'
+import { getToken } from '@/utils/auth'
 import api from '@/api/index'
+const localeStore = useLocaleStore()
 
-// 初始化编辑器主题
-// 添加一个标志位避免重复初始化
-let isEditorInitialized = false
+const currentLocale = computed(() => localeStore.getCurrentLocale)
 
-if (!isEditorInitialized) {
-  VueMarkdownEditor.use(vuepressTheme, {
-    Prism
-  })
-  isEditorInitialized = true
+i18nChangeLanguage(unref(currentLocale).lang)
+
+const props = defineProps({
+  editorId: propTypes.string.def('wangeEditor-1'),
+  height: propTypes.oneOfType([Number, String]).def('500px'),
+  editorConfig: {
+    type: Object as PropType<IEditorConfig>,
+    default: () => undefined
+  },
+  modelValue: propTypes.string.def(''),
+  readonly: propTypes.bool.def(false)
+})
+
+const emit = defineEmits(['change', 'update:modelValue'])
+
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef<IDomEditor>()
+
+const valueHtml = ref('')
+
+watch(
+  () => props.modelValue,
+  (val: string) => {
+    if (val === unref(valueHtml)) return
+    valueHtml.value = val
+  },
+  {
+    immediate: true
+  }
+)
+
+// 监听
+watch(
+  () => valueHtml.value,
+  (val: string) => {
+    emit('update:modelValue', val)
+  }
+)
+
+const handleCreated = (editor: IDomEditor) => {
+  editorRef.value = editor
 }
 
-// 定义props
-const props = defineProps({
-  modelValue: {
-    type: String,
-    default: ''
-  },
-  height: {
-    type: String,
-    default: '500px'
-  },
-  placeholder: {
-    type: String,
-    default: '请输入内容...'
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  leftToolbar: {
-    type: String,
-    default:
-      'undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code'
-  },
-  errorMessage: {
-    type: String,
-    default: ''
+const token = getToken()
+
+// 编辑器配置
+const editorConfig = computed((): IEditorConfig => {
+  // 初始化 MENU_CONF 属性
+  const customConfig: Partial<IEditorConfig> = {
+    // TS 语法
+    // const editorConfig = {                       // JS 语法
+    MENU_CONF: {}
+
+    // 其他属性...
+  }
+
+  // 修改 uploadImage 菜单配置
+  customConfig.MENU_CONF['uploadImage'] = {
+    // 单个文件的最大体积限制，默认为 2M
+    maxFileSize: 5 * 1024 * 1024,
+    // 低于指定体积以base64编码方式插入
+    base64LimitSize: 5 * 1024,
+    // 最多可上传几个文件，默认为 100
+    maxNumberOfFiles: 10,
+
+    // 选择文件时的类型限制，默认为 ['image/*'] 。如不想限制，则设置为 []
+    allowedFileTypes: ['image/*'],
+
+    // 自定义上传
+    async customUpload(file: File, insertFn: InsertFnType) {
+      const formData = new FormData()
+      formData.append('image', file)
+      api.support.attachment.uploadImage(formData).then((res) => {
+        const id = res.data
+        let url =
+          '/' + import.meta.env.VITE_API_BASEPATH + '/support/attachment/' + id + '/getImage'
+        insertFn(url, '', '')
+      })
+    }
+  }
+
+  return Object.assign(
+    {
+      readOnly: props.readonly,
+      customAlert: (s: string, t: string) => {
+        switch (t) {
+          case 'success':
+            ElMessage.success(s)
+            break
+          case 'info':
+            ElMessage.info(s)
+            break
+          case 'warning':
+            ElMessage.warning(s)
+            break
+          case 'error':
+            ElMessage.error(s)
+            break
+          default:
+            ElMessage.info(s)
+            break
+        }
+      },
+      autoFocus: false,
+      scroll: true,
+      uploadImgShowBase64: true
+    },
+    props.editorConfig || {},
+    customConfig
+  )
+})
+
+const editorStyle = computed(() => {
+  return {
+    height: isNumber(props.height) ? `${props.height}px` : props.height
   }
 })
 
-// 定义事件
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-  (e: 'change', value: string): void
-  (e: 'save', value: string): void
-  (e: 'modeChange', isPreview: boolean): void
-}>()
-
-// 编辑器实例
-const editorRef = ref<InstanceType<typeof VueMarkdownEditor> | null>(null)
-const editorContent = ref(props.modelValue)
-
-const handleUploadImage = (event, insertImage, files) => {
-  // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
-  const formData = new FormData()
-  formData.append('image', files[0])
-  api.support.attachment.uploadImage(formData).then((res) => {
-    const id = res.data
-    let url =
-      window.location.origin +
-      '/' +
-      import.meta.env.VITE_API_BASEPATH +
-      '/support/attachment/' +
-      id +
-      '/getImage'
-
-    // 插入图片
-    insertImage({
-      url: url,
-      desc: '',
-      width: '100%',
-      height: 'auto'
-    })
-  })
+// 回调函数
+const handleChange = (editor: IDomEditor) => {
+  emit('change', editor)
 }
 
-// 处理内容变更
-const handleContentChange = (value: string) => {
-  editorContent.value = value
-  emit('update:modelValue', value)
-  emit('change', value)
+// 组件销毁时，及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = unref(editorRef.value)
+  if (editor === null) return
+
+  // 销毁，并移除 editor
+  editor?.destroy()
+})
+
+const getEditorRef = async (): Promise<IDomEditor> => {
+  await nextTick()
+  return unref(editorRef.value) as IDomEditor
 }
 
-// 处理保存事件
-const handleSave = () => {
-  if (props.disabled) return
-  emit('save', editorContent.value)
-}
-
-// 监听外部内容变化
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    if (newVal !== editorContent.value) {
-      editorContent.value = newVal
-    }
-  },
-  { immediate: true }
-)
-
-// 监听禁用状态变化
-watch(
-  () => props.disabled,
-  (val) => {
-    if (editorRef.value) {
-      editorRef.value.setDisabled(val)
-    }
-  }
-)
-
-// 暴露给父组件的方法
-const exposeMethods = {
-  getContent: (): string => {
-    return editorRef.value?.getValue() || editorContent.value
-  },
-  setContent: (content: string): void => {
-    if (editorRef.value) {
-      editorRef.value.setValue(content)
-    } else {
-      editorContent.value = content
-    }
-    emit('update:modelValue', content)
-  },
-  clearContent: (): void => {
-    exposeMethods.setContent('')
-  },
-
-  focus: (): void => {
-    if (editorRef.value && !props.disabled) {
-      editorRef.value.focus()
-    }
-  },
-  blur: (): void => {
-    if (editorRef.value) {
-      editorRef.value.blur()
-    }
-  }
-}
-
-defineExpose(exposeMethods)
+defineExpose({
+  getEditorRef
+})
 </script>
 
+<template>
+  <div class="border-1 border-solid border-[var(--tags-view-border-color)] z-200">
+    <!-- 工具栏 -->
+    <Toolbar
+      :editor="editorRef"
+      :editorId="editorId"
+      class="border-bottom-1 border-solid border-[var(--tags-view-border-color)]"
+    />
+    <!-- 编辑器 -->
+    <Editor
+      v-model="valueHtml"
+      :editorId="editorId"
+      :defaultConfig="editorConfig"
+      :style="editorStyle"
+      @on-change="handleChange"
+      @on-created="handleCreated"
+    />
+  </div>
+</template>
+
+<style src="@wangeditor/editor/dist/css/style.css"></style>
+
 <style scoped>
-.custom-editor-container {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px;
+/*
+  *  以下样式由于全局reset文件被覆盖，所以需要重新定义
+  */
+:deep(.w-e-modal) {
+  padding: 20px 15px 0;
+}
+:deep(.w-e-modal button) {
+  padding: 0px 15px;
+}
+:deep(.w-e-modal input[type='text']) {
+  padding: 0;
 }
 
-.editor-toolbar-extra {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  padding: 8px 0;
-  gap: 16px;
-}
-
-.preview-switch {
-  margin-left: auto;
-}
-
-.editor-error {
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-top: 8px;
-  min-height: 16px;
-  padding: 0 4px;
-}
-
-:deep(.custom-md-editor) {
-  border-radius: 4px;
-  transition: border-color 0.2s;
-}
-
-:deep(.custom-md-editor .editor-container) {
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-:deep(.custom-md-editor:hover .editor-container:not(.is-disabled)) {
-  border-color: #c0c4cc;
-}
-
-:deep(.custom-md-editor .editor-container.is-disabled) {
-  background-color: #f5f7fa;
-  border-color: #e5e7eb;
-  cursor: not-allowed;
-}
-
-:deep(.custom-md-editor .toolbar-container) {
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #f9fafb;
-}
-
-:deep(.custom-md-editor .toolbar-item) {
-  color: #666;
-  transition: color 0.2s, background-color 0.2s;
-}
-
-:deep(.custom-md-editor .toolbar-item:hover) {
-  color: #1890ff;
-  background-color: #f0f7ff;
-}
-
-:deep(.custom-md-editor .toolbar-item.is-disabled) {
-  color: #ccc;
-  cursor: not-allowed;
-}
-
-:deep(.custom-md-editor .editor-content) {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+:deep(h5, .h5) {
   font-size: 14px;
-  line-height: 1.6;
 }
 
-:deep(.custom-md-editor .preview-container) {
-  background-color: #fff;
-  line-height: 1.8;
+:deep(h4, .h4) {
+  font-size: 16px;
+  font-weight: bold;
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .custom-editor-container {
-    padding: 4px;
-  }
+:deep(h3, .h3) {
+  font-size: 18px;
+  font-weight: bold;
+}
 
-  .editor-toolbar-extra {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
+:deep(h2, .h2) {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-  .preview-switch {
-    margin-left: 0;
-  }
+:deep(h1, .h1) {
+  font-size: 22px;
+  font-weight: bold;
+}
+:deep(i) {
+  font-style: italic;
+}
+:deep(.w-e-toolbar .w-e-menu i) {
+  font-style: normal;
+}
+:deep(ol) {
+  list-style-type: decimal;
 }
 </style>

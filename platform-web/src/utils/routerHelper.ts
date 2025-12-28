@@ -93,20 +93,45 @@ export const generateRoutesFn2 = (routes: AppCustomRouteRecordRaw[]): AppRouteRe
       path: route.path,
       name: route.name,
       redirect: route.redirect,
-      meta: route.meta
+      meta: {
+        ...route.meta,
+        externalLink: route.externalLink,
+        internalOpenFlag: route.internalOpenFlag,
+        viewType: route.viewType
+      }
     }
-    if (route.component) {
-      const comModule =
-        modules[`../modules/${route.component}.vue`] || modules[`../modules/${route.component}.tsx`]
 
+    if (route.component) {
       const component = route.component as string
 
-      if (!comModule && !component.includes('#')) {
-        console.error(`未找到${route.component}.vue文件或${route.component}.tsx文件，请创建`)
+      // 如果是外部链接，使用专门的外部链接处理组件
+      if (route.externalLink) {
+        // 外部链接使用ExternalLink组件处理，确保路由匹配成功
+        data.component = () => import('@/views/ExternalLink/ExternalLink.vue')
       } else {
-        // 动态加载路由文件
-        data.component =
-          component === '#' ? Layout : component.includes('##') ? getParentLayout() : comModule
+        // 非外部链接，正常加载组件
+        // 处理component路径中的null值
+        const cleanComponent = component.replace(/\/null/g, '')
+        const comModule =
+          modules[`../modules/${cleanComponent}.vue`] || modules[`../modules/${cleanComponent}.tsx`]
+
+        if (!comModule && !cleanComponent.includes('#')) {
+          console.error(`未找到${cleanComponent}.vue文件或${cleanComponent}.tsx文件，请创建`)
+        } else {
+          // 动态加载路由文件
+          data.component =
+            cleanComponent === '#'
+              ? Layout
+              : cleanComponent.includes('##')
+              ? getParentLayout()
+              : comModule
+        }
+      }
+    } else {
+      // 如果component为空，检查是否为外部链接
+      if (route.externalLink) {
+        // 外部链接使用ExternalLink组件处理，确保路由匹配成功
+        data.component = () => import('@/views/ExternalLink/ExternalLink.vue')
       }
     }
     // recursive child routes

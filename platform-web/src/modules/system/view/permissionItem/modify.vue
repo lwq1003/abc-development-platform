@@ -24,13 +24,42 @@
       <el-form-item label="类型" prop="type">
         <dictionary-select v-model="entityData.type" code="PermissionType" />
       </el-form-item>
-
+      <!-- 视图类型，仅菜单类型显示 -->
+      <el-form-item label="视图类型" prop="viewType" v-show="entityData.type == 'MENU'">
+        <dictionary-select v-model="entityData.viewType" code="MenuViewType" />
+      </el-form-item>
+      <!-- 内置视图相关属性 -->
       <el-form-item
         label="视图编码"
         prop="viewCode"
-        v-show="entityData.type == 'MENU' || entityData.type == 'PAGE'"
+        v-show="
+          (entityData.type == 'MENU' && entityData.viewType == 'INTERNAL') ||
+          entityData.type == 'PAGE'
+        "
       >
         <el-input v-model="entityData.viewCode" />
+      </el-form-item>
+      <el-form-item
+        label="组件"
+        prop="component"
+        v-show="entityData.type == 'MENU' && entityData.viewType == 'INTERNAL'"
+      >
+        <el-input v-model="entityData.component" />
+      </el-form-item>
+      <!-- 外部链接相关属性 -->
+      <el-form-item
+        label="外部链接"
+        prop="externalLink"
+        v-show="entityData.type == 'MENU' && entityData.viewType == 'EXTERNAL'"
+      >
+        <el-input v-model="entityData.externalLink" placeholder="例如：http://baidu.com" />
+      </el-form-item>
+      <el-form-item
+        label="是否内部打开"
+        prop="internalOpenFlag"
+        v-show="entityData.type == 'MENU' && entityData.viewType == 'EXTERNAL'"
+      >
+        <dictionary-radio-group v-model="entityData.internalOpenFlag" code="YesOrNo" />
       </el-form-item>
       <el-form-item label="图标" prop="icon">
         <icon-picker v-model="entityData.icon" />
@@ -81,12 +110,32 @@ export default {
   },
   methods: {
     validateData() {
-      if (
-        (this.entityData.type == 'MENU' || this.entityData.type == 'PAGE') &&
-        !this.entityData.viewCode
-      ) {
+      if (this.entityData.type == 'PAGE' && !this.entityData.viewCode) {
         this.$message.warning('【视图编码】不能为空')
         return false
+      }
+
+      // 当类型为菜单时，处理视图类型相关验证
+      if (this.entityData.type == 'MENU') {
+        // 如果是外部链接类型，外部链接必填
+        if (this.entityData.viewType == 'EXTERNAL') {
+          if (!this.entityData.externalLink) {
+            this.$message.warning('【外部链接】不能为空')
+            return false
+          }
+        } else {
+          // 如果是内置视图类型，视图编码必填
+          if (!this.entityData.viewCode) {
+            this.$message.warning('【视图编码】不能为空')
+            return false
+          }
+          // 如果是内置视图类型，组件必填
+
+          if (!this.entityData.component) {
+            this.$message.warning('【组件】不能为空')
+            return false
+          }
+        }
       }
       return true
     }

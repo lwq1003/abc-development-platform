@@ -38,9 +38,15 @@ import Prism from 'prismjs'
 import api from '@/api/index'
 
 // 初始化编辑器主题
-VueMarkdownEditor.use(vuepressTheme, {
-  Prism
-})
+// 添加一个标志位避免重复初始化
+let isEditorInitialized = false
+
+if (!isEditorInitialized) {
+  VueMarkdownEditor.use(vuepressTheme, {
+    Prism
+  })
+  isEditorInitialized = true
+}
 
 // 定义props
 const props = defineProps({
@@ -124,6 +130,11 @@ const handleSave = () => {
 watch(
   () => props.modelValue,
   (newVal) => {
+    // 处理null，防止报错
+    if (!newVal) {
+      newVal = ''
+    }
+
     if (newVal !== editorContent.value) {
       editorContent.value = newVal
     }

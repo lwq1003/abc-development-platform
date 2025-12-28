@@ -6,7 +6,7 @@ import * as scheduler from '@/modules/scheduler/api'
 import * as notification from '@/modules/notification/api'
 import * as workflow from '@/modules/workflow/api'
 import * as businessflow from '@/modules/businessflow/api'
-
+import * as monitor from '@/modules/monitor/api'
 export default {
   system,
   support,
@@ -15,5 +15,6 @@ export default {
   scheduler,
   notification,
   workflow,
-  businessflow
+  businessflow,
+  monitor
 }

@@ -15,7 +15,9 @@ import tech.abc.platform.common.exception.CustomException;
 import tech.abc.platform.common.utils.CacheUtil;
 import tech.abc.platform.system.entity.GroupPermissionItem;
 import tech.abc.platform.system.entity.PermissionItem;
+import tech.abc.platform.system.enums.MenuViewTypeEnum;
 import tech.abc.platform.system.enums.PermissionTypeEnum;
+import tech.abc.platform.system.exception.PermissionItemExceptionEnum;
 import tech.abc.platform.system.mapper.PermissionItemMapper;
 import tech.abc.platform.system.service.GroupPermissionItemService;
 import tech.abc.platform.system.service.PermissionItemService;
@@ -48,6 +50,8 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
         // 默认值处理
         entity.setType("");
         entity.setStatus("NORMAL");
+        entity.setViewType(MenuViewTypeEnum.INTERNAL.name());
+        entity.setInternalOpenFlag("YES");
         return entity;
     }
 
@@ -71,6 +75,9 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
                 throw new CustomException(CommonException.PROPERTY_EXIST_IN_SAME_NODE, "【编码】");
             }
         }
+
+        // 条件验证：根据视图类型验证必填字段
+        validateByViewType(entity);
 
     }
 
@@ -97,6 +104,8 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
             }
         }
 
+        // 条件验证：根据视图类型验证必填字段
+        validateByViewType(entity);
 
     }
 
@@ -196,8 +205,13 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
         if (entity.getType().equals(PermissionTypeEnum.MENU.name()) ||
                 entity.getType().equals(PermissionTypeEnum.PAGE.name())
         ) {
-            String componentPath = generateComponentPath(entity);
-            entity.setComponent(componentPath);
+            // 对于外部链接类型，不生成组件路径，直接使用#
+            if (MenuViewTypeEnum.EXTERNAL.name().equals(entity.getViewType())) {
+                entity.setComponent("#");
+            } else {
+                String componentPath = generateComponentPath(entity);
+                entity.setComponent(componentPath);
+            }
         } else if (entity.getType().equals(PermissionTypeEnum.MODULE.name())) {
             entity.setComponent("#");
         }
@@ -260,6 +274,28 @@ public class PermissionItemServiceImpl extends BaseServiceImpl<PermissionItemMap
 
         return MessageFormat.format("{0}/view/{1}/{2}", tempEntity.getCode(), folderCode, entity.getViewCode());
 
+    }
+
+    /**
+     * 根据视图类型验证必填字段
+     *
+     * @param entity 权限项实体
+     */
+    private void validateByViewType(PermissionItem entity) {
+        // 当类型为菜单时，处理视图类型相关验证
+        if (entity.getType().equals(PermissionTypeEnum.MENU.name())) {
+            // 如果是外部链接类型，外部链接必填
+            if (MenuViewTypeEnum.EXTERNAL.name().equals(entity.getViewType())) {
+                if (StringUtils.isBlank(entity.getExternalLink())) {
+                    throw new CustomException(PermissionItemExceptionEnum.EXTERNAL_LINK_REQUIRED);
+                }
+            } else {
+                // 如果是内置视图类型，组件必填
+                if (StringUtils.isBlank(entity.getComponent())) {
+                    throw new CustomException(PermissionItemExceptionEnum.COMPONENT_REQUIRED);
+                }
+            }
+        }
     }
 
 }

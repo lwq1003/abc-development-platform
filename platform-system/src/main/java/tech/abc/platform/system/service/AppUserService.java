@@ -27,6 +27,8 @@ public interface AppUserService {
 
     /**
      * 找回密码
+     *
+     * @param email 电子邮件
      */
     void retrievePassword(String email);
 }

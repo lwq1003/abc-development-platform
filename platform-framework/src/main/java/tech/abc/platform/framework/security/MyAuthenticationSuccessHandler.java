@@ -242,6 +242,9 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
                     vo.setName(node.getCode());
                     vo.setPath("/" + node.getCode());
                     vo.setComponent(node.getComponent());
+                    vo.setExternalLink(node.getExternalLink());
+                    vo.setInternalOpenFlag(node.getInternalOpenFlag());
+                    vo.setViewType(node.getViewType());
 
                     MetaVO metaVO = new MetaVO();
                     metaVO.setTitle(node.getName());
@@ -273,6 +276,17 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
                 vo.setName(permission.getCode());
                 vo.setPath(permission.getCode());
                 vo.setComponent(permission.getComponent());
+                // 处理外部链接地址，移除反引号和多余空格
+                String externalLink = permission.getExternalLink();
+                if (externalLink != null) {
+                    // 移除反引号
+                    externalLink = externalLink.replaceAll("`", "");
+                    // 移除首尾空格
+                    externalLink = externalLink.trim();
+                }
+                vo.setExternalLink(externalLink);
+                vo.setInternalOpenFlag(permission.getInternalOpenFlag());
+                vo.setViewType(permission.getViewType());
 
 
                 MetaVO metaVO = new MetaVO();

@@ -29,6 +29,21 @@ export const useTagsViewStore = defineStore('tagsView', {
       this.addVisitedView(view)
       this.addCachedView()
     },
+    // 新增外部链接tag
+    addExtTab(view: any): void {
+      if (this.visitedViews.some((v) => v.path === view.path)) return
+      if (view.meta?.noTagsView) return
+
+      // 确保fullPath格式正确
+      const fullPath = view.path.startsWith('/') ? view.path : `/${view.path}`
+
+      this.visitedViews.push(
+        Object.assign({}, view, {
+          fullPath: fullPath,
+          title: view.meta?.title || 'no-name'
+        })
+      )
+    },
     // 新增tag
     addVisitedView(view: RouteLocationNormalizedLoaded) {
       if (this.visitedViews.some((v) => v.path === view.path)) return

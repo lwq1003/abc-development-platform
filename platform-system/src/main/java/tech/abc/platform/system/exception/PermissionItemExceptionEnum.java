@@ -33,6 +33,14 @@ public enum PermissionItemExceptionEnum implements ExceptionInterface {
      * 无权访问，请联系系统管理员
      */
     NO_PERMISSION("无权访问，请联系系统管理员"),
+    /**
+     * 外部链接不能为空
+     */
+    EXTERNAL_LINK_REQUIRED("外部链接不能为空"),
+    /**
+     * 组件不能为空
+     */
+    COMPONENT_REQUIRED("组件不能为空"),
     ;
 
 

@@ -16,6 +16,7 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
       hidden: true
     }
   },
+
   {
     path: '/redirect',
     component: Layout,
@@ -99,6 +100,7 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
       }
     ]
   },
+
   {
     path: '/external-link',
     component: Layout,

@@ -57,6 +57,12 @@ public class PermissionItem extends BaseEntity {
     private String viewCode;
 
     /**
+     * 视图类型
+     */
+    @TableField("view_type")
+    private String viewType;
+
+    /**
      * 组件
      */
     @TableField("component")
@@ -79,5 +85,17 @@ public class PermissionItem extends BaseEntity {
      */
     @TableField("order_no")
     private String orderNo;
+
+    /**
+     * 外部链接
+     */
+    @TableField("external_link")
+    private String externalLink;
+
+    /**
+     * 是否内部打开
+     */
+    @TableField("internal_open_flag")
+    private String internalOpenFlag;
 
 }

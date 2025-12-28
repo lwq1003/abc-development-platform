@@ -71,8 +71,8 @@ public interface UserService extends BaseService<User> {
     /**
      * 不验证旧密码直接设置新密码
      *
-     * @param id          用户标识
-     * @param newPassword 新密码
+     * @param id       用户标识
+     * @param password 密码
      */
     void changePassword(String id, String password);
 

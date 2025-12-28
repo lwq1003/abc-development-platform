@@ -62,9 +62,23 @@ const getCaches = computed((): string[] => {
   >
     <router-view>
       <template #default="{ Component, route }">
-        <keep-alive :include="getCaches">
-          <component :is="Component" :key="route.fullPath" />
-        </keep-alive>
+        <!-- 如果路由配置了外部链接，显示iframe -->
+        <template v-if="route.meta && route.meta.externalLink">
+          <div class="w-full h-full overflow-hidden">
+            <iframe
+              :src="route.meta.externalLink"
+              frameborder="0"
+              class="w-full h-[calc(100vh-var(--tags-view-height)-var(--top-tool-height)-var(--app-footer-height)-40px)]"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            ></iframe>
+          </div>
+        </template>
+        <!-- 否则显示正常组件 -->
+        <template v-else>
+          <keep-alive :include="getCaches">
+            <component :is="Component" :key="route.fullPath" />
+          </keep-alive>
+        </template>
       </template>
     </router-view>
   </section>
